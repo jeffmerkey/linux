@@ -897,7 +897,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = DREF_OPEN_TOKEN;
 	     p++;
-	     if (tolower(*p) == 'q')
+	     if (tolower(*p) == 'q' && *(p + 1) == ' ')
 	     {
 		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
@@ -905,7 +905,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 		p++;
 		break;
 	     }
-	     if (tolower(*p) == 'd')
+	     if (tolower(*p) == 'd' && *(p + 1) == ' ')
 	     {
 		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
@@ -913,7 +913,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 		p++;
 		break;
 	     }
-	     if (tolower(*p) == 'w')
+	     if (tolower(*p) == 'w' && *(p + 1) == ' ')
 	     {
 		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
@@ -921,7 +921,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 		p++;
 		break;
 	     }
-	     if (tolower(*p) == 'b')
+	     if (tolower(*p) == 'b' && *(p + 1) == ' ')
 	     {
 		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
@@ -1883,12 +1883,12 @@ uint64_t Evaluate(StackFrame *stackFrame,
 	initNumericStacks();
 	for (i = 0; i < TokenCount; i++)
 	{
-#if (DEBUG_EXPRESS)
+//#if (DEBUG_EXPRESS)
 	   DBGPrint("token: %s value %0lX lastClass: %d\n", 
                     parserDescription[TokenType[i]], 
                     TokenValue[i],
                     lastClass);
-#endif
+//#endif
 	   switch (TokenType[i])
 	   {
 	      case INVALID_NUMBER_TOKEN:
