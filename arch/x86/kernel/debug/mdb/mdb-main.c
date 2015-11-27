@@ -535,12 +535,21 @@ unsigned char *kdebug_state[]=
 int kdebug_state_size = sizeof(kdebug_state) / sizeof(unsigned char *);
 #endif
 
+unsigned char kdbstate[40];
+atomic_t kgdb_active;
+
 static int mdb_notify(struct notifier_block *nb, unsigned long reason,
                       void *data)
 {
     register struct die_args *args = (struct die_args *)data;
     register unsigned long cr3;
     register int err = 0;
+
+    if (atomic_read(&kgdb_active))
+    {
+       printk("MDB:  kgdb currently set to [%s] MDB disabled.\n", kdbstate);
+       return NOTIFY_DONE;
+    }
 
     // flush the tlb in case we are inside of a memory remap routine 
     cr3 = ReadCR3();
@@ -669,6 +678,9 @@ static int mdb_nmi_handler(unsigned int cmd, struct pt_regs *regs)
 {
     unsigned long processor = get_processor_id();
 
+    if (atomic_read(&kgdb_active))
+       return NMI_DONE;
+
     switch (cmd) 
     {
         case NMI_LOCAL:
@@ -710,15 +722,45 @@ static struct sysrq_key_op sysrq_op =
 extern int disable_hw_bp_interface;
 #endif
 
+void strip_crlf(char *p, int limit)
+{
+   while (*p && limit)
+   {
+      if (*p == '\n' || (*p) == '\r')
+         *p = '\0';
+      p++;
+      limit--;
+   }
+  
+}
+
 static int __init mdb_init_module(void)
 {
     register int i;
+    register ssize_t size;
     register int ret = 0;
+    struct file *filp;
 
     /* return if debugger already initialized */
     if (debuggerInitialized)
        return 0;
     
+    filp = filp_open("/sys/module/kgdboc/parameters/kgdboc", O_RDWR, 0);
+    if (filp)
+    {
+       size = kernel_read(filp, 0, kdbstate, 39);
+       if (size)
+       {
+          strip_crlf(kdbstate, 39);
+          DBGPrint("MDB:  kgdb currently set to [%s] MDB disabled.  disable kgdb-kdb to proceed.\n", kdbstate);
+          DBGPrint("type \' echo \"\" > /sys/module/kgdboc/parameters/kgdboc \' <enter> to disable then reload mdb.\n");
+          printk("MDB:  kgdb currently set to [%s] MDB disabled.  disable kgdb-kdb to proceed.\n", kdbstate);
+          printk("type \' echo \"\" > /sys/module/kgdboc/parameters/kgdboc \' <enter> to disable then reload mdb.\n");
+          atomic_inc(&kgdb_active);
+       }
+       filp_close(filp, NULL);
+    }
+
     MDBInitializeDebugger();
 
     ret = register_die_notifier(&mdb_notifier);
