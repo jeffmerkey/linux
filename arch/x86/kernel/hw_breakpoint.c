@@ -57,6 +57,10 @@ static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
  */
 static DEFINE_PER_CPU(struct perf_event *, bp_per_reg[HBP_NUM]);
 
+#if defined(CONFIG_MDB_DIRECT_MODE)
+int disable_hw_bp_interface;
+EXPORT_SYMBOL_GPL(disable_hw_bp_interface);
+#endif
 
 static inline unsigned long
 __encode_dr7(int drnum, unsigned int len, unsigned int type)
@@ -108,6 +112,11 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
 	unsigned long *dr7;
 	int i;
 
+#if defined(CONFIG_MDB_DIRECT_MODE)
+        if (disable_hw_bp_interface)
+           return -EBUSY;
+#endif       
+
 	for (i = 0; i < HBP_NUM; i++) {
 		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
 
@@ -132,6 +141,7 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(arch_install_hw_breakpoint);
 
 /*
  * Uninstall the breakpoint contained in the given counter.
@@ -147,6 +157,11 @@ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
 	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
 	unsigned long *dr7;
 	int i;
+
+#if defined(CONFIG_MDB_DIRECT_MODE)
+        if (disable_hw_bp_interface)
+           return;
+#endif       
 
 	for (i = 0; i < HBP_NUM; i++) {
 		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
@@ -167,6 +182,7 @@ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
 	if (info->mask)
 		set_dr_addr_mask(0, i);
 }
+EXPORT_SYMBOL_GPL(arch_uninstall_hw_breakpoint);
 
 /*
  * Check for virtual address in kernel space.
@@ -416,6 +432,10 @@ void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
 
 void hw_breakpoint_restore(void)
 {
+#if defined(CONFIG_MDB_DIRECT_MODE)
+        if (disable_hw_bp_interface)
+           return;
+#endif       
 	set_debugreg(__this_cpu_read(cpu_debugreg[0]), 0);
 	set_debugreg(__this_cpu_read(cpu_debugreg[1]), 1);
 	set_debugreg(__this_cpu_read(cpu_debugreg[2]), 2);
@@ -448,6 +468,10 @@ static int hw_breakpoint_handler(struct die_args *args)
 	unsigned long dr7, dr6;
 	unsigned long *dr6_p;
 
+#if defined(CONFIG_MDB_DIRECT_MODE)
+        if (disable_hw_bp_interface)
+           return NOTIFY_DONE;
+#endif       
 	/* The DR6 value is pointed by args->err */
 	dr6_p = (unsigned long *)ERR_PTR(args->err);
 	dr6 = *dr6_p;

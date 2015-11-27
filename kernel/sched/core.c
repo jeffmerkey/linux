@@ -995,10 +995,12 @@ static int effective_prio(struct task_struct *p)
  *
  * Return: 1 if the task is currently executing. 0 otherwise.
  */
-inline int task_curr(const struct task_struct *p)
+
+int task_curr(const struct task_struct *p)
 {
 	return cpu_curr(task_cpu(p)) == p;
 }
+EXPORT_SYMBOL(task_curr);
 
 /*
  * switched_from, switched_to and prio_changed must _NOT_ drop rq->lock,
@@ -7579,7 +7581,7 @@ void normalize_rt_tasks(void)
 
 #endif /* CONFIG_MAGIC_SYSRQ */
 
-#if defined(CONFIG_IA64) || defined(CONFIG_KGDB_KDB)
+#if defined(CONFIG_IA64) || defined(CONFIG_KGDB_KDB) || defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
 /*
  * These functions are only useful for the IA64 MCA handling, or kdb.
  *
@@ -7602,6 +7604,7 @@ struct task_struct *curr_task(int cpu)
 {
 	return cpu_curr(cpu);
 }
+EXPORT_SYMBOL(curr_task);
 
 #endif /* defined(CONFIG_IA64) || defined(CONFIG_KGDB_KDB) */
 
