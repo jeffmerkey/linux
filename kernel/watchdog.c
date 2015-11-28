@@ -240,8 +240,10 @@ void touch_softlockup_watchdog_sync(void)
 	__this_cpu_write(softlockup_touch_sync, true);
 	__this_cpu_write(watchdog_touch_ts, 0);
 }
+EXPORT_SYMBOL(touch_softlockup_watchdog_sync);
 
 #ifdef CONFIG_HARDLOCKUP_DETECTOR
+
 /* watchdog detector functions */
 static int is_hardlockup(void)
 {
@@ -253,6 +255,13 @@ static int is_hardlockup(void)
 	__this_cpu_write(hrtimer_interrupts_saved, hrint);
 	return 0;
 }
+
+void touch_hardlockup_watchdog(void)
+{
+	__this_cpu_write(hrtimer_interrupts_saved, 0);
+}
+EXPORT_SYMBOL_GPL(touch_hardlockup_watchdog);
+
 #endif
 
 static int is_softlockup(unsigned long touch_ts)
