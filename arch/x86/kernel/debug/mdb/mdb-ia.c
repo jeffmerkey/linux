@@ -1277,8 +1277,7 @@ unsigned long SSBUpdate(StackFrame *stackFrame, unsigned long processor)
     memmove((void *)&lastStackFrame, stackFrame,
 		     sizeof(StackFrame));
 
-    if (!trap_disable)
-       stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
+    stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
     atomic_inc(&focusActive);
     atomic_inc(&per_cpu(traceProcessors, get_processor_id()));
@@ -1300,8 +1299,7 @@ unsigned long processTraceSSBACC(unsigned long key, void *p, ACCELERATOR *accel)
      lastCR4 = ReadCR4();
      memmove((void *)&lastStackFrame, stackFrame, sizeof(StackFrame));
 
-     if (!trap_disable)
-       stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
+     stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
      /* set as focus processor for trace, ssb, or proceed */
      atomic_inc(&focusActive);
@@ -1358,8 +1356,7 @@ unsigned long processProceedACC(unsigned long key, void *p, ACCELERATOR *accel)
      memmove((void *)&lastStackFrame, stackFrame,
 	       sizeof(StackFrame));
 
-     if (!trap_disable)
-       stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
+     stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
      /* set as focus processor for trace, ssb, or proceed */
      atomic_inc(&focusActive);
@@ -1383,8 +1380,7 @@ unsigned long processTraceACC(unsigned long key, void *p, ACCELERATOR *accel)
      memmove((void *)&lastStackFrame, stackFrame,
 		     sizeof(StackFrame));
 
-     if (!trap_disable)
-       stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
+     stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
      /* set as focus processor for trace, ssb, or proceed */
      atomic_inc(&focusActive);
@@ -1478,8 +1474,7 @@ unsigned long processProceed(unsigned char *cmd,
      memmove((void *)&lastStackFrame, stackFrame,
 	       sizeof(StackFrame));
 
-     if (!trap_disable)
-       stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
+     stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
      /* set as focus processor for trace, ssb, or proceed */
      atomic_inc(&focusActive);
@@ -1503,8 +1498,7 @@ unsigned long processTraceSSB(unsigned char *cmd,
      memmove((void *)&lastStackFrame, stackFrame,
 		     sizeof(StackFrame));
 
-     if (!trap_disable)
-       stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
+     stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
      /* set as focus processor for trace, ssb, or proceed */
      atomic_inc(&focusActive);
@@ -1528,8 +1522,7 @@ unsigned long processTrace(unsigned char *cmd,
      memmove((void *)&lastStackFrame, stackFrame,
 		     sizeof(StackFrame));
 
-     if (!trap_disable)
-       stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
+    stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
      /* set as focus processor for trace, ssb, or proceed */
      atomic_inc(&focusActive);
@@ -1606,19 +1599,6 @@ unsigned long processorCommandHelp(unsigned char *commandLine, DEBUGGER_PARSER *
     DBGPrint("lcpu                     - list processors\n");
     DBGPrint("cpu [p#]                 - switch processor\n");
     DBGPrint("lr  [p#]                 - display processor registers\n");
-#if defined(CONFIG_SMP) && !defined(CONFIG_X86_ELAN)
-    DBGPrint("nmi [p#]                 - deliver hard nmi exception\n\n");
-    DBGPrint("The 'nmi [p#]' command will deliver a level triggered\n");
-    DBGPrint("NMI hardware interrupt to a specified processor and system\n");
-    DBGPrint("recovery may not be possible in all cases after issuing this\n");
-    DBGPrint("command.  This command is used to trigger debugger\n");
-    DBGPrint("entry on a hard hung processor.\n\n");
-    DBGPrint("If you just want to switch processors with a soft NMI\n");
-    DBGPrint("exception (which is typically recoverable), then use the\n");
-    DBGPrint("'cpu [p#]' command instead.  Only use the 'nmi [p#]' command\n");
-    DBGPrint("for situations where you need to trigger a hardware NMI to\n");
-    DBGPrint("force a hung processor to enter the debugger.\n");
-#endif
     return 1;
 }
 
