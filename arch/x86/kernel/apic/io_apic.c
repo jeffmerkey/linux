@@ -158,6 +158,7 @@ static inline struct irq_domain *mp_ioapic_irqdomain(int ioapic)
 }
 
 int nr_ioapics;
+EXPORT_SYMBOL(nr_ioapics);
 
 /* The one past the highest gsi number used */
 u32 gsi_top;
@@ -268,6 +269,7 @@ int __init arch_early_ioapic_init(void)
 
 	return 0;
 }
+EXPORT_SYMBOL(native_io_apic_read);
 
 struct io_apic {
 	unsigned int index;
