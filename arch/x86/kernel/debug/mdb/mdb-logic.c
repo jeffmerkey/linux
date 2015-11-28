@@ -1883,12 +1883,12 @@ uint64_t Evaluate(StackFrame *stackFrame,
 	initNumericStacks();
 	for (i = 0; i < TokenCount; i++)
 	{
-//#if (DEBUG_EXPRESS)
+#if (DEBUG_EXPRESS)
 	   DBGPrint("token: %s value %0lX lastClass: %d\n", 
                     parserDescription[TokenType[i]], 
                     TokenValue[i],
                     lastClass);
-//#endif
+#endif
 	   switch (TokenType[i])
 	   {
 	      case INVALID_NUMBER_TOKEN:

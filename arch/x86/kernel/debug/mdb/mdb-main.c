@@ -546,10 +546,7 @@ static int mdb_notify(struct notifier_block *nb, unsigned long reason,
     register int err = 0;
 
     if (atomic_read(&kgdb_active))
-    {
-       printk("MDB:  kgdb currently set to [%s] MDB disabled.\n", kdbstate);
        return NOTIFY_DONE;
-    }
 
     // flush the tlb in case we are inside of a memory remap routine 
     cr3 = ReadCR3();
@@ -745,6 +742,7 @@ static int __init mdb_init_module(void)
     if (debuggerInitialized)
        return 0;
     
+    /* disable kgdb/kdb on module load if enabled */
     filp = filp_open("/sys/module/kgdboc/parameters/kgdboc", O_RDWR, 0);
     if (filp)
     {
@@ -752,11 +750,18 @@ static int __init mdb_init_module(void)
        if (size)
        {
           strip_crlf(kdbstate, 39);
-          DBGPrint("MDB:  kgdb currently set to [%s] MDB disabled.  disable kgdb-kdb to proceed.\n", kdbstate);
-          DBGPrint("type \' echo \"\" > /sys/module/kgdboc/parameters/kgdboc \' <enter> to disable then reload mdb.\n");
-          printk("MDB:  kgdb currently set to [%s] MDB disabled.  disable kgdb-kdb to proceed.\n", kdbstate);
-          printk("type \' echo \"\" > /sys/module/kgdboc/parameters/kgdboc \' <enter> to disable then reload mdb.\n");
-          atomic_inc(&kgdb_active);
+
+          printk(KERN_WARNING "MDB:  kgdb currently set to [%s], attempting to disable.\n", kdbstate);
+
+          kdbstate[0] = '\0';
+          size = kernel_write(filp, kdbstate, 1, 0);
+          if (!size)
+          {
+             printk(KERN_WARNING "MDB:  kgdb/kdb active, MDB set to disabled. unload/reload to retry.\n");
+             atomic_inc(&kgdb_active);
+          }
+          else 
+             printk(KERN_WARNING "MDB:  kgdb/kdb set to disabled. MDB is enabled.\n");
        }
        filp_close(filp, NULL);
     }

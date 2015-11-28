@@ -519,13 +519,44 @@ DEBUGGER_PARSER ListProcessorsPE = {
 0, 0, listProcessors, processorCommandHelp, 0, "LCPU", 0, 0,
 "list processors"  , 0, 7 };
 
+DEBUGGER_PARSER ORIGEAXPE = {
+0, 0, ChangeORIGEAXRegister, displayEAXHelp, 0, "ORGEAX", 0, -1,
+"", 0, -1 };
+
+DEBUGGER_PARSER ALPE = {
+0, 0, ChangeEAXRegister, displayEAXHelp, 0, "AL", 0, -1,
+"", 0, -1 };
+
+DEBUGGER_PARSER BLPE = {
+0, 0, ChangeEBXRegister, displayEBXHelp, 0, "BL", 0, -1,
+"", 0, -1 };
+
+DEBUGGER_PARSER CLPE = {
+0, 0, ChangeECXRegister, displayECXHelp, 0, "CL", 0, -1,
+"", 0, -1 };
+
+DEBUGGER_PARSER DLPE = {
+0, 0, ChangeEDXRegister, displayEDXHelp, 0, "DL", 0, -1,
+"", 0, -1 };
+
+DEBUGGER_PARSER AXPE = {
+0, 0, ChangeEAXRegister, displayEAXHelp, 0, "AX", 0, -1,
+"", 0, -1 };
+
+DEBUGGER_PARSER BXPE = {
+0, 0, ChangeEBXRegister, displayEBXHelp, 0, "BX", 0, -1,
+"", 0, -1 };
+
+DEBUGGER_PARSER CXPE = {
+0, 0, ChangeECXRegister, displayECXHelp, 0, "CX", 0, -1,
+"", 0, -1 };
+
+DEBUGGER_PARSER DXPE = {
+0, 0, ChangeEDXRegister, displayEDXHelp, 0, "DX", 0, -1,
+"", 0, -1 };
 
 DEBUGGER_PARSER EAXPE = {
 0, 0, ChangeEAXRegister, displayEAXHelp, 0, "EAX", 0, -1,
-"", 0, -1 };
-
-DEBUGGER_PARSER ORIGEAXPE = {
-0, 0, ChangeORIGEAXRegister, displayEAXHelp, 0, "ORGEAX", 0, -1,
 "", 0, -1 };
 
 DEBUGGER_PARSER EBXPE = {
@@ -1071,8 +1102,16 @@ void MDBInitializeDebugger(void)
    AddDebuggerCommandParser(&R14PE);
    AddDebuggerCommandParser(&R15PE);
 #endif
-   AddDebuggerCommandParser(&EAXPE);
    AddDebuggerCommandParser(&ORIGEAXPE);
+   AddDebuggerCommandParser(&ALPE);
+   AddDebuggerCommandParser(&BLPE);
+   AddDebuggerCommandParser(&CLPE);
+   AddDebuggerCommandParser(&DLPE);
+   AddDebuggerCommandParser(&AXPE);
+   AddDebuggerCommandParser(&BXPE);
+   AddDebuggerCommandParser(&CXPE);
+   AddDebuggerCommandParser(&DXPE);
+   AddDebuggerCommandParser(&EAXPE);
    AddDebuggerCommandParser(&EBXPE);
    AddDebuggerCommandParser(&ECXPE);
    AddDebuggerCommandParser(&EDXPE);
@@ -2076,32 +2115,6 @@ unsigned long displayEAXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
     return 1;
 }
 
-/* EAX */
-
-unsigned long ChangeEAXRegister(unsigned char *cmd,
-		       StackFrame *stackFrame, unsigned long Exception,
-		       DEBUGGER_PARSER *parser)
-{
-     unsigned long valid;
-     register unsigned long value;
-
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
-
-     value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	stackFrame->tAX = value;
-	DBGPrint("EAX changed to 0x%X\n", (unsigned)value);
-     }
-     else
-	DBGPrint("invalid change register command or address\n");
-     return 1;
-
-}
-
-
 /* ORIGEAX */
 
 unsigned long ChangeORIGEAXRegister(unsigned char *cmd,
@@ -2127,6 +2140,59 @@ unsigned long ChangeORIGEAXRegister(unsigned char *cmd,
 
 }
 
+/* EAX */
+
+unsigned long ChangeEAXRegister(unsigned char *cmd,
+		       StackFrame *stackFrame, unsigned long Exception,
+		       DEBUGGER_PARSER *parser)
+{
+     unsigned long valid, width = 0;
+     register unsigned long value;
+
+     if (!strncasecmp(cmd, "AL", 2))
+        width = 2;
+     else
+     if (!strncasecmp(cmd, "AX", 2))
+        width = 1;
+
+     cmd = &cmd[parser->debugCommandNameLength];
+     while (*cmd && *cmd == ' ')
+        cmd++;
+
+     value = EvaluateExpression(stackFrame, &cmd, &valid);
+     if (valid)
+     {
+        switch (width) {
+           case 0:
+              stackFrame->tAX &= ~0xFFFFFFFF;
+	      stackFrame->tAX |= value & 0xFFFFFFFF;
+	      DBGPrint("EAX changed to 0x%X\n", (unsigned)value);
+              break;
+
+           case 1:
+              stackFrame->tAX &= ~0xFFFF;
+	      stackFrame->tAX |= value & 0xFFFF;
+	      DBGPrint("AX changed to 0x%X\n", (unsigned)value);
+              break;
+
+           case 2:
+              stackFrame->tAX &= ~0xFF;
+	      stackFrame->tAX |= value & 0xFF;
+	      DBGPrint("AL changed to 0x%X\n", (unsigned)value);
+              break;
+
+           default:
+	      stackFrame->tAX = value;
+              break;
+        }
+     }
+     else
+	DBGPrint("invalid change register command or address\n");
+     return 1;
+
+}
+
+
 
 unsigned long displayEBXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
@@ -2139,8 +2205,14 @@ unsigned long ChangeEBXRegister(unsigned char *cmd,
 		       StackFrame *stackFrame, unsigned long Exception,
 		       DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+     unsigned long valid, width = 0;
      register unsigned long value;
+
+     if (!strncasecmp(cmd, "BL", 2))
+        width = 2;
+     else
+     if (!strncasecmp(cmd, "BX", 2))
+        width = 1;
 
      cmd = &cmd[parser->debugCommandNameLength];
      while (*cmd && *cmd == ' ')
@@ -2149,8 +2221,29 @@ unsigned long ChangeEBXRegister(unsigned char *cmd,
      value = EvaluateExpression(stackFrame, &cmd, &valid);
      if (valid)
      {
-	stackFrame->tBX = value;
-	DBGPrint("EBX changed to 0x%X\n", (unsigned)value);
+        switch (width) {
+           case 0:
+              stackFrame->tBX &= ~0xFFFFFFFF;
+	      stackFrame->tBX |= value & 0xFFFFFFFF;
+	      DBGPrint("EBX changed to 0x%X\n", (unsigned)value);
+              break;
+
+           case 1:
+              stackFrame->tBX &= ~0xFFFF;
+	      stackFrame->tBX |= value & 0xFFFF;
+	      DBGPrint("BX changed to 0x%X\n", (unsigned)value);
+              break;
+
+           case 2:
+              stackFrame->tBX &= ~0xFF;
+	      stackFrame->tBX |= value & 0xFF;
+	      DBGPrint("BL changed to 0x%X\n", (unsigned)value);
+              break;
+
+           default:
+	      stackFrame->tBX = value;
+              break;
+        }
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2169,8 +2262,14 @@ unsigned long ChangeECXRegister(unsigned char *cmd,
 		       StackFrame *stackFrame, unsigned long Exception,
 		       DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+     unsigned long valid, width = 0;
      register unsigned long value;
+
+     if (!strncasecmp(cmd, "CL", 2))
+        width = 2;
+     else
+     if (!strncasecmp(cmd, "CX", 2))
+        width = 1;
 
      cmd = &cmd[parser->debugCommandNameLength];
      while (*cmd && *cmd == ' ')
@@ -2179,8 +2278,29 @@ unsigned long ChangeECXRegister(unsigned char *cmd,
      value = EvaluateExpression(stackFrame, &cmd, &valid);
      if (valid)
      {
-	stackFrame->tCX = value;
-	DBGPrint("ECX changed to 0x%X\n", (unsigned)value);
+        switch (width) {
+           case 0:
+              stackFrame->tCX &= ~0xFFFFFFFF;
+	      stackFrame->tCX |= value & 0xFFFFFFFF;
+	      DBGPrint("ECX changed to 0x%X\n", (unsigned)value);
+              break;
+
+           case 1:
+              stackFrame->tCX &= ~0xFFFF;
+	      stackFrame->tCX |= value & 0xFFFF;
+	      DBGPrint("CX changed to 0x%X\n", (unsigned)value);
+              break;
+
+           case 2:
+              stackFrame->tCX &= ~0xFF;
+	      stackFrame->tCX |= value & 0xFF;
+	      DBGPrint("CL changed to 0x%X\n", (unsigned)value);
+              break;
+
+           default:
+	      stackFrame->tCX = value;
+              break;
+        }
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2200,8 +2320,14 @@ unsigned long ChangeEDXRegister(unsigned char *cmd,
 		       StackFrame *stackFrame, unsigned long Exception,
 		       DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+     unsigned long valid, width = 0;
      register unsigned long value;
+
+     if (!strncasecmp(cmd, "DL", 2))
+        width = 2;
+     else
+     if (!strncasecmp(cmd, "DX", 2))
+        width = 1;
 
      cmd = &cmd[parser->debugCommandNameLength];
      while (*cmd && *cmd == ' ')
@@ -2210,8 +2336,29 @@ unsigned long ChangeEDXRegister(unsigned char *cmd,
      value = EvaluateExpression(stackFrame, &cmd, &valid);
      if (valid)
      {
-	stackFrame->tDX = value;
-	DBGPrint("EDX changed to 0x%X\n", (unsigned)value);
+        switch (width) {
+           case 0:
+              stackFrame->tDX &= ~0xFFFFFFFF;
+	      stackFrame->tDX |= value & 0xFFFFFFFF;
+              DBGPrint("EDX changed to 0x%X\n", (unsigned)value);
+              break;
+
+           case 1:
+              stackFrame->tDX &= ~0xFFFF;
+	      stackFrame->tDX |= value & 0xFFFF;
+              DBGPrint("DX changed to 0x%X\n", (unsigned)value);
+              break;
+
+           case 2:
+              stackFrame->tDX &= ~0xFF;
+	      stackFrame->tDX |= value & 0xFF;
+              DBGPrint("DL changed to 0x%X\n", (unsigned)value);
+              break;
+
+           default:
+	      stackFrame->tDX = value;
+              break;
+        }
      }
      else
 	DBGPrint("invalid change register command or address\n");
