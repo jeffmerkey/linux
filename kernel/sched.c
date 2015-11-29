@@ -8294,7 +8294,7 @@ void normalize_rt_tasks(void)
 
 #endif /* CONFIG_MAGIC_SYSRQ */
 
-#if defined(CONFIG_IA64) || defined(CONFIG_KGDB_KDB || defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE))
+#if defined(CONFIG_IA64) || defined(CONFIG_KGDB_KDB) || defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
 /*
  * These functions are only useful for the IA64 MCA handling, or kdb.
  *
