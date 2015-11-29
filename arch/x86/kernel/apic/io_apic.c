@@ -167,6 +167,7 @@ static inline struct irq_domain *mp_ioapic_irqdomain(int ioapic)
 }
 
 int nr_ioapics;
+EXPORT_SYMBOL(nr_ioapics);
 
 /* The one past the highest gsi number used */
 u32 gsi_top;
@@ -270,6 +271,7 @@ static inline struct irq_cfg *irq_cfg(unsigned int irq)
 {
 	return irq_get_chip_data(irq);
 }
+EXPORT_SYMBOL(native_io_apic_read);
 
 static struct irq_cfg *alloc_irq_cfg(unsigned int irq, int node)
 {

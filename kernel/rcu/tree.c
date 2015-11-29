@@ -1268,6 +1268,7 @@ static unsigned long rcu_cbs_completed(struct rcu_state *rsp,
 	 */
 	return rnp->completed + 2;
 }
+EXPORT_SYMBOL(rcu_cpu_stall_reset);
 
 /*
  * Trace-event helper function for rcu_start_future_gp() and
