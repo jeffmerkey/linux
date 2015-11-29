@@ -233,19 +233,20 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 
 #else
 
-static int print_trace_stack(void *data, char *name)
+
+static int print_trace_stack(char *name)
 {
-	DBGPrint("%s <%s> ", (char *)data, name);
+	DBGPrint("<%s> ", name);
 	return 0;
 }
 
-void printk_address(unsigned long address, int reliable)
+static void printk_address(unsigned long address, int reliable)
 {
 	DBGPrint(" [<%p>] %s%pB\n",
 		(void *)address, reliable ? "" : "? ", (void *)address);
 }
 
-static void print_trace_address(void *data, unsigned long addr, int reliable)
+static void print_trace_address(unsigned long addr, int reliable)
 {
 	mdb_watchdogs();
 	printk_address(addr, reliable);
@@ -264,10 +265,9 @@ static inline int valid_stack_ptr(struct thread_info *tinfo,
 	return p > t && p < t + THREAD_SIZE - size;
 }
 
-unsigned long
-print_context_stack(struct thread_info *tinfo,
+static unsigned long
+print_context(struct thread_info *tinfo,
 		unsigned long *stack, unsigned long bp,
-		void *data,
 		unsigned long *end)
 {
 	struct stack_frame *frame = (struct stack_frame *)bp;
@@ -278,11 +278,11 @@ print_context_stack(struct thread_info *tinfo,
 		addr = *stack;
 		if (__kernel_text_address(addr)) {
 			if ((unsigned long) stack == bp + sizeof(long)) {
-				print_trace_address(data, addr, 1);
+				print_trace_address(addr, 1);
 				frame = frame->next_frame;
 				bp = (unsigned long) frame;
 			} else {
-				print_trace_address(data, addr, 0);
+				print_trace_address(addr, 0);
 			}
 		}
 		stack++;
@@ -293,6 +293,8 @@ print_context_stack(struct thread_info *tinfo,
 int bt_stack(struct task_struct *task, struct pt_regs *regs,
              unsigned long *stack)
 {
+        unsigned long bp = 0;
+
 	if (!task)
 		task = current;
 
@@ -313,12 +315,12 @@ int bt_stack(struct task_struct *task, struct pt_regs *regs,
 		context = (struct thread_info *)
 			((unsigned long)stack & (~(THREAD_SIZE - 1)));
 
-		bp = print_context_stack(context, stack, bp, data, NULL);
+		bp = print_context(context, stack, bp, NULL);
 
 		stack = (unsigned long *)context->previous_esp;
 		if (!stack)
 			break;
-		if (print_trace_stack(data, "IRQ") < 0)
+		if (print_trace_stack("IRQ") < 0)
 			break;
 		mdb_watchdogs();
 	}
