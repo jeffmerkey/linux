@@ -377,14 +377,24 @@ asmlinkage __kprobes struct pt_regs *sync_regs(struct pt_regs *eregs)
  *
  * May run on IST stack.
  */
+DEFINE_PER_CPU(unsigned long, curr_dr6);
+EXPORT_PER_CPU_SYMBOL(curr_dr6);
+DEFINE_PER_CPU(unsigned long, curr_dr7);
+EXPORT_PER_CPU_SYMBOL(curr_dr7);
 dotraplinkage void __kprobes do_debug(struct pt_regs *regs, long error_code)
 {
 	struct task_struct *tsk = current;
 	int user_icebp = 0;
 	unsigned long dr6;
+	unsigned long dr7;
 	int si_code;
 
 	get_debugreg(dr6, 6);
+	get_debugreg(dr7, 7);
+
+        /* allow debugger int1 handlers access to the raw register values */
+        __this_cpu_write(curr_dr6, dr6);
+        __this_cpu_write(curr_dr7, dr7);
 
 	/* Filter out all the reserved bits which are preset to 1 */
 	dr6 &= ~DR6_RESERVED;
