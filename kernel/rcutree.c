@@ -995,6 +995,7 @@ static int rcu_panic(struct notifier_block *this, unsigned long ev, void *ptr)
 	rcu_cpu_stall_suppress = 1;
 	return NOTIFY_DONE;
 }
+EXPORT_SYMBOL(rcu_cpu_stall_reset);
 
 /**
  * rcu_cpu_stall_reset - prevent further stall warnings in current grace period
