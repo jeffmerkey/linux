@@ -239,7 +239,7 @@ static int print_trace_stack(char *name)
 	return 0;
 }
 
-void printk_address(unsigned long address, int reliable)
+static void printk_address(unsigned long address, int reliable)
 {
 	DBGPrint(" [<%p>] %s%pB\n",
 		(void *)address, reliable ? "" : "? ", (void *)address);
@@ -264,7 +264,7 @@ static inline int valid_stack_ptr(struct thread_info *tinfo,
 	return p > t && p < t + THREAD_SIZE - size;
 }
 
-unsigned long
+static unsigned long
 print_context(struct thread_info *tinfo,
 		unsigned long *stack, unsigned long bp,
 		unsigned long *end)
@@ -325,6 +325,7 @@ int bt_stack(struct task_struct *task, struct pt_regs *regs,
 	}
         return 0;
 }
+
 
 #if 0
 int bt_stack(struct task_struct *task, struct pt_regs *regs,
