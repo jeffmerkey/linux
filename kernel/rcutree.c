@@ -983,6 +983,7 @@ void rcu_cpu_stall_reset(void)
 	for_each_rcu_flavor(rsp)
 		rsp->jiffies_stall = jiffies + ULONG_MAX / 2;
 }
+EXPORT_SYMBOL(rcu_cpu_stall_reset);
 
 /*
  * Initialize the specified rcu_data structure's callback list to empty.
