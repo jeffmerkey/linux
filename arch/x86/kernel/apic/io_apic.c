@@ -110,6 +110,7 @@ struct mp_ioapic_gsi *mp_ioapic_gsi_routing(int ioapic_idx)
 }
 
 int nr_ioapics;
+EXPORT_SYMBOL(nr_ioapics);
 
 /* The one past the highest gsi number used */
 u32 gsi_top;
@@ -314,12 +315,13 @@ static inline void io_apic_eoi(unsigned int apic, unsigned int vector)
 	writel(vector, &io_apic->eoi);
 }
 
-static inline unsigned int io_apic_read(unsigned int apic, unsigned int reg)
+unsigned int io_apic_read(unsigned int apic, unsigned int reg)
 {
 	struct io_apic __iomem *io_apic = io_apic_base(apic);
 	writel(reg, &io_apic->index);
 	return readl(&io_apic->data);
 }
+EXPORT_SYMBOL(io_apic_read);
 
 static inline void io_apic_write(unsigned int apic, unsigned int reg, unsigned int value)
 {
