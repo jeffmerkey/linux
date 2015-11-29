@@ -375,6 +375,8 @@ int dbg_reserve_bp_slot(struct perf_event *bp)
 	return __reserve_bp_slot(bp);
 }
 
+EXPORT_SYMBOL_GPL(dbg_reserve_bp_slot);
+
 int dbg_release_bp_slot(struct perf_event *bp)
 {
 	if (mutex_is_locked(&nr_bp_mutex))
@@ -384,6 +386,7 @@ int dbg_release_bp_slot(struct perf_event *bp)
 
 	return 0;
 }
+EXPORT_SYMBOL_GPL(dbg_release_bp_slot);
 
 static int validate_hw_breakpoint(struct perf_event *bp)
 {
