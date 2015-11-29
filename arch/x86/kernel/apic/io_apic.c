@@ -127,6 +127,7 @@ struct mp_ioapic_gsi *mp_ioapic_gsi_routing(int ioapic_idx)
 }
 
 int nr_ioapics;
+EXPORT_SYMBOL(nr_ioapics);
 
 /* The one past the highest gsi number used */
 u32 gsi_top;
@@ -244,6 +245,7 @@ int __init arch_early_irq_init(void)
 
 	return 0;
 }
+EXPORT_SYMBOL(native_io_apic_read);
 
 static struct irq_cfg *irq_cfg(unsigned int irq)
 {
