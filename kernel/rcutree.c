@@ -983,6 +983,7 @@ void rcu_cpu_stall_reset(void)
 	for_each_rcu_flavor(rsp)
 		rsp->jiffies_stall = jiffies + ULONG_MAX / 2;
 }
+EXPORT_SYMBOL(rcu_cpu_stall_reset);
 
 /*
  * Update CPU-local rcu_data state to record the newly noticed grace period.
