@@ -731,13 +731,40 @@ void strip_crlf(char *p, int limit)
   
 }
 
+static ssize_t mdb_kernel_read(struct file *file, char *buf,
+			       size_t count, loff_t offset)
+{
+	mm_segment_t old_fs;
+	loff_t pos = offset;
+	ssize_t res;
+
+	old_fs = get_fs();
+	set_fs(get_ds());
+	res = vfs_read(file, (char __user *)buf, count, &pos);
+	set_fs(old_fs);
+	return res;
+}
+
+static ssize_t mdb_kernel_write(struct file *file, const char *buf, 
+			       size_t count, loff_t pos)
+{
+	mm_segment_t old_fs;
+	ssize_t res;
+
+	old_fs = get_fs();
+	set_fs(get_ds());
+	res = vfs_write(file, (const char __user *)buf, count, &pos);
+	set_fs(old_fs);
+
+	return res;
+}
+
 static int __init mdb_init_module(void)
 {
     register int i;
     register ssize_t size;
     register int ret = 0;
     struct file *filp;
-    extern ssize_t kernel_write(struct file *file, const char *buf, size_t count, loff_t pos);
 
     /* return if debugger already initialized */
     if (debuggerInitialized)
@@ -745,9 +772,9 @@ static int __init mdb_init_module(void)
     
     /* disable kgdb/kdb on module load if enabled */
     filp = filp_open("/sys/module/kgdboc/parameters/kgdboc", O_RDWR, 0);
-    if (filp)
+    if (!IS_ERR(filp))
     {
-       size = kernel_read(filp, 0, kdbstate, 39);
+       size = mdb_kernel_read(filp, kdbstate, 39, 0);
        if (size)
        {
           strip_crlf(kdbstate, 39);
@@ -755,7 +782,7 @@ static int __init mdb_init_module(void)
           printk(KERN_WARNING "MDB:  kgdb currently set to [%s], attempting to disable.\n", kdbstate);
 
           kdbstate[0] = '\0';
-          size = kernel_write(filp, kdbstate, 1, 0);
+          size = mdb_kernel_write(filp, kdbstate, 1, 0);
           if (!size)
           {
              printk(KERN_WARNING "MDB:  kgdb/kdb active, MDB set to disabled. unload/reload to retry.\n");
