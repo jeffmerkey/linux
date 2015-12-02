@@ -6995,7 +6995,7 @@ void LoadDebugRegisters(void)
             }
       }
    }
-   WriteDR7(per_cpu(SavedDR7, processor));
+   WriteDR7(per_cpu(SavedDR7, cpu));
    return;
 }
 
