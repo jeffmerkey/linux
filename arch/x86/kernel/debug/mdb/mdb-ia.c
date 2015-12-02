@@ -6153,14 +6153,8 @@ void ReadStackFrame(void *frame, StackFrame *sf, unsigned long processor)
    sf->tES = ReadES();
    sf->tFS = ReadFS();
    sf->tGS = ReadGS();
-   if (user_mode(regs)) 
-   {
-      sf->tSS = regs->ss;
-      sf->tSP = regs->sp;
-   } else {
-      sf->tSS = __KERNEL_DS;
-      sf->tSP = kernel_stack_pointer(regs);
-   }
+   sf->tSS = regs->ss;
+   sf->tSP = regs->sp;
 #endif
    return;
 }
