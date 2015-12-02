@@ -963,6 +963,7 @@ unsigned long totalLines;
 unsigned long debuggerInitialized;
 unsigned long ssbmode;
 
+DEFINE_PER_CPU(unsigned long, SavedDR7);
 DEFINE_PER_CPU(unsigned long, CurrentDR6);
 DEFINE_PER_CPU(unsigned long, BreakMask);
 DEFINE_PER_CPU(unsigned long, ProcessorHold);
@@ -6535,6 +6536,9 @@ unsigned long debugger_entry(unsigned long Exception, StackFrame *stackFrame,
 #if defined(CONFIG_MDB_DIRECT_MODE)
     WriteDR7(0);  /* disable breakpoints while debugger is running */
     per_cpu(CurrentDR6, processor) = __this_cpu_read(curr_dr6);
+#else
+    per_cpu(SavedDR7, processor) = ReadDR7();
+    WriteDR7(0);  /* disable breakpoints while debugger is running */
 #endif
 
 MDBLoop:;
@@ -6992,7 +6996,7 @@ void LoadDebugRegisters(void)
             }
       }
    }
-
+   WriteDR7(per_cpu(SavedDR7, cpu))
    return;
 }
 
