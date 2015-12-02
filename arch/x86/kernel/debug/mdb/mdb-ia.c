@@ -6538,8 +6538,8 @@ unsigned long debugger_entry(unsigned long Exception, StackFrame *stackFrame,
 
     per_cpu(ProcessorState, processor) = PROCESSOR_DEBUG;
 
-#if defined(CONFIG_MDB_DIRECT_MODE)
     WriteDR7(0);  /* disable breakpoints while debugger is running */
+#if defined(CONFIG_MDB_DIRECT_MODE)
     per_cpu(CurrentDR6, processor) = __this_cpu_read(curr_dr6);
 #endif
 
