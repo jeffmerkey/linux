@@ -6545,6 +6545,8 @@ MDBLoop:;
     switch (Exception)
     {
           case 1:/* int 1 debug exception */
+            if (current->thread.debugreg6 & DR_STEP)
+		current->thread.debugreg6 &= ~DR_STEP;
 	    if (per_cpu(BreakMask, processor))
 	    {
 	       stackFrame->tSystemFlags &= ~SINGLE_STEP;
