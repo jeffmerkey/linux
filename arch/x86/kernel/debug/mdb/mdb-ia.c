@@ -6959,6 +6959,7 @@ void LoadDebugRegisters(void)
 {
    register int i;
    int cpu = raw_smp_processor_id();
+   extern void hw_breakpoint_enable(void);
 
    per_cpu(CurrentDR6, cpu) = 0;
    for (i=0; i < HBP_NUM; i++) {
@@ -6999,7 +7000,7 @@ void LoadDebugRegisters(void)
             }
       }
    }
-   hw_breakpoint_restore();
+   hw_breakpoint_enable();
    return;
 }
 
