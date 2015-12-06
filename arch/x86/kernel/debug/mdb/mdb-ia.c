@@ -6971,6 +6971,10 @@ void LoadDebugRegisters(void)
 		int val;
 
 		bp = *per_cpu_ptr(breakinfo[i].pev, cpu);
+	        if (!bp->attr.disabled) {
+	           arch_uninstall_hw_breakpoint(bp);
+	           bp->attr.disabled = 1;
+                }
 		info = counter_arch_bp(bp);
 		if (bp->attr.disabled == 1)
                 {
