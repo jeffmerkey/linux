@@ -445,6 +445,16 @@ void hw_breakpoint_restore(void)
 }
 EXPORT_SYMBOL_GPL(hw_breakpoint_restore);
 
+void hw_breakpoint_enable(void)
+{
+	set_debugreg(__this_cpu_read(cpu_debugreg[0]), 0);
+	set_debugreg(__this_cpu_read(cpu_debugreg[1]), 1);
+	set_debugreg(__this_cpu_read(cpu_debugreg[2]), 2);
+	set_debugreg(__this_cpu_read(cpu_debugreg[3]), 3);
+	set_debugreg(__this_cpu_read(cpu_dr7), 7);
+}
+EXPORT_SYMBOL_GPL(hw_breakpoint_enable);
+
 /*
  * Handle debug exception notifications.
  *
