@@ -382,21 +382,13 @@ int nextline;
 int pause_mode = 1;
 int mdb_suppress_crlf;
 
-#if defined(CONFIG_SMP)
 rlock_t mdb_mutex = { -1, 0 };
 DEFINE_SPINLOCK(mdb_lock);
-#else
-rlock_t mdb_mutex = { -1, 0 };
-#endif
 
 extern unsigned long debug_rlock(spinlock_t *lock, rlock_t *rlock, unsigned long p);
 extern void debug_unrlock(spinlock_t *lock, rlock_t *rlock, unsigned long p);
-#ifdef CONFIG_MDB_CONSOLE_REDIRECTION
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33)
+#if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
 extern int vt_kmsg_redirect(int console);
-#else
-extern int kmsg_redirect;
-#endif
 #endif
 
 char mdb_buffer[256];
@@ -407,23 +399,13 @@ int mdb_printf(char *fmt, ...)
 {
 	va_list	ap;
 	struct console *con;
-#ifdef CONFIG_MDB_CONSOLE_REDIRECTION
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33)
-#else
-       int kmsg_redirect_save;
-#endif
-#endif
+
 	debug_rlock(&mdb_lock, &mdb_mutex, get_processor_id());
 
-#ifdef CONFIG_MDB_CONSOLE_REDIRECTION
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33)
+#if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
         consolestate = vt_kmsg_redirect(-1);
         if (consolestate)
            consolestate = vt_kmsg_redirect(0);
-#else
-        kmsg_redirect_save = kmsg_redirect;
-        kmsg_redirect = 0;
-#endif
 #endif
 	va_start(ap, fmt);
 	vsprintf(mdb_buffer, fmt, ap);
@@ -492,28 +474,22 @@ int mdb_printf(char *fmt, ...)
            {
               nextline = 0;
 
-#ifdef CONFIG_MDB_CONSOLE_REDIRECTION
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33)
+#if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
               if (consolestate)
                  vt_kmsg_redirect(consolestate);
-#else
-              kmsg_redirect = kmsg_redirect_save;
 #endif
-#endif
+
 	      debug_unrlock(&mdb_lock, &mdb_mutex, get_processor_id());
               return 1;
            }
 
 	}
 
-#ifdef CONFIG_MDB_CONSOLE_REDIRECTION
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 33)
+#if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
         if (consolestate)
            vt_kmsg_redirect(consolestate);
-#else
-        kmsg_redirect = kmsg_redirect_save;
 #endif
-#endif
+
 	debug_unrlock(&mdb_lock, &mdb_mutex, get_processor_id());
         return 0;
 }
@@ -564,8 +540,7 @@ int get_modem_char(void)
     return -1;
 }
 
-#if defined(CONFIG_MDB_MODULE)
-u_short plain_map[NR_KEYS] = {
+u_short m_plain_map[NR_KEYS] = {
 	0xf200,	0xf01b,	0xf031,	0xf032,	0xf033,	0xf034,	0xf035,	0xf036,
 	0xf037,	0xf038,	0xf039,	0xf030,	0xf02d,	0xf03d,	0xf07f,	0xf009,
 	0xfb71,	0xfb77,	0xfb65,	0xfb72,	0xfb74,	0xfb79,	0xfb75,	0xfb69,
@@ -584,7 +559,7 @@ u_short plain_map[NR_KEYS] = {
 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
 };
 
-u_short shift_map[NR_KEYS] = {
+u_short m_shift_map[NR_KEYS] = {
 	0xf200,	0xf01b,	0xf021,	0xf040,	0xf023,	0xf024,	0xf025,	0xf05e,
 	0xf026,	0xf02a,	0xf028,	0xf029,	0xf05f,	0xf02b,	0xf07f,	0xf009,
 	0xfb51,	0xfb57,	0xfb45,	0xfb52,	0xfb54,	0xfb59,	0xfb55,	0xfb49,
@@ -603,7 +578,7 @@ u_short shift_map[NR_KEYS] = {
 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
 };
 
-u_short ctrl_map[NR_KEYS] = {
+u_short m_ctrl_map[NR_KEYS] = {
 	0xf200,	0xf200,	0xf200,	0xf000,	0xf01b,	0xf01c,	0xf01d,	0xf01e,
 	0xf01f,	0xf07f,	0xf200,	0xf200,	0xf01f,	0xf200,	0xf008,	0xf200,
 	0xf011,	0xf017,	0xf005,	0xf012,	0xf014,	0xf019,	0xf015,	0xf009,
@@ -621,7 +596,6 @@ u_short ctrl_map[NR_KEYS] = {
 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
 };
-#endif
 
 static int get_kbd_char(void)
 {
@@ -630,9 +604,6 @@ static int get_kbd_char(void)
 	static int shift_key;	/* Shift next keypress */
 	static int ctrl_key;
 	u_short keychar;
-#if !defined(CONFIG_MDB_MODULE)
-        extern u_short plain_map[], shift_map[], ctrl_map[];
-#endif
 
 	if ((inb(KBD_STATUS_REG) & KBD_STAT_OBF) == 0)
 		return -1;
@@ -721,11 +692,11 @@ static int get_kbd_char(void)
 	}
 
 	if (!shift_lock && !shift_key && !ctrl_key) {
-		keychar = plain_map[scancode];
+		keychar = m_plain_map[scancode];
 	} else if (shift_lock || shift_key) {
-		keychar = shift_map[scancode];
+		keychar = m_shift_map[scancode];
 	} else if (ctrl_key) {
-		keychar = ctrl_map[scancode];
+		keychar = m_ctrl_map[scancode];
 	} else {
 		keychar = 0x0020;
 		DBGPrint("Unknown state/scancode (%d)\n", scancode);
