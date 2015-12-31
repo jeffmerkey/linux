@@ -164,12 +164,8 @@ unsigned char irq_control[MAX_PICS] = { PIC_0, PIC_1, PIC_2 };
 unsigned char irq_mask[MAX_PICS] = { MASK_0, MASK_1, MASK_2 };
 unsigned char mask_value[MAX_PICS] = { 0xF8, 0xFF, 0xFF };
 
-#if defined(CONFIG_SMP)
 rlock_t debug_mutex = { -1, 0 };
 DEFINE_SPINLOCK(debuglock);
-#else
-rlock_t debug_mutex = { -1, 0 };
-#endif
 
 atomic_t focusActive;  /* cpus is focus */
 atomic_t debuggerActive;  /* cpus in the debugger */
@@ -1148,8 +1144,8 @@ void MDBInitializeDebugger(void)
 #if defined(CONFIG_SMP) && !defined(CONFIG_X86_ELAN)
    AddDebuggerCommandParser(&APIC_PE);
    AddDebuggerCommandParser(&IOAPIC_PE);
-#endif
    AddDebuggerCommandParser(&PERCPU_PE);
+#endif
    AddDebuggerCommandParser(&GDTPE);
    AddDebuggerCommandParser(&IDTPE);
    AddDebuggerCommandParser(&EvaluatePE);
