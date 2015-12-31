@@ -3625,8 +3625,9 @@ static unsigned long mod_find_symname(struct module *mod, const char *name)
 int mdb_modules(char *str, int (*print)(char *s, ...))
 {
 	struct module *mod;
+#ifdef CONFIG_MODULE_UNLOAD
 	struct module_use *use;
-
+#endif
         if (!print)
            return 0;
 
@@ -3637,17 +3638,22 @@ int mdb_modules(char *str, int (*print)(char *s, ...))
 
 	   print(" 0x%08p ", mod->module_core);
 	   print("%s", mod->name);
+#ifdef CONFIG_MODULE_UNLOAD
 	   print(" %lu %02u ", mod->init_size + mod->core_size,
                  module_refcount(mod));
+#else
+	   print(" %lu ", mod->init_size + mod->core_size);
+#endif
 
+#ifdef CONFIG_MODULE_UNLOAD
 	   list_for_each_entry(use, &mod->source_list, source_list) 
 	      print("%s,", use->source->name);
-
 	   if (mod->init != NULL && mod->exit == NULL)
 	      print("[permanent],");
 	   print(" %s ", mod->state == MODULE_STATE_GOING ? "Unloading":
 	                mod->state == MODULE_STATE_COMING ? "Loading":
 		        "Live");
+#endif
 	   if (print("\n"))
               return 1;
 	}
