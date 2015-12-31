@@ -51,6 +51,7 @@
 #include <linux/input.h>
 #include <linux/uaccess.h>
 #include <linux/nmi.h>
+#include <linux/clocksource.h>
 #include <asm/nmi.h>
 
 #if defined(CONFIG_SMP)
