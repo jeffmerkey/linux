@@ -533,7 +533,7 @@ unsigned char *kdebug_state[]=
     "DIE_PAGE_FAULT",
     "DIE_NMIUNKNOWN",
 };
-int kdebug_state_size = sizeof(kdebug_state) / sizeof(unsigned char *);
+int kdebug_state_size = ARRAY_SIZE(kdebug_state);
 #endif
 
 unsigned char kdbstate[40];
