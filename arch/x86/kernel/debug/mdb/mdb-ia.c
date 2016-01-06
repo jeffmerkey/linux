@@ -122,7 +122,7 @@ unsigned char *ExceptionDescription[]={
    "Directed NMI Breakpoint",        /*  21 */
    "Panic"                           /*  22 */
 };
-unsigned long exceptions = (sizeof(ExceptionDescription) / sizeof(unsigned char *));
+unsigned long exceptions = ARRAY_SIZE(ExceptionDescription);
 
 unsigned char char32spc[] = { "xxxúxxxúxxxúxxxùxxxúxxxúxxxúxxx " };
 unsigned char flset[] = { "VMRF  NT    OFDNIETFMIZR  AC  PE  CY" };
@@ -1979,7 +1979,7 @@ void DisplayNPXRegisters(StackFrame *stackFrame)
      save_npx(npx);
 
      tos = (npx->status >> 11) & 7;
-     if (tos) {};
+     if (tos) {}
 
      DBGPrint("Control: 0x%04X  Status: 0x%04X  Tag: 0x%04X  TOS: %i CPU: %i\n",
 	       (unsigned)npx->control & 0xFFFF,
@@ -2004,7 +2004,7 @@ void DisplayNPXRegisters(StackFrame *stackFrame)
 		 (unsigned)npx->reg[i].sig0,
 		 (unsigned)npx->reg[i].exponent);
 
-	 if (tos) {};
+	 if (tos) {}
 	 tag = (npx->tag >> (((i + tos) % 8) * 2)) & 3;
 	 switch (tag)
 	 {
@@ -5947,7 +5947,7 @@ void DisplayControlRegisters(unsigned long processor, StackFrame *stackFrame)
 
     unsigned char GDTR[16], IDTR[16];
 
-    if (stackFrame) {};
+    if (stackFrame) {}
 
 #ifdef CONFIG_X86_64
     DBGPrint("CR0: %016lX ", ReadCR0());
