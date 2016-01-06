@@ -709,7 +709,7 @@ unsigned long GetValueFromToken(unsigned char *symbol, StackFrame *stackFrame,
        *retCode = -1;
 
     len = strlen(symbol);
-    for (i = 0; len && i < ARRAY_SIZE(stackframeSymbols); 
+    for (i = 0; len && i < (sizeof(stackframeSymbols) / sizeof(struct stackframe_symbols)); 
          i++) 
     {
        if ((len == stackframeSymbols[i].symbol_len) && 
@@ -2377,7 +2377,7 @@ evaluate_error_exit:
      if (type)
 	*type = INVALID_EXPRESSION;
 
-     if (lastToken) {}
+     if (lastToken) {};
 
 #ifdef MDB_ATOMIC
      spin_unlock_irqrestore(&expressLock, flags);
