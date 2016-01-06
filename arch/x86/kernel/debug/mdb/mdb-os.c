@@ -771,7 +771,7 @@ static int get_kbd_char(void)
 		}
 
                 /* enter-release error */
-		if (scancode != 0x9c) {} ;
+		if (scancode != 0x9c) {}
 
                 if (!mdb_suppress_crlf)
 		   DBGPrint("\n");
