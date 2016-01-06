@@ -1989,7 +1989,7 @@ unsigned long SearchMemoryW(unsigned char *cmd,
      unsigned char *changeBuffer = s_changeBuffer;
      unsigned short *searchBuffer = w_searchBuffer;
      unsigned short *copyBuffer = w_copyBuffer;
-     unsigned long maxlen = ARRAY_SIZE(w_searchBuffer);
+     unsigned long maxlen = sizeof(w_searchBuffer) / sizeof(unsigned short);
      register unsigned short *changeW;
      unsigned char *pB;
      register unsigned long address, r, value, count, len, i;
@@ -2065,7 +2065,7 @@ unsigned long SearchMemoryW(unsigned char *cmd,
                      (unsigned *)address)) return 1;
 		 if (dumpWordSearchResults((unsigned char *)address, 4))
                      return 1;
-		 if (DBGPrint("searching\n")) return 1;
+		 if (DBGPrint("searching\n")) return 1;;
 	      }
 	      address++;
 	      if (!(address % 0x100000))
@@ -2097,7 +2097,7 @@ unsigned long SearchMemoryD(unsigned char *cmd,
      register unsigned char *changeBuffer = s_changeBuffer;
      register unsigned long *searchBuffer = d_searchBuffer;
      register unsigned long *copyBuffer = d_copyBuffer;
-     register unsigned long maxlen = ARRAY_SIZE(d_searchBuffer);
+     register unsigned long maxlen = sizeof(d_searchBuffer) / sizeof(unsigned long);
      register unsigned long *changeD;
      unsigned char *pB;
      register unsigned long address, r, value, count, len, i;
