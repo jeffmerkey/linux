@@ -537,7 +537,7 @@ int kdebug_state_size = ARRAY_SIZE(kdebug_state);
 #endif
 
 unsigned char kdbstate[40];
-atomic_t kgdb_active;
+atomic_t kgdb_detected;
 static int debug_previous_nmi[NR_CPUS];
 
 static int mdb_notify(struct notifier_block *nb, unsigned long reason,
@@ -548,7 +548,7 @@ static int mdb_notify(struct notifier_block *nb, unsigned long reason,
     register int err = 0;
     register unsigned long processor = get_processor_id();
 
-    if (atomic_read(&kgdb_active))
+    if (atomic_read(&kgdb_detected))
        return NOTIFY_DONE;
 
     // flush the tlb in case we are inside of a memory remap routine 
@@ -767,7 +767,7 @@ static int __init mdb_init_module(void)
           if (!size)
           {
              printk(KERN_WARNING "MDB:  kgdb/kdb active, MDB set to disabled. unload/reload to retry.\n");
-             atomic_inc(&kgdb_active);
+             atomic_inc(&kgdb_detected);
           }
           else 
              printk(KERN_WARNING "MDB:  kgdb/kdb set to disabled. MDB is enabled.\n");
