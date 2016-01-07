@@ -537,7 +537,7 @@ int kdebug_state_size = ARRAY_SIZE(kdebug_state);
 #endif
 
 unsigned char kdbstate[40];
-atomic_t kgdb_detected;
+static atomic_t kgdb_detected;
 
 static int mdb_notify(struct notifier_block *nb, unsigned long reason,
                       void *data)
