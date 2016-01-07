@@ -76,12 +76,11 @@
 extern void MDBInitializeDebugger(void);
 extern void MDBClearDebuggerState(void);
 
-unsigned long TotalSystemMemory;
-unsigned long HistoryPointer;
-unsigned char HistoryBuffer[16][256];
+static unsigned long HistoryPointer;
+static unsigned char HistoryBuffer[16][256];
                               /* remember non-repeating commands */
 unsigned char delim_table[256];
-unsigned char workBuffer[256];
+static unsigned char workBuffer[256];
 unsigned char verbBuffer[100];
 
 atomic_t inmdb = { 0 };
@@ -93,7 +92,7 @@ static inline void set_delimiter(unsigned char c)
     delim_table[c & 0xFF] = 1;  
 }
 
-void SaveLastCommandInfo(unsigned long processor)
+static void SaveLastCommandInfo(unsigned long processor)
 {
     register int i;
 
@@ -536,7 +535,7 @@ unsigned char *kdebug_state[]=
 int kdebug_state_size = ARRAY_SIZE(kdebug_state);
 #endif
 
-unsigned char kdbstate[40];
+static unsigned char kdbstate[40];
 static atomic_t kgdb_detected;
 
 static int mdb_notify(struct notifier_block *nb, unsigned long reason,
@@ -720,7 +719,7 @@ static struct sysrq_key_op sysrq_op =
 extern int disable_hw_bp_interface;
 #endif
 
-void strip_crlf(char *p, int limit)
+static inline void strip_crlf(char *p, int limit)
 {
    while (*p && limit)
    {
