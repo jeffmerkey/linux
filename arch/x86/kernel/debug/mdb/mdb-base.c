@@ -1085,12 +1085,12 @@ unsigned long dumpDoubleSearchResults(unsigned char *p, unsigned long count)
 {
 
    register int i, r;
-   unsigned long *lp;
+   uint32_t *lp;
    unsigned char *symbolName;
    unsigned char *moduleName;
    unsigned char ch;
 
-   lp = (unsigned long *) p;
+   lp = (uint32_t *) p;
 
    for (r = 0; r < count; r++)
    {
@@ -1126,7 +1126,7 @@ unsigned long dumpDoubleSearchResults(unsigned char *p, unsigned long count)
       if (DBGPrint("\n")) return 1;
 
       p = (void *)((unsigned long) p + (unsigned long) 16);
-      lp = (unsigned long *) p;
+      lp = (uint32_t *) p;
    }
 
    return 0;
@@ -1188,12 +1188,12 @@ unsigned char *dumpDouble(unsigned char *p, unsigned long count, unsigned long p
 {
 
    register int i, r;
-   unsigned long *lp;
+   uint32_t *lp;
    unsigned char *symbolName;
    unsigned char *moduleName;
    unsigned char ch;
 
-   lp = (unsigned long *) p;
+   lp = (uint32_t *) p;
 
    for (r = 0; r < count; r++)
    {
@@ -1229,7 +1229,7 @@ unsigned char *dumpDouble(unsigned char *p, unsigned long count, unsigned long p
       DBGPrint("\n");
 
       p = (void *)((unsigned long) p + (unsigned long) 16);
-      lp = (unsigned long *) p;
+      lp = (uint32_t *) p;
    }
 
    return p;
@@ -1314,10 +1314,10 @@ unsigned char *dumpDoubleStack(StackFrame *stackFrame, unsigned char *p, unsigne
 {
 
    register int i, r;
-   unsigned long *lp;
+   uint32_t *lp;
    unsigned char ch;
 
-   lp = (unsigned long *) p;
+   lp = (uint32_t *) p;
 
    DBGPrint("Stack = %04lX:%p\n",
             (unsigned long)GetStackSegment(stackFrame), p);
@@ -1341,7 +1341,7 @@ unsigned char *dumpDoubleStack(StackFrame *stackFrame, unsigned char *p, unsigne
       DBGPrint("\n");
 
       p = (void *)((unsigned long) p + (unsigned long) 16);
-      lp = (unsigned long *) p;
+      lp = (uint32_t *) p;
    }
 
    return p;
