@@ -428,6 +428,9 @@ extern unsigned char delim_table[256];
 
 static unsigned long token_stackframe_value(StackFrame *stackFrame, unsigned long type)
 {
+	if (!stackFrame)
+	   return 0;
+
 	switch (type) {
 		case PF_TOKEN:
 		    return stackFrame->tSystemFlags & PF_FLAG;
@@ -707,6 +710,9 @@ unsigned long GetValueFromToken(unsigned char *symbol, StackFrame *stackFrame,
 
     if (retCode)
        *retCode = -1;
+
+	if (!stackFrame)
+	   return 0;
 
     len = strlen(symbol);
     for (i = 0; len && i < ARRAY_SIZE(stackframeSymbols); 
