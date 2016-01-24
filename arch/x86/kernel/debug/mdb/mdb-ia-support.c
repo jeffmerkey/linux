@@ -1837,9 +1837,9 @@ static const struct dis386 x86_64_table[][2] = {
 };
 
 #ifdef	__KERNEL__
-#define INTERNAL_DISASSEMBLER_ERROR "<internal disassembler error>"
+#define INTERNAL_DISASSEMBLER_ERROR "<???>"
 #else	/* __KERNEL__ */
-#define INTERNAL_DISASSEMBLER_ERROR _("<internal disassembler error>")
+#define INTERNAL_DISASSEMBLER_ERROR _("<???>")
 #endif	/* __KERNEL__ */
 
 static void
@@ -2010,7 +2010,7 @@ prefix_name (int pref, int sizeflag)
     }
 }
 
-static char op1out[100], op2out[100], op3out[100];
+static char op1out[256], op2out[256], op3out[256];
 static int op_ad, op_index[3];
 static int two_source_ops;
 static bfd_vma op_address[3];
@@ -2260,6 +2260,18 @@ static inline void evaluate_expression(int bytemode, int sizeflag,
 
 	// QWORD PTR
 	case branch_v_mode:
+	  if (mode_64bit)
+		sz = 8;
+	  // DWORD PTR
+	  else if (sizeflag & DFLAG)
+		sz = 4;
+	  // WORD PTR
+	  else
+		sz = 2;
+	  used_prefixes |= (prefixes & PREFIX_DATA);
+	  break;
+
+	/*case branch_v_mode:*/
 	case v_mode:
 	case dq_mode:
 	  USED_REX (REX_MODE64);
@@ -2412,6 +2424,18 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
 
 	// QWORD PTR
 	case branch_v_mode:
+	  if (mode_64bit)
+		sz = 8;
+	  // DWORD PTR
+	  else if (sizeflag & DFLAG)
+		sz = 4;
+	  // WORD PTR
+	  else
+		sz = 2;
+	  used_prefixes |= (prefixes & PREFIX_DATA);
+	  break;
+
+	/*case branch_v_mode:*/
 	case v_mode:
 	case dq_mode:
 	  USED_REX (REX_MODE64);
@@ -2901,12 +2925,19 @@ print_insn (bfd_vma pc, disassemble_info *info,
      order as the intel book; everything else is printed in reverse order.  */
   if (intel_syntax || two_source_ops)
     {
+	int riprel;
+
       first = op1out;
       second = op2out;
       third = op3out;
+
       op_ad = op_index[0];
       op_index[0] = op_index[2];
       op_index[2] = op_ad;
+
+		riprel = op_riprel[0];
+		op_riprel[0] = op_riprel[2];
+		op_riprel[2] = riprel;
     }
   else
     {
@@ -2957,6 +2988,7 @@ print_insn (bfd_vma pc, disassemble_info *info,
       else
 	(*info->fprintf_func) (info->stream, "%s", third);
     }
+/*
   for (i = 0; i < 3; i++)
     if (op_index[i] != -1 && op_riprel[i])
       {
@@ -2964,6 +2996,7 @@ print_insn (bfd_vma pc, disassemble_info *info,
 	(*info->print_address_func) ((bfd_vma) (start_pc + codep - start_codep
 						+ op_address[op_index[i]]), info);
       }
+*/
   return codep - priv.the_buffer;
 }
 
@@ -3871,17 +3904,50 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	  break;
 	}
 
-      if (!intel_syntax)
+	if (!intel_syntax)
+	{
+	  if (mod != 0 || (base & 7) == 5)
+	  {
+	    if (riprel)
+	    {
+		set_op (disp, 1);
+		if (!evaluate_address_expression(bytemode, sizeflag,
+	               start_pc + codep - start_codep + op_address[op_index[op_ad]],
+			0, stackFrame, NULL))
+			{
+	           print_operand_value (scratchbuf, 1, disp);
+	           oappend (scratchbuf);
+		     oappend ("(%rip)");
+	        }
+		}
+		else
+		{
+	           print_operand_value (scratchbuf, 1, disp);
+	           oappend (scratchbuf);
+		}
+	  }
+	}
+
+
+      if (intel_syntax)
+      {
 	if (mod != 0 || (base & 7) == 5)
 	  {
-	    print_operand_value (scratchbuf, !riprel, disp);
-	    oappend (scratchbuf);
 	    if (riprel)
-	      {
+	    {
 		set_op (disp, 1);
-		oappend ("(%rip)");
-	      }
-	  }
+		if (!evaluate_address_expression(bytemode, sizeflag,
+	               start_pc + codep - start_codep + op_address[op_index[op_ad]],
+			 0, stackFrame, NULL))
+			{
+		   oappend ("[rip+");
+	           print_operand_value (scratchbuf, 1, disp);
+	           oappend (scratchbuf);
+		   oappend ("]");
+			}
+			}
+		}
+	}
 
       if (havebase || (havesib && (index != 4 || scale != 0)))
 	{
@@ -3897,6 +3963,15 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 		  oappend ("WORD PTR ");
 		  break;
 		case branch_v_mode:
+		if (mode_64bit)
+		    oappend ("QWORD PTR ");
+		  else if (sizeflag & DFLAG)
+		    oappend ("DWORD PTR ");
+		  else
+		    oappend ("WORD PTR ");
+		  used_prefixes |= (prefixes & PREFIX_DATA);
+		  break;
+		/*case branch_v_mode:*/
 		case v_mode:
 		case dq_mode:
 		  USED_REX (REX_MODE64);
@@ -3943,8 +4018,6 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
           // begin dereference
           deref = obufp;
 	  *obufp++ = open_char;
-	  if (intel_syntax && riprel)
-	    oappend ("rip + ");
 	  *obufp = '\0';
 	  if (havebase)
           {
@@ -4008,7 +4081,9 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
       else if (intel_syntax)
 	{
 	  if (mod != 0 || (base & 7) == 5)
-	    {
+	  {
+		if (!riprel)
+		{
 #ifdef MDB_ENHANCEMENTS
 	      if (prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
 			      | PREFIX_ES | PREFIX_FS | PREFIX_GS))
@@ -4043,6 +4118,7 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	      oappend (scratchbuf);
 #endif
 	    }
+	  }
 	}
     }
   else
