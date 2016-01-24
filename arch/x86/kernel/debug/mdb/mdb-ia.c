@@ -94,7 +94,7 @@ unsigned char *BreakDescription[]=
 };
 
 unsigned char *BreakLengthDescription[]={
-   ": 1 BYTE",  ": 2 BYTE",  ": ??????",  ": 4 BYTE",
+   ": 1 BYTE",  ": 2 BYTE",  ": 8 BYTE",  ": 4 BYTE",
 };
 
 unsigned char *ExceptionDescription[]={
