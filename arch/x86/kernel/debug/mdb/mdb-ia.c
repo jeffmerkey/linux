@@ -1748,6 +1748,9 @@ unsigned long nmiProcessor(unsigned char *cmd,
 
 /* LR */
 
+extern int bt_stack(struct task_struct *task, struct pt_regs *regs,
+	            unsigned long *stack);
+
 unsigned long listProcessorFrame(unsigned char *cmd,
 			StackFrame *stackFrame, unsigned long Exception,
 			DEBUGGER_PARSER *parser)
@@ -1761,9 +1764,13 @@ unsigned long listProcessorFrame(unsigned char *cmd,
      pnum = EvaluateExpression(stackFrame, &cmd, &valid);
      if (valid && (pnum < MAX_PROCESSORS) && (cpu_online(pnum)))
      {
+        StackFrame *listFrame = (StackFrame *)&per_cpu(CurrentStackFrame, pnum);
+
 	DBGPrint("Processor Frame %d -> (%lX)\n", pnum,
                  &per_cpu(CurrentStackFrame, pnum));
-	DisplayTSS((StackFrame *)&per_cpu(CurrentStackFrame, pnum));
+	DisplayTSS(listFrame);
+        DisplayClosestSymbol(listFrame->tIP);
+        bt_stack(NULL, NULL, (unsigned long *)listFrame->tSP);
      }
      else
 	DBGPrint("invalid processor frame\n");
