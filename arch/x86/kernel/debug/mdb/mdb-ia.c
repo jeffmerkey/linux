@@ -2530,7 +2530,7 @@ unsigned long ChangeRAXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tAX = value;
-	DBGPrint("RAX changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("RAX changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2555,7 +2555,7 @@ unsigned long ChangeORIGRAXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tReserved[1] = value;
-	DBGPrint("ORIGRAX changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("ORIGRAX changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2586,7 +2586,7 @@ unsigned long ChangeRBXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tBX = value;
-	DBGPrint("RBX changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("RBX changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2616,7 +2616,7 @@ unsigned long ChangeRCXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tCX = value;
-	DBGPrint("RCX changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("RCX changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2647,7 +2647,7 @@ unsigned long ChangeRDXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tDX = value;
-	DBGPrint("RDX changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("RDX changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2677,7 +2677,7 @@ unsigned long ChangeRSIRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tSI = value;
-	DBGPrint("RSI changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("RSI changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2708,7 +2708,7 @@ unsigned long ChangeRDIRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tDI = value;
-	DBGPrint("RDI changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("RDI changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2739,7 +2739,7 @@ unsigned long ChangeRBPRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tBP = value;
-	DBGPrint("RBP changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("RBP changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2770,7 +2770,7 @@ unsigned long ChangeRSPRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tSP = value;
-	DBGPrint("RSP changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("RSP changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2801,7 +2801,7 @@ unsigned long ChangeRIPRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tIP = value;
-	DBGPrint("RIP changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("RIP changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2831,7 +2831,7 @@ unsigned long ChangeR8Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r8 = value;
-	DBGPrint("R8 changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("R8 changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2861,7 +2861,7 @@ unsigned long ChangeR9Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r9 = value;
-	DBGPrint("R9 changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("R9 changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2891,7 +2891,7 @@ unsigned long ChangeR10Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r10 = value;
-	DBGPrint("R10 changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("R10 changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2921,7 +2921,7 @@ unsigned long ChangeR11Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r11 = value;
-	DBGPrint("R11 changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("R11 changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2951,7 +2951,7 @@ unsigned long ChangeR12Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r12 = value;
-	DBGPrint("R12 changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("R12 changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2981,7 +2981,7 @@ unsigned long ChangeR13Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r13 = value;
-	DBGPrint("R13 changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("R13 changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -3011,7 +3011,7 @@ unsigned long ChangeR14Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r14 = value;
-	DBGPrint("R14 changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("R14 changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -3041,7 +3041,7 @@ unsigned long ChangeR15Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r15 = value;
-	DBGPrint("R15 changed to 0x%lX\n", (unsigned)value);
+	DBGPrint("R15 changed to 0x%llX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
