@@ -1761,7 +1761,7 @@ unsigned long listProcessorFrame(unsigned char *cmd,
      pnum = EvaluateExpression(stackFrame, &cmd, &valid);
      if (valid && (pnum < MAX_PROCESSORS) && (cpu_online(pnum)))
      {
-	DBGPrint("Processor Frame %d -> (%X)\n", pnum,
+	DBGPrint("Processor Frame %d -> (%lX)\n", pnum,
                  &per_cpu(CurrentStackFrame, pnum));
 	DisplayTSS((StackFrame *)&per_cpu(CurrentStackFrame, pnum));
      }
@@ -2108,7 +2108,7 @@ unsigned long ChangeORIGEAXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tReserved[1] = value;
-	DBGPrint("ORIGEAX changed to 0x%X\n", (unsigned)value);
+	DBGPrint("ORIGEAX changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2142,19 +2142,19 @@ unsigned long ChangeEAXRegister(unsigned char *cmd,
            case 0:
               stackFrame->tAX &= ~0xFFFFFFFF;
 	      stackFrame->tAX |= value & 0xFFFFFFFF;
-	      DBGPrint("EAX changed to 0x%X\n", (unsigned)value);
+	      DBGPrint("EAX changed to 0x%lX\n", (unsigned)value);
               break;
 
            case 1:
               stackFrame->tAX &= ~0xFFFF;
 	      stackFrame->tAX |= value & 0xFFFF;
-	      DBGPrint("AX changed to 0x%X\n", (unsigned)value);
+	      DBGPrint("AX changed to 0x%lX\n", (unsigned)value);
               break;
 
            case 2:
               stackFrame->tAX &= ~0xFF;
 	      stackFrame->tAX |= value & 0xFF;
-	      DBGPrint("AL changed to 0x%X\n", (unsigned)value);
+	      DBGPrint("AL changed to 0x%lX\n", (unsigned)value);
               break;
 
            default:
@@ -2201,19 +2201,19 @@ unsigned long ChangeEBXRegister(unsigned char *cmd,
            case 0:
               stackFrame->tBX &= ~0xFFFFFFFF;
 	      stackFrame->tBX |= value & 0xFFFFFFFF;
-	      DBGPrint("EBX changed to 0x%X\n", (unsigned)value);
+	      DBGPrint("EBX changed to 0x%lX\n", (unsigned)value);
               break;
 
            case 1:
               stackFrame->tBX &= ~0xFFFF;
 	      stackFrame->tBX |= value & 0xFFFF;
-	      DBGPrint("BX changed to 0x%X\n", (unsigned)value);
+	      DBGPrint("BX changed to 0x%lX\n", (unsigned)value);
               break;
 
            case 2:
               stackFrame->tBX &= ~0xFF;
 	      stackFrame->tBX |= value & 0xFF;
-	      DBGPrint("BL changed to 0x%X\n", (unsigned)value);
+	      DBGPrint("BL changed to 0x%lX\n", (unsigned)value);
               break;
 
            default:
@@ -2258,19 +2258,19 @@ unsigned long ChangeECXRegister(unsigned char *cmd,
            case 0:
               stackFrame->tCX &= ~0xFFFFFFFF;
 	      stackFrame->tCX |= value & 0xFFFFFFFF;
-	      DBGPrint("ECX changed to 0x%X\n", (unsigned)value);
+	      DBGPrint("ECX changed to 0x%lX\n", (unsigned)value);
               break;
 
            case 1:
               stackFrame->tCX &= ~0xFFFF;
 	      stackFrame->tCX |= value & 0xFFFF;
-	      DBGPrint("CX changed to 0x%X\n", (unsigned)value);
+	      DBGPrint("CX changed to 0x%lX\n", (unsigned)value);
               break;
 
            case 2:
               stackFrame->tCX &= ~0xFF;
 	      stackFrame->tCX |= value & 0xFF;
-	      DBGPrint("CL changed to 0x%X\n", (unsigned)value);
+	      DBGPrint("CL changed to 0x%lX\n", (unsigned)value);
               break;
 
            default:
@@ -2316,19 +2316,19 @@ unsigned long ChangeEDXRegister(unsigned char *cmd,
            case 0:
               stackFrame->tDX &= ~0xFFFFFFFF;
 	      stackFrame->tDX |= value & 0xFFFFFFFF;
-              DBGPrint("EDX changed to 0x%X\n", (unsigned)value);
+              DBGPrint("EDX changed to 0x%lX\n", (unsigned)value);
               break;
 
            case 1:
               stackFrame->tDX &= ~0xFFFF;
 	      stackFrame->tDX |= value & 0xFFFF;
-              DBGPrint("DX changed to 0x%X\n", (unsigned)value);
+              DBGPrint("DX changed to 0x%lX\n", (unsigned)value);
               break;
 
            case 2:
               stackFrame->tDX &= ~0xFF;
 	      stackFrame->tDX |= value & 0xFF;
-              DBGPrint("DL changed to 0x%X\n", (unsigned)value);
+              DBGPrint("DL changed to 0x%lX\n", (unsigned)value);
               break;
 
            default:
@@ -2364,7 +2364,7 @@ unsigned long ChangeESIRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tSI = value;
-	DBGPrint("ESI changed to 0x%X\n", (unsigned)value);
+	DBGPrint("ESI changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2395,7 +2395,7 @@ unsigned long ChangeEDIRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tDI = value;
-	DBGPrint("EDI changed to 0x%X\n", (unsigned)value);
+	DBGPrint("EDI changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2426,7 +2426,7 @@ unsigned long ChangeEBPRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tBP = value;
-	DBGPrint("EBP changed to 0x%X\n", (unsigned)value);
+	DBGPrint("EBP changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2457,7 +2457,7 @@ unsigned long ChangeESPRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tSP = value;
-	DBGPrint("ESP changed to 0x%X\n", (unsigned)value);
+	DBGPrint("ESP changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2488,7 +2488,7 @@ unsigned long ChangeEIPRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tIP = value;
-	DBGPrint("EIP changed to 0x%X\n", (unsigned)value);
+	DBGPrint("EIP changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2523,7 +2523,7 @@ unsigned long ChangeRAXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tAX = value;
-	DBGPrint("RAX changed to 0x%X\n", (unsigned)value);
+	DBGPrint("RAX changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2548,7 +2548,7 @@ unsigned long ChangeORIGRAXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tReserved[1] = value;
-	DBGPrint("ORIGRAX changed to 0x%X\n", (unsigned)value);
+	DBGPrint("ORIGRAX changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2579,7 +2579,7 @@ unsigned long ChangeRBXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tBX = value;
-	DBGPrint("RBX changed to 0x%X\n", (unsigned)value);
+	DBGPrint("RBX changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2609,7 +2609,7 @@ unsigned long ChangeRCXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tCX = value;
-	DBGPrint("RCX changed to 0x%X\n", (unsigned)value);
+	DBGPrint("RCX changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2640,7 +2640,7 @@ unsigned long ChangeRDXRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tDX = value;
-	DBGPrint("RDX changed to 0x%X\n", (unsigned)value);
+	DBGPrint("RDX changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2670,7 +2670,7 @@ unsigned long ChangeRSIRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tSI = value;
-	DBGPrint("RSI changed to 0x%X\n", (unsigned)value);
+	DBGPrint("RSI changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2701,7 +2701,7 @@ unsigned long ChangeRDIRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tDI = value;
-	DBGPrint("RDI changed to 0x%X\n", (unsigned)value);
+	DBGPrint("RDI changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2732,7 +2732,7 @@ unsigned long ChangeRBPRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tBP = value;
-	DBGPrint("RBP changed to 0x%X\n", (unsigned)value);
+	DBGPrint("RBP changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2763,7 +2763,7 @@ unsigned long ChangeRSPRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tSP = value;
-	DBGPrint("RSP changed to 0x%X\n", (unsigned)value);
+	DBGPrint("RSP changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2794,7 +2794,7 @@ unsigned long ChangeRIPRegister(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->tIP = value;
-	DBGPrint("RIP changed to 0x%X\n", (unsigned)value);
+	DBGPrint("RIP changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2824,7 +2824,7 @@ unsigned long ChangeR8Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r8 = value;
-	DBGPrint("R8 changed to 0x%X\n", (unsigned)value);
+	DBGPrint("R8 changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2854,7 +2854,7 @@ unsigned long ChangeR9Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r9 = value;
-	DBGPrint("R9 changed to 0x%X\n", (unsigned)value);
+	DBGPrint("R9 changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2884,7 +2884,7 @@ unsigned long ChangeR10Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r10 = value;
-	DBGPrint("R10 changed to 0x%X\n", (unsigned)value);
+	DBGPrint("R10 changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2914,7 +2914,7 @@ unsigned long ChangeR11Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r11 = value;
-	DBGPrint("R11 changed to 0x%X\n", (unsigned)value);
+	DBGPrint("R11 changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2944,7 +2944,7 @@ unsigned long ChangeR12Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r12 = value;
-	DBGPrint("R12 changed to 0x%X\n", (unsigned)value);
+	DBGPrint("R12 changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -2974,7 +2974,7 @@ unsigned long ChangeR13Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r13 = value;
-	DBGPrint("R13 changed to 0x%X\n", (unsigned)value);
+	DBGPrint("R13 changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -3004,7 +3004,7 @@ unsigned long ChangeR14Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r14 = value;
-	DBGPrint("R14 changed to 0x%X\n", (unsigned)value);
+	DBGPrint("R14 changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -3034,7 +3034,7 @@ unsigned long ChangeR15Register(unsigned char *cmd,
      if (valid)
      {
 	stackFrame->r15 = value;
-	DBGPrint("R15 changed to 0x%X\n", (unsigned)value);
+	DBGPrint("R15 changed to 0x%lX\n", (unsigned)value);
      }
      else
 	DBGPrint("invalid change register command or address\n");
@@ -3272,7 +3272,7 @@ unsigned long ChangeRFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & RF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= RF_FLAG) : (stackFrame->tSystemFlags &= ~RF_FLAG);
-	DBGPrint("EFlag RF[%X] changed to (%d)\n",
+	DBGPrint("EFlag RF[%lX] changed to (%d)\n",
 			(unsigned)oldD, (int)value);
      }
      else
@@ -3304,7 +3304,7 @@ unsigned long ChangeTFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & TF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= TF_FLAG) : (stackFrame->tSystemFlags &= ~TF_FLAG);
-	DBGPrint("EFlag TF[%X] changed to (%d)\n",
+	DBGPrint("EFlag TF[%lX] changed to (%d)\n",
 			(unsigned)oldD, (int)value);
      }
      else
@@ -3336,7 +3336,7 @@ unsigned long ChangeZFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & ZF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= ZF_FLAG) : (stackFrame->tSystemFlags &= ~ZF_FLAG);
-	DBGPrint("EFlag ZF[%X] changed to (%d)\n",
+	DBGPrint("EFlag ZF[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3368,7 +3368,7 @@ unsigned long ChangeSFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & SF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= SF_FLAG) : (stackFrame->tSystemFlags &= ~SF_FLAG);
-	DBGPrint("EFlag SF[%X] changed to (%d)\n",
+	DBGPrint("EFlag SF[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3400,7 +3400,7 @@ unsigned long ChangePFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & PF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= PF_FLAG) : (stackFrame->tSystemFlags &= ~PF_FLAG);
-	DBGPrint("EFlag PF[%X] changed to (%d)\n",
+	DBGPrint("EFlag PF[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3432,7 +3432,7 @@ unsigned long ChangeCFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & CF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= CF_FLAG) : (stackFrame->tSystemFlags &= ~CF_FLAG);
-	DBGPrint("EFlag CF[%X] changed to (%d)\n",
+	DBGPrint("EFlag CF[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3464,7 +3464,7 @@ unsigned long ChangeOFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & OF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= OF_FLAG) : (stackFrame->tSystemFlags &= ~OF_FLAG);
-	DBGPrint("EFlag OF[%X] changed to (%d)\n",
+	DBGPrint("EFlag OF[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3497,7 +3497,7 @@ unsigned long ChangeIFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & IF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= IF_FLAG) : (stackFrame->tSystemFlags &= ~IF_FLAG);
-	DBGPrint("EFlag IF[%X] changed to (%d)\n",
+	DBGPrint("EFlag IF[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3529,7 +3529,7 @@ unsigned long ChangeIDFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & ID_FLAGS;
 	(value) ? (stackFrame->tSystemFlags |= ID_FLAGS) : (stackFrame->tSystemFlags &= ~ID_FLAGS);
-	DBGPrint("EFlag ID[%X] changed to (%d)\n",
+	DBGPrint("EFlag ID[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3562,7 +3562,7 @@ unsigned long ChangeDFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & DF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= DF_FLAG) : (stackFrame->tSystemFlags &= ~DF_FLAG);
-	DBGPrint("EFlag DF[%X] changed to (%d)\n",
+	DBGPrint("EFlag DF[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3594,7 +3594,7 @@ unsigned long ChangeNTFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & NT_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= NT_FLAG) : (stackFrame->tSystemFlags &= ~NT_FLAG);
-	DBGPrint("EFlag NT[%X] changed to (%d)\n",
+	DBGPrint("EFlag NT[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3626,7 +3626,7 @@ unsigned long ChangeVMFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & VM_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= VM_FLAG) : (stackFrame->tSystemFlags &= ~VM_FLAG);
-	DBGPrint("EFlag VM[%X] changed to (%d)\n",
+	DBGPrint("EFlag VM[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3659,7 +3659,7 @@ unsigned long ChangeVIFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & VIF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= VIF_FLAG) : (stackFrame->tSystemFlags &= ~VIF_FLAG);
-	DBGPrint("EFlag VIF[%X] changed to (%d)\n",
+	DBGPrint("EFlag VIF[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3691,7 +3691,7 @@ unsigned long ChangeVIPFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & VIP_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= VIP_FLAG) : (stackFrame->tSystemFlags &= ~VIP_FLAG);
-	DBGPrint("EFlag VIP[%X] changed to (%d)\n",
+	DBGPrint("EFlag VIP[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3723,7 +3723,7 @@ unsigned long ChangeAFFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & AF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= AF_FLAG) : (stackFrame->tSystemFlags &= ~AF_FLAG);
-	DBGPrint("EFlag AF[%X] changed to (%d)\n",
+	DBGPrint("EFlag AF[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3756,7 +3756,7 @@ unsigned long ChangeACFlag(unsigned char *cmd,
      {
 	oldD = stackFrame->tSystemFlags & AC_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= AC_FLAG) : (stackFrame->tSystemFlags &= ~AC_FLAG);
-	DBGPrint("EFlag AC[%X] changed to (%d)\n",
+	DBGPrint("EFlag AC[%lX] changed to (%d)\n",
 				(unsigned)oldD, (int)value);
      }
      else
@@ -3917,7 +3917,7 @@ unsigned long inputDoublePort(unsigned char *cmd,
      address = EvaluateExpression(stackFrame, &cmd, &valid);
      if (valid)
      {
-	DBGPrint("inportd (%04X) = %X\n",
+	DBGPrint("inportd (%04X) = %lX\n",
 			  (unsigned)address, (unsigned)inl(address));
      }
      else
@@ -4033,7 +4033,7 @@ unsigned long outputDoublePort(unsigned char *cmd,
 	value = EvaluateExpression(stackFrame, &cmd, &valid);
 	if (valid)
 	{
-	   DBGPrint("outportd (%04X) = %X\n",
+	   DBGPrint("outportd (%04X) = %lX\n",
 			    (unsigned)port, (unsigned)value);
 	   outl(port, value);
 	   return 1;
@@ -5493,7 +5493,7 @@ void displayMTRRRegisters(void)
        {
 	  ReadMSR(MTRR_BASE_REGS[i], &base1, &base2);
 	  ReadMSR(MTRR_MASK_VALUES[i], &mask1, &mask2);
-	  DBGPrint("MTRR_BASE_%i  %X:%X   MTRR_MASK_%i  %X:%X\n",
+	  DBGPrint("MTRR_BASE_%i  %lX:%lX   MTRR_MASK_%i  %lX:%lX\n",
 			   (int)i,
                            (unsigned)base1, (unsigned)base2,
                            (int)i,
@@ -5565,7 +5565,7 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
     gdt_index = mdb_getword((unsigned long)&GDTR[0], 2);
     gdt_pointer = mdb_getword((unsigned long)&GDTR[2], 4);
 
-    DBGPrint("GDTR: %04X:%X  Processor: %i\n",
+    DBGPrint("GDTR: %04X:%lX  Processor: %i\n",
                   (unsigned)gdt_index, (unsigned)gdt_pointer,
                   (int)get_processor_id());
 
@@ -5574,7 +5574,7 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
     p = (unsigned char *) gdt_pointer;
     for (i = 0; i < gdt_index; i++)
     {
-       if (DBGPrint("%X (%04i):", (unsigned) count, (int)i)) return;
+       if (DBGPrint("%lX (%04i):", (unsigned) count, (int)i)) return;
        for (r = 0; r < 8; r++)
        {
 	  lg.data[r] = (unsigned char) mdb_getword((unsigned long)&p[r], 1);
@@ -5584,7 +5584,7 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
        gdt = (GDT *) &lg.lgdt;
        if ((gdt->GDTType & 0x92) == 0x92)
        {
-	  if (DBGPrint("  b:%X lim:%X t:%02X ot:%02X",
+	  if (DBGPrint("  b:%lX lim:%lX t:%02X ot:%02X",
 		   ((gdt->Base3 << 24) | (gdt->Base2 << 16) |
                    (gdt->Base1)),
 		   (((gdt->OtherType & 0xF) << 16) | (gdt->Limit)),
@@ -5593,7 +5593,7 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
        else if ((gdt->GDTType & 0x89) == 0x89)
        {
 	  tss = (TSS *) gdt;
-	  if (DBGPrint("  tss:%X lim:%04X t:%02X ot:%02X",
+	  if (DBGPrint("  tss:%lX lim:%04X t:%02X ot:%02X",
 		      ((tss->TSSBase3 << 24) | (tss->TSSBase2 << 16) |
                       (tss->TSSBase1)),
 		      tss->TSSLimit, tss->TSSType,
@@ -5687,7 +5687,7 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
     idt_index = mdb_getword((unsigned long)&IDTR[0], 2);
     idt_pointer = mdb_getword((unsigned long)&IDTR[2], 4);
 
-    DBGPrint("IDTR: %04X:%X  Processor: %i\n",
+    DBGPrint("IDTR: %04X:%lX  Processor: %i\n",
                     (unsigned)idt_index, (unsigned)idt_pointer,
                     (int)get_processor_id());
 
@@ -5699,7 +5699,7 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
        unsigned char *symbolName, *moduleName;
        unsigned long idtAddress;
 
-       if (DBGPrint("%X (%04i):", (unsigned)count, (int)i)) return;
+       if (DBGPrint("%lX (%04i):", (unsigned)count, (int)i)) return;
        for (r = 0; r < 8; r++)
        {
 	   id.data[r] = mdb_getword((unsigned long)&p[r], 1);
@@ -5708,7 +5708,7 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
        idt = (IDT *) &id.lidt;
        if ((idt->IDTFlags & 0x8E) == 0x8E)
        {
-	  if (DBGPrint("  b:%X s:%04X t:%02X ot:%02X",
+	  if (DBGPrint("  b:%lX s:%04X t:%02X ot:%02X",
 			     ((idt->IDTHigh << 16) | (idt->IDTLow)),
 			     idt->IDTSegment,
 			     idt->IDTFlags, idt->IDTSkip)) return;
