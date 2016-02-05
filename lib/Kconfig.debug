@@ -732,7 +732,7 @@ config MDB_DIRECT_MODE
 config DEBUG_BUG
 	bool "Set Breakpoint for Kernel BUG() macros"
 	depends on DEBUG_KERNEL && !S390 && MDB
-	default y
+	default n
 	help
 	  Say Y here to enable the kernel to emit a breakpoint instruction
 	  anywhere a BUG_XX() macro has been placed in the system kernel code
@@ -744,7 +744,7 @@ config DEBUG_BUG
 config DEBUG_LOCKUPS
 	bool "Set Breakpoints for Kernel Hard/Soft Lockup Detector"
 	depends on DEBUG_KERNEL && !S390 && MDB && DEBUG_BUG
-	default y
+	default n
 	help
 	  Say Y here to enable the kernel to emit a breakpoint instruction
 	  into the hard and soft lockup detector and trigger a breakpoint
