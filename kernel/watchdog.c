@@ -43,10 +43,12 @@
 #define NMI_WATCHDOG_ENABLED      (1 << NMI_WATCHDOG_ENABLED_BIT)
 #define SOFT_WATCHDOG_ENABLED     (1 << SOFT_WATCHDOG_ENABLED_BIT)
 
+#ifdef CONFIG_DEBUG_LOCKUPS
 #ifdef CONFIG_DEBUG_BUG
 #define WATCHDOG_DEBUG_LOCKUP  1
 #else
 #define WATCHDOG_DEBUG_LOCKUP  0
+#endif
 #endif
 
 static DEFINE_MUTEX(watchdog_proc_mutex);
@@ -356,9 +358,9 @@ static void watchdog_overflow_callback(struct perf_event *event,
 			show_regs(regs);
 		else
 			dump_stack();
-
+#ifdef CONFIG_DEBUG_LOCKUPS
 		BUG_ON(WATCHDOG_DEBUG_LOCKUP);
-
+#endif
 		/*
 		 * Perform all-CPU dump only once to avoid multiple hardlockups
 		 * generating interleaving traces
@@ -478,9 +480,9 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
 			show_regs(regs);
 		else
 			dump_stack();
-
+#ifdef CONFIG_DEBUG_LOCKUPS
 		BUG_ON(WATCHDOG_DEBUG_LOCKUP);
-
+#endif
 		if (softlockup_all_cpu_backtrace) {
 			/* Avoid generating two back traces for current
 			 * given that one is already made above
