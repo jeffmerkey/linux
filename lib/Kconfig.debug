@@ -743,7 +743,8 @@ config DEBUG_BUG
 
 config DEBUG_LOCKUPS
 	bool "Set Breakpoints for Kernel Hard/Soft Lockup Detector"
-	depends on DEBUG_KERNEL && !S390 && MDB && DEBUG_BUG
+	depends on DEBUG_KERNEL && !S390 && MDB
+        select DEBUG_BUG
 	default n
 	help
 	  Say Y here to enable the kernel to emit a breakpoint instruction
