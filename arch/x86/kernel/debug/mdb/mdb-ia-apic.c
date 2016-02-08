@@ -79,9 +79,9 @@ extern int nr_ioapics;
 
 unsigned long apic_directed_nmi(unsigned long cpu)
 {
-    apic->send_IPI_mask(cpumask_of(cpu), 
+    apic->send_IPI_mask(cpumask_of(cpu),
                         APIC_DM_NMI | APIC_INT_LEVELTRIG | APIC_INT_ASSERT);
-    apic->send_IPI_mask(cpumask_of(cpu), 
+    apic->send_IPI_mask(cpumask_of(cpu),
                         APIC_DM_NMI | APIC_INT_LEVELTRIG);
     return 0;
 }
@@ -124,7 +124,6 @@ void dump_local_apic(void)
        if ((i & 3) == 3)
 	  DBGPrint("\n");
     }
-
 }
 
 void dump_remote_apic(unsigned long cpu)
@@ -185,8 +184,7 @@ void dump_remote_apic(unsigned long cpu)
        {
           val = apic_read(APIC_RRR);
           DBGPrint("%08X ", val);
-       }
-       else
+       } else
        {
           DBGPrint("???????? ");
        }
@@ -194,7 +192,6 @@ void dump_remote_apic(unsigned long cpu)
        if ((i & 3) == 3)
 	  DBGPrint("\n");
     }
-
 }
 
 unsigned long displayAPICHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
@@ -207,7 +204,7 @@ unsigned long displayAPICHelp(unsigned char *commandLine, DEBUGGER_PARSER *parse
 /* APIC */
 
 unsigned long displayAPICInfo(unsigned char *cmd,
-		     StackFrame *stackFrame, unsigned long Exception,
+			      StackFrame *stackFrame, unsigned long Exception,
 		     DEBUGGER_PARSER *parser)
 {
      register unsigned long value;
@@ -239,7 +236,7 @@ unsigned long displayIOAPICHelp(unsigned char *commandLine, DEBUGGER_PARSER *par
 /* IOAPIC */
 
 unsigned long displayIOAPICInfo(unsigned char *cmd,
-		       StackFrame *stackFrame, unsigned long Exception,
+				StackFrame *stackFrame, unsigned long Exception,
 		       DEBUGGER_PARSER *parser)
 {
      register unsigned long value;
@@ -261,7 +258,6 @@ unsigned long displayIOAPICInfo(unsigned char *cmd,
         dump_ioapic(0);
 
      return 1;
-
 }
 
 #endif /* CONFIG_SMP */

@@ -52,7 +52,6 @@ GNU General Public License for more details. */
 	     char *source;
 	{ ... }
 
-
    VPARAMS ((prototype, ...))
    -- for functions which take a variable number of arguments.  Use
    PARAMS to declare the function, VPARAMS to define it.  For example:
@@ -92,7 +91,6 @@ GNU General Public License for more details. */
 
 	   return result;
 	}
-
 
    You can declare variables either before or after the VA_OPEN,
    VA_FIXEDARG sequence.  Also, VA_OPEN and VA_CLOSE are the beginning
@@ -153,9 +151,9 @@ So instead we use the macro below and test it against specific values.  */
 
 /* PARAMS is often defined elsewhere (e.g. by libintl.h), so wrap it in
    a #ifndef.  */
-//#ifndef PARAMS
-//#define PARAMS(ARGS)		ARGS
-//#endif
+/* #ifndef PARAMS */
+/* #define PARAMS(ARGS)		ARGS */
+/* #endif */
 
 #define VPARAMS(ARGS)		ARGS
 #define VA_START(VA_LIST, VAR)	va_start(VA_LIST, VAR)
@@ -201,8 +199,8 @@ So instead we use the macro below and test it against specific values.  */
 #define EXFUN(name, proto)		name proto
 #define DEFUN(name, arglist, args)	name(args)
 #define DEFUN_VOID(name)		name(void)
-#define AND		,
-#define DOTS		, ...
+#define AND,
+#define DOTS, ...
 #define NOARGS		void
 #endif /* ! IN_GCC */
 
@@ -213,7 +211,7 @@ So instead we use the macro below and test it against specific values.  */
 #define PTRCONST	PTR
 #define LONG_DOUBLE	double
 
-//#define PARAMS(args)		()
+/* #define PARAMS(args)		() */
 #define VPARAMS(args)		(va_alist) va_dcl
 #define VA_START(va_list, var)	va_start(va_list)
 
@@ -236,11 +234,11 @@ So instead we use the macro below and test it against specific values.  */
 #define VOLATILE
 #define SIGNED
 
-#define PROTO(type, name, arglist)	type name ()
+#define PROTO(type, name, arglist)	type name()
 #define EXFUN(name, proto)		name()
 #define DEFUN(name, arglist, args)	name arglist args;
 #define DEFUN_VOID(name)		name()
-#define AND		;
+#define AND;
 #define DOTS
 #define NOARGS
 #endif /* ! IN_GCC */
@@ -279,7 +277,7 @@ So instead we use the macro below and test it against specific values.  */
 
 /* Before GCC 3.4, the C++ frontend couldn't parse attributes placed after the
    identifier name.  */
-#if ! defined(__cplusplus) || (GCC_VERSION >= 3004)
+#if !defined(__cplusplus) || (GCC_VERSION >= 3004)
 # define ARG_UNUSED(NAME) NAME ATTRIBUTE_UNUSED
 #else /* !__cplusplus || GNUC >= 3.4 */
 # define ARG_UNUSED(NAME) NAME
@@ -292,7 +290,7 @@ So instead we use the macro below and test it against specific values.  */
 /* Attribute `nonnull' was valid as of gcc 3.3.  */
 #ifndef ATTRIBUTE_NONNULL
 # if (GCC_VERSION >= 3003)
-#  define ATTRIBUTE_NONNULL(m) __attribute__ ((__nonnull__ (m)))
+#  define ATTRIBUTE_NONNULL(m) __attribute__ ((__nonnull__(m)))
 # else
 #  define ATTRIBUTE_NONNULL(m)
 # endif /* GNUC >= 3.3 */
@@ -312,7 +310,7 @@ So instead we use the macro below and test it against specific values.  */
    before GCC 3.3, but as of 3.3 we need to add the `nonnull'
    attribute to retain this behavior.  */
 #ifndef ATTRIBUTE_PRINTF
-#define ATTRIBUTE_PRINTF(m, n) __attribute__ ((__format__ (__printf__, m, n))) ATTRIBUTE_NONNULL(m)
+#define ATTRIBUTE_PRINTF(m, n) __attribute__ ((__format__(__printf__, m, n))) ATTRIBUTE_NONNULL(m)
 #define ATTRIBUTE_PRINTF_1 ATTRIBUTE_PRINTF(1, 2)
 #define ATTRIBUTE_PRINTF_2 ATTRIBUTE_PRINTF(2, 3)
 #define ATTRIBUTE_PRINTF_3 ATTRIBUTE_PRINTF(3, 4)
@@ -340,7 +338,7 @@ So instead we use the macro below and test it against specific values.  */
    NULL format specifier was allowed as of gcc 3.3.  */
 #ifndef ATTRIBUTE_NULL_PRINTF
 # if (GCC_VERSION >= 3003)
-#  define ATTRIBUTE_NULL_PRINTF(m, n) __attribute__ ((__format__ (__printf__, m, n)))
+#  define ATTRIBUTE_NULL_PRINTF(m, n) __attribute__ ((__format__(__printf__, m, n)))
 # else
 #  define ATTRIBUTE_NULL_PRINTF(m, n)
 # endif /* GNUC >= 3.3 */
@@ -360,10 +358,9 @@ So instead we use the macro below and test it against specific values.  */
 # endif /* GNUC >= 3.5 */
 #endif /* ATTRIBUTE_SENTINEL */
 
-
 #ifndef ATTRIBUTE_ALIGNED_ALIGNOF
 # if (GCC_VERSION >= 3000)
-#  define ATTRIBUTE_ALIGNED_ALIGNOF(m) __attribute__ ((__aligned__ (__alignof__ (m))))
+#  define ATTRIBUTE_ALIGNED_ALIGNOF(m) __attribute__ ((__aligned__(__alignof__(m))))
 # else
 #  define ATTRIBUTE_ALIGNED_ALIGNOF(m)
 # endif /* GNUC >= 3.0 */

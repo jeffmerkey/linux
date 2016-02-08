@@ -87,9 +87,9 @@ atomic_t inmdb = { 0 };
 unsigned char *mdb_oops;
 unsigned char *last_mdb_oops;
 
-static inline void set_delimiter(unsigned char c) 
-{  
-    delim_table[c & 0xFF] = 1;  
+static inline void set_delimiter(unsigned char c)
+{
+    delim_table[c & 0xFF] = 1;
 }
 
 static void SaveLastCommandInfo(unsigned long processor)
@@ -136,6 +136,7 @@ void mdb_watchdogs(void)
 int mdb(unsigned long reason, unsigned long error, void *frame)
 {
     register unsigned long retCode = 0, processor = get_processor_id();
+
     extern void ReadStackFrame(void *, StackFrame *, unsigned long);
     extern void WriteStackFrame(void *, StackFrame *, unsigned long);
     unsigned long flagstate;
@@ -152,10 +153,10 @@ int mdb(unsigned long reason, unsigned long error, void *frame)
        mdb_oops = NULL;
     }
 
-    // if we are re-entered, report it
+    /* if we are re-entered, report it */
     if (atomic_read(&inmdb_processor[processor]))
     {
-       DBGPrint("MDB re-entered.  exception: %d error: %d processor: %d\n", 
+       DBGPrint("MDB re-entered.  exception: %d error: %d processor: %d\n",
                 reason, error, processor);
     }
 
@@ -164,7 +165,7 @@ int mdb(unsigned long reason, unsigned long error, void *frame)
     atomic_inc(&inmdb_processor[processor]);
     memset(&stackframe, 0, sizeof(StackFrame));
 
-    // snapshot last reported processor frame
+    /* snapshot last reported processor frame */
     ReadStackFrame(frame, &per_cpu(CurrentStackFrame, processor), processor);
     ReadStackFrame(frame, &stackframe, processor);
 
@@ -239,6 +240,7 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
     register unsigned char *p;
     register int i, r, temp;
     register unsigned long orig_index, HistoryIndex;
+
     extern unsigned long IsAccelerator(unsigned long);
 
     if (buf_index > max_index)
@@ -278,7 +280,7 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
                 out_chars(delta, ' ');
                 out_chars(delta, '\b');
 
-	        p = (unsigned char *) &buf[buf_index];
+	        p = (unsigned char *)&buf[buf_index];
 	        temp = buf_index;
 	        p++;
 	        while ((*p) && (temp < max_index))
@@ -335,7 +337,7 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
                 out_chars(delta, ' ');
                 out_chars(delta, '\b');
 
-	        p = (unsigned char *) &buf[buf_index];
+	        p = (unsigned char *)&buf[buf_index];
 	        temp = buf_index;
 	        p++;
 	        while ((*p) && (temp < max_index))
@@ -350,7 +352,7 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
 
 	  case 13:  /* enter */
 	     if (strncmp(HistoryBuffer[(HistoryPointer - 1) & 0xF], buf,
-                         strlen(buf)) || (strlen(buf) !=
+			 strlen(buf)) || (strlen(buf) !=
                          strlen(HistoryBuffer[(HistoryPointer - 1) & 0xF])))
 	     {
 		for (r = 0; r < max_index; r++)
@@ -410,8 +412,8 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
 		{
                    register int delta;
 
-		   for (i=max_index; i > buf_index; i--)
-		      buf[i] = buf[i-1];
+		   for (i = max_index; i > buf_index; i--)
+		      buf[i] = buf[i - 1];
 		   buf[buf_index] = (unsigned char)key;
 		   if (buf_index < max_index)
 		      buf_index++;
@@ -427,19 +429,20 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
 }
 
 unsigned long debugger_command_entry(unsigned long processor, unsigned long Exception,
-			             StackFrame *stackFrame)
+				     StackFrame *stackFrame)
 {
     register unsigned char *verb, *pp, *vp;
     register unsigned long count, retCode, key;
     extern unsigned long reason_toggle;
+
     extern void displayRegisters(StackFrame *, unsigned long);
 
     if (Exception > 22)
        Exception = 20;
 
-    lastUnasmAddress = (unsigned long) GetIP(stackFrame);
+    lastUnasmAddress = (unsigned long)GetIP(stackFrame);
     lastLinkAddress = lastDumpAddress =
-                      (unsigned char *) GetStackAddress(stackFrame);
+                      (unsigned char *)GetStackAddress(stackFrame);
     lastDisplayLength = displayLength = 20;
     lastCommandEntry = lastCommand;
     nextline = 0;
@@ -448,7 +451,7 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
     if (!ssbmode)
     {
        if (reason_toggle && !ConsoleDisplayBreakReason(stackFrame,
-           Exception, processor, lastCommand))
+						       Exception, processor, lastCommand))
           return 0;
        displayRegisters(stackFrame, processor);
     }
@@ -514,8 +517,7 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
 }
 
 #if MDB_DEBUG_DEBUGGER
-unsigned char *kdebug_state[]=
-{
+unsigned char *kdebug_state[] = {
     "",
     "DIE_OOPS",
     "DIE_INT3",
@@ -532,6 +534,7 @@ unsigned char *kdebug_state[]=
     "DIE_PAGE_FAULT",
     "DIE_NMIUNKNOWN",
 };
+
 int kdebug_state_size = ARRAY_SIZE(kdebug_state);
 #endif
 
@@ -548,7 +551,7 @@ static int mdb_notify(struct notifier_block *nb, unsigned long reason,
     if (atomic_read(&kgdb_detected))
        return NOTIFY_DONE;
 
-    // flush the tlb in case we are inside of a memory remap routine 
+    /* flush the tlb in case we are inside of a memory remap routine */
     cr3 = ReadCR3();
     WriteCR3(cr3);
 
@@ -600,7 +603,7 @@ static int mdb_notify(struct notifier_block *nb, unsigned long reason,
              {
                 if (user_mode(args->regs))
                    return NOTIFY_DONE;
-                else 
+                else
                 if (test_thread_flag(TIF_SINGLESTEP))
                    return NOTIFY_DONE;
              }
@@ -640,8 +643,7 @@ static int mdb_notify(struct notifier_block *nb, unsigned long reason,
     return NOTIFY_STOP;
 }
 
-static struct notifier_block mdb_notifier =
-{
+static struct notifier_block mdb_notifier = {
     .notifier_call = mdb_notify,
     .priority = 0x7FFFFFFF,
 };
@@ -678,7 +680,7 @@ static int mdb_nmi_handler(unsigned int cmd, struct pt_regs *regs)
     if (atomic_read(&kgdb_detected))
        return NMI_DONE;
 
-    switch (cmd) 
+    switch (cmd)
     {
         case NMI_LOCAL:
              if (atomic_read(&inmdb) && is_processor_held(processor))
@@ -688,7 +690,7 @@ static int mdb_nmi_handler(unsigned int cmd, struct pt_regs *regs)
                    mdb(NMI_EXCEPTION, 0, regs);
                    debug_previous_nmi[processor] = 1;
                    mdb_watchdogs();
-  	           return NMI_HANDLED;
+	           return NMI_HANDLED;
                 }
              }
              break;
@@ -707,8 +709,7 @@ static int mdb_nmi_handler(unsigned int cmd, struct pt_regs *regs)
     return NMI_DONE;
 }
 
-static struct sysrq_key_op sysrq_op =
-{
+static struct sysrq_key_op sysrq_op = {
     .handler     = sysrq_mdb,
     .help_msg    = "mdb(A)",
     .action_msg  = "MDB",
@@ -728,7 +729,6 @@ static inline void strip_crlf(char *p, int limit)
       p++;
       limit--;
    }
-  
 }
 
 static ssize_t mdb_kernel_read(struct file *file, char *buf,
@@ -745,8 +745,8 @@ static ssize_t mdb_kernel_read(struct file *file, char *buf,
 	return res;
 }
 
-static ssize_t mdb_kernel_write(struct file *file, const char *buf, 
-			       size_t count, loff_t pos)
+static ssize_t mdb_kernel_write(struct file *file, const char *buf,
+				size_t count, loff_t pos)
 {
 	mm_segment_t old_fs;
 	ssize_t res;
@@ -769,7 +769,7 @@ static int __init mdb_init_module(void)
     /* return if debugger already initialized */
     if (debuggerInitialized)
        return 0;
-    
+
     /* disable kgdb/kdb on module load if enabled */
     filp = filp_open("/sys/module/kgdboc/parameters/kgdboc", O_RDWR, 0);
     if (!IS_ERR(filp))
@@ -787,8 +787,7 @@ static int __init mdb_init_module(void)
           {
              printk(KERN_WARNING "MDB:  kgdb/kdb active, MDB set to disabled. unload/reload to retry.\n");
              atomic_inc(&kgdb_detected);
-          }
-          else 
+          } else
              printk(KERN_WARNING "MDB:  kgdb/kdb set to disabled. MDB is enabled.\n");
        }
        filp_close(filp, NULL);

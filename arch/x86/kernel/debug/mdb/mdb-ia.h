@@ -133,7 +133,6 @@ static inline void _sti(void)
 	__asm__ __volatile__("sti" : : : "memory");
 }
 
-
 #ifdef CONFIG_X86_64
 static inline unsigned long get_flags(void)
 {

@@ -85,7 +85,7 @@
 #define BOOL_STACK_SIZE     256
 #define LOGICAL_STACK_SIZE  256
 
-// 0-127 token values, 8 high bit is reserved as dereference flag
+/* 0-127 token values, 8 high bit is reserved as dereference flag */
 #define NULL_TOKEN            0
 #define NUMBER_TOKEN          1
 #define MINUS_TOKEN           2
@@ -173,7 +173,7 @@
 #define CL_TOKEN             84
 #define DL_TOKEN             85
 #define ESI_TOKEN            86
-#define EDI_TOKEN	     87	
+#define EDI_TOKEN	     87
 #define EBP_TOKEN            88
 #define ESP_TOKEN            89
 #define RSI_TOKEN            90
@@ -181,7 +181,7 @@
 #define RBP_TOKEN            92
 #define RSP_TOKEN            93
 
-// limit is 0-127
+/* limit is 0-127 */
 
 #define CF_FLAG   0x00000001
 #define PF_FLAG   0x00000004
@@ -212,14 +212,14 @@
 #define   CLASS_ARITHMETIC  4
 #define   CLASS_BOOLEAN     5
 
-unsigned char *exprDescription[]={
+unsigned char *exprDescription[] = {
      "INVALID",
      "NUMERIC",
      "BOOLEAN",
      "???????",
 };
 
-unsigned char *parserDescription[]={
+unsigned char *parserDescription[] = {
      "NULL_TOKEN",
      "NUMBER_TOKEN",
      "MINUS_TOKEN",
@@ -280,14 +280,14 @@ unsigned char *parserDescription[]={
      "NOT_EQUAL_TOKEN",
      "INVALID_NUMBER_TOKEN",
      "QWORD_TOKEN",
-     "R8_TOKEN",             
-     "R9_TOKEN",            
-     "R10_TOKEN",           
-     "R11_TOKEN",           
-     "R12_TOKEN",           
-     "R13_TOKEN",           
-     "R14_TOKEN",           
-     "R15_TOKEN",          
+     "R8_TOKEN",
+     "R9_TOKEN",
+     "R10_TOKEN",
+     "R11_TOKEN",
+     "R12_TOKEN",
+     "R13_TOKEN",
+     "R14_TOKEN",
+     "R15_TOKEN",
      "CS_ADDR_TOKEN",
      "DS_ADDR_TOKEN",
      "ES_ADDR_TOKEN",
@@ -316,9 +316,9 @@ unsigned char *parserDescription[]={
      "RSP_TOKEN",
 };
 
-struct stackframe_symbols {	
+struct stackframe_symbols {
 	char *symbol;
- 	int symbol_len;
+	int symbol_len;
 	unsigned long type;
 };
 
@@ -385,10 +385,10 @@ struct stackframe_symbols stackframeSymbols[] = {
 	{ "ZF", 2, ZF_TOKEN },
 	{ "IF", 2, IF_TOKEN },
 	{ "OF", 2, OF_TOKEN },
-	{ "VM",	2, VM_TOKEN }, 
-	{ "AF",	2, AF_TOKEN }, 
+	{ "VM",	2, VM_TOKEN },
+	{ "AF",	2, AF_TOKEN },
 	{ "AC",	2, AC_TOKEN },
-	{ "CF",	2, CF_TOKEN }, 
+	{ "CF",	2, CF_TOKEN },
 	{ "DF",	2, DF_TOKEN },
 	{ "SF",	2, SF_TOKEN },
 };
@@ -496,7 +496,7 @@ static unsigned long token_stackframe_value(StackFrame *stackFrame, unsigned lon
 		case BP_TOKEN:
 		    return stackFrame->tBP & 0xFFFF;
 		case SP_TOKEN:
- 	   	    return stackFrame->tSP & 0xFFFF;
+		    return stackFrame->tSP & 0xFFFF;
 
 #ifdef CONFIG_X86_64
 		case RAX_TOKEN:
@@ -514,7 +514,7 @@ static unsigned long token_stackframe_value(StackFrame *stackFrame, unsigned lon
 		case RBP_TOKEN:
 		    return stackFrame->tBP;
 		case RSP_TOKEN:
- 	   	    return stackFrame->tSP;
+		    return stackFrame->tSP;
 
 		case EAX_TOKEN:
 		    return stackFrame->tAX & 0xFFFFFFFF;
@@ -531,7 +531,7 @@ static unsigned long token_stackframe_value(StackFrame *stackFrame, unsigned lon
 		case EBP_TOKEN:
 		    return stackFrame->tBP & 0xFFFFFFFF;
 		case ESP_TOKEN:
- 	   	    return stackFrame->tSP & 0xFFFFFFFF;
+		    return stackFrame->tSP & 0xFFFFFFFF;
 
 		case R8_TOKEN:
 		    return stackFrame->r8;
@@ -565,7 +565,7 @@ static unsigned long token_stackframe_value(StackFrame *stackFrame, unsigned lon
 		case EBP_TOKEN:
 		    return stackFrame->tBP;
 		case ESP_TOKEN:
- 	   	    return stackFrame->tSP;
+		    return stackFrame->tSP;
 #endif
 		case IP_TOKEN:
 		    return stackFrame->tIP;
@@ -576,13 +576,12 @@ static unsigned long token_stackframe_value(StackFrame *stackFrame, unsigned lon
 	return 0;
 }
 
-static inline unsigned long long GetNumber(unsigned char *p, 
-                                           unsigned char **rp, 
-                                           unsigned long *opl, 
-                                           unsigned long *retCode, 
+static inline unsigned long long GetNumber(unsigned char *p,
+                                           unsigned char **rp,
+                                           unsigned long *opl,
+                                           unsigned long *retCode,
                                            unsigned long mode)
 {
-
     unsigned char *op, *pp = NULL;
     unsigned long long c = 0;
     unsigned long decimal = 0, hex_found = 0, invalid = 0, valid = 0;
@@ -597,8 +596,7 @@ static inline unsigned long long GetNumber(unsigned char *p,
        p++;
        p++;
        pp = p;
-    } 
-    else
+    } else
     if (*p == 'X' || *p == 'x')
     {
        hex_found = 1;
@@ -612,22 +610,19 @@ static inline unsigned long long GetNumber(unsigned char *p,
        {
           valid++;
 	  p++;
-       }
-       else
+       } else
        if (*p >= 'A' && *p <= 'F')
        {
 	  hex_found = 1;
           valid++;
 	  p++;
-       }
-       else
+       } else
        if (*p >= 'a' && *p <= 'f')
        {
 	  hex_found = 1;
           valid++;
 	  p++;
-       }
-       else
+       } else
        if (delim_table[((*p) & 0xFF)])
 	  break;
        else
@@ -647,7 +642,7 @@ static inline unsigned long long GetNumber(unsigned char *p,
     if (rp)
        *rp = p;
     if (opl)
-       *opl = (unsigned long)((unsigned long)p - (unsigned long) op);
+       *opl = (unsigned long)((unsigned long)p - (unsigned long)op);
 
     p = pp;
 
@@ -669,8 +664,7 @@ static inline unsigned long long GetNumber(unsigned char *p,
 	     break;
 	  p++;
        }
-    }
-    else
+    } else
     if (decimal)
     {
        /* parse as decimal number */
@@ -682,8 +676,7 @@ static inline unsigned long long GetNumber(unsigned char *p,
 		break;
 	  p++;
        }
-    }
-    else  /* default parses as decimal */
+    } else  /* default parses as decimal */
     {
        /* parse as decimal number */
        while (*p)
@@ -700,7 +693,6 @@ static inline unsigned long long GetNumber(unsigned char *p,
        *retCode = 0;
 
     return (c);
-
 }
 
 unsigned long GetValueFromToken(unsigned char *symbol, StackFrame *stackFrame,
@@ -715,10 +707,10 @@ unsigned long GetValueFromToken(unsigned char *symbol, StackFrame *stackFrame,
 	   return 0;
 
     len = strlen(symbol);
-    for (i = 0; len && i < ARRAY_SIZE(stackframeSymbols); 
-         i++) 
+    for (i = 0; len && i < ARRAY_SIZE(stackframeSymbols);
+         i++)
     {
-       if ((len == stackframeSymbols[i].symbol_len) && 
+       if ((len == stackframeSymbols[i].symbol_len) &&
            (!strcasecmp(symbol, stackframeSymbols[i].symbol)))
        {
           if (type)
@@ -731,8 +723,8 @@ unsigned long GetValueFromToken(unsigned char *symbol, StackFrame *stackFrame,
     return 0;
 }
 
-static inline unsigned char *parseTokens(StackFrame *stackFrame, 
-                                         unsigned char *p, 
+static inline unsigned char *parseTokens(StackFrame *stackFrame,
+                                         unsigned char *p,
                                          unsigned long mode)
 {
     register unsigned long i, value;
@@ -762,36 +754,33 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
           if (retCode)
           {
 	     value = GetNumber(symbol, NULL, &delta, &retCode, mode);
-             if (retCode) 
+             if (retCode)
              {
                 value = GetValueFromSymbol(symbol);
                 if (!value)
                 {
-	           TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	           TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
 	           TokenValue[TokenCount] = value;
 	           TokenType[TokenCount++] = INVALID_NUMBER_TOKEN;
-                }
-                else
+                } else
                 {
-                   TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+                   TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                    TokenValue[TokenCount] = value;
                    TokenType[TokenCount++] = NUMBER_TOKEN;
                 }
-             }
-             else
+             } else
              {
-	        TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	        TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
 	        TokenValue[TokenCount] = value;
 	        TokenType[TokenCount++] = NUMBER_TOKEN;
              }
-          }
-          else
+          } else
           {
-	     TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
 	     TokenValue[TokenCount] = value;
 	     TokenType[TokenCount++] = type;
           }
-          p = next;  
+          p = next;
        }
 
        if (delim_table[*p & 0xFF]) {
@@ -802,78 +791,77 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
              DBGPrint("delim: [NULL]\n", *p);
 #endif
           switch (*p) {
-
           case '\0':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = NULL_TOKEN;
 	      return (p);
 
 	  case ']':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = DREF_CLOSE_TOKEN;
 	      p++;
 	      break;
 
 	  case '(':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = BB_TOKEN;
 	      p++;
 	      break;
 
 	  case ')':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = EB_TOKEN;
 	      p++;
 	     break;
 
 	  case '+':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = PLUS_TOKEN;
 	      p++;
 	      break;
 
 	  case '-':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = MINUS_TOKEN;
 	      p++;
 	      break;
 
 	  case '*':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = MULTIPLY_TOKEN;
 	      p++;
 	      break;
 
 	  case '/':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = DIVIDE_TOKEN;
 	      p++;
 	      break;
 
 	  case '%':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = MOD_TOKEN;
 	      p++;
 	      break;
 
 	  case '~':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = NEG_TOKEN;
 	      p++;
 	      break;
 
 	  case '^':
-	      TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = XOR_TOKEN;
 	      p++;
@@ -883,13 +871,13 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     p++;
 	     if (*p == '=')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = NOT_EQUAL_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = NOT_TOKEN;
 	     break;
@@ -899,13 +887,13 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     break;
 
 	  case '[':
-	     TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = DREF_OPEN_TOKEN;
 	     p++;
 	     if (tolower(*p) == 'q' && *(p + 1) == ' ')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = QWORD_TOKEN;
 		p++;
@@ -913,7 +901,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     }
 	     if (tolower(*p) == 'd' && *(p + 1) == ' ')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = DWORD_TOKEN;
 		p++;
@@ -921,7 +909,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     }
 	     if (tolower(*p) == 'w' && *(p + 1) == ' ')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = WORD_TOKEN;
 		p++;
@@ -929,7 +917,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     }
 	     if (tolower(*p) == 'b' && *(p + 1) == ' ')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = BYTE_TOKEN;
 		p++;
@@ -941,13 +929,13 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     p++;
 	     if (*p == '=')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = EQUAL_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = ASSIGNMENT_TOKEN;
 	     break;
@@ -956,7 +944,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     p++;
 	     if (*p == '<')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = LEFT_SHIFT_TOKEN;
 		p++;
@@ -964,13 +952,13 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     }
 	     if (*p == '=')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = LESS_EQUAL_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = LESS_TOKEN;
 	     break;
@@ -979,7 +967,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     p++;
 	     if (*p == '>')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = RIGHT_SHIFT_TOKEN;
 		p++;
@@ -987,13 +975,13 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     }
 	     if (*p == '=')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = GREATER_EQUAL_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = GREATER_TOKEN;
 	     break;
@@ -1002,13 +990,13 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     p++;
 	     if (*p == '|')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = LOGICAL_OR_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = OR_TOKEN;
 	     break;
@@ -1017,30 +1005,28 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     p++;
 	     if (*p == '&')
 	     {
-		TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = LOGICAL_AND_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long) ((unsigned long) p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = AND_TOKEN;
 	     break;
 
-	  default: 
+	  default:
 	     break;
-
           }
        }
 
        /* if the string did not advance, bump the pointer. */
-       if (*p && prev >= p) 
+       if (*p && prev >= p)
           p++;
 
     }  /* while */
     return p;
-
 }
 
 void displayExpressionHelp(void)
@@ -1258,12 +1244,11 @@ void displayExpressionHelp(void)
        if (DBGPrint("\n")) return;
 #endif
        return;
-
 }
 
-static inline uint64_t deref(unsigned long type, 
+static inline uint64_t deref(unsigned long type,
                              unsigned long value,
-                             int sizeflag, 
+                             int sizeflag,
                              unsigned char **result,
                              unsigned long seg,
                              unsigned long sv)
@@ -1277,80 +1262,79 @@ static inline uint64_t deref(unsigned long type,
    DBGPrint("DEREF: %04X -> %04X:%lX\n", seg, sv, value);
 #endif
 
-   // if a sizeflag was specified, override the type field
+   /* if a sizeflag was specified, override the type field */
    if (sizeflag)
    {
       switch (sizeflag)
       {
-           // BYTE
+           /* BYTE */
            case 1:
-	     pb = (unsigned char *) value;
-	     return (unsigned char) mdb_segment_getword(sv,
-                                                       (unsigned long)pb, 1);
+	     pb = (unsigned char *)value;
+	     return (unsigned char)mdb_segment_getword(sv,
+						       (unsigned long)pb, 1);
 
-           // WORD
+           /* WORD */
            case 2:
-	     pw = (unsigned short *) value;
-	     return (unsigned short) mdb_segment_getword(sv,
-                                                        (unsigned long)pw, 2);
+	     pw = (unsigned short *)value;
+	     return (unsigned short)mdb_segment_getword(sv,
+							(unsigned long)pw, 2);
 
-           // DWORD
+           /* DWORD */
            case 4:
-	     pd = (unsigned long *) value;
-	     return (unsigned long) mdb_segment_getword(sv, 
-                                                       (unsigned long)pd, 4);
+	     pd = (unsigned long *)value;
+	     return (unsigned long)mdb_segment_getword(sv,
+						       (unsigned long)pd, 4);
 
-           // QWORD
+           /* QWORD */
            case 8:
-	     pq = (uint64_t *) value;
-	     return (uint64_t) mdb_segment_getqword(sv, (uint64_t *)pq, 8);
+	     pq = (uint64_t *)value;
+	     return (uint64_t)mdb_segment_getqword(sv, (uint64_t *)pq, 8);
 
-           // FWORD
+           /* FWORD */
            case 6:
-           // TBYTE (floating point)
+           /* TBYTE (floating point) */
            case 10:
-           // VMMWORD 
+           /* VMMWORD */
            case 16:
              if (result)
                 *result = (unsigned char *)value;
              return 0;
 
-           // if an unknown sizeflag is passed, then default to type
+           /* if an unknown sizeflag is passed, then default to type */
            default:
               break;
-      } 
+      }
    }
 
    switch (type)
    {
       case ARCH_PTR:
-#ifdef CONFIG_X86_64 
-	 pq = (uint64_t *) value;
-	 return (uint64_t) mdb_segment_getqword(sv, (uint64_t *)pq, 8);
+#ifdef CONFIG_X86_64
+	 pq = (uint64_t *)value;
+	 return (uint64_t)mdb_segment_getqword(sv, (uint64_t *)pq, 8);
 #else
-	 pd = (unsigned long *) value;
-	 return (unsigned long) mdb_segment_getword(sv, (unsigned long)pd, 4);
+	 pd = (unsigned long *)value;
+	 return (unsigned long)mdb_segment_getword(sv, (unsigned long)pd, 4);
 #endif
       case ULONGLONG_PTR:
-	 pq = (uint64_t *) value;
-	 return (uint64_t) mdb_segment_getqword(sv, (uint64_t *)pq, 8);
+	 pq = (uint64_t *)value;
+	 return (uint64_t)mdb_segment_getqword(sv, (uint64_t *)pq, 8);
 
       case ULONG_PTR:
-	 pd = (unsigned long *) value;
-	 return (unsigned long) mdb_segment_getword(sv, (unsigned long)pd, 4);
+	 pd = (unsigned long *)value;
+	 return (unsigned long)mdb_segment_getword(sv, (unsigned long)pd, 4);
 
       case WORD_PTR:
-	 pw = (unsigned short *) value;
-	 return (unsigned short) mdb_segment_getword(sv, (unsigned long)pw, 2);
+	 pw = (unsigned short *)value;
+	 return (unsigned short)mdb_segment_getword(sv, (unsigned long)pw, 2);
 
       case BYTE_PTR:
-	 pb = (unsigned char *) value;
-	 return (unsigned char) mdb_segment_getword(sv, (unsigned long)pb, 1);
+	 pb = (unsigned char *)value;
+	 return (unsigned char)mdb_segment_getword(sv, (unsigned long)pb, 1);
 
       default:
 	 return 0;
    }
-
 }
 
 static inline unsigned long SegmentPush(unsigned long i)
@@ -1385,7 +1369,6 @@ static inline unsigned long SegmentPop(void)
     DBGPrint("spop  : %lX (%d)\n", *s_sp, *s_sp);
 #endif
     return *s_sp;
-
 }
 
 static inline unsigned long ExpressPush(unsigned long long i)
@@ -1420,7 +1403,6 @@ static inline unsigned long long ExpressPop(void)
     DBGPrint("pop  : %lX (%d)\n", *sp, *sp);
 #endif
     return *sp;
-
 }
 
 static inline unsigned long ContextPush(unsigned long long i)
@@ -1455,7 +1437,6 @@ static inline unsigned long long ContextPop(void)
     DBGPrint("cpop : %lX (%d)\n", *c_sp, *c_sp);
 #endif
     return *c_sp;
-
 }
 
 static inline unsigned long BooleanPush(unsigned long long i)
@@ -1490,7 +1471,6 @@ static inline unsigned long long BooleanPop(void)
     DBGPrint("bpop : %lX (%d)\n", *b_sp, *b_sp);
 #endif
     return *b_sp;
-
 }
 
 static inline unsigned long LogicalPush(unsigned long long i)
@@ -1525,12 +1505,10 @@ static inline unsigned long long LogicalPop(void)
     DBGPrint("lpop : %lX (%d)\n", *l_sp, *l_sp);
 #endif
     return *l_sp;
-
 }
 
 static inline void initNumericStacks(void)
 {
-
     sp = numStack;
     tos = sp;
     bos = sp + NUM_STACK_SIZE - 1;
@@ -1550,7 +1528,6 @@ static inline void initNumericStacks(void)
     l_sp = logicalStack;
     l_tos = l_sp;
     l_bos = l_sp + LOGICAL_STACK_SIZE - 1;
-
 }
 
 static inline unsigned long ProcessOperator(unsigned long oper)
@@ -1559,7 +1536,7 @@ static inline unsigned long ProcessOperator(unsigned long oper)
 
     b = ExpressPop();
     a = ExpressPop();
-    switch(oper)
+    switch (oper)
     {
        case NEG_TOKEN:
 	  break;
@@ -1609,20 +1586,17 @@ static inline unsigned long ProcessOperator(unsigned long oper)
 	  else
 	     ExpressPush(0);
 	  break;
-
     }
     return 0;
-
 }
 
 static inline unsigned long ProcessBoolean(unsigned long oper)
 {
-
     unsigned long a, b;
 
     b = ExpressPop();
     a = ExpressPop();
-    switch(oper)
+    switch (oper)
     {
        case NOT_TOKEN:
 	  ExpressPush(a == b); /* we pushed an imaginary zero on the stack */
@@ -1653,17 +1627,15 @@ static inline unsigned long ProcessBoolean(unsigned long oper)
 	  break;
     }
     return 0;
-
 }
 
 static inline unsigned long ProcessLogical(unsigned long oper)
 {
-
     unsigned long a, b;
 
     b = ExpressPop();
     a = ExpressPop();
-    switch(oper)
+    switch (oper)
     {
        case LOGICAL_AND_TOKEN:
 	  ExpressPush(a && b);
@@ -1674,12 +1646,10 @@ static inline unsigned long ProcessLogical(unsigned long oper)
 	  break;
     }
     return 0;
-
 }
 
 static inline unsigned long ParseLogical(unsigned long logicalCount)
 {
-
     register int i, r;
     unsigned long a;
     unsigned long c = 0, lastClass = 0, oper = 0;
@@ -1706,7 +1676,7 @@ static inline unsigned long ParseLogical(unsigned long logicalCount)
     {
 #if DEBUG_LOGICAL
        DBGPrint("token: %02X  value: %lX  type: %s\n", TokenType[i],
-	      TokenValue[i], parserDescription[TokenType[i]]);
+		TokenValue[i], parserDescription[TokenType[i]]);
 #endif
        switch (TokenType[i])
        {
@@ -1741,12 +1711,10 @@ static inline unsigned long ParseLogical(unsigned long logicalCount)
        }
     }
     return c;
-
 }
 
 static inline unsigned long ParseBoolean(unsigned long booleanCount)
 {
-
     register int i, r;
     unsigned long a, oper = 0;
     unsigned long c = 0, lastClass = 0, logicalCount = 0;
@@ -1773,7 +1741,7 @@ static inline unsigned long ParseBoolean(unsigned long booleanCount)
     {
 #if DEBUG_BOOL
        DBGPrint("token: %02X  value: %lX  type: %s\n", TokenType[i],
-	      TokenValue[i], parserDescription[TokenType[i]]);
+		TokenValue[i], parserDescription[TokenType[i]]);
 #endif
        switch (TokenType[i])
        {
@@ -1853,14 +1821,13 @@ static inline unsigned long ParseBoolean(unsigned long booleanCount)
        }
     }
     return c;
-
 }
 
-uint64_t Evaluate(StackFrame *stackFrame, 
-                                unsigned char **p, 
-                                unsigned long *type, 
+uint64_t Evaluate(StackFrame *stackFrame,
+		  unsigned char **p,
+                                unsigned long *type,
                                 unsigned long mode,
-                                int sizeflag, 
+                                int sizeflag,
                                 unsigned char **result)
 {
      register int i;
@@ -1890,8 +1857,8 @@ uint64_t Evaluate(StackFrame *stackFrame,
 	for (i = 0; i < TokenCount; i++)
 	{
 #if (DEBUG_EXPRESS)
-	   DBGPrint("token: %s value %0lX lastClass: %d\n", 
-                    parserDescription[TokenType[i]], 
+	   DBGPrint("token: %s value %0lX lastClass: %d\n",
+		    parserDescription[TokenType[i]],
                     TokenValue[i],
                     lastClass);
 #endif
@@ -2032,8 +1999,8 @@ uint64_t Evaluate(StackFrame *stackFrame,
 		 if (!dref)
 		    continue;
 
-		 c = deref(dref_type, ExpressPop(), sizeflag, result, 
-                           segment, segment_value);
+		 c = deref(dref_type, ExpressPop(), sizeflag, result,
+			   segment, segment_value);
 		 ExpressPush(c);
 		 negative_flag  = ContextPop();
 		 neg_flag  = ContextPop();
@@ -2209,14 +2176,14 @@ uint64_t Evaluate(StackFrame *stackFrame,
 	      case RCX_TOKEN:
 	      case RDX_TOKEN:
 	      case ESI_TOKEN:
-	      case EDI_TOKEN:	
+	      case EDI_TOKEN:
 	      case EBP_TOKEN:
 	      case ESP_TOKEN:
 	      case RSI_TOKEN:
 	      case RDI_TOKEN:
 	      case RBP_TOKEN:
 	      case RSP_TOKEN:
-                 // get the last segment associated with this data token
+                 /* get the last segment associated with this data token */
                  if (segmentCount)
                  {
                     segment = SegmentPop();
@@ -2272,7 +2239,7 @@ uint64_t Evaluate(StackFrame *stackFrame,
 		 lastToken = 0;
 		 continue;
 
-              // if a segment token is tagged for derefence, push segment
+              /* if a segment token is tagged for derefence, push segment */
 	      case CS_ADDR_TOKEN:
 	      case DS_ADDR_TOKEN:
 	      case ES_ADDR_TOKEN:
@@ -2389,7 +2356,6 @@ evaluate_error_exit:
      spin_unlock_irqrestore(&expressLock, flags);
 #endif
      return 0;
-
 }
 
 uint64_t EvaluateDisassemblyExpression(StackFrame *stackFrame, unsigned char **p, unsigned long *type, int sizeflag, unsigned char **result)
@@ -2447,10 +2413,9 @@ void EvaluateCommandExpression(StackFrame *stackFrame, unsigned char *p)
      if (type)
      {
 	DBGPrint("expr: %s = 0x%llX (%lld) (%s) bool(%i) = %s\n",
-		    expr, c, c, exprDescription[type & 3],
+		 expr, c, c, exprDescription[type & 3],
 		    (c) ? 1 : 0, (c) ? "TRUE" : "FALSE");
-     }
-     else
+     } else
      {
         DBGPrint("expression parameters invalid\n");
 	DBGPrint("expr: %s = 0x%llX (%lld) (results invalid) (%s)"
@@ -2459,5 +2424,4 @@ void EvaluateCommandExpression(StackFrame *stackFrame, unsigned char *p)
 		 (c) ? 1 : 0, (c) ? "TRUE" : "FALSE");
      }
      return;
-
 }

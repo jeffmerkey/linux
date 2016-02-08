@@ -22,7 +22,7 @@
 #define _MDB_H
 
 /* screen output function */
-extern int mdb_printf(char *s, ...);
+int mdb_printf(char *s, ...);
 #define DBGPrint   mdb_printf
 
 /* external entry points used by linux */

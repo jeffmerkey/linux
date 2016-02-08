@@ -25,9 +25,9 @@ struct ACCELERATOR {
 	struct ACCELERATOR *accelNext;
 	struct ACCELERATOR *accelPrior;
 	unsigned long (*accelRoutine)(unsigned long key, void *p,
-				struct ACCELERATOR *parser);
+				      struct ACCELERATOR *parser);
 	unsigned long (*accelRoutineHelp)(unsigned long key,
-				struct ACCELERATOR *parser);
+					  struct ACCELERATOR *parser);
 	unsigned long accelFlags;
 	unsigned long key;
 	unsigned long supervisorCommand;
@@ -40,16 +40,15 @@ struct ALT_DEBUGGER {
 	int (*AlternateDebugger)(int reason, int error, void *frame);
 };
 
-
 struct DEBUGGER_PARSER {
 	struct DEBUGGER_PARSER *debugNext;
 	struct DEBUGGER_PARSER *debugPrior;
 	unsigned long (*DebugCommandParser)(unsigned char *commandLine,
-				StackFrame *stackFrame,
+					    StackFrame *stackFrame,
 				unsigned long Exception,
 				struct DEBUGGER_PARSER *parser);
 	unsigned long (*DebugCommandParserHelp)(unsigned char *commandLine,
-					struct DEBUGGER_PARSER *parser);
+						struct DEBUGGER_PARSER *parser);
 	unsigned long parserFlags;
 	unsigned char *debugCommandName;
 	unsigned long debugCommandNameLength;
@@ -69,17 +68,17 @@ struct DEBUGGER_LIST {
 #define DEBUGGER_PARSER  struct DEBUGGER_PARSER
 #define DEBUGGER_LIST    struct DEBUGGER_LIST
 
-extern int AlternateDebuggerRoutine(int reason, int error, void *frame);
-extern unsigned long AddAlternateDebugger(ALT_DEBUGGER *Debugger);
-extern unsigned long RemoveAlternateDebugger(ALT_DEBUGGER *Debugger);
-extern unsigned long DebuggerParserRoutine(unsigned char *command,
-		unsigned char *commandLine,
+int AlternateDebuggerRoutine(int reason, int error, void *frame);
+unsigned long AddAlternateDebugger(ALT_DEBUGGER *Debugger);
+unsigned long RemoveAlternateDebugger(ALT_DEBUGGER *Debugger);
+unsigned long DebuggerParserRoutine(unsigned char *command,
+				    unsigned char *commandLine,
 		StackFrame *stackFrame,
 		unsigned long Exception);
-extern unsigned long DebuggerParserHelpRoutine(unsigned char *command,
-		unsigned char *commandLine);
-extern unsigned long AddDebuggerCommandParser(DEBUGGER_PARSER *parser);
-extern unsigned long RemoveDebuggerCommandParser(DEBUGGER_PARSER *parser);
+unsigned long DebuggerParserHelpRoutine(unsigned char *command,
+					unsigned char *commandLine);
+unsigned long AddDebuggerCommandParser(DEBUGGER_PARSER *parser);
+unsigned long RemoveDebuggerCommandParser(DEBUGGER_PARSER *parser);
 
 static inline unsigned long strhash(unsigned char *s, int len, int limit)
 {

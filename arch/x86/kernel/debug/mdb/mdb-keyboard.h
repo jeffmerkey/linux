@@ -24,7 +24,6 @@
 #undef KBD_IS_FOCUS_9000		/* We have the brain-damaged FOCUS-9000 keyboard */
 #undef INITIALIZE_MOUSE			/* Define if your PS/2 mouse needs initialization. */
 
-
 #define KBD_INIT_TIMEOUT 1000		/* Timeout in ms for initializing the keyboard */
 #define KBC_TIMEOUT 250			/* Timeout in ms for sending to keyboard controller */
 #define KBD_TIMEOUT 1000		/* Timeout in ms for keyboard command acknowledge */
@@ -116,7 +115,7 @@
 #define AUX_RESET		0xFF	/* Reset aux device */
 #define AUX_ACK			0xFA	/* Command byte ACK. */
 
-#define AUX_BUF_SIZE		2048	
+#define AUX_BUF_SIZE		2048
                                            /* This might be better divisible by
 					   three to make overruns stay in sync
 					   but then the read function would need

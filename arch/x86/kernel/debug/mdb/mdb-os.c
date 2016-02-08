@@ -73,16 +73,16 @@ unsigned char symbuf[MAX_SYMBOL_LEN];
 unsigned char modbuf[MAX_SYMBOL_LEN];
 unsigned char workbuf[MAX_SYMBOL_LEN];
 
-#ifdef CONFIG_X86_64 
+#ifdef CONFIG_X86_64
 
 static inline int in_irq_stack(unsigned long *stack, unsigned long *irq_stack,
-	     unsigned long *irq_stack_end)
+			       unsigned long *irq_stack_end)
 {
 	return (stack >= irq_stack && stack < irq_stack_end);
 }
 
-static inline unsigned long fixup_bp_irq_link(unsigned long bp, 
-unsigned long *stack, unsigned long *irq_stack, unsigned long *irq_stack_end)
+static inline unsigned long fixup_bp_irq_link(unsigned long bp,
+					      unsigned long *stack, unsigned long *irq_stack, unsigned long *irq_stack_end)
 {
 #ifdef CONFIG_FRAME_POINTER
 	struct stack_frame *frame = (struct stack_frame *)bp;
@@ -92,8 +92,8 @@ unsigned long *stack, unsigned long *irq_stack, unsigned long *irq_stack_end)
 		if (!probe_kernel_address(&frame->next_frame, next))
 			return next;
 		else
-			DBGPrint("MDB: bad frame pointer = %p in chain\n", 
-                                 &frame->next_frame);
+			DBGPrint("MDB: bad frame pointer = %p in chain\n",
+				 &frame->next_frame);
 	}
 #endif
 	return bp;
@@ -102,21 +102,22 @@ unsigned long *stack, unsigned long *irq_stack, unsigned long *irq_stack_end)
 #define get_bp(bp) asm("movq %%rbp, %0" : "=r" (bp) :)
 
 extern unsigned long *in_exception_stack(unsigned cpu, unsigned long stack,
-    			                 unsigned *usedp, char **idp);
+					 unsigned *usedp, char **idp);
 extern unsigned long *get_irq_stack_end(const unsigned int cpu);
 
 void DBGPrint_address(unsigned long address, int reliable)
 {
-	DBGPrint(" [<%p>] %s%pS\n", (void *) address,
-		 reliable ? "" : "? ", (void *) address);
+	DBGPrint(" [<%p>] %s%pS\n", (void *)address,
+		 reliable ? "" : "? ", (void *)address);
 }
 
 static inline int valid_stack_ptr(struct thread_info *tinfo,
-			void *p, unsigned int size, void *end)
+				  void *p, unsigned int size, void *end)
 {
 	void *t = tinfo;
+
 	if (end) {
-		if (p < end && p >= (end-THREAD_SIZE))
+		if (p < end && p >= (end - THREAD_SIZE))
 			return 1;
 		else
 			return 0;
@@ -125,7 +126,7 @@ static inline int valid_stack_ptr(struct thread_info *tinfo,
 }
 
 static inline unsigned long
-print_context(struct thread_info *tinfo, unsigned long *stack, 
+print_context(struct thread_info *tinfo, unsigned long *stack,
               unsigned long bp, unsigned long *end)
 {
 	struct stack_frame *frame = (struct stack_frame *)bp;
@@ -135,11 +136,11 @@ print_context(struct thread_info *tinfo, unsigned long *stack,
 
 		addr = *stack;
 		if (__kernel_text_address(addr)) {
-			if ((unsigned long) stack == bp + sizeof(long)) {
+			if ((unsigned long)stack == bp + sizeof(long)) {
 	                        mdb_watchdogs();
 	                        DBGPrint_address(addr, 1);
 				frame = frame->next_frame;
-				bp = (unsigned long) frame;
+				bp = (unsigned long)frame;
 			} else {
 	                        mdb_watchdogs();
 	                        DBGPrint_address(addr, bp == 0);
@@ -164,61 +165,63 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 
 	if (!stack) {
 		unsigned long dummy;
+
 		stack = &dummy;
 		if (task && task != current)
 			stack = (unsigned long *)task->thread.sp;
 	}
 
 #ifdef CONFIG_FRAME_POINTER
-	if (!bp) 
+	if (!bp)
         {
-		if (task == current) 
+		if (task == current)
                 {
 			get_bp(bp);
-		} 
-                else 
+                } else
                 {
-			bp = *(unsigned long *) task->thread.sp;
+			bp = *(unsigned long *)task->thread.sp;
 		}
 	}
 #endif
 
 	tinfo = task_thread_info(task);
-	for (;;) 
+	for (;;)
         {
 		char *id;
 		unsigned long *estack_end;
+
 		estack_end = in_exception_stack(cpu, (unsigned long)stack,
 						&used, &id);
 
 		if (estack_end) {
 			if (DBGPrint("%s", id))
- 			   break;
+			   break;
 
 			bp = print_context(tinfo, stack, bp, estack_end);
 			DBGPrint("%s", "<EOE>");
 
-			stack = (unsigned long *) estack_end[-2];
+			stack = (unsigned long *)estack_end[-2];
 			continue;
 		}
 
-		if (irq_stack_end) 
+		if (irq_stack_end)
                 {
 			unsigned long *irq_stack;
+
 			irq_stack = irq_stack_end -
 				(IRQ_STACK_SIZE - 64) / sizeof(*irq_stack);
 
-			if (in_irq_stack(stack, irq_stack, irq_stack_end)) 
+			if (in_irq_stack(stack, irq_stack, irq_stack_end))
                         {
 			      if (DBGPrint("%s", "IRQ"))
-		 	         break;
+			         break;
 
 			      bp = print_context(tinfo, stack, bp,
-			    		               irq_stack_end);
+						 irq_stack_end);
 
-			      stack = (unsigned long *) (irq_stack_end[-1]);
+			      stack = (unsigned long *)(irq_stack_end[-1]);
 			      bp = fixup_bp_irq_link(bp, stack, irq_stack,
-						       irq_stack_end);
+						     irq_stack_end);
 			      irq_stack_end = NULL;
 			      DBGPrint("%s", "EOI");
 			      continue;
@@ -237,11 +240,12 @@ extern void *is_hardirq_stack(unsigned long *stack, int cpu);
 extern void *is_softirq_stack(unsigned long *stack, int cpu);
 
 static inline int valid_stack_ptr(struct thread_info *tinfo,
-			void *p, unsigned int size, void *end)
+				  void *p, unsigned int size, void *end)
 {
 	void *t = tinfo;
+
 	if (end) {
-		if (p < end && p >= (end-THREAD_SIZE))
+		if (p < end && p >= (end - THREAD_SIZE))
 			return 1;
 		else
 			return 0;
@@ -252,13 +256,13 @@ static inline int valid_stack_ptr(struct thread_info *tinfo,
 static void print_stack_address(unsigned long address, int reliable)
 {
 	DBGPrint("[<%p>] %s%pB\n",
-		(void *)address, reliable ? "" : "? ",
+		 (void *)address, reliable ? "" : "? ",
 		(void *)address);
 }
 
 unsigned long
 print_context(struct thread_info *tinfo,
-		unsigned long *stack, unsigned long bp,
+	      unsigned long *stack, unsigned long bp,
 		unsigned long *end)
 {
 	struct stack_frame *frame = (struct stack_frame *)bp;
@@ -268,11 +272,11 @@ print_context(struct thread_info *tinfo,
 
 		addr = *stack;
 		if (__kernel_text_address(addr)) {
-			if ((unsigned long) stack == bp + sizeof(long)) {
+			if ((unsigned long)stack == bp + sizeof(long)) {
                                 mdb_watchdogs();
 				print_stack_address(addr, 1);
 				frame = frame->next_frame;
-				bp = (unsigned long) frame;
+				bp = (unsigned long)frame;
 			} else {
                                 mdb_watchdogs();
 				print_stack_address(addr, 0);
@@ -353,12 +357,11 @@ int bt_stack(struct task_struct *task, struct pt_regs *regs,
 
     if (!stack)
     {
-
        stack = &dummy;
        if (task && task != current)
        {
-#ifdef CONFIG_X86_64 
-  	  stack = (unsigned long *)task->thread.sp;
+#ifdef CONFIG_X86_64
+	  stack = (unsigned long *)task->thread.sp;
 #else
           if (mdb_verify_rw((void *)&task->thread.sp, 4))
              return 0;
@@ -370,7 +373,6 @@ int bt_stack(struct task_struct *task, struct pt_regs *regs,
     }
 
     return (dumpBacktrace((unsigned char *)stack, 40));
-
 }
 #endif
 
@@ -414,7 +416,7 @@ int mdb_printf(char *fmt, ...)
 	for (con = console_drivers; con; con = con->next)
         {
 	   if ((con->flags & CON_ENABLED) && con->write &&
-	        (cpu_online(get_processor_id()) ||
+	       (cpu_online(get_processor_id()) ||
 		(con->flags & CON_ANYTIME)))
            {
 	      con->write(con, mdb_buffer, strlen(mdb_buffer));
@@ -433,25 +435,25 @@ int mdb_printf(char *fmt, ...)
 	   for (con = console_drivers; con; con = con->next)
            {
 	      if ((con->flags & CON_ENABLED) && con->write &&
-	           (cpu_online(get_processor_id()) ||
+		  (cpu_online(get_processor_id()) ||
 	           (con->flags & CON_ANYTIME)))
               {
 	         con->write(con, mdbprompt, strlen(mdbprompt));
                  mdb_watchdogs();
               }
 	   }
-  
+
            mdb_suppress_crlf = 1;
 	   mdb_keystroke[0] = (char)mdb_getkey();
            mdb_suppress_crlf = 0;
 
-	   if (mdb_keystroke[0] == ' ') 
+	   if (mdb_keystroke[0] == ' ')
               nextline = 0;
 
 	   for (con = console_drivers; con; con = con->next)
            {
 	      if ((con->flags & CON_ENABLED) && con->write &&
-	           (cpu_online(get_processor_id()) ||
+		  (cpu_online(get_processor_id()) ||
 	           (con->flags & CON_ANYTIME)))
               {
                  memset(mdb_buffer, 0, 256);
@@ -482,7 +484,6 @@ int mdb_printf(char *fmt, ...)
 	      debug_unrlock(&mdb_lock, &mdb_mutex, get_processor_id());
               return 1;
            }
-
 	}
 
 #if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
@@ -494,10 +495,10 @@ int mdb_printf(char *fmt, ...)
         return 0;
 }
 
-unsigned int mdb_serial_port;  
+unsigned int mdb_serial_port;
 module_param(mdb_serial_port, uint, 0644);
 MODULE_PARM_DESC(mdb_serial_port,
-	"MDB serial port address.  i.e. 0x3f8(ttyS0), 0x2f8(ttyS1), 0x3e8(ttyS2), 0x2e8(ttyS3)");
+		 "MDB serial port address.  i.e. 0x3f8(ttyS0), 0x2f8(ttyS1), 0x3e8(ttyS2), 0x2e8(ttyS3)");
 
 int get_modem_char(void)
 {
@@ -627,15 +628,15 @@ static int get_kbd_char(void)
 	 */
 
 	if (((scancode & 0x7f) == 0x2a) ||
-            ((scancode & 0x7f) == 0x36))
+	    ((scancode & 0x7f) == 0x36))
         {
 		/*
 		 * Next key may use shift table
 		 */
 		if ((scancode & 0x80) == 0) {
-			shift_key=1;
+			shift_key = 1;
 		} else {
-			shift_key=0;
+			shift_key = 0;
 		}
 		return -1;
 	}
@@ -806,7 +807,7 @@ extern void mdb_watchdogs(void);
 int mdb_getkey(void)
 {
    int key = -1;
-   
+
    for (;;)
    {
       key = get_kbd_char();
@@ -832,6 +833,7 @@ int mdb_copy(void *to, void *from, size_t size)
 int mdb_verify_rw(void *addr, size_t size)
 {
     unsigned char data[size];
+
     return (mdb_copy(data, addr, size));
 }
 
@@ -859,7 +861,7 @@ int mdb_getphysword(uint64_t *word, unsigned long addr, size_t size)
 	__u16 w2;
 	__u32 w4;
 	__u64 w8;
-	*word = 0;	
+	*word = 0;
 
 	switch (size) {
 	case 1:
@@ -988,6 +990,7 @@ int mdb_putqword(uint64_t *addr, uint64_t word, size_t size)
 uint64_t mdb_getqword(uint64_t *addr, size_t size)
 {
    uint64_t data = 0;
+
    register int ret;
 
    ret = mdb_getlword(&data, (unsigned long)addr, size);
@@ -1045,7 +1048,7 @@ uint64_t mdb_segment_getqword(unsigned long sv, uint64_t *addr, size_t size)
    return data;
 }
 
-unsigned long mdb_segment_getword(unsigned long sv, unsigned long addr, 
+unsigned long mdb_segment_getword(unsigned long sv, unsigned long addr,
                                   size_t size)
 {
    uint64_t data = 0;
@@ -1063,7 +1066,7 @@ int DisplayClosestSymbol(unsigned long address)
     char *modname;
     const char *name;
     unsigned long offset = 0, size;
-    char namebuf[KSYM_NAME_LEN+1];
+    char namebuf[KSYM_NAME_LEN + 1];
 
     name = kallsyms_lookup(address, &size, &offset, &modname, namebuf);
     if (!name)
@@ -1075,8 +1078,7 @@ int DisplayClosestSymbol(unsigned long address)
           DBGPrint("%s|%s+0x%X\n", modname, name, offset);
        else
           DBGPrint("%s|%s\n", modname, name);
-    }
-    else
+    } else
     {
        if (offset)
           DBGPrint("%s+0x%X\n", name, offset);
@@ -1097,13 +1099,12 @@ unsigned long GetValueFromSymbol(unsigned char *symbol)
    return ((unsigned long)kallsyms_lookup_name(symbol));
 }
 
-
 unsigned char *GetModuleInfoFromSymbolValue(unsigned long value, unsigned char *buf, unsigned long len)
 {
     char *modname;
     const char *name;
     unsigned long offset, size;
-    char namebuf[KSYM_NAME_LEN+1];
+    char namebuf[KSYM_NAME_LEN + 1];
 
     name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
     if (name && modname && buf)
@@ -1119,7 +1120,7 @@ unsigned char *GetSymbolFromValue(unsigned long value, unsigned char *buf, unsig
     char *modname;
     const char *name;
     unsigned long offset, size;
-    char namebuf[KSYM_NAME_LEN+1];
+    char namebuf[KSYM_NAME_LEN + 1];
 
     name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
     if (!name)
@@ -1135,12 +1136,12 @@ unsigned char *GetSymbolFromValue(unsigned long value, unsigned char *buf, unsig
 }
 
 unsigned char *GetSymbolFromValueWithOffset(unsigned long value, unsigned long *sym_offset,
-                                   unsigned char *buf, unsigned long len)
+					    unsigned char *buf, unsigned long len)
 {
     char *modname;
     const char *name;
     unsigned long offset, size;
-    char namebuf[KSYM_NAME_LEN+1];
+    char namebuf[KSYM_NAME_LEN + 1];
 
     name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
     if (!name || !buf)
@@ -1154,12 +1155,12 @@ unsigned char *GetSymbolFromValueWithOffset(unsigned long value, unsigned long *
 }
 
 unsigned char *GetSymbolFromValueOffsetModule(unsigned long value, unsigned long *sym_offset,
-                                     unsigned char **module, unsigned char *buf, unsigned long len)
+					      unsigned char **module, unsigned char *buf, unsigned long len)
 {
     char *modname;
     const char *name;
     unsigned long offset, size;
-    char namebuf[KSYM_NAME_LEN+1];
+    char namebuf[KSYM_NAME_LEN + 1];
 
     name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
     if (!name || !buf)
@@ -1174,7 +1175,6 @@ unsigned char *GetSymbolFromValueOffsetModule(unsigned long value, unsigned long
     mdb_copy(buf, namebuf, len);
     return (unsigned char *)buf;
 }
-
 
 unsigned long get_processor_id(void)
 {
@@ -1215,8 +1215,8 @@ unsigned char *UpcaseString(unsigned char *s)
    for (i = 0; i < strlen(s); i++)
       s[i] = toupper(s[i]);
    return s;
-
 }
+
 void ClearScreen(void)
 {
     mdb_printf("%c%c", 0x1B, 'c');
@@ -1227,7 +1227,7 @@ unsigned long ReadDS(void)
 {
     unsigned short contents = 0;
 
-    __asm__ ("mov %%ds,%0\n\t":"=r"(contents));
+    __asm__ ("mov %%ds,%0\n\t" : "=r"(contents));
     return contents;
 }
 
@@ -1235,7 +1235,7 @@ unsigned long ReadES(void)
 {
     unsigned short contents = 0;
 
-    __asm__ ("mov %%es,%0\n\t":"=r"(contents));
+    __asm__ ("mov %%es,%0\n\t" : "=r"(contents));
     return contents;
 }
 
@@ -1243,7 +1243,7 @@ unsigned long ReadFS(void)
 {
     unsigned short contents = 0;
 
-    __asm__ ("mov %%fs,%0\n\t":"=r"(contents));
+    __asm__ ("mov %%fs,%0\n\t" : "=r"(contents));
     return contents;
 }
 
@@ -1251,7 +1251,7 @@ unsigned long ReadGS(void)
 {
     unsigned short contents = 0;
 
-    __asm__ ("mov %%gs,%0\n\t":"=r"(contents));
+    __asm__ ("mov %%gs,%0\n\t" : "=r"(contents));
     return contents;
 }
 
@@ -1260,28 +1260,28 @@ unsigned long ReadDR(unsigned long regnum)
 {
 	unsigned long contents = 0;
 
-	switch(regnum)
+	switch (regnum)
         {
 	   case 0:
-		__asm__ ("movq %%db0,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%db0,%0\n\t" : "=r"(contents));
 		break;
 	   case 1:
-		__asm__ ("movq %%db1,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%db1,%0\n\t" : "=r"(contents));
 		break;
 	   case 2:
-		__asm__ ("movq %%db2,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%db2,%0\n\t" : "=r"(contents));
 		break;
 	   case 3:
-		__asm__ ("movq %%db3,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%db3,%0\n\t" : "=r"(contents));
 		break;
 	   case 4:
 	   case 5:
 		break;
 	   case 6:
-		__asm__ ("movq %%db6,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%db6,%0\n\t" : "=r"(contents));
 		break;
 	   case 7:
-		__asm__ ("movq %%db7,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%db7,%0\n\t" : "=r"(contents));
 		break;
 	   default:
 		break;
@@ -1292,7 +1292,7 @@ unsigned long ReadDR(unsigned long regnum)
 
 void WriteDR(int regnum, unsigned long contents)
 {
-	switch(regnum)
+	switch (regnum)
         {
 	   case 0:
 		__asm__ ("movq %0,%%db0\n\t"::"r"(contents));
@@ -1324,21 +1324,21 @@ unsigned long ReadCR(int regnum)
 {
 	unsigned long contents = 0;
 
-	switch(regnum)
+	switch (regnum)
         {
 	   case 0:
-		__asm__ ("movq %%cr0,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%cr0,%0\n\t" : "=r"(contents));
 		break;
 	   case 1:
 		break;
 	   case 2:
-		__asm__ ("movq %%cr2,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%cr2,%0\n\t" : "=r"(contents));
 		break;
 	   case 3:
-		__asm__ ("movq %%cr3,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%cr3,%0\n\t" : "=r"(contents));
 		break;
 	   case 4:
-		__asm__ ("movq %%cr4,%0\n\t":"=r"(contents));
+		__asm__ ("movq %%cr4,%0\n\t" : "=r"(contents));
 		break;
 	   default:
 		break;
@@ -1348,7 +1348,7 @@ unsigned long ReadCR(int regnum)
 
 void WriteCR(int regnum, unsigned long contents)
 {
-	switch(regnum)
+	switch (regnum)
         {
 	   case 0:
 		__asm__ ("movq %0,%%cr0\n\t"::"r"(contents));
@@ -1375,28 +1375,28 @@ unsigned long ReadDR(unsigned long regnum)
 {
 	unsigned long contents = 0;
 
-	switch(regnum)
+	switch (regnum)
         {
 	   case 0:
-		__asm__ ("movl %%db0,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%db0,%0\n\t" : "=r"(contents));
 		break;
 	   case 1:
-		__asm__ ("movl %%db1,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%db1,%0\n\t" : "=r"(contents));
 		break;
 	   case 2:
-		__asm__ ("movl %%db2,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%db2,%0\n\t" : "=r"(contents));
 		break;
 	   case 3:
-		__asm__ ("movl %%db3,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%db3,%0\n\t" : "=r"(contents));
 		break;
 	   case 4:
 	   case 5:
 		break;
 	   case 6:
-		__asm__ ("movl %%db6,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%db6,%0\n\t" : "=r"(contents));
 		break;
 	   case 7:
-		__asm__ ("movl %%db7,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%db7,%0\n\t" : "=r"(contents));
 		break;
 	   default:
 		break;
@@ -1407,7 +1407,7 @@ unsigned long ReadDR(unsigned long regnum)
 
 void WriteDR(int regnum, unsigned long contents)
 {
-	switch(regnum)
+	switch (regnum)
         {
 	   case 0:
 		__asm__ ("movl %0,%%db0\n\t"::"r"(contents));
@@ -1439,21 +1439,21 @@ unsigned long ReadCR(int regnum)
 {
 	unsigned long contents = 0;
 
-	switch(regnum)
+	switch (regnum)
         {
 	   case 0:
-		__asm__ ("movl %%cr0,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%cr0,%0\n\t" : "=r"(contents));
 		break;
 	   case 1:
 		break;
 	   case 2:
-		__asm__ ("movl %%cr2,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%cr2,%0\n\t" : "=r"(contents));
 		break;
 	   case 3:
-		__asm__ ("movl %%cr3,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%cr3,%0\n\t" : "=r"(contents));
 		break;
 	   case 4:
-		__asm__ ("movl %%cr4,%0\n\t":"=r"(contents));
+		__asm__ ("movl %%cr4,%0\n\t" : "=r"(contents));
 		break;
 	   default:
 		break;
@@ -1463,7 +1463,7 @@ unsigned long ReadCR(int regnum)
 
 void WriteCR(int regnum, unsigned long contents)
 {
-	switch(regnum)
+	switch (regnum)
         {
 	   case 0:
 		__asm__ ("movl %0,%%cr0\n\t"::"r"(contents));
@@ -1490,38 +1490,38 @@ unsigned long ReadTR(void)
 {
    unsigned short tr;
 
-   __asm__ __volatile__("str %0":"=a"(tr));
+   __asm__ __volatile__("str %0" : "=a"(tr));
 
-   return (unsigned long) tr;
+   return (unsigned long)tr;
 }
 
 unsigned long ReadLDTR(void)
 {
    unsigned short ldt;
 
-   __asm__ __volatile__("sldt %0":"=a"(ldt));
+   __asm__ __volatile__("sldt %0" : "=a"(ldt));
 
-   return (unsigned long) ldt;
+   return (unsigned long)ldt;
 }
 
 void ReadGDTR(unsigned long *v)
 {
-   __asm__ __volatile__("sgdt %0":"=m"(*v));
+   __asm__ __volatile__("sgdt %0" : "=m"(*v));
 }
 
 void ReadIDTR(unsigned long *v)
 {
-    __asm__ __volatile__("sidt %0":"=m"(*v));
+    __asm__ __volatile__("sidt %0" : "=m"(*v));
 }
 
 void save_npx(NUMERIC_FRAME *v)
 {
-    __asm__ __volatile__("fsave %0":"=m"(*v));
+    __asm__ __volatile__("fsave %0" : "=m"(*v));
 }
 
 void load_npx(NUMERIC_FRAME *v)
 {
-    __asm__ __volatile__("frstor %0":"=m"(*v));
+    __asm__ __volatile__("frstor %0" : "=m"(*v));
 }
 
 unsigned long ReadDR6(void)  {  return (ReadDR(6)); }

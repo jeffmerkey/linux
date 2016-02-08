@@ -54,7 +54,7 @@
    the Intel manual for details.  */
 
 /* 06-26-2010 Jeff V. Merkey - port GDB debugger to MDB and add memory
-   dereferencing, jump labeling, and opcode output.  Convert MDB to 
+   dereferencing, jump labeling, and opcode output.  Convert MDB to
    conform to Linux hex and decimal notation and display.  */
 
 #include <linux/version.h>
@@ -116,69 +116,69 @@
 #define UNIXWARE_COMPAT 1
 #endif
 
-// enable MDB enhancements to the GDB base disassembler
-#define MDB_ENHANCEMENTS 
+/* enable MDB enhancements to the GDB base disassembler */
+#define MDB_ENHANCEMENTS
 
 extern int print_insn_i386(bfd_vma, disassemble_info *, StackFrame *);
 extern int print_insn_i386_att(bfd_vma, disassemble_info *, StackFrame *);
 extern int print_insn_i386_intel(bfd_vma, disassemble_info *, StackFrame *);
 
-static int fetch_data (struct disassemble_info *, bfd_byte *);
-static void ckprefix (void);
-static const char *prefix_name (int, int);
-static int print_insn (bfd_vma, disassemble_info *, StackFrame *);
+static int fetch_data(struct disassemble_info *, bfd_byte *);
+static void ckprefix(void);
+static const char *prefix_name(int, int);
+static int print_insn(bfd_vma, disassemble_info *, StackFrame *);
 static void dofloat (int, StackFrame *);
-static void OP_ST (int, int, StackFrame *);
-static void OP_STi (int, int, StackFrame *);
-static int putop (const char *, int);
-static void oappend (const char *);
-static void append_seg (void);
-static void OP_indirE (int, int, StackFrame *);
-static void print_operand_value (char *, int, bfd_vma);
-static void OP_E (int, int, StackFrame *);
-static void OP_G (int, int, StackFrame *);
-static bfd_vma get64 (void);
-static bfd_signed_vma get32 (void);
-static bfd_signed_vma get32s (void);
-static int get16 (void);
-static void set_op (bfd_vma, int);
-static void OP_REG (int, int, StackFrame *);
-static void OP_IMREG (int, int, StackFrame *);
-static void OP_I (int, int, StackFrame *);
-static void OP_I64 (int, int, StackFrame *);
-static void OP_sI (int, int, StackFrame *);
-static void OP_J (int, int, StackFrame *);
-static void OP_SEG (int, int, StackFrame *);
-static void OP_DIR (int, int, StackFrame *);
-static void OP_OFF (int, int, StackFrame *);
-static void OP_OFF64 (int, int, StackFrame *);
-static void ptr_reg (int, int, StackFrame *);
-static void OP_ESreg (int, int, StackFrame *);
-static void OP_DSreg (int, int, StackFrame *);
-static void OP_C (int, int, StackFrame *);
-static void OP_D (int, int, StackFrame *);
-static void OP_T (int, int, StackFrame *);
-static void OP_Rd (int, int, StackFrame *);
-static void OP_MMX (int, int, StackFrame *);
-static void OP_XMM (int, int, StackFrame *);
-static void OP_EM (int, int, StackFrame *);
-static void OP_EX (int, int, StackFrame *);
-static void OP_MS (int, int, StackFrame *);
-static void OP_XS (int, int, StackFrame *);
-static void OP_M (int, int, StackFrame *);
-static void OP_VMX (int, int, StackFrame *);
-static void OP_0fae (int, int, StackFrame *);
-static void OP_0f07 (int, int, StackFrame *);
-static void NOP_Fixup (int, int, StackFrame *);
-static void OP_3DNowSuffix (int, int, StackFrame *);
-static void OP_SIMD_Suffix (int, int, StackFrame *);
-static void SIMD_Fixup (int, int, StackFrame *);
-static void PNI_Fixup (int, int, StackFrame *);
-static void SVME_Fixup (int, int, StackFrame *);
-static void INVLPG_Fixup (int, int, StackFrame *);
-static void BadOp (void);
-static void SEG_Fixup (int, int, StackFrame *);
-static void VMX_Fixup (int, int, StackFrame *);
+static void OP_ST(int, int, StackFrame *);
+static void OP_STi(int, int, StackFrame *);
+static int putop(const char *, int);
+static void oappend(const char *);
+static void append_seg(void);
+static void OP_indirE(int, int, StackFrame *);
+static void print_operand_value(char *, int, bfd_vma);
+static void OP_E(int, int, StackFrame *);
+static void OP_G(int, int, StackFrame *);
+static bfd_vma get64(void);
+static bfd_signed_vma get32(void);
+static bfd_signed_vma get32s(void);
+static int get16(void);
+static void set_op(bfd_vma, int);
+static void OP_REG(int, int, StackFrame *);
+static void OP_IMREG(int, int, StackFrame *);
+static void OP_I(int, int, StackFrame *);
+static void OP_I64(int, int, StackFrame *);
+static void OP_sI(int, int, StackFrame *);
+static void OP_J(int, int, StackFrame *);
+static void OP_SEG(int, int, StackFrame *);
+static void OP_DIR(int, int, StackFrame *);
+static void OP_OFF(int, int, StackFrame *);
+static void OP_OFF64(int, int, StackFrame *);
+static void ptr_reg(int, int, StackFrame *);
+static void OP_ESreg(int, int, StackFrame *);
+static void OP_DSreg(int, int, StackFrame *);
+static void OP_C(int, int, StackFrame *);
+static void OP_D(int, int, StackFrame *);
+static void OP_T(int, int, StackFrame *);
+static void OP_Rd(int, int, StackFrame *);
+static void OP_MMX(int, int, StackFrame *);
+static void OP_XMM(int, int, StackFrame *);
+static void OP_EM(int, int, StackFrame *);
+static void OP_EX(int, int, StackFrame *);
+static void OP_MS(int, int, StackFrame *);
+static void OP_XS(int, int, StackFrame *);
+static void OP_M(int, int, StackFrame *);
+static void OP_VMX(int, int, StackFrame *);
+static void OP_0fae(int, int, StackFrame *);
+static void OP_0f07(int, int, StackFrame *);
+static void NOP_Fixup(int, int, StackFrame *);
+static void OP_3DNowSuffix(int, int, StackFrame *);
+static void OP_SIMD_Suffix(int, int, StackFrame *);
+static void SIMD_Fixup(int, int, StackFrame *);
+static void PNI_Fixup(int, int, StackFrame *);
+static void SVME_Fixup(int, int, StackFrame *);
+static void INVLPG_Fixup(int, int, StackFrame *);
+static void BadOp(void);
+static void SEG_Fixup(int, int, StackFrame *);
+static void VMX_Fixup(int, int, StackFrame *);
 
 struct dis_private {
   /* Points to first byte not fetched.	*/
@@ -243,8 +243,8 @@ static int used_prefixes;
    to ADDR (exclusive) are valid.  Returns 1 for success, longjmps
    on error.  */
 #define FETCH_DATA(info, addr) \
-  ((addr) <= ((struct dis_private *) (info->private_data))->max_fetched \
-   ? 1 : fetch_data ((info), (addr)))
+  ((addr) <= ((struct dis_private *)(info->private_data))->max_fetched \
+   ? 1 : fetch_data((info), (addr)))
 
 disassemble_info mdb_di;
 char disbuf[512];
@@ -259,10 +259,10 @@ void *vaddr = NULL;
 extern unsigned long full_deref_toggle;
 
 static int
-fetch_data (struct disassemble_info *info, bfd_byte *addr)
+fetch_data(struct disassemble_info *info, bfd_byte *addr)
 {
   int status;
-  struct dis_private *priv = (struct dis_private *) info->private_data;
+  struct dis_private *priv = (struct dis_private *)info->private_data;
   bfd_vma start = priv->insn_start + (priv->max_fetched - priv->the_buffer);
 
   status = (*info->read_memory_func) (start,
@@ -278,7 +278,7 @@ fetch_data (struct disassemble_info *info, bfd_byte *addr)
       if (priv->max_fetched == priv->the_buffer)
 	(*info->memory_error_func) (status, start, info);
 #ifndef __KERNEL__
-      longjmp (priv->bailout, 1);
+      longjmp(priv->bailout, 1);
 #else	/* __KERNEL__ */
 	/* XXX - what to do? */
 	mdb_printf("Hmm. longjmp.\n");
@@ -933,8 +933,8 @@ static const struct dis386 dis386_twobyte[] = {
   { "movntpX",		Ev, XM, XX },
   { PREGRP4 },
   { PREGRP3 },
-  { "ucomisX",		XM,EX, XX },
-  { "comisX",		XM,EX, XX },
+  { "ucomisX",		XM, EX, XX },
+  { "comisX",		XM, EX, XX },
   /* 30 */
   { "wrmsr",		XX, XX, XX },
   { "rdtsc",		XX, XX, XX },
@@ -1174,22 +1174,22 @@ static const struct dis386 dis386_twobyte[] = {
 static const unsigned char onebyte_has_modrm[256] = {
   /*	   0 1 2 3 4 5 6 7 8 9 a b c d e f	  */
   /*	   -------------------------------	  */
-  /* 00 */ 1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0, /* 00 */
-  /* 10 */ 1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0, /* 10 */
-  /* 20 */ 1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0, /* 20 */
-  /* 30 */ 1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0, /* 30 */
-  /* 40 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 40 */
-  /* 50 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 50 */
-  /* 60 */ 0,0,1,1,0,0,0,0,0,1,0,1,0,0,0,0, /* 60 */
-  /* 70 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 70 */
-  /* 80 */ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /* 80 */
-  /* 90 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 90 */
-  /* a0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* a0 */
-  /* b0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* b0 */
-  /* c0 */ 1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0, /* c0 */
-  /* d0 */ 1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1, /* d0 */
-  /* e0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* e0 */
-  /* f0 */ 0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1  /* f0 */
+  /* 00 */ 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, /* 00 */
+  /* 10 */ 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, /* 10 */
+  /* 20 */ 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, /* 20 */
+  /* 30 */ 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, /* 30 */
+  /* 40 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 40 */
+  /* 50 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 50 */
+  /* 60 */ 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, /* 60 */
+  /* 70 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 70 */
+  /* 80 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* 80 */
+  /* 90 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 90 */
+  /* a0 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* a0 */
+  /* b0 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* b0 */
+  /* c0 */ 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, /* c0 */
+  /* d0 */ 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, /* d0 */
+  /* e0 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* e0 */
+  /* f0 */ 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1  /* f0 */
   /*	   -------------------------------	  */
   /*	   0 1 2 3 4 5 6 7 8 9 a b c d e f	  */
 };
@@ -1197,22 +1197,22 @@ static const unsigned char onebyte_has_modrm[256] = {
 static const unsigned char twobyte_has_modrm[256] = {
   /*	   0 1 2 3 4 5 6 7 8 9 a b c d e f	  */
   /*	   -------------------------------	  */
-  /* 00 */ 1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,1, /* 0f */
-  /* 10 */ 1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1, /* 1f */
-  /* 20 */ 1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1, /* 2f */
-  /* 30 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 3f */
-  /* 40 */ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /* 4f */
-  /* 50 */ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /* 5f */
-  /* 60 */ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /* 6f */
-  /* 70 */ 1,1,1,1,1,1,1,0,1,1,0,0,1,1,1,1, /* 7f */
-  /* 80 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 8f */
-  /* 90 */ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /* 9f */
-  /* a0 */ 0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1, /* af */
-  /* b0 */ 1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1, /* bf */
-  /* c0 */ 1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0, /* cf */
-  /* d0 */ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /* df */
-  /* e0 */ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /* ef */
-  /* f0 */ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0  /* ff */
+  /* 00 */ 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, /* 0f */
+  /* 10 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, /* 1f */
+  /* 20 */ 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, /* 2f */
+  /* 30 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 3f */
+  /* 40 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* 4f */
+  /* 50 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* 5f */
+  /* 60 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* 6f */
+  /* 70 */ 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, /* 7f */
+  /* 80 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 8f */
+  /* 90 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* 9f */
+  /* a0 */ 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, /* af */
+  /* b0 */ 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, /* bf */
+  /* c0 */ 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, /* cf */
+  /* d0 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* df */
+  /* e0 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* ef */
+  /* f0 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0  /* ff */
   /*	   -------------------------------	  */
   /*	   0 1 2 3 4 5 6 7 8 9 a b c d e f	  */
 };
@@ -1220,22 +1220,22 @@ static const unsigned char twobyte_has_modrm[256] = {
 static const unsigned char twobyte_uses_SSE_prefix[256] = {
   /*	   0 1 2 3 4 5 6 7 8 9 a b c d e f	  */
   /*	   -------------------------------	  */
-  /* 00 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0f */
-  /* 10 */ 1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0, /* 1f */
-  /* 20 */ 0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0, /* 2f */
-  /* 30 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 3f */
-  /* 40 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 4f */
-  /* 50 */ 0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1, /* 5f */
-  /* 60 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1, /* 6f */
-  /* 70 */ 1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1, /* 7f */
-  /* 80 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 8f */
-  /* 90 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 9f */
-  /* a0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* af */
-  /* b0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* bf */
-  /* c0 */ 0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0, /* cf */
-  /* d0 */ 1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0, /* df */
-  /* e0 */ 0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0, /* ef */
-  /* f0 */ 1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0  /* ff */
+  /* 00 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0f */
+  /* 10 */ 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 1f */
+  /* 20 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, /* 2f */
+  /* 30 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 3f */
+  /* 40 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 4f */
+  /* 50 */ 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, /* 5f */
+  /* 60 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, /* 6f */
+  /* 70 */ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, /* 7f */
+  /* 80 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 8f */
+  /* 90 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 9f */
+  /* a0 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* af */
+  /* b0 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* bf */
+  /* c0 */ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* cf */
+  /* d0 */ 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* df */
+  /* e0 */ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* ef */
+  /* f0 */ 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0  /* ff */
   /*	   -------------------------------	  */
   /*	   0 1 2 3 4 5 6 7 8 9 a b c d e f	  */
 };
@@ -1255,7 +1255,7 @@ static unsigned char need_modrm;
 /* If we are accessing mod/rm/reg without need_modrm set, then the
    values are stale.  Hitting this abort likely indicates that you
    need to update onebyte_has_modrm or twobyte_has_modrm.  */
-#define MODRM_CHECK  if (!need_modrm) abort ()
+#define MODRM_CHECK  if (!need_modrm) abort()
 
 static const char **names64;
 static const char **names32;
@@ -1269,24 +1269,30 @@ static const char *intel_names64[] = {
   "rax", "rcx", "rdx", "rbx", "rsp", "rbp", "rsi", "rdi",
   "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
 };
+
 static const char *intel_names32[] = {
   "eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi",
   "r8d", "r9d", "r10d", "r11d", "r12d", "r13d", "r14d", "r15d"
 };
+
 static const char *intel_names16[] = {
   "ax", "cx", "dx", "bx", "sp", "bp", "si", "di",
   "r8w", "r9w", "r10w", "r11w", "r12w", "r13w", "r14w", "r15w"
 };
+
 static const char *intel_names8[] = {
   "al", "cl", "dl", "bl", "ah", "ch", "dh", "bh",
 };
+
 static const char *intel_names8rex[] = {
   "al", "cl", "dl", "bl", "spl", "bpl", "sil", "dil",
   "r8b", "r9b", "r10b", "r11b", "r12b", "r13b", "r14b", "r15b"
 };
+
 static const char *intel_names_seg[] = {
   "es", "cs", "ss", "ds", "fs", "gs", "?", "?",
 };
+
 static const char *intel_index16[] = {
   "bx+si", "bx+di", "bp+si", "bp+di", "si", "di", "bp", "bx"
 };
@@ -1295,24 +1301,30 @@ static const char *att_names64[] = {
   "%rax", "%rcx", "%rdx", "%rbx", "%rsp", "%rbp", "%rsi", "%rdi",
   "%r8", "%r9", "%r10", "%r11", "%r12", "%r13", "%r14", "%r15"
 };
+
 static const char *att_names32[] = {
   "%eax", "%ecx", "%edx", "%ebx", "%esp", "%ebp", "%esi", "%edi",
   "%r8d", "%r9d", "%r10d", "%r11d", "%r12d", "%r13d", "%r14d", "%r15d"
 };
+
 static const char *att_names16[] = {
   "%ax", "%cx", "%dx", "%bx", "%sp", "%bp", "%si", "%di",
   "%r8w", "%r9w", "%r10w", "%r11w", "%r12w", "%r13w", "%r14w", "%r15w"
 };
+
 static const char *att_names8[] = {
   "%al", "%cl", "%dl", "%bl", "%ah", "%ch", "%dh", "%bh",
 };
+
 static const char *att_names8rex[] = {
   "%al", "%cl", "%dl", "%bl", "%spl", "%bpl", "%sil", "%dil",
   "%r8b", "%r9b", "%r10b", "%r11b", "%r12b", "%r13b", "%r14b", "%r15b"
 };
+
 static const char *att_names_seg[] = {
   "%es", "%cs", "%ss", "%ds", "%fs", "%gs", "%?", "%?",
 };
+
 static const char *att_index16[] = {
   "%bx,%si", "%bx,%di", "%bp,%si", "%bp,%di", "%si", "%di", "%bp", "%bx"
 };
@@ -1711,8 +1723,8 @@ static const struct dis386 prefix_user_table[][4] = {
   /* PREGRP16 */
   {
     { "cvtdq2ps", XM, EX, XX },
-    { "cvttps2dq",XM, EX, XX },
-    { "cvtps2dq",XM, EX, XX },
+    { "cvttps2dq", XM, EX, XX },
+    { "cvtps2dq", XM, EX, XX },
     { "(bad)", XM, EX, XX },
   },
   /* PREGRP17 */
@@ -1843,16 +1855,17 @@ static const struct dis386 x86_64_table[][2] = {
 #endif	/* __KERNEL__ */
 
 static void
-ckprefix (void)
+ckprefix(void)
 {
   int newrex;
+
   rex = 0;
   prefixes = 0;
   used_prefixes = 0;
   rex_used = 0;
   while (1)
     {
-      FETCH_DATA (the_info, codep + 1);
+      FETCH_DATA(the_info, codep + 1);
       newrex = 0;
       switch (*codep)
 	{
@@ -1929,8 +1942,8 @@ ckprefix (void)
       /* Rex is ignored when followed by another prefix.  */
       if (rex)
 	{
-	  oappend (prefix_name (rex, 0));
-	  oappend (" ");
+	  oappend(prefix_name(rex, 0));
+	  oappend(" ");
 	}
       rex = newrex;
       codep++;
@@ -1941,7 +1954,7 @@ ckprefix (void)
    prefix byte.	 */
 
 static const char *
-prefix_name (int pref, int sizeflag)
+prefix_name(int pref, int sizeflag)
 {
   switch (pref)
     {
@@ -2036,40 +2049,40 @@ static char scale_char;
    print_insn_i386_att and print_insn_i386_intel these functions can
    disappear, and print_insn_i386 be merged into print_insn.  */
 int
-print_insn_i386_att (bfd_vma pc, disassemble_info *info,
-                     StackFrame *stackFrame)
+print_insn_i386_att(bfd_vma pc, disassemble_info *info,
+		    StackFrame *stackFrame)
 {
   intel_syntax = 0;
 
-  return print_insn (pc, info, stackFrame);
+  return print_insn(pc, info, stackFrame);
 }
 
 int
-print_insn_i386_intel (bfd_vma pc, disassemble_info *info,
-                       StackFrame *stackFrame)
+print_insn_i386_intel(bfd_vma pc, disassemble_info *info,
+		      StackFrame *stackFrame)
 {
   intel_syntax = 1;
 
-  return print_insn (pc, info, stackFrame);
+  return print_insn(pc, info, stackFrame);
 }
 
 int
-print_insn_i386 (bfd_vma pc, disassemble_info *info,
-                 StackFrame *stackFrame)
+print_insn_i386(bfd_vma pc, disassemble_info *info,
+		StackFrame *stackFrame)
 {
   intel_syntax = -1;
 
-  return print_insn (pc, info, stackFrame);
+  return print_insn(pc, info, stackFrame);
 }
 
 #ifdef MDB_ENHANCEMENTS
-static inline int evaluate_jump_condition(StackFrame *stackFrame, 
-                                          unsigned long val, 
-                                          char *ubuf, 
+static inline int evaluate_jump_condition(StackFrame *stackFrame,
+                                          unsigned long val,
+                                          char *ubuf,
                                           disassemble_info *info)
 {
     if ((!strncasecmp(ubuf, "jbe", 3) &&
-           ((stackFrame->tSystemFlags & ZF_FLAG) ||
+	 ((stackFrame->tSystemFlags & ZF_FLAG) ||
             (stackFrame->tSystemFlags & CF_FLAG))) ||
 	(!strncasecmp(ubuf, "jcxz", 4) &&
            (!stackFrame->tCX)) ||
@@ -2126,16 +2139,16 @@ static inline int evaluate_jump_condition(StackFrame *stackFrame,
           (*info->fprintf_func)(info->stream, " (0x%p) %s", (void *)val,
                       (val < (unsigned long)vaddr) ? "(up)" : "(down)");
        else
-          (*info->fprintf_func)(info->stream, " %s", 
+          (*info->fprintf_func)(info->stream, " %s",
                       (val < (unsigned long)vaddr) ? "(up)" : "(down)");
        return 1;
     }
     return 0;
 }
 
-static inline void output_jmp_address(StackFrame *stackFrame, 
-                                      unsigned long val, 
-                                      char *ubuf, 
+static inline void output_jmp_address(StackFrame *stackFrame,
+                                      unsigned long val,
+                                      char *ubuf,
                                       disassemble_info *info)
 {
     if (!strncasecmp(ubuf, "j", 1) || !strncasecmp(ubuf, "loop", 4))
@@ -2148,14 +2161,14 @@ static inline void output_jmp_address(StackFrame *stackFrame,
           (*info->fprintf_func)(info->stream, " (0x%p) %s", (void *)val,
                       (val < (unsigned long)vaddr) ? "(up)" : "(down)");
        else
-          (*info->fprintf_func)(info->stream, " %s", 
+          (*info->fprintf_func)(info->stream, " %s",
                       (val < (unsigned long)vaddr) ? "(up)" : "(down)");
     }
     return;
 }
 
-static inline void evaluate_expression_size(int sz, int sizeflag, 
-                                            unsigned char *deref, 
+static inline void evaluate_expression_size(int sz, int sizeflag,
+                                            unsigned char *deref,
                                             StackFrame *stackFrame)
 {
     unsigned char *cmd = deref;
@@ -2181,18 +2194,18 @@ static inline void evaluate_expression_size(int sz, int sizeflag,
              sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
              break;
            case 6:
-#ifdef CONFIG_X86_64 
-             // FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32
+#ifdef CONFIG_X86_64
+             /* FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32 */
              if (r && !mdb_copy(work, r, 10))
                 sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
-                                     "%02X%02X%02X%02X", 
-                                  work[0], work[1], work[2], work[3], 
-                                  work[4], work[5], work[6], work[7], 
+                                     "%02X%02X%02X%02X",
+                                  work[0], work[1], work[2], work[3],
+                                  work[4], work[5], work[6], work[7],
                                   work[8], work[9]);
 #else
              if (r && !mdb_copy(work, r, 6))
-                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X", 
-                                  work[0], work[1], work[2],
+                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X",
+			work[0], work[1], work[2],
                                   work[3], work[4], work[5]);
 #endif
              else
@@ -2203,8 +2216,8 @@ static inline void evaluate_expression_size(int sz, int sizeflag,
              break;
            case 10:
              if (r && !mdb_copy(work, r, 10))
-               sprintf(scratchbuf, 
-                       "=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", 
+               sprintf(scratchbuf,
+                       "=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
                                work[0], work[1], work[2],
                                work[3], work[4], work[5],
                                work[6], work[7], work[8],
@@ -2214,26 +2227,26 @@ static inline void evaluate_expression_size(int sz, int sizeflag,
              break;
            case 16:
              if (r && !mdb_copy(work, r, 16))
-                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X" 
-                       "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", 
-                               work[0], work[1], work[2], work[3], 
-                               work[4], work[5], work[6], work[7], 
-                               work[8], work[9], work[10],work[11], 
-                               work[12],work[13],work[14],work[15]); 
+                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+                       "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+                               work[0], work[1], work[2], work[3],
+                               work[4], work[5], work[6], work[7],
+                               work[8], work[9], work[10], work[11],
+                               work[12], work[13], work[14], work[15]);
              else
                 sprintf(scratchbuf, "=?");
               break;
            default:
               sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
               break;
-         } 
-         oappend (scratchbuf);
+         }
+         oappend(scratchbuf);
      }
      return;
 }
 
-static inline void evaluate_expression(int bytemode, int sizeflag, 
-                                       unsigned char *deref, 
+static inline void evaluate_expression(int bytemode, int sizeflag,
+                                       unsigned char *deref,
                                        StackFrame *stackFrame)
 {
     unsigned char *cmd = deref;
@@ -2247,25 +2260,25 @@ static inline void evaluate_expression(int bytemode, int sizeflag,
 
     switch (bytemode)
     {
-	// BYTE PTR 
+	/* BYTE PTR */
 	case b_mode:
           sz = 1;
           break;
 
-	// WORD PTR
+	/* WORD PTR */
 	case w_mode:
 	case dqw_mode:
           sz = 2;
-  	  break;
+	  break;
 
-	// QWORD PTR
+	/* QWORD PTR */
 	case branch_v_mode:
 	  if (mode_64bit)
 		sz = 8;
-	  // DWORD PTR
+	  /* DWORD PTR */
 	  else if (sizeflag & DFLAG)
 		sz = 4;
-	  // WORD PTR
+	  /* WORD PTR */
 	  else
 		sz = 2;
 	  used_prefixes |= (prefixes & PREFIX_DATA);
@@ -2274,53 +2287,53 @@ static inline void evaluate_expression(int bytemode, int sizeflag,
 	/*case branch_v_mode:*/
 	case v_mode:
 	case dq_mode:
-	  USED_REX (REX_MODE64);
+	  USED_REX(REX_MODE64);
 	  if (rex & REX_MODE64)
              sz = 8;
-	  // DWORD PTR
+	  /* DWORD PTR */
 	  else if ((sizeflag & DFLAG) || bytemode == dq_mode)
              sz = 4;
-	  // WORD PTR
+	  /* WORD PTR */
 	  else
              sz = 2;
 	  used_prefixes |= (prefixes & PREFIX_DATA);
 	  break;
-	// DWORD PTR
+	/* DWORD PTR */
 	case d_mode:
           sz = 4;
 	  break;
-	// QWORD PTR
+	/* QWORD PTR */
 	case q_mode:
           sz = 8;
 	  break;
         case m_mode:
-	  // QWORD PTR
+	  /* QWORD PTR */
 	  if (mode_64bit)
              sz = 8;
-	  // DWORD PTR
+	  /* DWORD PTR */
           else
              sz = 4;
 	  break;
 	case f_mode:
-          // FWORD PTR
+          /* FWORD PTR */
 	  if (sizeflag & DFLAG)
 	  {
 	      used_prefixes |= (prefixes & PREFIX_DATA);
               sz = 6;
 	  }
-	  // DWORD PTR
+	  /* DWORD PTR */
 	  else
               sz = 4;
 	  break;
-	// TBYTE PTR
+	/* TBYTE PTR */
 	case t_mode:
           sz = 10;
 	  break;
-	// XMMWORD PTR
+	/* XMMWORD PTR */
 	case x_mode:
           sz = 16;
         break;
-       // default is DWORD
+       /* default is DWORD */
        default:
           sz = 4;
 	  break;
@@ -2341,18 +2354,18 @@ static inline void evaluate_expression(int bytemode, int sizeflag,
              sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
              break;
            case 6:
-#ifdef CONFIG_X86_64 
-             // FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32
+#ifdef CONFIG_X86_64
+             /* FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32 */
              if (r && !mdb_copy(work, r, 10))
-                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X" 
-                                     "%02X%02X%02X%02X", 
-                                  work[0], work[1], work[2], work[3], 
-                                  work[4], work[5], work[6], work[7], 
+                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+                                     "%02X%02X%02X%02X",
+                                  work[0], work[1], work[2], work[3],
+                                  work[4], work[5], work[6], work[7],
                                   work[8], work[9]);
 #else
              if (r && !mdb_copy(work, r, 6))
-                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X", 
-                                  work[0], work[1], work[2],
+                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X",
+			work[0], work[1], work[2],
                                   work[3], work[4], work[5]);
 #endif
              else
@@ -2363,8 +2376,8 @@ static inline void evaluate_expression(int bytemode, int sizeflag,
              break;
            case 10:
              if (r && !mdb_copy(work, r, 10))
-               sprintf(scratchbuf, 
-                       "=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", 
+               sprintf(scratchbuf,
+                       "=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
                                work[0], work[1], work[2],
                                work[3], work[4], work[5],
                                work[6], work[7], work[8],
@@ -2374,30 +2387,30 @@ static inline void evaluate_expression(int bytemode, int sizeflag,
              break;
            case 16:
              if (r && !mdb_copy(work, r, 16))
-                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X" 
-                       "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", 
-                               work[0], work[1], work[2], work[3], 
-                               work[4], work[5], work[6], work[7], 
-                               work[8], work[9], work[10],work[11], 
-                               work[12],work[13],work[14],work[15]); 
+                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+                       "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+                               work[0], work[1], work[2], work[3],
+                               work[4], work[5], work[6], work[7],
+                               work[8], work[9], work[10], work[11],
+                               work[12], work[13], work[14], work[15]);
              else
                 sprintf(scratchbuf, "=?");
              break;
            default:
               sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
               break;
-         } 
-         oappend (scratchbuf);
+         }
+         oappend(scratchbuf);
       }
       return;
 }
 
 static inline int evaluate_address_expression(int bytemode, int sizeflag,
-                                               unsigned long addr, 
+					      unsigned long addr,
                                                unsigned long mask,
                                                StackFrame *stackFrame,
                                                const char *sv)
-{ 
+{
     unsigned char *cmd;
     unsigned char *sym_name;
     unsigned long offset;
@@ -2411,25 +2424,25 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
 
     switch (bytemode)
     {
-	// BYTE PTR 
+	/* BYTE PTR */
 	case b_mode:
           sz = 1;
           break;
 
-	// WORD PTR
+	/* WORD PTR */
 	case w_mode:
 	case dqw_mode:
           sz = 2;
-  	  break;
+	  break;
 
-	// QWORD PTR
+	/* QWORD PTR */
 	case branch_v_mode:
 	  if (mode_64bit)
 		sz = 8;
-	  // DWORD PTR
+	  /* DWORD PTR */
 	  else if (sizeflag & DFLAG)
 		sz = 4;
-	  // WORD PTR
+	  /* WORD PTR */
 	  else
 		sz = 2;
 	  used_prefixes |= (prefixes & PREFIX_DATA);
@@ -2438,53 +2451,53 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
 	/*case branch_v_mode:*/
 	case v_mode:
 	case dq_mode:
-	  USED_REX (REX_MODE64);
+	  USED_REX(REX_MODE64);
 	  if (rex & REX_MODE64)
              sz = 8;
-	  // DWORD PTR
+	  /* DWORD PTR */
 	  else if ((sizeflag & DFLAG) || bytemode == dq_mode)
              sz = 4;
-	  // WORD PTR
+	  /* WORD PTR */
 	  else
              sz = 2;
 	  used_prefixes |= (prefixes & PREFIX_DATA);
 	  break;
-	// DWORD PTR
+	/* DWORD PTR */
 	case d_mode:
           sz = 4;
 	  break;
-	// QWORD PTR
+	/* QWORD PTR */
 	case q_mode:
           sz = 8;
 	  break;
         case m_mode:
-	  // QWORD PTR
+	  /* QWORD PTR */
 	  if (mode_64bit)
              sz = 8;
-	  // DWORD PTR
+	  /* DWORD PTR */
           else
              sz = 4;
 	  break;
 	case f_mode:
-          // FWORD PTR
+          /* FWORD PTR */
 	  if (sizeflag & DFLAG)
 	  {
 	      used_prefixes |= (prefixes & PREFIX_DATA);
               sz = 6;
 	  }
-	  // DWORD PTR
+	  /* DWORD PTR */
 	  else
               sz = 4;
 	  break;
-	// TBYTE PTR
+	/* TBYTE PTR */
 	case t_mode:
           sz = 10;
 	  break;
-	// XMMWORD PTR
+	/* XMMWORD PTR */
 	case x_mode:
           sz = 16;
         break;
-       // default is DWORD
+       /* default is DWORD */
        default:
           sz = 4;
 	  break;
@@ -2493,26 +2506,26 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
     if (mask)
        addr = addr & mask;
 
-    sym_name = GetSymbolFromValueWithOffset(addr, &offset, 
-                                            &symbuf[0], 
+    sym_name = GetSymbolFromValueWithOffset(addr, &offset,
+                                            &symbuf[0],
                                             MAX_SYMBOL_LEN);
-    if (sym_name && sym_name[0] != ' ') 
+    if (sym_name && sym_name[0] != ' ')
     {
        cmd = obufp;
        if (sv)
        {
-          oappend(sv); 
-          oappend(":"); 
+          oappend(sv);
+          oappend(":");
        }
-       oappend ("[");
+       oappend("[");
        sprintf(scratchbuf, "%s", sym_name);
-       oappend (scratchbuf);
+       oappend(scratchbuf);
        if (offset)
        {
           sprintf(scratchbuf, "+0x%lx", offset);
-          oappend (scratchbuf);
+          oappend(scratchbuf);
        }
-       oappend ("]");
+       oappend("]");
 
        value = EvaluateDisassemblyExpression(stackFrame, &cmd, &valid, sz, &r);
        if (valid)
@@ -2529,18 +2542,18 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
              sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
              break;
            case 6:
-#ifdef CONFIG_X86_64 
-             // FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32
+#ifdef CONFIG_X86_64
+             /* FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32 */
              if (r && !mdb_copy(work, r, 10))
-                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X" 
-                                     "%02X%02X%02X%02X", 
-                                  work[0], work[1], work[2], work[3], 
-                                  work[4], work[5], work[6], work[7], 
+                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+                                     "%02X%02X%02X%02X",
+                                  work[0], work[1], work[2], work[3],
+                                  work[4], work[5], work[6], work[7],
                                   work[8], work[9]);
 #else
              if (r && !mdb_copy(work, r, 6))
-                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X", 
-                                  work[0], work[1], work[2],
+                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X",
+			work[0], work[1], work[2],
                                   work[3], work[4], work[5]);
 #endif
              else
@@ -2551,8 +2564,8 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
              break;
            case 10:
              if (r && !mdb_copy(work, r, 10))
-               sprintf(scratchbuf, 
-                       "=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", 
+               sprintf(scratchbuf,
+                       "=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
                                work[0], work[1], work[2],
                                work[3], work[4], work[5],
                                work[6], work[7], work[8],
@@ -2562,12 +2575,12 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
              break;
            case 16:
              if (r && !mdb_copy(work, r, 16))
-                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X" 
-                       "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", 
-                               work[0], work[1], work[2], work[3], 
-                               work[4], work[5], work[6], work[7], 
-                               work[8], work[9], work[10],work[11], 
-                               work[12],work[13],work[14],work[15]); 
+                sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+                       "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+                               work[0], work[1], work[2], work[3],
+                               work[4], work[5], work[6], work[7],
+                               work[8], work[9], work[10], work[11],
+                               work[12], work[13], work[14], work[15]);
              else
                 sprintf(scratchbuf, "=?");
               break;
@@ -2575,17 +2588,17 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
               sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
               break;
          }
-         oappend (scratchbuf);
+         oappend(scratchbuf);
        }
        return 1;
     }
     return 0;
-} 
+}
 #endif
 
 static int
-print_insn (bfd_vma pc, disassemble_info *info,
-            StackFrame *stackFrame)
+print_insn(bfd_vma pc, disassemble_info *info,
+	   StackFrame *stackFrame)
 {
   const struct dis386 *dp;
   int i;
@@ -2599,7 +2612,7 @@ print_insn (bfd_vma pc, disassemble_info *info,
   mode_64bit = (info->mach == bfd_mach_x86_64_intel_syntax
 		|| info->mach == bfd_mach_x86_64);
 
-  if (intel_syntax == (char) -1)
+  if (intel_syntax == (char)-1)
     intel_syntax = (info->mach == bfd_mach_i386_i386_intel_syntax
 		    || info->mach == bfd_mach_x86_64_intel_syntax);
 
@@ -2611,51 +2624,51 @@ print_insn (bfd_vma pc, disassemble_info *info,
   else if (info->mach == bfd_mach_i386_i8086)
     priv.orig_sizeflag = 0;
   else
-    abort ();
+    abort();
 
   for (p = info->disassembler_options; p != NULL; )
     {
-      if (strncmp (p, "x86-64", 6) == 0)
+      if (strncmp(p, "x86-64", 6) == 0)
 	{
 	  mode_64bit = 1;
 	  priv.orig_sizeflag = AFLAG | DFLAG;
 	}
-      else if (strncmp (p, "i386", 4) == 0)
+      else if (strncmp(p, "i386", 4) == 0)
 	{
 	  mode_64bit = 0;
 	  priv.orig_sizeflag = AFLAG | DFLAG;
 	}
-      else if (strncmp (p, "i8086", 5) == 0)
+      else if (strncmp(p, "i8086", 5) == 0)
 	{
 	  mode_64bit = 0;
 	  priv.orig_sizeflag = 0;
 	}
-      else if (strncmp (p, "intel", 5) == 0)
+      else if (strncmp(p, "intel", 5) == 0)
 	{
 	  intel_syntax = 1;
 	}
-      else if (strncmp (p, "att", 3) == 0)
+      else if (strncmp(p, "att", 3) == 0)
 	{
 	  intel_syntax = 0;
 	}
-      else if (strncmp (p, "addr", 4) == 0)
+      else if (strncmp(p, "addr", 4) == 0)
 	{
 	  if (p[4] == '1' && p[5] == '6')
 	    priv.orig_sizeflag &= ~AFLAG;
 	  else if (p[4] == '3' && p[5] == '2')
 	    priv.orig_sizeflag |= AFLAG;
 	}
-      else if (strncmp (p, "data", 4) == 0)
+      else if (strncmp(p, "data", 4) == 0)
 	{
 	  if (p[4] == '1' && p[5] == '6')
 	    priv.orig_sizeflag &= ~DFLAG;
 	  else if (p[4] == '3' && p[5] == '2')
 	    priv.orig_sizeflag |= DFLAG;
 	}
-      else if (strncmp (p, "suffix", 6) == 0)
+      else if (strncmp(p, "suffix", 6) == 0)
 	priv.orig_sizeflag |= SUFFIX_ALWAYS;
 
-      p = strchr (p, ',');
+      p = strchr(p, ',');
       if (p != NULL)
 	p++;
     }
@@ -2710,7 +2723,7 @@ print_insn (bfd_vma pc, disassemble_info *info,
   codep = priv.the_buffer;
 
 #ifndef __KERNEL__
-  if (setjmp (priv.bailout) != 0)
+  if (setjmp(priv.bailout) != 0)
     {
       const char *name;
 
@@ -2719,14 +2732,14 @@ print_insn (bfd_vma pc, disassemble_info *info,
 	 print the first byte as a prefix or a .byte pseudo-op.	 */
       if (codep > priv.the_buffer)
 	{
-	  name = prefix_name (priv.the_buffer[0], priv.orig_sizeflag);
+	  name = prefix_name(priv.the_buffer[0], priv.orig_sizeflag);
 	  if (name != NULL)
 	    (*info->fprintf_func) (info->stream, "%s", name);
 	  else
 	    {
 	      /* Just print the first byte as a .byte instruction.  */
 	      (*info->fprintf_func) (info->stream, ".byte 0x%x",
-				     (unsigned int) priv.the_buffer[0]);
+				     (unsigned int)priv.the_buffer[0]);
 	    }
 
 	  return 1;
@@ -2737,12 +2750,12 @@ print_insn (bfd_vma pc, disassemble_info *info,
 #endif	/* __KERNEL__ */
 
   obufp = obuf;
-  ckprefix ();
+  ckprefix();
 
   insn_codep = codep;
   sizeflag = priv.orig_sizeflag;
 
-  FETCH_DATA (info, codep + 1);
+  FETCH_DATA(info, codep + 1);
   two_source_ops = (*codep == 0x62) || (*codep == 0xc8);
 
   if ((prefixes & PREFIX_FWAIT)
@@ -2752,7 +2765,7 @@ print_insn (bfd_vma pc, disassemble_info *info,
 
       /* fwait not followed by floating point instruction.  Print the
 	 first prefix, which is probably fwait itself.	*/
-      name = prefix_name (priv.the_buffer[0], priv.orig_sizeflag);
+      name = prefix_name(priv.the_buffer[0], priv.orig_sizeflag);
       if (name == NULL)
 	name = INTERNAL_DISASSEMBLER_ERROR;
       (*info->fprintf_func) (info->stream, "%s", name);
@@ -2761,7 +2774,7 @@ print_insn (bfd_vma pc, disassemble_info *info,
 
   if (*codep == 0x0f)
     {
-      FETCH_DATA (info, codep + 2);
+      FETCH_DATA(info, codep + 2);
       dp = &dis386_twobyte[*++codep];
       need_modrm = twobyte_has_modrm[*codep];
       uses_SSE_prefix = twobyte_uses_SSE_prefix[*codep];
@@ -2778,17 +2791,17 @@ print_insn (bfd_vma pc, disassemble_info *info,
 
   if (!uses_SSE_prefix && (prefixes & PREFIX_REPZ))
     {
-      oappend ("repz ");
+      oappend("repz ");
       used_prefixes |= PREFIX_REPZ;
     }
   if (!uses_SSE_prefix && (prefixes & PREFIX_REPNZ))
     {
-      oappend ("repnz ");
+      oappend("repnz ");
       used_prefixes |= PREFIX_REPNZ;
     }
   if (!uses_LOCK_prefix && (prefixes & PREFIX_LOCK))
     {
-      oappend ("lock ");
+      oappend("lock ");
       used_prefixes |= PREFIX_LOCK;
     }
 
@@ -2798,9 +2811,9 @@ print_insn (bfd_vma pc, disassemble_info *info,
       if (dp->bytemode3 != loop_jcxz_mode || intel_syntax)
 	{
 	  if ((sizeflag & AFLAG) || mode_64bit)
-	    oappend ("addr32 ");
+	    oappend("addr32 ");
 	  else
-	    oappend ("addr16 ");
+	    oappend("addr16 ");
 	  used_prefixes |= PREFIX_ADDR;
 	}
     }
@@ -2813,16 +2826,16 @@ print_insn (bfd_vma pc, disassemble_info *info,
 	  && !intel_syntax)
 	{
 	  if (sizeflag & DFLAG)
-	    oappend ("data32 ");
+	    oappend("data32 ");
 	  else
-	    oappend ("data16 ");
+	    oappend("data16 ");
 	  used_prefixes |= PREFIX_DATA;
 	}
     }
 
   if (need_modrm)
     {
-      FETCH_DATA (info, codep + 1);
+      FETCH_DATA(info, codep + 1);
       mod = (*codep >> 6) & 3;
       reg = (*codep >> 3) & 7;
       rm = *codep & 7;
@@ -2835,6 +2848,7 @@ print_insn (bfd_vma pc, disassemble_info *info,
   else
     {
       int index;
+
       if (dp->name == NULL)
 	{
 	  switch (dp->bytemode1)
@@ -2868,12 +2882,12 @@ print_insn (bfd_vma pc, disassemble_info *info,
 	      break;
 
 	    default:
-	      oappend (INTERNAL_DISASSEMBLER_ERROR);
+	      oappend(INTERNAL_DISASSEMBLER_ERROR);
 	      break;
 	    }
 	}
 
-      if (putop (dp->name, sizeflag) == 0)
+      if (putop(dp->name, sizeflag) == 0)
 	{
 	  obufp = op1out;
 	  op_ad = 2;
@@ -2900,7 +2914,7 @@ print_insn (bfd_vma pc, disassemble_info *info,
     {
       const char *name;
 
-      name = prefix_name (priv.the_buffer[0], priv.orig_sizeflag);
+      name = prefix_name(priv.the_buffer[0], priv.orig_sizeflag);
       if (name == NULL)
 	name = INTERNAL_DISASSEMBLER_ERROR;
       (*info->fprintf_func) (info->stream, "%s", name);
@@ -2909,16 +2923,17 @@ print_insn (bfd_vma pc, disassemble_info *info,
   if (rex & ~rex_used)
     {
       const char *name;
-      name = prefix_name (rex | 0x40, priv.orig_sizeflag);
+
+      name = prefix_name(rex | 0x40, priv.orig_sizeflag);
       if (name == NULL)
 	name = INTERNAL_DISASSEMBLER_ERROR;
       (*info->fprintf_func) (info->stream, "%s ", name);
     }
 
-  obufp = obuf + strlen (obuf);
-  for (i = strlen (obuf); i < 6; i++)
-    oappend (" ");
-  oappend (" ");
+  obufp = obuf + strlen(obuf);
+  for (i = strlen(obuf); i < 6; i++)
+    oappend(" ");
+  oappend(" ");
   (*info->fprintf_func) (info->stream, "%s", obuf);
 
   /* The enter and bound instructions are printed with operands in the same
@@ -2950,13 +2965,12 @@ print_insn (bfd_vma pc, disassemble_info *info,
     {
       if (op_index[0] != -1 && !op_riprel[0])
       {
-	(*info->print_address_func) ((bfd_vma) op_address[op_index[0]], info);
+	(*info->print_address_func) ((bfd_vma)op_address[op_index[0]], info);
 #ifdef MDB_ENHANCEMENTS
         if (intel_syntax || two_source_ops)
            output_jmp_address(stackFrame, op_address[op_index[0]], obuf, info);
 #endif
-      }
-      else
+      } else
 	(*info->fprintf_func) (info->stream, "%s", first);
       needcomma = 1;
     }
@@ -2967,9 +2981,8 @@ print_insn (bfd_vma pc, disassemble_info *info,
       if (op_index[1] != -1 && !op_riprel[1])
       {
 	(*info->fprintf_func) (info->stream, "S:");
-	(*info->print_address_func) ((bfd_vma) op_address[op_index[1]], info);
-      }
-      else
+	(*info->print_address_func) ((bfd_vma)op_address[op_index[1]], info);
+      } else
 	(*info->fprintf_func) (info->stream, "%s", second);
       needcomma = 1;
     }
@@ -2979,13 +2992,12 @@ print_insn (bfd_vma pc, disassemble_info *info,
 	(*info->fprintf_func) (info->stream, ",");
       if (op_index[2] != -1 && !op_riprel[2])
       {
-	(*info->print_address_func) ((bfd_vma) op_address[op_index[2]], info);
+	(*info->print_address_func) ((bfd_vma)op_address[op_index[2]], info);
 #ifdef MDB_ENHANCEMENTS
         if (!intel_syntax && !two_source_ops)
            output_jmp_address(stackFrame, op_address[op_index[0]], obuf, info);
 #endif
-      }
-      else
+      } else
 	(*info->fprintf_func) (info->stream, "%s", third);
     }
 /*
@@ -3190,7 +3202,7 @@ static const struct dis386 float_reg[][8] = {
   {
     { "fcmovb", ST, STi, XX },
     { "fcmove", ST, STi, XX },
-    { "fcmovbe",ST, STi, XX },
+    { "fcmovbe", ST, STi, XX },
     { "fcmovu", ST, STi, XX },
     { "(bad)",	XX, XX, XX },
     { FGRPda_5 },
@@ -3199,10 +3211,10 @@ static const struct dis386 float_reg[][8] = {
   },
   /* db */
   {
-    { "fcmovnb",ST, STi, XX },
-    { "fcmovne",ST, STi, XX },
-    { "fcmovnbe",ST, STi, XX },
-    { "fcmovnu",ST, STi, XX },
+    { "fcmovnb", ST, STi, XX },
+    { "fcmovne", ST, STi, XX },
+    { "fcmovnbe", ST, STi, XX },
+    { "fcmovnu", ST, STi, XX },
     { FGRPdb_4 },
     { "fucomi", ST, STi, XX },
     { "fcomi",	ST, STi, XX },
@@ -3262,7 +3274,7 @@ static const struct dis386 float_reg[][8] = {
     { "(bad)",	XX, XX, XX },
     { "(bad)",	XX, XX, XX },
     { FGRPdf_4 },
-    { "fucomip",ST, STi, XX },
+    { "fucomip", ST, STi, XX },
     { "fcomip", ST, STi, XX },
     { "(bad)",	XX, XX, XX },
   },
@@ -3271,48 +3283,48 @@ static const struct dis386 float_reg[][8] = {
 static char *fgrps[][8] = {
   /* d9_2  0 */
   {
-    "fnop","(bad)","(bad)","(bad)","(bad)","(bad)","(bad)","(bad)",
+    "fnop", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)",
   },
 
   /* d9_4  1 */
   {
-    "fchs","fabs","(bad)","(bad)","ftst","fxam","(bad)","(bad)",
+    "fchs", "fabs", "(bad)", "(bad)", "ftst", "fxam", "(bad)", "(bad)",
   },
 
   /* d9_5  2 */
   {
-    "fld1","fldl2t","fldl2e","fldpi","fldlg2","fldln2","fldz","(bad)",
+    "fld1", "fldl2t", "fldl2e", "fldpi", "fldlg2", "fldln2", "fldz", "(bad)",
   },
 
   /* d9_6  3 */
   {
-    "f2xm1","fyl2x","fptan","fpatan","fxtract","fprem1","fdecstp","fincstp",
+    "f2xm1", "fyl2x", "fptan", "fpatan", "fxtract", "fprem1", "fdecstp", "fincstp",
   },
 
   /* d9_7  4 */
   {
-    "fprem","fyl2xp1","fsqrt","fsincos","frndint","fscale","fsin","fcos",
+    "fprem", "fyl2xp1", "fsqrt", "fsincos", "frndint", "fscale", "fsin", "fcos",
   },
 
   /* da_5  5 */
   {
-    "(bad)","fucompp","(bad)","(bad)","(bad)","(bad)","(bad)","(bad)",
+    "(bad)", "fucompp", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)",
   },
 
   /* db_4  6 */
   {
-    "feni(287 only)","fdisi(287 only)","fNclex","fNinit",
-    "fNsetpm(287 only)","(bad)","(bad)","(bad)",
+    "feni(287 only)", "fdisi(287 only)", "fNclex", "fNinit",
+    "fNsetpm(287 only)", "(bad)", "(bad)", "(bad)",
   },
 
   /* de_3  7 */
   {
-    "(bad)","fcompp","(bad)","(bad)","(bad)","(bad)","(bad)","(bad)",
+    "(bad)", "fcompp", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)",
   },
 
   /* df_4  8 */
   {
-    "fNstsw","(bad)","(bad)","(bad)","(bad)","(bad)","(bad)","(bad)",
+    "fNstsw", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)", "(bad)",
   },
 };
 
@@ -3328,9 +3340,9 @@ dofloat (int sizeflag, StackFrame *stackFrame)
     {
       int fp_indx = (floatop - 0xd8) * 8 + reg;
 
-      putop (float_mem[fp_indx], sizeflag);
+      putop(float_mem[fp_indx], sizeflag);
       obufp = op1out;
-      OP_E (float_mem_mode[fp_indx], sizeflag, stackFrame);
+      OP_E(float_mem_mode[fp_indx], sizeflag, stackFrame);
       return;
     }
   /* Skip mod/rm byte.	*/
@@ -3340,15 +3352,15 @@ dofloat (int sizeflag, StackFrame *stackFrame)
   dp = &float_reg[floatop - 0xd8][reg];
   if (dp->name == NULL)
     {
-      putop (fgrps[dp->bytemode1][rm], sizeflag);
+      putop(fgrps[dp->bytemode1][rm], sizeflag);
 
       /* Instruction fnstsw is only one with strange arg.  */
       if (floatop == 0xdf && codep[-1] == 0xe0)
-	strcpy (op1out, names16[0]);
+	strcpy(op1out, names16[0]);
     }
   else
     {
-      putop (dp->name, sizeflag);
+      putop(dp->name, sizeflag);
 
       obufp = op1out;
       if (dp->op1)
@@ -3360,23 +3372,23 @@ dofloat (int sizeflag, StackFrame *stackFrame)
 }
 
 static void
-OP_ST (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-       StackFrame *stackFrame)
+OP_ST(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+      StackFrame *stackFrame)
 {
-  oappend ("%st");
+  oappend("%st");
 }
 
 static void
-OP_STi (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+OP_STi(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
        StackFrame *stackFrame)
 {
-  sprintf (scratchbuf, "%%st(%d)", rm);
-  oappend (scratchbuf + intel_syntax);
+  sprintf(scratchbuf, "%%st(%d)", rm);
+  oappend(scratchbuf + intel_syntax);
 }
 
 /* Capital letters in template are macros.  */
 static int
-putop (const char *template, int sizeflag)
+putop(const char *template, int sizeflag)
 {
   const char *p;
   int alt = 0;
@@ -3401,12 +3413,12 @@ putop (const char *template, int sizeflag)
 		  if (*p == '}')
 		    {
 		      /* Alternative not valid.	 */
-		      strcpy (obuf, "(bad)");
+		      strcpy(obuf, "(bad)");
 		      obufp = obuf + 5;
 		      return 1;
 		    }
 		  else if (*p == '\0')
-		    abort ();
+		    abort();
 		}
 	      alt--;
 	    }
@@ -3418,7 +3430,7 @@ putop (const char *template, int sizeflag)
 	  while (*++p != '}')
 	    {
 	      if (*p == '\0')
-		abort ();
+		abort();
 	    }
 	  break;
 	case '}':
@@ -3505,7 +3517,7 @@ putop (const char *template, int sizeflag)
 	    used_prefixes |= PREFIX_FWAIT;
 	  break;
 	case 'O':
-	  USED_REX (REX_MODE64);
+	  USED_REX(REX_MODE64);
 	  if (rex & REX_MODE64)
 	    *obufp++ = 'o';
 	  else
@@ -3527,7 +3539,7 @@ putop (const char *template, int sizeflag)
 	      || (rex & REX_MODE64)
 	      || (sizeflag & SUFFIX_ALWAYS))
 	    {
-	      USED_REX (REX_MODE64);
+	      USED_REX(REX_MODE64);
 	      if (rex & REX_MODE64)
 		*obufp++ = 'q';
 	      else
@@ -3552,7 +3564,7 @@ putop (const char *template, int sizeflag)
 	case 'Q':
 	  if (intel_syntax && !alt)
 	    break;
-	  USED_REX (REX_MODE64);
+	  USED_REX(REX_MODE64);
 	  if (mod != 3 || (sizeflag & SUFFIX_ALWAYS))
 	    {
 	      if (rex & REX_MODE64)
@@ -3568,7 +3580,7 @@ putop (const char *template, int sizeflag)
 	    }
 	  break;
 	case 'R':
-	  USED_REX (REX_MODE64);
+	  USED_REX(REX_MODE64);
 	  if (intel_syntax)
 	    {
 	      if (rex & REX_MODE64)
@@ -3628,14 +3640,14 @@ putop (const char *template, int sizeflag)
 	    break;
 	  if (rex & REX_MODE64)
 	    {
-	      USED_REX (REX_MODE64);
+	      USED_REX(REX_MODE64);
 	      *obufp++ = 'q';
 	    }
 	  break;
 	  /* implicit operand size 'l' for i386 or 'q' for x86-64 */
 	case 'W':
 	  /* operand size flag for cwtl, cbtw */
-	  USED_REX (0);
+	  USED_REX(0);
 	  if (rex)
 	    *obufp++ = 'l';
 	  else if (sizeflag & DFLAG)
@@ -3670,57 +3682,57 @@ putop (const char *template, int sizeflag)
 }
 
 static void
-oappend (const char *s)
+oappend(const char *s)
 {
-  strcpy (obufp, s);
-  obufp += strlen (s);
+  strcpy(obufp, s);
+  obufp += strlen(s);
 }
 
 static void
-append_seg (void)
+append_seg(void)
 {
   if (prefixes & PREFIX_CS)
     {
       used_prefixes |= PREFIX_CS;
-      oappend ("%cs:" + intel_syntax);
+      oappend("%cs:" + intel_syntax);
     }
   if (prefixes & PREFIX_DS)
     {
       used_prefixes |= PREFIX_DS;
-      oappend ("%ds:" + intel_syntax);
+      oappend("%ds:" + intel_syntax);
     }
   if (prefixes & PREFIX_SS)
     {
       used_prefixes |= PREFIX_SS;
-      oappend ("%ss:" + intel_syntax);
+      oappend("%ss:" + intel_syntax);
     }
   if (prefixes & PREFIX_ES)
     {
       used_prefixes |= PREFIX_ES;
-      oappend ("%es:" + intel_syntax);
+      oappend("%es:" + intel_syntax);
     }
   if (prefixes & PREFIX_FS)
     {
       used_prefixes |= PREFIX_FS;
-      oappend ("%fs:" + intel_syntax);
+      oappend("%fs:" + intel_syntax);
     }
   if (prefixes & PREFIX_GS)
     {
       used_prefixes |= PREFIX_GS;
-      oappend ("%gs:" + intel_syntax);
+      oappend("%gs:" + intel_syntax);
     }
 }
 
 static void
-OP_indirE (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_indirE(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   if (!intel_syntax)
-    oappend ("*");
-  OP_E (bytemode, sizeflag, stackFrame);
+    oappend("*");
+  OP_E(bytemode, sizeflag, stackFrame);
 }
 
 static void
-print_operand_value (char *buf, int hex, bfd_vma disp)
+print_operand_value(char *buf, int hex, bfd_vma disp)
 {
   if (mode_64bit)
     {
@@ -3728,17 +3740,19 @@ print_operand_value (char *buf, int hex, bfd_vma disp)
 	{
 	  char tmp[30];
 	  int i;
+
 	  buf[0] = '0';
 	  buf[1] = 'x';
-	  sprintf_vma (tmp, disp);
+	  sprintf_vma(tmp, disp);
 	  for (i = 0; tmp[i] == '0' && tmp[i + 1]; i++);
-	  strcpy (buf + 2, tmp + i);
+	  strcpy(buf + 2, tmp + i);
 	}
       else
 	{
 	  bfd_signed_vma v = disp;
 	  char tmp[30];
 	  int i;
+
 	  if (v < 0)
 	    {
 	      *(buf++) = '-';
@@ -3746,13 +3760,13 @@ print_operand_value (char *buf, int hex, bfd_vma disp)
 	      /* Check for possible overflow on 0x8000000000000000.  */
 	      if (v < 0)
 		{
-		  strcpy (buf, "9223372036854775808");
+		  strcpy(buf, "9223372036854775808");
 		  return;
 		}
 	    }
 	  if (!v)
 	    {
-	      strcpy (buf, "0");
+	      strcpy(buf, "0");
 	      return;
 	    }
 
@@ -3764,27 +3778,28 @@ print_operand_value (char *buf, int hex, bfd_vma disp)
 	      v /= 10;
 	      i++;
 	    }
-	  strcpy (buf, tmp + 29 - i);
+	  strcpy(buf, tmp + 29 - i);
 	}
     }
   else
     {
       if (hex)
-	sprintf (buf, "0x%x", (unsigned int) disp);
+	sprintf(buf, "0x%x", (unsigned int)disp);
       else
-	sprintf (buf, "%d", (int) disp);
+	sprintf(buf, "%d", (int)disp);
     }
 }
 
 static void
-OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   unsigned char *deref;
 
   bfd_vma disp;
   int add = 0;
   int riprel = 0;
-  USED_REX (REX_EXTZ);
+
+  USED_REX(REX_EXTZ);
   if (rex & REX_EXTZ)
     add += 8;
 
@@ -3797,62 +3812,62 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
       switch (bytemode)
 	{
 	case b_mode:
-	  USED_REX (0);
+	  USED_REX(0);
 	  if (rex)
-	    oappend (names8rex[rm + add]);
+	    oappend(names8rex[rm + add]);
 	  else
-	    oappend (names8[rm + add]);
+	    oappend(names8[rm + add]);
 	  break;
 	case w_mode:
-	  oappend (names16[rm + add]);
+	  oappend(names16[rm + add]);
 	  break;
 	case d_mode:
-	  oappend (names32[rm + add]);
+	  oappend(names32[rm + add]);
 	  break;
 	case q_mode:
-	  oappend (names64[rm + add]);
+	  oappend(names64[rm + add]);
 	  break;
 	case m_mode:
 	  if (mode_64bit)
-	    oappend (names64[rm + add]);
+	    oappend(names64[rm + add]);
 	  else
-	    oappend (names32[rm + add]);
+	    oappend(names32[rm + add]);
 	  break;
 	case branch_v_mode:
 	  if (mode_64bit)
-	    oappend (names64[rm + add]);
+	    oappend(names64[rm + add]);
 	  else
 	    {
 	      if ((sizeflag & DFLAG) || bytemode != branch_v_mode)
-		oappend (names32[rm + add]);
+		oappend(names32[rm + add]);
 	      else
-		oappend (names16[rm + add]);
+		oappend(names16[rm + add]);
 	      used_prefixes |= (prefixes & PREFIX_DATA);
 	    }
 	  break;
 	case v_mode:
 	case dq_mode:
 	case dqw_mode:
-	  USED_REX (REX_MODE64);
+	  USED_REX(REX_MODE64);
 	  if (rex & REX_MODE64)
-	    oappend (names64[rm + add]);
+	    oappend(names64[rm + add]);
 	  else if ((sizeflag & DFLAG) || bytemode != v_mode)
-	    oappend (names32[rm + add]);
+	    oappend(names32[rm + add]);
 	  else
-	    oappend (names16[rm + add]);
+	    oappend(names16[rm + add]);
 	  used_prefixes |= (prefixes & PREFIX_DATA);
 	  break;
 	case 0:
 	  break;
 	default:
-	  oappend (INTERNAL_DISASSEMBLER_ERROR);
+	  oappend(INTERNAL_DISASSEMBLER_ERROR);
 	  break;
 	}
       return;
     }
 
   disp = 0;
-  append_seg ();
+  append_seg();
 
   if ((sizeflag & AFLAG) || mode_64bit) /* 32 bit address mode */
     {
@@ -3869,13 +3884,13 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
       if (base == 4)
 	{
 	  havesib = 1;
-	  FETCH_DATA (the_info, codep + 1);
+	  FETCH_DATA(the_info, codep + 1);
 	  index = (*codep >> 3) & 7;
 	  if (mode_64bit || index != 0x4)
 	    /* When INDEX == 0x4 in 32 bit mode, SCALE is ignored.  */
 	    scale = (*codep >> 6) & 3;
 	  base = *codep & 7;
-	  USED_REX (REX_EXTY);
+	  USED_REX(REX_EXTY);
 	  if (rex & REX_EXTY)
 	    index += 8;
 	  codep++;
@@ -3890,17 +3905,17 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	      havebase = 0;
 	      if (mode_64bit && !havesib)
 		riprel = 1;
-	      disp = get32s ();
+	      disp = get32s();
 	    }
 	  break;
 	case 1:
-	  FETCH_DATA (the_info, codep + 1);
+	  FETCH_DATA(the_info, codep + 1);
 	  disp = *codep++;
 	  if ((disp & 0x80) != 0)
 	    disp -= 0x100;
 	  break;
 	case 2:
-	  disp = get32s ();
+	  disp = get32s();
 	  break;
 	}
 
@@ -3910,24 +3925,22 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	  {
 	    if (riprel)
 	    {
-		set_op (disp, 1);
+		set_op(disp, 1);
 		if (!evaluate_address_expression(bytemode, sizeflag,
-	               start_pc + codep - start_codep + op_address[op_index[op_ad]],
+						 start_pc + codep - start_codep + op_address[op_index[op_ad]],
 			0, stackFrame, NULL))
 			{
-	           print_operand_value (scratchbuf, 1, disp);
-	           oappend (scratchbuf);
-		     oappend ("(%rip)");
+	           print_operand_value(scratchbuf, 1, disp);
+	           oappend(scratchbuf);
+		     oappend("(%rip)");
 	        }
-		}
-		else
+		} else
 		{
-	           print_operand_value (scratchbuf, 1, disp);
-	           oappend (scratchbuf);
+	           print_operand_value(scratchbuf, 1, disp);
+	           oappend(scratchbuf);
 		}
 	  }
 	}
-
 
       if (intel_syntax)
       {
@@ -3935,15 +3948,15 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	  {
 	    if (riprel)
 	    {
-		set_op (disp, 1);
+		set_op(disp, 1);
 		if (!evaluate_address_expression(bytemode, sizeflag,
-	               start_pc + codep - start_codep + op_address[op_index[op_ad]],
+						 start_pc + codep - start_codep + op_address[op_index[op_ad]],
 			 0, stackFrame, NULL))
 			{
-		   oappend ("[rip+");
-	           print_operand_value (scratchbuf, 1, disp);
-	           oappend (scratchbuf);
-		   oappend ("]");
+		   oappend("[rip+");
+	           print_operand_value(scratchbuf, 1, disp);
+	           oappend(scratchbuf);
+		   oappend("]");
 			}
 			}
 		}
@@ -3956,72 +3969,72 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	      switch (bytemode)
 		{
 		case b_mode:
-		  oappend ("BYTE PTR ");
+		  oappend("BYTE PTR ");
 		  break;
 		case w_mode:
 		case dqw_mode:
-		  oappend ("WORD PTR ");
+		  oappend("WORD PTR ");
 		  break;
 		case branch_v_mode:
 		if (mode_64bit)
-		    oappend ("QWORD PTR ");
+		    oappend("QWORD PTR ");
 		  else if (sizeflag & DFLAG)
-		    oappend ("DWORD PTR ");
+		    oappend("DWORD PTR ");
 		  else
-		    oappend ("WORD PTR ");
+		    oappend("WORD PTR ");
 		  used_prefixes |= (prefixes & PREFIX_DATA);
 		  break;
 		/*case branch_v_mode:*/
 		case v_mode:
 		case dq_mode:
-		  USED_REX (REX_MODE64);
+		  USED_REX(REX_MODE64);
 		  if (rex & REX_MODE64)
-		    oappend ("QWORD PTR ");
+		    oappend("QWORD PTR ");
 		  else if ((sizeflag & DFLAG) || bytemode == dq_mode)
-		    oappend ("DWORD PTR ");
+		    oappend("DWORD PTR ");
 		  else
-		    oappend ("WORD PTR ");
+		    oappend("WORD PTR ");
 		  used_prefixes |= (prefixes & PREFIX_DATA);
 		  break;
 		case d_mode:
-		  oappend ("DWORD PTR ");
+		  oappend("DWORD PTR ");
 		  break;
 		case q_mode:
-		  oappend ("QWORD PTR ");
+		  oappend("QWORD PTR ");
 		  break;
 		case m_mode:
 		  if (mode_64bit)
-		    oappend ("QWORD PTR ");
+		    oappend("QWORD PTR ");
 		  else
-		    oappend ("DWORD PTR ");
+		    oappend("DWORD PTR ");
 		  break;
 		case f_mode:
 		  if (sizeflag & DFLAG)
 		    {
 		      used_prefixes |= (prefixes & PREFIX_DATA);
-		      oappend ("FWORD PTR ");
+		      oappend("FWORD PTR ");
 		    }
 		  else
-		    oappend ("DWORD PTR ");
+		    oappend("DWORD PTR ");
 		  break;
 		case t_mode:
-		  oappend ("TBYTE PTR ");
+		  oappend("TBYTE PTR ");
 		  break;
 		case x_mode:
-		  oappend ("XMMWORD PTR ");
+		  oappend("XMMWORD PTR ");
 		  break;
 		default:
 		  break;
 		}
 	    }
 
-          // begin dereference
+          /* begin dereference */
           deref = obufp;
 	  *obufp++ = open_char;
 	  *obufp = '\0';
 	  if (havebase)
           {
-	    oappend (mode_64bit && (sizeflag & AFLAG)
+	    oappend(mode_64bit && (sizeflag & AFLAG)
 		     ? names64[base] : names32[base]);
           }
 	  if (havesib)
@@ -4033,28 +4046,27 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 		      *obufp++ = separator_char;
 		      *obufp = '\0';
 		  }
-                  // check the bottom case and bracket if true
+                  /* check the bottom case and bracket if true */
 	          if (scale != 0)
-   	             *obufp++ = '(';
-		  oappend (mode_64bit && (sizeflag & AFLAG)
+	             *obufp++ = '(';
+		  oappend(mode_64bit && (sizeflag & AFLAG)
 			   ? names64[index] : names32[index]);
 	      }
 	      if (scale != 0 || (!intel_syntax && index != 4))
 	      {
 		  *obufp++ = scale_char;
 		  *obufp = '\0';
-		  sprintf (scratchbuf, "%d", 1 << scale);
-		  oappend (scratchbuf);
+		  sprintf(scratchbuf, "%d", 1 << scale);
+		  oappend(scratchbuf);
 
-                  // if we fell through the top case, close the bracket
+                  /* if we fell through the top case, close the bracket */
 	          if (index != 4)
 	             *obufp++ = ')';
 	      }
-
 	  }
 	  if (intel_syntax && disp)
 	    {
-	      if ((bfd_signed_vma) disp > 0)
+	      if ((bfd_signed_vma)disp > 0)
 		{
 		  *obufp++ = '+';
 		  *obufp = '\0';
@@ -4063,14 +4075,14 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 		{
 		  *obufp++ = '-';
 		  *obufp = '\0';
-		  disp = - (bfd_signed_vma) disp;
+		  disp = -(bfd_signed_vma)disp;
 		}
 
-	      print_operand_value (scratchbuf, mod != 1, disp);
-	      oappend (scratchbuf);
+	      print_operand_value(scratchbuf, mod != 1, disp);
+	      oappend(scratchbuf);
 	    }
 
-          // end dereference
+          /* end dereference */
 	  *obufp++ = close_char;
 	  *obufp = '\0';
 #ifdef MDB_ENHANCEMENTS
@@ -4088,34 +4100,33 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	      if (prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
 			      | PREFIX_ES | PREFIX_FS | PREFIX_GS))
               {
-                 if (!evaluate_address_expression(bytemode, sizeflag, disp, 0, 
+                 if (!evaluate_address_expression(bytemode, sizeflag, disp, 0,
                                                   stackFrame, NULL))
                  {
- 	            print_operand_value (scratchbuf, 1, disp);
-	            oappend (scratchbuf);
+	            print_operand_value(scratchbuf, 1, disp);
+	            oappend(scratchbuf);
                  }
-              }
-	      else
+	      } else
 	      {
-                 if (!evaluate_address_expression(bytemode, sizeflag, disp, 0, 
-                                          stackFrame, 
+                 if (!evaluate_address_expression(bytemode, sizeflag, disp, 0,
+						  stackFrame,
 	                                  names_seg[ds_reg - es_reg]))
                  {
- 	            print_operand_value (scratchbuf, 1, disp);
-	            oappend (scratchbuf);
+	            print_operand_value(scratchbuf, 1, disp);
+	            oappend(scratchbuf);
                  }
 	      }
-#else 
+#else
 	      if (prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
 			      | PREFIX_ES | PREFIX_FS | PREFIX_GS))
 		;
 	      else
 	      {
-		  oappend (names_seg[ds_reg - es_reg]);
-		  oappend (":");
+		  oappend(names_seg[ds_reg - es_reg]);
+		  oappend(":");
 	      }
-              print_operand_value (scratchbuf, 1, disp);
-	      oappend (scratchbuf);
+              print_operand_value(scratchbuf, 1, disp);
+	      oappend(scratchbuf);
 #endif
 	    }
 	  }
@@ -4128,19 +4139,19 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	case 0:
 	  if (rm == 6)
 	    {
-	      disp = get16 ();
+	      disp = get16();
 	      if ((disp & 0x8000) != 0)
 		disp -= 0x10000;
 	    }
 	  break;
 	case 1:
-	  FETCH_DATA (the_info, codep + 1);
+	  FETCH_DATA(the_info, codep + 1);
 	  disp = *codep++;
 	  if ((disp & 0x80) != 0)
 	    disp -= 0x100;
 	  break;
 	case 2:
-	  disp = get16 ();
+	  disp = get16();
 	  if ((disp & 0x8000) != 0)
 	    disp -= 0x10000;
 	  break;
@@ -4149,20 +4160,20 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
       if (!intel_syntax)
 	if (mod != 0 || rm == 6)
 	  {
-	    print_operand_value (scratchbuf, 0, disp);
-	    oappend (scratchbuf);
+	    print_operand_value(scratchbuf, 0, disp);
+	    oappend(scratchbuf);
 	  }
 
       if (mod != 0 || rm != 6)
 	{
-          // begin dereference
+          /* begin dereference */
           deref = obufp;
 	  *obufp++ = open_char;
 	  *obufp = '\0';
-	  oappend (index16[rm]);
+	  oappend(index16[rm]);
 	  if (intel_syntax && disp)
 	    {
-	      if ((bfd_signed_vma) disp > 0)
+	      if ((bfd_signed_vma)disp > 0)
 		{
 		  *obufp++ = '+';
 		  *obufp = '\0';
@@ -4171,14 +4182,14 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 		{
 		  *obufp++ = '-';
 		  *obufp = '\0';
-		  disp = - (bfd_signed_vma) disp;
+		  disp = -(bfd_signed_vma)disp;
 		}
 
-	      print_operand_value (scratchbuf, mod != 1, disp);
-	      oappend (scratchbuf);
+	      print_operand_value(scratchbuf, mod != 1, disp);
+	      oappend(scratchbuf);
 	    }
 
-          // end dereference
+          /* end dereference */
 	  *obufp++ = close_char;
 	  *obufp = '\0';
 #ifdef MDB_ENHANCEMENTS
@@ -4192,21 +4203,20 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	  if (prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
 			  | PREFIX_ES | PREFIX_FS | PREFIX_GS))
           {
-             if (!evaluate_address_expression(bytemode, sizeflag, disp, 
-                                             0xFFFF, stackFrame, NULL))
+             if (!evaluate_address_expression(bytemode, sizeflag, disp,
+					      0xFFFF, stackFrame, NULL))
              {
- 	        print_operand_value (scratchbuf, 1, disp & 0xFFFF);
-	        oappend (scratchbuf);
+	        print_operand_value(scratchbuf, 1, disp & 0xFFFF);
+	        oappend(scratchbuf);
              }
-	  } 
-	  else
+	  } else
 	  {
-             if (!evaluate_address_expression(bytemode, sizeflag, disp, 
-                                             0xFFFF, stackFrame,
+             if (!evaluate_address_expression(bytemode, sizeflag, disp,
+					      0xFFFF, stackFrame,
 	                                     names_seg[ds_reg - es_reg]))
              {
- 	        print_operand_value (scratchbuf, 1, disp & 0xFFFF);
-	        oappend (scratchbuf);
+	        print_operand_value(scratchbuf, 1, disp & 0xFFFF);
+	        oappend(scratchbuf);
              }
 	  }
 #else
@@ -4215,75 +4225,76 @@ OP_E (int bytemode, int sizeflag, StackFrame *stackFrame)
 	    ;
 	  else
 	    {
-	      oappend (names_seg[ds_reg - es_reg]);
-	      oappend (":");
+	      oappend(names_seg[ds_reg - es_reg]);
+	      oappend(":");
 	    }
- 	    print_operand_value (scratchbuf, 1, disp & 0xFFFF);
-	    oappend (scratchbuf);
+	    print_operand_value(scratchbuf, 1, disp & 0xFFFF);
+	    oappend(scratchbuf);
 #endif
 	}
     }
 }
 
 static void
-OP_G (int bytemode, int sizeflag,
-       StackFrame *stackFrame)
+OP_G(int bytemode, int sizeflag,
+     StackFrame *stackFrame)
 {
   int add = 0;
-  USED_REX (REX_EXTX);
+
+  USED_REX(REX_EXTX);
   if (rex & REX_EXTX)
     add += 8;
   switch (bytemode)
     {
     case b_mode:
-      USED_REX (0);
+      USED_REX(0);
       if (rex)
-	oappend (names8rex[reg + add]);
+	oappend(names8rex[reg + add]);
       else
-	oappend (names8[reg + add]);
+	oappend(names8[reg + add]);
       break;
     case w_mode:
-      oappend (names16[reg + add]);
+      oappend(names16[reg + add]);
       break;
     case d_mode:
-      oappend (names32[reg + add]);
+      oappend(names32[reg + add]);
       break;
     case q_mode:
-      oappend (names64[reg + add]);
+      oappend(names64[reg + add]);
       break;
     case v_mode:
     case dq_mode:
     case dqw_mode:
-      USED_REX (REX_MODE64);
+      USED_REX(REX_MODE64);
       if (rex & REX_MODE64)
-	oappend (names64[reg + add]);
+	oappend(names64[reg + add]);
       else if ((sizeflag & DFLAG) || bytemode != v_mode)
-	oappend (names32[reg + add]);
+	oappend(names32[reg + add]);
       else
-	oappend (names16[reg + add]);
+	oappend(names16[reg + add]);
       used_prefixes |= (prefixes & PREFIX_DATA);
       break;
     case m_mode:
       if (mode_64bit)
-	oappend (names64[reg + add]);
+	oappend(names64[reg + add]);
       else
-	oappend (names32[reg + add]);
+	oappend(names32[reg + add]);
       break;
     default:
-      oappend (INTERNAL_DISASSEMBLER_ERROR);
+      oappend(INTERNAL_DISASSEMBLER_ERROR);
       break;
     }
 }
 
 static bfd_vma
-get64 (void)
+get64(void)
 {
   bfd_vma x;
 #ifdef BFD64
   unsigned int a;
   unsigned int b;
 
-  FETCH_DATA (the_info, codep + 8);
+  FETCH_DATA(the_info, codep + 8);
   a = *codep++ & 0xff;
   a |= (*codep++ & 0xff) << 8;
   a |= (*codep++ & 0xff) << 16;
@@ -4292,56 +4303,56 @@ get64 (void)
   b |= (*codep++ & 0xff) << 8;
   b |= (*codep++ & 0xff) << 16;
   b |= (*codep++ & 0xff) << 24;
-  x = a + ((bfd_vma) b << 32);
+  x = a + ((bfd_vma)b << 32);
 #else
-  abort ();
+  abort();
   x = 0;
 #endif
   return x;
 }
 
 static bfd_signed_vma
-get32 (void)
+get32(void)
 {
   bfd_signed_vma x = 0;
 
-  FETCH_DATA (the_info, codep + 4);
-  x = *codep++ & (bfd_signed_vma) 0xff;
-  x |= (*codep++ & (bfd_signed_vma) 0xff) << 8;
-  x |= (*codep++ & (bfd_signed_vma) 0xff) << 16;
-  x |= (*codep++ & (bfd_signed_vma) 0xff) << 24;
+  FETCH_DATA(the_info, codep + 4);
+  x = *codep++ & (bfd_signed_vma)0xff;
+  x |= (*codep++ & (bfd_signed_vma)0xff) << 8;
+  x |= (*codep++ & (bfd_signed_vma)0xff) << 16;
+  x |= (*codep++ & (bfd_signed_vma)0xff) << 24;
   return x;
 }
 
 static bfd_signed_vma
-get32s (void)
+get32s(void)
 {
   bfd_signed_vma x = 0;
 
-  FETCH_DATA (the_info, codep + 4);
-  x = *codep++ & (bfd_signed_vma) 0xff;
-  x |= (*codep++ & (bfd_signed_vma) 0xff) << 8;
-  x |= (*codep++ & (bfd_signed_vma) 0xff) << 16;
-  x |= (*codep++ & (bfd_signed_vma) 0xff) << 24;
+  FETCH_DATA(the_info, codep + 4);
+  x = *codep++ & (bfd_signed_vma)0xff;
+  x |= (*codep++ & (bfd_signed_vma)0xff) << 8;
+  x |= (*codep++ & (bfd_signed_vma)0xff) << 16;
+  x |= (*codep++ & (bfd_signed_vma)0xff) << 24;
 
-  x = (x ^ ((bfd_signed_vma) 1 << 31)) - ((bfd_signed_vma) 1 << 31);
+  x = (x ^ ((bfd_signed_vma)1 << 31)) - ((bfd_signed_vma)1 << 31);
 
   return x;
 }
 
 static int
-get16 (void)
+get16(void)
 {
   int x = 0;
 
-  FETCH_DATA (the_info, codep + 2);
+  FETCH_DATA(the_info, codep + 2);
   x = *codep++ & 0xff;
   x |= (*codep++ & 0xff) << 8;
   return x;
 }
 
 static void
-set_op (bfd_vma op, int riprel)
+set_op(bfd_vma op, int riprel)
 {
   op_index[op_ad] = op_ad;
   if (mode_64bit)
@@ -4358,12 +4369,13 @@ set_op (bfd_vma op, int riprel)
 }
 
 static void
-OP_REG (int code, int sizeflag,
+OP_REG(int code, int sizeflag,
        StackFrame *stackFrame)
 {
   const char *s;
   int add = 0;
-  USED_REX (REX_EXTZ);
+
+  USED_REX(REX_EXTZ);
   if (rex & REX_EXTZ)
     add = 8;
 
@@ -4385,7 +4397,7 @@ OP_REG (int code, int sizeflag,
       break;
     case al_reg: case ah_reg: case cl_reg: case ch_reg:
     case dl_reg: case dh_reg: case bl_reg: case bh_reg:
-      USED_REX (0);
+      USED_REX(0);
       if (rex)
 	s = names8rex[code - al_reg + add];
       else
@@ -4402,7 +4414,7 @@ OP_REG (int code, int sizeflag,
       /* Fall through.	*/
     case eAX_reg: case eCX_reg: case eDX_reg: case eBX_reg:
     case eSP_reg: case eBP_reg: case eSI_reg: case eDI_reg:
-      USED_REX (REX_MODE64);
+      USED_REX(REX_MODE64);
       if (rex & REX_MODE64)
 	s = names64[code - eAX_reg + add];
       else if (sizeflag & DFLAG)
@@ -4415,12 +4427,12 @@ OP_REG (int code, int sizeflag,
       s = INTERNAL_DISASSEMBLER_ERROR;
       break;
     }
-  oappend (s);
+  oappend(s);
 }
 
 static void
-OP_IMREG (int code, int sizeflag,
-       StackFrame *stackFrame)
+OP_IMREG(int code, int sizeflag,
+	 StackFrame *stackFrame)
 {
   const char *s;
 
@@ -4442,7 +4454,7 @@ OP_IMREG (int code, int sizeflag,
       break;
     case al_reg: case ah_reg: case cl_reg: case ch_reg:
     case dl_reg: case dh_reg: case bl_reg: case bh_reg:
-      USED_REX (0);
+      USED_REX(0);
       if (rex)
 	s = names8rex[code - al_reg];
       else
@@ -4450,7 +4462,7 @@ OP_IMREG (int code, int sizeflag,
       break;
     case eAX_reg: case eCX_reg: case eDX_reg: case eBX_reg:
     case eSP_reg: case eBP_reg: case eSI_reg: case eDI_reg:
-      USED_REX (REX_MODE64);
+      USED_REX(REX_MODE64);
       if (rex & REX_MODE64)
 	s = names64[code - eAX_reg];
       else if (sizeflag & DFLAG)
@@ -4463,12 +4475,12 @@ OP_IMREG (int code, int sizeflag,
       s = INTERNAL_DISASSEMBLER_ERROR;
       break;
     }
-  oappend (s);
+  oappend(s);
 }
 
 static void
-OP_I (int bytemode, int sizeflag,
-       StackFrame *stackFrame)
+OP_I(int bytemode, int sizeflag,
+     StackFrame *stackFrame)
 {
   bfd_signed_vma op;
   bfd_signed_vma mask = -1;
@@ -4476,55 +4488,55 @@ OP_I (int bytemode, int sizeflag,
   switch (bytemode)
     {
     case b_mode:
-      FETCH_DATA (the_info, codep + 1);
+      FETCH_DATA(the_info, codep + 1);
       op = *codep++;
       mask = 0xff;
       break;
     case q_mode:
       if (mode_64bit)
 	{
-	  op = get32s ();
+	  op = get32s();
 	  break;
 	}
       /* Fall through.	*/
     case v_mode:
-      USED_REX (REX_MODE64);
+      USED_REX(REX_MODE64);
       if (rex & REX_MODE64)
-	op = get32s ();
+	op = get32s();
       else if (sizeflag & DFLAG)
 	{
-	  op = get32 ();
+	  op = get32();
 	  mask = 0xffffffff;
 	}
       else
 	{
-	  op = get16 ();
+	  op = get16();
 	  mask = 0xfffff;
 	}
       used_prefixes |= (prefixes & PREFIX_DATA);
       break;
     case w_mode:
       mask = 0xfffff;
-      op = get16 ();
+      op = get16();
       break;
     case const_1_mode:
       if (intel_syntax)
-	oappend ("1");
+	oappend("1");
       return;
     default:
-      oappend (INTERNAL_DISASSEMBLER_ERROR);
+      oappend(INTERNAL_DISASSEMBLER_ERROR);
       return;
     }
 
   op &= mask;
   scratchbuf[0] = '$';
-  print_operand_value (scratchbuf + 1, 1, op);
-  oappend (scratchbuf + intel_syntax);
+  print_operand_value(scratchbuf + 1, 1, op);
+  oappend(scratchbuf + intel_syntax);
   scratchbuf[0] = '\0';
 }
 
 static void
-OP_I64 (int bytemode, int sizeflag,
+OP_I64(int bytemode, int sizeflag,
        StackFrame *stackFrame)
 {
   bfd_signed_vma op;
@@ -4532,52 +4544,52 @@ OP_I64 (int bytemode, int sizeflag,
 
   if (!mode_64bit)
     {
-      OP_I (bytemode, sizeflag, stackFrame);
+      OP_I(bytemode, sizeflag, stackFrame);
       return;
     }
 
   switch (bytemode)
     {
     case b_mode:
-      FETCH_DATA (the_info, codep + 1);
+      FETCH_DATA(the_info, codep + 1);
       op = *codep++;
       mask = 0xff;
       break;
     case v_mode:
-      USED_REX (REX_MODE64);
+      USED_REX(REX_MODE64);
       if (rex & REX_MODE64)
-	op = get64 ();
+	op = get64();
       else if (sizeflag & DFLAG)
 	{
-	  op = get32 ();
+	  op = get32();
 	  mask = 0xffffffff;
 	}
       else
 	{
-	  op = get16 ();
+	  op = get16();
 	  mask = 0xfffff;
 	}
       used_prefixes |= (prefixes & PREFIX_DATA);
       break;
     case w_mode:
       mask = 0xfffff;
-      op = get16 ();
+      op = get16();
       break;
     default:
-      oappend (INTERNAL_DISASSEMBLER_ERROR);
+      oappend(INTERNAL_DISASSEMBLER_ERROR);
       return;
     }
 
   op &= mask;
   scratchbuf[0] = '$';
-  print_operand_value (scratchbuf + 1, 1, op);
-  oappend (scratchbuf + intel_syntax);
+  print_operand_value(scratchbuf + 1, 1, op);
+  oappend(scratchbuf + intel_syntax);
   scratchbuf[0] = '\0';
 }
 
 static void
-OP_sI (int bytemode, int sizeflag,
-       StackFrame *stackFrame)
+OP_sI(int bytemode, int sizeflag,
+      StackFrame *stackFrame)
 {
   bfd_signed_vma op;
   bfd_signed_vma mask = -1;
@@ -4585,49 +4597,49 @@ OP_sI (int bytemode, int sizeflag,
   switch (bytemode)
     {
     case b_mode:
-      FETCH_DATA (the_info, codep + 1);
+      FETCH_DATA(the_info, codep + 1);
       op = *codep++;
       if ((op & 0x80) != 0)
 	op -= 0x100;
       mask = 0xffffffff;
       break;
     case v_mode:
-      USED_REX (REX_MODE64);
+      USED_REX(REX_MODE64);
       if (rex & REX_MODE64)
-	op = get32s ();
+	op = get32s();
       else if (sizeflag & DFLAG)
 	{
-	  op = get32s ();
+	  op = get32s();
 	  mask = 0xffffffff;
 	}
       else
 	{
 	  mask = 0xffffffff;
-	  op = get16 ();
+	  op = get16();
 	  if ((op & 0x8000) != 0)
 	    op -= 0x10000;
 	}
       used_prefixes |= (prefixes & PREFIX_DATA);
       break;
     case w_mode:
-      op = get16 ();
+      op = get16();
       mask = 0xffffffff;
       if ((op & 0x8000) != 0)
 	op -= 0x10000;
       break;
     default:
-      oappend (INTERNAL_DISASSEMBLER_ERROR);
+      oappend(INTERNAL_DISASSEMBLER_ERROR);
       return;
     }
 
   scratchbuf[0] = '$';
-  print_operand_value (scratchbuf + 1, 1, op);
-  oappend (scratchbuf + intel_syntax);
+  print_operand_value(scratchbuf + 1, 1, op);
+  oappend(scratchbuf + intel_syntax);
 }
 
 static void
-OP_J (int bytemode, int sizeflag,
-       StackFrame *stackFrame)
+OP_J(int bytemode, int sizeflag,
+     StackFrame *stackFrame)
 {
   bfd_vma disp;
   bfd_vma mask = -1;
@@ -4635,17 +4647,17 @@ OP_J (int bytemode, int sizeflag,
   switch (bytemode)
     {
     case b_mode:
-      FETCH_DATA (the_info, codep + 1);
+      FETCH_DATA(the_info, codep + 1);
       disp = *codep++;
       if ((disp & 0x80) != 0)
 	disp -= 0x100;
       break;
     case v_mode:
       if (sizeflag & DFLAG)
-	disp = get32s ();
+	disp = get32s();
       else
 	{
-	  disp = get16 ();
+	  disp = get16();
 	  /* For some reason, a data16 prefix on a jump instruction
 	     means that the pc is masked to 16 bits after the
 	     displacement is added!  */
@@ -4653,58 +4665,58 @@ OP_J (int bytemode, int sizeflag,
 	}
       break;
     default:
-      oappend (INTERNAL_DISASSEMBLER_ERROR);
+      oappend(INTERNAL_DISASSEMBLER_ERROR);
       return;
     }
   disp = (start_pc + codep - start_codep + disp) & mask;
-  set_op (disp, 0);
-  print_operand_value (scratchbuf, 1, disp);
-  oappend (scratchbuf);
+  set_op(disp, 0);
+  print_operand_value(scratchbuf, 1, disp);
+  oappend(scratchbuf);
 }
 
 static void
-OP_SEG (int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+OP_SEG(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
        StackFrame *stackFrame)
 {
-  oappend (names_seg[reg]);
+  oappend(names_seg[reg]);
 }
 
 static void
-OP_DIR (int dummy ATTRIBUTE_UNUSED, int sizeflag,
+OP_DIR(int dummy ATTRIBUTE_UNUSED, int sizeflag,
        StackFrame *stackFrame)
 {
   int seg, offset;
 
   if (sizeflag & DFLAG)
     {
-      offset = get32 ();
-      seg = get16 ();
+      offset = get32();
+      seg = get16();
     }
   else
     {
-      offset = get16 ();
-      seg = get16 ();
+      offset = get16();
+      seg = get16();
     }
   used_prefixes |= (prefixes & PREFIX_DATA);
   if (intel_syntax)
-    sprintf (scratchbuf, "0x%x,0x%x", seg, offset);
+    sprintf(scratchbuf, "0x%x,0x%x", seg, offset);
   else
-    sprintf (scratchbuf, "$0x%x,$0x%x", seg, offset);
-  oappend (scratchbuf);
+    sprintf(scratchbuf, "$0x%x,$0x%x", seg, offset);
+  oappend(scratchbuf);
 }
 
 static void
-OP_OFF (int bytemode ATTRIBUTE_UNUSED, int sizeflag,
+OP_OFF(int bytemode ATTRIBUTE_UNUSED, int sizeflag,
        StackFrame *stackFrame)
 {
   bfd_vma off;
 
-  append_seg ();
+  append_seg();
 
   if ((sizeflag & AFLAG) || mode_64bit)
-    off = get32 ();
+    off = get32();
   else
-    off = get16 ();
+    off = get16();
 
   if (intel_syntax)
     {
@@ -4712,56 +4724,54 @@ OP_OFF (int bytemode ATTRIBUTE_UNUSED, int sizeflag,
       if (!(prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
 			| PREFIX_ES | PREFIX_FS | PREFIX_GS)))
 	{
-           if (!evaluate_address_expression(bytemode, sizeflag, off, 
+           if (!evaluate_address_expression(bytemode, sizeflag, off,
                                             0, stackFrame,
 	                                    names_seg[ds_reg - es_reg]))
            {
-              print_operand_value (scratchbuf, 1, off);
-	      oappend (scratchbuf);
+              print_operand_value(scratchbuf, 1, off);
+	      oappend(scratchbuf);
            }
-	}
-        else
+        } else
         {
-           if (!evaluate_address_expression(bytemode, sizeflag, off, 
+           if (!evaluate_address_expression(bytemode, sizeflag, off,
                                             0, stackFrame, NULL))
            {
-              print_operand_value (scratchbuf, 1, off);
-	      oappend (scratchbuf);
+              print_operand_value(scratchbuf, 1, off);
+	      oappend(scratchbuf);
            }
         }
 #else
       if (!(prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
 			| PREFIX_ES | PREFIX_FS | PREFIX_GS)))
 	{
-	  oappend (names_seg[ds_reg - es_reg]);
-	  oappend (":");
+	  oappend(names_seg[ds_reg - es_reg]);
+	  oappend(":");
 	}
-        print_operand_value (scratchbuf, 1, off);
-        oappend (scratchbuf);
-#endif 
-    }
-    else
+        print_operand_value(scratchbuf, 1, off);
+        oappend(scratchbuf);
+#endif
+    } else
     {
-       print_operand_value (scratchbuf, 1, off);
-       oappend (scratchbuf);
+       print_operand_value(scratchbuf, 1, off);
+       oappend(scratchbuf);
     }
 }
 
 static void
-OP_OFF64 (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-       StackFrame *stackFrame)
+OP_OFF64(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+	 StackFrame *stackFrame)
 {
   bfd_vma off;
 
   if (!mode_64bit)
     {
-      OP_OFF (bytemode, sizeflag, stackFrame);
+      OP_OFF(bytemode, sizeflag, stackFrame);
       return;
     }
 
-  append_seg ();
+  append_seg();
 
-  off = get64 ();
+  off = get64();
 
   if (intel_syntax)
     {
@@ -4769,48 +4779,46 @@ OP_OFF64 (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
       if (!(prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
 			| PREFIX_ES | PREFIX_FS | PREFIX_GS)))
 	{
-           if (!evaluate_address_expression(bytemode, sizeflag, off, 
-                                         0, stackFrame,
+           if (!evaluate_address_expression(bytemode, sizeflag, off,
+					    0, stackFrame,
                                          names_seg[ds_reg - es_reg]))
            {
-              print_operand_value (scratchbuf, 1, off);
-              oappend (scratchbuf);
+              print_operand_value(scratchbuf, 1, off);
+              oappend(scratchbuf);
            }
-	}
-        else
+        } else
         {
-           if (!evaluate_address_expression(bytemode, sizeflag, off, 
-                                         0, stackFrame, NULL))
+           if (!evaluate_address_expression(bytemode, sizeflag, off,
+					    0, stackFrame, NULL))
            {
-              print_operand_value (scratchbuf, 1, off);
-              oappend (scratchbuf);
+              print_operand_value(scratchbuf, 1, off);
+              oappend(scratchbuf);
            }
-        }   
+        }
 #else
       if (!(prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
 			| PREFIX_ES | PREFIX_FS | PREFIX_GS)))
 	{
-	  oappend (names_seg[ds_reg - es_reg]);
-	  oappend (":");
+	  oappend(names_seg[ds_reg - es_reg]);
+	  oappend(":");
 	}
-        print_operand_value (scratchbuf, 1, off);
-        oappend (scratchbuf);
+        print_operand_value(scratchbuf, 1, off);
+        oappend(scratchbuf);
 #endif
-    }
-    else
+    } else
     {
-       print_operand_value (scratchbuf, 1, off);
-       oappend (scratchbuf);
+       print_operand_value(scratchbuf, 1, off);
+       oappend(scratchbuf);
     }
 }
 
 static void
-ptr_reg (int code, int sizeflag, StackFrame *stackFrame)
+ptr_reg(int code, int sizeflag, StackFrame *stackFrame)
 {
   const char *s;
   unsigned char *deref;
 
-  // begin dereference
+  /* begin dereference */
   deref = obufp;
   *obufp++ = open_char;
   used_prefixes |= (prefixes & PREFIX_ADDR);
@@ -4825,8 +4833,8 @@ ptr_reg (int code, int sizeflag, StackFrame *stackFrame)
     s = names32[code - eAX_reg];
   else
     s = names16[code - eAX_reg];
-  oappend (s);
-  // end dereference
+  oappend(s);
+  /* end dereference */
   *obufp++ = close_char;
   *obufp = 0;
 #ifdef MDB_ENHANCEMENTS
@@ -4835,18 +4843,18 @@ ptr_reg (int code, int sizeflag, StackFrame *stackFrame)
      register int size;
 
      if (mode_64bit)
-     { 
-        // 32 bit
+     {
+        /* 32 bit */
         if (!(sizeflag & AFLAG))
 	  size = 4;
-        // 64 bit 
+        /* 64 bit */
         else
           size = 8;
      }
-     // 32 bit
+     /* 32 bit */
      else if (sizeflag & AFLAG)
 	size = 4;
-     // 16 bit
+     /* 16 bit */
      else
 	size = 2;
 
@@ -4856,47 +4864,47 @@ ptr_reg (int code, int sizeflag, StackFrame *stackFrame)
 }
 
 static void
-OP_ESreg (int code, int sizeflag, StackFrame *stackFrame)
+OP_ESreg(int code, int sizeflag, StackFrame *stackFrame)
 {
   if (intel_syntax)
     {
       if (codep[-1] & 1)
 	{
-	  USED_REX (REX_MODE64);
+	  USED_REX(REX_MODE64);
 	  used_prefixes |= (prefixes & PREFIX_DATA);
 	  if (rex & REX_MODE64)
-	    oappend ("QWORD PTR ");
+	    oappend("QWORD PTR ");
 	  else if ((sizeflag & DFLAG))
-	    oappend ("DWORD PTR ");
+	    oappend("DWORD PTR ");
 	  else
-	    oappend ("WORD PTR ");
+	    oappend("WORD PTR ");
 	}
       else
-	oappend ("BYTE PTR ");
+	oappend("BYTE PTR ");
     }
 
-  oappend ("%es:" + intel_syntax);
-  ptr_reg (code, sizeflag, stackFrame);
+  oappend("%es:" + intel_syntax);
+  ptr_reg(code, sizeflag, stackFrame);
 }
 
 static void
-OP_DSreg (int code, int sizeflag, StackFrame *stackFrame)
+OP_DSreg(int code, int sizeflag, StackFrame *stackFrame)
 {
   if (intel_syntax)
     {
       if (codep[-1] != 0xd7 && (codep[-1] & 1))
 	{
-	  USED_REX (REX_MODE64);
+	  USED_REX(REX_MODE64);
 	  used_prefixes |= (prefixes & PREFIX_DATA);
 	  if (rex & REX_MODE64)
-	    oappend ("QWORD PTR ");
+	    oappend("QWORD PTR ");
 	  else if ((sizeflag & DFLAG))
-	    oappend ("DWORD PTR ");
+	    oappend("DWORD PTR ");
 	  else
-	    oappend ("WORD PTR ");
+	    oappend("WORD PTR ");
 	}
       else
-	oappend ("BYTE PTR ");
+	oappend("BYTE PTR ");
     }
 
   if ((prefixes
@@ -4907,18 +4915,19 @@ OP_DSreg (int code, int sizeflag, StackFrame *stackFrame)
 	  | PREFIX_FS
 	  | PREFIX_GS)) == 0)
     prefixes |= PREFIX_DS;
-  append_seg ();
-  ptr_reg (code, sizeflag, stackFrame);
+  append_seg();
+  ptr_reg(code, sizeflag, stackFrame);
 }
 
 static void
-OP_C (int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-       StackFrame *stackFrame)
+OP_C(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+     StackFrame *stackFrame)
 {
   int add = 0;
+
   if (rex & REX_EXTX)
     {
-      USED_REX (REX_EXTX);
+      USED_REX(REX_EXTX);
       add = 8;
     }
   else if (!mode_64bit && (prefixes & PREFIX_LOCK))
@@ -4926,74 +4935,77 @@ OP_C (int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
       used_prefixes |= PREFIX_LOCK;
       add = 8;
     }
-  sprintf (scratchbuf, "%%cr%d", reg + add);
-  oappend (scratchbuf + intel_syntax);
+  sprintf(scratchbuf, "%%cr%d", reg + add);
+  oappend(scratchbuf + intel_syntax);
 }
 
 static void
-OP_D (int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-       StackFrame *stackFrame)
+OP_D(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+     StackFrame *stackFrame)
 {
   int add = 0;
-  USED_REX (REX_EXTX);
+
+  USED_REX(REX_EXTX);
   if (rex & REX_EXTX)
     add = 8;
   if (intel_syntax)
-    sprintf (scratchbuf, "db%d", reg + add);
+    sprintf(scratchbuf, "db%d", reg + add);
   else
-    sprintf (scratchbuf, "%%db%d", reg + add);
-  oappend (scratchbuf);
+    sprintf(scratchbuf, "%%db%d", reg + add);
+  oappend(scratchbuf);
 }
 
 static void
-OP_T (int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-       StackFrame *stackFrame)
+OP_T(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+     StackFrame *stackFrame)
 {
-  sprintf (scratchbuf, "%%tr%d", reg);
-  oappend (scratchbuf + intel_syntax);
+  sprintf(scratchbuf, "%%tr%d", reg);
+  oappend(scratchbuf + intel_syntax);
 }
 
 static void
-OP_Rd (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_Rd(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   if (mod == 3)
-    OP_E (bytemode, sizeflag, stackFrame);
+    OP_E(bytemode, sizeflag, stackFrame);
   else
-    BadOp ();
+    BadOp();
 }
 
 static void
-OP_MMX (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+OP_MMX(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
        StackFrame *stackFrame)
 {
   used_prefixes |= (prefixes & PREFIX_DATA);
   if (prefixes & PREFIX_DATA)
     {
       int add = 0;
-      USED_REX (REX_EXTX);
+
+      USED_REX(REX_EXTX);
       if (rex & REX_EXTX)
 	add = 8;
-      sprintf (scratchbuf, "%%xmm%d", reg + add);
+      sprintf(scratchbuf, "%%xmm%d", reg + add);
     }
   else
-    sprintf (scratchbuf, "%%mm%d", reg);
-  oappend (scratchbuf + intel_syntax);
+    sprintf(scratchbuf, "%%mm%d", reg);
+  oappend(scratchbuf + intel_syntax);
 }
 
 static void
-OP_XMM (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+OP_XMM(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
        StackFrame *stackFrame)
 {
   int add = 0;
-  USED_REX (REX_EXTX);
+
+  USED_REX(REX_EXTX);
   if (rex & REX_EXTX)
     add = 8;
-  sprintf (scratchbuf, "%%xmm%d", reg + add);
-  oappend (scratchbuf + intel_syntax);
+  sprintf(scratchbuf, "%%xmm%d", reg + add);
+  oappend(scratchbuf + intel_syntax);
 }
 
 static void
-OP_EM (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_EM(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   if (mod != 3)
     {
@@ -5002,7 +5014,7 @@ OP_EM (int bytemode, int sizeflag, StackFrame *stackFrame)
 	  bytemode = (prefixes & PREFIX_DATA) ? x_mode : q_mode;
 	  used_prefixes |= (prefixes & PREFIX_DATA);
 	}
-      OP_E (bytemode, sizeflag, stackFrame);
+      OP_E(bytemode, sizeflag, stackFrame);
       return;
     }
 
@@ -5014,25 +5026,26 @@ OP_EM (int bytemode, int sizeflag, StackFrame *stackFrame)
     {
       int add = 0;
 
-      USED_REX (REX_EXTZ);
+      USED_REX(REX_EXTZ);
       if (rex & REX_EXTZ)
 	add = 8;
-      sprintf (scratchbuf, "%%xmm%d", rm + add);
+      sprintf(scratchbuf, "%%xmm%d", rm + add);
     }
   else
-    sprintf (scratchbuf, "%%mm%d", rm);
-  oappend (scratchbuf + intel_syntax);
+    sprintf(scratchbuf, "%%mm%d", rm);
+  oappend(scratchbuf + intel_syntax);
 }
 
 static void
-OP_EX (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_EX(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   int add = 0;
+
   if (mod != 3)
     {
       if (intel_syntax && bytemode == v_mode)
 	{
-	  switch (prefixes & (PREFIX_DATA|PREFIX_REPZ|PREFIX_REPNZ))
+	  switch (prefixes & (PREFIX_DATA | PREFIX_REPZ | PREFIX_REPNZ))
 	    {
 	    case 0:	       bytemode = x_mode; break;
 	    case PREFIX_REPZ:  bytemode = d_mode; used_prefixes |= PREFIX_REPZ;	 break;
@@ -5041,88 +5054,88 @@ OP_EX (int bytemode, int sizeflag, StackFrame *stackFrame)
 	    default:	       bytemode = 0; break;
 	    }
 	}
-      OP_E (bytemode, sizeflag, stackFrame);
+      OP_E(bytemode, sizeflag, stackFrame);
       return;
     }
-  USED_REX (REX_EXTZ);
+  USED_REX(REX_EXTZ);
   if (rex & REX_EXTZ)
     add = 8;
 
   /* Skip mod/rm byte.	*/
   MODRM_CHECK;
   codep++;
-  sprintf (scratchbuf, "%%xmm%d", rm + add);
-  oappend (scratchbuf + intel_syntax);
+  sprintf(scratchbuf, "%%xmm%d", rm + add);
+  oappend(scratchbuf + intel_syntax);
 }
 
 static void
-OP_MS (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_MS(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   if (mod == 3)
-    OP_EM (bytemode, sizeflag, stackFrame);
+    OP_EM(bytemode, sizeflag, stackFrame);
   else
-    BadOp ();
+    BadOp();
 }
 
 static void
-OP_XS (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_XS(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   if (mod == 3)
-    OP_EX (bytemode, sizeflag, stackFrame);
+    OP_EX(bytemode, sizeflag, stackFrame);
   else
-    BadOp ();
+    BadOp();
 }
 
 static void
-OP_M (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_M(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   if (mod == 3)
-    BadOp ();	/* bad lea,lds,les,lfs,lgs,lss modrm */
+    BadOp();	/* bad lea,lds,les,lfs,lgs,lss modrm */
   else
-    OP_E (bytemode, sizeflag, stackFrame);
+    OP_E(bytemode, sizeflag, stackFrame);
 }
 
 static void
-OP_0f07 (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_0f07(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   if (mod != 3 || rm != 0)
-    BadOp ();
+    BadOp();
   else
-    OP_E (bytemode, sizeflag, stackFrame);
+    OP_E(bytemode, sizeflag, stackFrame);
 }
 
 static void
-OP_0fae (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_0fae(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   if (mod == 3)
     {
       if (reg == 5)
-	strcpy (obuf + strlen (obuf) - sizeof ("xrstor") + 1, "lfence");
+	strcpy(obuf + strlen(obuf) - sizeof("xrstor") + 1, "lfence");
       if (reg == 7)
-	strcpy (obuf + strlen (obuf) - sizeof ("clflush") + 1, "sfence");
+	strcpy(obuf + strlen(obuf) - sizeof("clflush") + 1, "sfence");
 
       if (reg < 5 || rm != 0)
 	{
-	  BadOp ();	/* bad sfence, mfence, or lfence */
+	  BadOp();	/* bad sfence, mfence, or lfence */
 	  return;
 	}
     }
   else if (reg != 5 && reg != 7)
     {
-      BadOp ();		/* bad xrstor or clflush */
+      BadOp();		/* bad xrstor or clflush */
       return;
     }
 
-  OP_E (bytemode, sizeflag, stackFrame);
+  OP_E(bytemode, sizeflag, stackFrame);
 }
 
 static void
-NOP_Fixup (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-       StackFrame *stackFrame)
+NOP_Fixup(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+	  StackFrame *stackFrame)
 {
   /* NOP with REPZ prefix is called PAUSE.  */
   if (prefixes == PREFIX_REPZ)
-    strcpy (obuf, "pause");
+    strcpy(obuf, "pause");
 }
 
 static const char *const Suffix3DNow[] = {
@@ -5193,19 +5206,19 @@ static const char *const Suffix3DNow[] = {
 };
 
 static void
-OP_3DNowSuffix (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-       StackFrame *stackFrame)
+OP_3DNowSuffix(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+	       StackFrame *stackFrame)
 {
   const char *mnemonic;
 
-  FETCH_DATA (the_info, codep + 1);
+  FETCH_DATA(the_info, codep + 1);
   /* AMD 3DNow! instructions are specified by an opcode suffix in the
      place where an 8-bit immediate would normally go.	ie. the last
      byte of the instruction.  */
-  obufp = obuf + strlen (obuf);
+  obufp = obuf + strlen(obuf);
   mnemonic = Suffix3DNow[*codep++ & 0xff];
   if (mnemonic)
-    oappend (mnemonic);
+    oappend(mnemonic);
   else
     {
       /* Since a variable sized modrm/sib chunk is between the start
@@ -5214,7 +5227,7 @@ OP_3DNowSuffix (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 	 we have a bad opcode.	This necessitates some cleaning up.  */
       op1out[0] = '\0';
       op2out[0] = '\0';
-      BadOp ();
+      BadOp();
     }
 }
 
@@ -5230,17 +5243,18 @@ static const char *simd_cmp_op[] = {
 };
 
 static void
-OP_SIMD_Suffix (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-       StackFrame *stackFrame)
+OP_SIMD_Suffix(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
+	       StackFrame *stackFrame)
 {
   unsigned int cmp_type;
 
-  FETCH_DATA (the_info, codep + 1);
-  obufp = obuf + strlen (obuf);
+  FETCH_DATA(the_info, codep + 1);
+  obufp = obuf + strlen(obuf);
   cmp_type = *codep++ & 0xff;
   if (cmp_type < 8)
     {
       char suffix1 = 'p', suffix2 = 's';
+
       used_prefixes |= (prefixes & PREFIX_REPZ);
       if (prefixes & PREFIX_REPZ)
 	suffix1 = 's';
@@ -5256,29 +5270,29 @@ OP_SIMD_Suffix (int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 		suffix1 = 's', suffix2 = 'd';
 	    }
 	}
-      sprintf (scratchbuf, "cmp%s%c%c",
-	       simd_cmp_op[cmp_type], suffix1, suffix2);
+      sprintf(scratchbuf, "cmp%s%c%c",
+	      simd_cmp_op[cmp_type], suffix1, suffix2);
       used_prefixes |= (prefixes & PREFIX_REPZ);
-      oappend (scratchbuf);
+      oappend(scratchbuf);
     }
   else
     {
       /* We have a bad extension byte.	Clean up.  */
       op1out[0] = '\0';
       op2out[0] = '\0';
-      BadOp ();
+      BadOp();
     }
 }
 
 static void
-SIMD_Fixup (int extrachar, int sizeflag ATTRIBUTE_UNUSED,
-            StackFrame *stackFrame)
+SIMD_Fixup(int extrachar, int sizeflag ATTRIBUTE_UNUSED,
+	   StackFrame *stackFrame)
 {
   /* Change movlps/movhps to movhlps/movlhps for 2 register operand
      forms of these instructions.  */
   if (mod == 3)
     {
-      char *p = obuf + strlen (obuf);
+      char *p = obuf + strlen(obuf);
       *(p + 1) = '\0';
       *p       = *(p - 1);
       *(p - 1) = *(p - 2);
@@ -5288,12 +5302,12 @@ SIMD_Fixup (int extrachar, int sizeflag ATTRIBUTE_UNUSED,
 }
 
 static void
-PNI_Fixup (int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
+PNI_Fixup(int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
 {
   if (mod == 3 && reg == 1 && rm <= 1)
     {
       /* Override "sidt".  */
-      char *p = obuf + strlen (obuf) - 4;
+      char *p = obuf + strlen(obuf) - 4;
 
       /* We might have a suffix when disassembling with -Msuffix.  */
       if (*p == 'i')
@@ -5302,42 +5316,42 @@ PNI_Fixup (int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
       if (rm)
 	{
 	  /* mwait %eax,%ecx  */
-	  strcpy (p, "mwait");
+	  strcpy(p, "mwait");
 	  if (!intel_syntax)
-	    strcpy (op1out, names32[0]);
+	    strcpy(op1out, names32[0]);
 	}
       else
 	{
 	  /* monitor %eax,%ecx,%edx"  */
-	  strcpy (p, "monitor");
+	  strcpy(p, "monitor");
 	  if (!intel_syntax)
 	    {
 	      if (!mode_64bit)
-		strcpy (op1out, names32[0]);
+		strcpy(op1out, names32[0]);
 	      else if (!(prefixes & PREFIX_ADDR))
-		strcpy (op1out, names64[0]);
+		strcpy(op1out, names64[0]);
 	      else
 		{
-		  strcpy (op1out, names32[0]);
+		  strcpy(op1out, names32[0]);
 		  used_prefixes |= PREFIX_ADDR;
 		}
-	      strcpy (op3out, names32[2]);
+	      strcpy(op3out, names32[2]);
 	    }
 	}
       if (!intel_syntax)
 	{
-	  strcpy (op2out, names32[1]);
+	  strcpy(op2out, names32[1]);
 	  two_source_ops = 1;
 	}
 
       codep++;
     }
   else
-    OP_M (0, sizeflag, stackFrame);
+    OP_M(0, sizeflag, stackFrame);
 }
 
 static void
-SVME_Fixup (int bytemode, int sizeflag, StackFrame *stackFrame)
+SVME_Fixup(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   const char *alt;
   char *p;
@@ -5370,15 +5384,15 @@ SVME_Fixup (int bytemode, int sizeflag, StackFrame *stackFrame)
       alt = "invlpga";
       break;
     default:
-      OP_M (bytemode, sizeflag, stackFrame);
+      OP_M(bytemode, sizeflag, stackFrame);
       return;
     }
   /* Override "lidt".  */
-  p = obuf + strlen (obuf) - 4;
+  p = obuf + strlen(obuf) - 4;
   /* We might have a suffix.  */
   if (*p == 'i')
     --p;
-  strcpy (p, alt);
+  strcpy(p, alt);
   if (!(prefixes & PREFIX_ADDR))
     {
       ++codep;
@@ -5388,22 +5402,22 @@ SVME_Fixup (int bytemode, int sizeflag, StackFrame *stackFrame)
   switch (*codep++)
     {
     case 0xdf:
-      strcpy (op2out, names32[1]);
+      strcpy(op2out, names32[1]);
       two_source_ops = 1;
 	  /* Fall through.  */
     case 0xd8:
     case 0xda:
     case 0xdb:
-      // begin dereference
+      /* begin dereference */
       deref = obufp;
       *obufp++ = open_char;
       if (mode_64bit || (sizeflag & AFLAG))
         alt = names32[0];
       else
         alt = names16[0];
-      strcpy (obufp, alt);
-      obufp += strlen (alt);
-      // end dereference
+      strcpy(obufp, alt);
+      obufp += strlen(alt);
+      /* end dereference */
       *obufp++ = close_char;
       *obufp = '\0';
 #ifdef MDB_ENHANCEMENTS
@@ -5415,7 +5429,7 @@ SVME_Fixup (int bytemode, int sizeflag, StackFrame *stackFrame)
 }
 
 static void
-INVLPG_Fixup (int bytemode, int sizeflag, StackFrame *stackFrame)
+INVLPG_Fixup(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   const char *alt;
 
@@ -5428,24 +5442,24 @@ INVLPG_Fixup (int bytemode, int sizeflag, StackFrame *stackFrame)
       alt = "rdtscp";
       break;
     default:
-      OP_M (bytemode, sizeflag, stackFrame);
+      OP_M(bytemode, sizeflag, stackFrame);
       return;
     }
   /* Override "invlpg".  */
-  strcpy (obuf + strlen (obuf) - 6, alt);
+  strcpy(obuf + strlen(obuf) - 6, alt);
   codep++;
 }
 
 static void
-BadOp (void)
+BadOp(void)
 {
   /* Throw away prefixes and 1st. opcode byte.  */
   codep = insn_codep + 1;
-  oappend ("(bad)");
+  oappend("(bad)");
 }
 
 static void
-SEG_Fixup (int extrachar, int sizeflag, StackFrame *stackFrame)
+SEG_Fixup(int extrachar, int sizeflag, StackFrame *stackFrame)
 {
   if (mod == 3)
     {
@@ -5464,13 +5478,13 @@ SEG_Fixup (int extrachar, int sizeflag, StackFrame *stackFrame)
 	suffix = "w";
       else
 	{
-	  USED_REX (REX_MODE64);
+	  USED_REX(REX_MODE64);
 	  if (rex & REX_MODE64)
 	    suffix = "q";
 	  else
 	    suffix = "l";
 	}
-      strcat (obuf, suffix);
+      strcat(obuf, suffix);
     }
   else
     {
@@ -5482,7 +5496,7 @@ SEG_Fixup (int extrachar, int sizeflag, StackFrame *stackFrame)
 		movw (%rax),%ds
 
 	 Override "mov[l|q]".  */
-      char *p = obuf + strlen (obuf) - 1;
+      char *p = obuf + strlen(obuf) - 1;
 
       /* We might not have a suffix.  */
       if (*p == 'v')
@@ -5490,16 +5504,16 @@ SEG_Fixup (int extrachar, int sizeflag, StackFrame *stackFrame)
       *p = 'w';
     }
 
-  OP_E (extrachar, sizeflag, stackFrame);
+  OP_E(extrachar, sizeflag, stackFrame);
 }
 
 static void
-VMX_Fixup (int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
+VMX_Fixup(int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
 {
-  if (mod == 3 && reg == 0 && rm >=1 && rm <= 4)
+  if (mod == 3 && reg == 0 && rm >= 1 && rm <= 4)
     {
       /* Override "sgdt".  */
-      char *p = obuf + strlen (obuf) - 4;
+      char *p = obuf + strlen(obuf) - 4;
 
       /* We might have a suffix when disassembling with -Msuffix.  */
       if (*p == 'g')
@@ -5508,36 +5522,36 @@ VMX_Fixup (int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
       switch (rm)
 	{
 	case 1:
-	  strcpy (p, "vmcall");
+	  strcpy(p, "vmcall");
 	  break;
 	case 2:
-	  strcpy (p, "vmlaunch");
+	  strcpy(p, "vmlaunch");
 	  break;
 	case 3:
-	  strcpy (p, "vmresume");
+	  strcpy(p, "vmresume");
 	  break;
 	case 4:
-	  strcpy (p, "vmxoff");
+	  strcpy(p, "vmxoff");
 	  break;
 	}
 
       codep++;
     }
   else
-    OP_E (0, sizeflag, stackFrame);
+    OP_E(0, sizeflag, stackFrame);
 }
 
 static void
-OP_VMX (int bytemode, int sizeflag, StackFrame *stackFrame)
+OP_VMX(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
   used_prefixes |= (prefixes & (PREFIX_DATA | PREFIX_REPZ));
   if (prefixes & PREFIX_DATA)
-    strcpy (obuf, "vmclear");
+    strcpy(obuf, "vmclear");
   else if (prefixes & PREFIX_REPZ)
-    strcpy (obuf, "vmxon");
+    strcpy(obuf, "vmxon");
   else
-    strcpy (obuf, "vmptrld");
-  OP_E (bytemode, sizeflag, stackFrame);
+    strcpy(obuf, "vmptrld");
+  OP_E(bytemode, sizeflag, stackFrame);
 }
 
 static int mdb_dis_getsym(bfd_vma addr, disassemble_info *dip)
@@ -5545,42 +5559,41 @@ static int mdb_dis_getsym(bfd_vma addr, disassemble_info *dip)
 	return 0;
 }
 
-static void mdb_printaddress(unsigned long addr, disassemble_info *dip, 
+static void mdb_printaddress(unsigned long addr, disassemble_info *dip,
                              int flag, int type)
 {
 	int spaces = 5;
         unsigned char *sym_name;
         unsigned long offset;
 
-        sym_name = GetSymbolFromValueWithOffset(addr, &offset,  
-                                                &symbuf[0], 
+        sym_name = GetSymbolFromValueWithOffset(addr, &offset,
+                                                &symbuf[0],
                                                 MAX_SYMBOL_LEN);
-	if (sym_name && sym_name[0] != ' ') 
+	if (sym_name && sym_name[0] != ' ')
         {
            if (type)
-	      dip->fprintf_func(dip->stream, "0x%0*lx %s", 
-                               (int)(2*sizeof(addr)), addr, sym_name);
+	      dip->fprintf_func(dip->stream, "0x%0*lx %s",
+                               (int)(2 * sizeof(addr)), addr, sym_name);
            else
 	      dip->fprintf_func(dip->stream, "%s", sym_name);
- 	   if ((offset) == 0) 
+	   if ((offset) == 0)
 	      spaces += 4;
-	   else 
+	   else
            {
 	      unsigned int o = offset;
 
 	      while (o >>= 4)
-  	         --spaces;
+	         --spaces;
               dip->fprintf_func(dip->stream, "+0x%lx", offset);
 	   }
-	} 
-        else 
+        } else
         {
 	   dip->fprintf_func(dip->stream, "0x%lx", addr);
 	}
 
-	if (flag) 
+	if (flag)
         {
-	   if (spaces < 1) 
+	   if (spaces < 1)
            {
 	      spaces = 1;
 	   }
@@ -5611,26 +5624,25 @@ int mdb_id_printinsn_intel(unsigned long pc, disassemble_info *dip,
         char *final = &finalbuf[0];
         long segment, offset;
 
-        // print the address info based on architecture
-        if ((dip->mach == bfd_mach_i386_i386) || 
+        /* print the address info based on architecture */
+        if ((dip->mach == bfd_mach_i386_i386) ||
             (dip->mach == bfd_mach_x86_64))
         {
 	   mdb_fprintf(final, "0x%p ", (void *)pc);
-        }
-        else
+        } else
         if (dip->mach == bfd_mach_i386_i8086)
         {
            segment = (((unsigned long)pc >> 4) & 0x0000FFFF);
            offset = ((unsigned long)pc & 0x0000000F);
 
 	   mdb_fprintf(final, "%04X:%04X ",
-                       (unsigned)segment, (unsigned)offset);
+		       (unsigned)segment, (unsigned)offset);
         }
 
-        // perform disassembly
+        /* perform disassembly */
 	err = print_insn_i386_intel(pc, dip, stackFrame);
 
-        // output byte opcodes
+        /* output byte opcodes */
         mdb_fprintf(final, "%s ", &fbytebuf[0]);
 
         do
@@ -5639,7 +5651,7 @@ int mdb_id_printinsn_intel(unsigned long pc, disassemble_info *dip,
            columns++;
         } while (columns < 15);
 
-        // output disassembly results
+        /* output disassembly results */
         mdb_fprintf(final, "%s ", &disbuf[0]);
 
         columns += strlen(&disbuf[0]);
@@ -5653,7 +5665,7 @@ int mdb_id_printinsn_intel(unsigned long pc, disassemble_info *dip,
 }
 
 int mdb_id_printinsn_att(unsigned long pc, disassemble_info *dip,
-                        StackFrame *stackFrame)
+			 StackFrame *stackFrame)
 {
 	mdb_printaddress(pc, dip, 1, 1);
 	return print_insn_i386_att(pc, dip, stackFrame);
@@ -5685,8 +5697,8 @@ unsigned short read_memory(void *addr, void *buf, unsigned length)
     return 0;
 }
 
-static int mdb_dis_getmem(bfd_vma addr, bfd_byte *buf, unsigned int length, 
-                           disassemble_info *dip)
+static int mdb_dis_getmem(bfd_vma addr, bfd_byte *buf, unsigned int length,
+			  disassemble_info *dip)
 {
     register unsigned long i;
     register unsigned char *s = buf;
@@ -5703,8 +5715,8 @@ static int mdb_dis_getmem(bfd_vma addr, bfd_byte *buf, unsigned int length,
     return 0;
 }
 
-static int mdb_intel_getmem(bfd_vma addr, bfd_byte *buf, unsigned int length, 
-                           disassemble_info *dip)
+static int mdb_intel_getmem(bfd_vma addr, bfd_byte *buf, unsigned int length,
+			    disassemble_info *dip)
 {
     register unsigned long i;
     register unsigned char *s = buf, *fbyte = (char *)&fbytebuf[0];
@@ -5716,14 +5728,13 @@ static int mdb_intel_getmem(bfd_vma addr, bfd_byte *buf, unsigned int length,
           s[i] = (unsigned char)
                   mdb_getword((unsigned long)((unsigned long)addr + i), 1);
           vaddr = (void *)((unsigned long)vaddr + 1);
-          
+
 	  mdb_fprintf(fbyte, "%02X", s[i]);
           columns += 2;
        }
     }
     return 0;
 }
-
 
 int mdb_dis_fprintf(PTR file, const char *fmt, ...)
 {
@@ -5783,13 +5794,12 @@ int mdb_id_init(disassemble_info *dip, unsigned long type)
         if (type)
         {
 	   dip->read_memory_func       = mdb_dis_getmem;
-  	   dip->print_address_func     = mdb_dis_printaddr;
+	   dip->print_address_func     = mdb_dis_printaddr;
 	   dip->fprintf_func           = mdb_dis_fprintf;
-        }
-        else
+        } else
         {
 	   dip->read_memory_func       = mdb_intel_getmem;
-  	   dip->print_address_func     = mdb_intel_printaddr;
+	   dip->print_address_func     = mdb_intel_printaddr;
 	   dip->fprintf_func           = mdb_intel_fprintf;
         }
 
@@ -5802,17 +5812,16 @@ int mdb_id_init(disassemble_info *dip, unsigned long type)
 #ifdef CONFIG_X86_32
 	dip->mach		    = bfd_mach_i386_i386;
 #endif
-	dip->endian	    	    = BFD_ENDIAN_LITTLE;
+	dip->endian		    = BFD_ENDIAN_LITTLE;
 	dip->display_endian         = BFD_ENDIAN_LITTLE;
 
         return 0;
 }
 
 unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
-                         unsigned long use, unsigned long *ret,   
+                         unsigned long use, unsigned long *ret,
                          unsigned long type)
 {
-
         jmp_active = 0;
         trap_disable = 0;
         columns = 0;
@@ -5838,7 +5847,7 @@ unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
 
            default:
 #ifdef CONFIG_X86_64
- 	      mdb_di.mach = bfd_mach_x86_64;
+	      mdb_di.mach = bfd_mach_x86_64;
 #else
 	      mdb_di.mach = bfd_mach_i386_i386;
 #endif
@@ -5847,13 +5856,13 @@ unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
 
         vaddr = (void *)ip;
         if (type)
-	   (void) mdb_id_printinsn_att(ip, &mdb_di, stackFrame);
+	   (void)mdb_id_printinsn_att(ip, &mdb_di, stackFrame);
         else
-   	   (void) mdb_id_printinsn_intel(ip, &mdb_di, stackFrame);
+	   (void)mdb_id_printinsn_intel(ip, &mdb_di, stackFrame);
 
-        if (!strncasecmp(&disbuf[0], "call", 4) || 
+        if (!strncasecmp(&disbuf[0], "call", 4) ||
             !strncasecmp(&disbuf[0], "rep", 3)  ||
-	    !strncasecmp(&disbuf[0], "int", 3)  || 
+	    !strncasecmp(&disbuf[0], "int", 3)  ||
             !strncasecmp(&disbuf[0], "loop", 4))
         {
            needs_proceed = 1;
@@ -5864,14 +5873,14 @@ unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
            jmp_active = 1;
 
         if (!strncasecmp(&disbuf[0], "iret", 4) ||
-            !strncasecmp(&disbuf[0], "sysexit", 7) || 
-            !strncasecmp(&disbuf[0], "syscall", 7) || 
-            !strncasecmp(&disbuf[0], "sysret", 6)) 
+            !strncasecmp(&disbuf[0], "sysexit", 7) ||
+            !strncasecmp(&disbuf[0], "syscall", 7) ||
+            !strncasecmp(&disbuf[0], "sysret", 6))
            jmp_active = 1;
 
-        if (strstr(&disbuf[0], "sysexit") || 
-            strstr(&disbuf[0], "syscall") || 
-            strstr(&disbuf[0], "sysret")) 
+        if (strstr(&disbuf[0], "sysexit") ||
+            strstr(&disbuf[0], "syscall") ||
+            strstr(&disbuf[0], "sysret"))
         {
            trap_disable = 1;
         }
@@ -5884,6 +5893,4 @@ unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
 
         return 0;
 }
-
-
 

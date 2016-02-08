@@ -21,7 +21,7 @@
 #ifndef _MDB_OS_H
 #define _MDB_OS_H
 
-#define MAX_SYMBOL_LEN  KSYM_NAME_LEN+1
+#define MAX_SYMBOL_LEN  KSYM_NAME_LEN + 1
 
 extern atomic_t inmdb;
 extern int pause_mode;
@@ -32,98 +32,98 @@ extern unsigned char symbuf[MAX_SYMBOL_LEN];
 extern unsigned char modbuf[MAX_SYMBOL_LEN];
 extern unsigned char workbuf[MAX_SYMBOL_LEN];
 
-extern unsigned long mdb_kallsyms_lookup_name(char *str);
-extern int mdb_kallsyms(char *str, 
+unsigned long mdb_kallsyms_lookup_name(char *str);
+int mdb_kallsyms(char *str,
+		 int (*print)(char *s, ...));
+int mdb_modules(char *str,
 		int (*print)(char *s, ...));
-extern int mdb_modules(char *str, 
-		int (*print)(char *s, ...));
-extern int mdb_getkey(void);
-extern int mdb_getlword(uint64_t *word, 
-			unsigned long addr, 
+int mdb_getkey(void);
+int mdb_getlword(uint64_t *word,
+		 unsigned long addr,
 			size_t size);
-extern int mdb_putword(unsigned long addr, 
-			unsigned long word, 
+int mdb_putword(unsigned long addr,
+		unsigned long word,
 			size_t size);
-extern int mdb_copy(void *to, void *from, 
-			size_t size);
-extern unsigned long mdb_phys_getword(unsigned long addr, 
-			size_t size);
-extern unsigned long mdb_getword(unsigned long addr, 
-			size_t size);
-extern uint64_t mdb_getqword(uint64_t *addr, size_t size);
-extern uint64_t mdb_phys_getqword(uint64_t *addr, size_t size);
-extern int mdb_putqword(uint64_t *addr, uint64_t word, 
-			size_t size);
-extern unsigned long mdb_segment_getword(unsigned long seg, 
-                                unsigned long addr, 
+int mdb_copy(void *to, void *from,
+	     size_t size);
+unsigned long mdb_phys_getword(unsigned long addr,
+			       size_t size);
+unsigned long mdb_getword(unsigned long addr,
+			  size_t size);
+uint64_t mdb_getqword(uint64_t *addr, size_t size);
+uint64_t mdb_phys_getqword(uint64_t *addr, size_t size);
+int mdb_putqword(uint64_t *addr, uint64_t word,
+		 size_t size);
+unsigned long mdb_segment_getword(unsigned long seg,
+				  unsigned long addr,
 				size_t size);
-extern uint64_t mdb_segment_getqword(unsigned long segment,
-                                uint64_t *addr, 
+uint64_t mdb_segment_getqword(unsigned long segment,
+			      uint64_t *addr,
 				size_t size);
-extern int mdb_verify_rw(void *addr, size_t size);
-extern unsigned long ValidateAddress(unsigned long addr, 
-				unsigned long length);
-extern int DisplayClosestSymbol(unsigned long address);
-extern void DumpOSSymbolTableMatch(unsigned char *symbol);
-extern void DumpOSSymbolTable(void);
-extern unsigned long GetValueFromSymbol(unsigned char *symbol);
-extern unsigned char *GetModuleInfoFromSymbolValue(unsigned long value, 
-				unsigned char *buf, 
+int mdb_verify_rw(void *addr, size_t size);
+unsigned long ValidateAddress(unsigned long addr,
+			      unsigned long length);
+int DisplayClosestSymbol(unsigned long address);
+void DumpOSSymbolTableMatch(unsigned char *symbol);
+void DumpOSSymbolTable(void);
+unsigned long GetValueFromSymbol(unsigned char *symbol);
+unsigned char *GetModuleInfoFromSymbolValue(unsigned long value,
+					    unsigned char *buf,
 				unsigned long len);
-extern unsigned char *GetSymbolFromValue(unsigned long value, 
-				unsigned char *buf, 
+unsigned char *GetSymbolFromValue(unsigned long value,
+				  unsigned char *buf,
 				unsigned long len);
-extern unsigned char *GetSymbolFromValueWithOffset(unsigned long value, 
-				unsigned long *sym_offset,
-                                unsigned char *buf, 
+unsigned char *GetSymbolFromValueWithOffset(unsigned long value,
+					    unsigned long *sym_offset,
+                                unsigned char *buf,
 				unsigned long len);
-extern unsigned char *GetSymbolFromValueOffsetModule(unsigned long value, 
-				unsigned long *sym_offset,
-                                unsigned char **module, 
-				unsigned char *buf, 
+unsigned char *GetSymbolFromValueOffsetModule(unsigned long value,
+					      unsigned long *sym_offset,
+                                unsigned char **module,
+				unsigned char *buf,
 				unsigned long len);
-extern unsigned long get_processor_id(void);
-extern unsigned long get_physical_processor(void);
-extern unsigned long fpu_present(void);
-extern unsigned long cpu_mttr_on(void);
-extern unsigned char *UpcaseString(unsigned char *s);
-extern void ClearScreen(void);
-extern unsigned long ReadDS(void);
-extern unsigned long ReadES(void);
-extern unsigned long ReadFS(void);
-extern unsigned long ReadGS(void);
-extern unsigned long ReadDR(unsigned long regnum);
-extern void WriteDR(int regnum, unsigned long contents);
-extern unsigned long ReadCR(int regnum);
-extern void WriteCR(int regnum, unsigned long contents);
-extern unsigned long ReadTR(void);
-extern unsigned long ReadLDTR(void);
-extern void ReadGDTR(unsigned long *v);
-extern void ReadIDTR(unsigned long *v);
-extern void save_npx(NUMERIC_FRAME *v);
-extern void load_npx(NUMERIC_FRAME *v);
-extern unsigned long ReadDR0(void);
-extern unsigned long ReadDR1(void);
-extern unsigned long ReadDR2(void);
-extern unsigned long ReadDR3(void);
-extern unsigned long ReadDR6(void);
-extern unsigned long ReadDR7(void);
-extern void WriteDR0(unsigned long v);
-extern void WriteDR1(unsigned long v);
-extern void WriteDR2(unsigned long v);
-extern void WriteDR3(unsigned long v);
-extern void WriteDR6(unsigned long v);
-extern void WriteDR7(unsigned long v);
-extern unsigned long ReadCR0(void);
-extern unsigned long ReadCR2(void);
-extern unsigned long ReadCR3(void);
-extern unsigned long ReadCR4(void);
-extern void WriteCR0(unsigned long v);
-extern void WriteCR2(unsigned long v);
-extern void WriteCR3(unsigned long v);
-extern void WriteCR4(unsigned long v);
-extern void ReadMSR(unsigned long r, unsigned long *v1, 
-			unsigned long *v2);
-extern void WriteMSR(unsigned long r, unsigned long *v1, 
-			unsigned long *v2);
+unsigned long get_processor_id(void);
+unsigned long get_physical_processor(void);
+unsigned long fpu_present(void);
+unsigned long cpu_mttr_on(void);
+unsigned char *UpcaseString(unsigned char *s);
+void ClearScreen(void);
+unsigned long ReadDS(void);
+unsigned long ReadES(void);
+unsigned long ReadFS(void);
+unsigned long ReadGS(void);
+unsigned long ReadDR(unsigned long regnum);
+void WriteDR(int regnum, unsigned long contents);
+unsigned long ReadCR(int regnum);
+void WriteCR(int regnum, unsigned long contents);
+unsigned long ReadTR(void);
+unsigned long ReadLDTR(void);
+void ReadGDTR(unsigned long *v);
+void ReadIDTR(unsigned long *v);
+void save_npx(NUMERIC_FRAME *v);
+void load_npx(NUMERIC_FRAME *v);
+unsigned long ReadDR0(void);
+unsigned long ReadDR1(void);
+unsigned long ReadDR2(void);
+unsigned long ReadDR3(void);
+unsigned long ReadDR6(void);
+unsigned long ReadDR7(void);
+void WriteDR0(unsigned long v);
+void WriteDR1(unsigned long v);
+void WriteDR2(unsigned long v);
+void WriteDR3(unsigned long v);
+void WriteDR6(unsigned long v);
+void WriteDR7(unsigned long v);
+unsigned long ReadCR0(void);
+unsigned long ReadCR2(void);
+unsigned long ReadCR3(void);
+unsigned long ReadCR4(void);
+void WriteCR0(unsigned long v);
+void WriteCR2(unsigned long v);
+void WriteCR3(unsigned long v);
+void WriteCR4(unsigned long v);
+void ReadMSR(unsigned long r, unsigned long *v1,
+	     unsigned long *v2);
+void WriteMSR(unsigned long r, unsigned long *v1,
+	      unsigned long *v2);
 #endif
