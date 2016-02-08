@@ -199,8 +199,6 @@ So instead we use the macro below and test it against specific values.  */
 #define EXFUN(name, proto)		name proto
 #define DEFUN(name, arglist, args)	name(args)
 #define DEFUN_VOID(name)		name(void)
-#define AND,
-#define DOTS, ...
 #define NOARGS		void
 #endif /* ! IN_GCC */
 
