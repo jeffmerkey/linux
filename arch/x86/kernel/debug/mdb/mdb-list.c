@@ -72,10 +72,8 @@ unsigned long AccelRoutine(unsigned long key,  void *p)
 	unsigned long retCode;
 
 	accel = accelHead;
-	while (accel)
-	{
-		if (accel->accelFlags && accel->accelRoutine && accel->key == key)
-		{
+	while (accel) {
+		if (accel->accelFlags && accel->accelRoutine && accel->key == key) {
 			retCode = (accel->accelRoutine)(key,  p,  accel);
 			return retCode;
 		}
@@ -91,8 +89,7 @@ void ShowDebuggerAccelerators(void)
 	DBGPrint("\nDebugger Keystroke Accelerator(s)\n");
 
 	accel = accelHead;
-	while (accel)
-	{
+	while (accel) {
 		if (accel->shortHelp)
 			if (DBGPrint("%s\n",  accel->shortHelp)) return;
 		accel = accel->accelNext;
@@ -105,10 +102,8 @@ unsigned long IsAccelerator(unsigned long key)
 	register ACCELERATOR *accel;
 
 	accel = accelHead;
-	while (accel)
-	{
-		if (accel->accelFlags && accel->accelRoutine && accel->key == key)
-		{
+	while (accel) {
+		if (accel->accelFlags && accel->accelRoutine && accel->key == key) {
 			return 1;
 		}
 		accel = accel->accelNext;
@@ -121,14 +116,10 @@ unsigned long AccelHelpRoutine(unsigned long key)
 	register ACCELERATOR *accel;
 
 	accel = accelHead;
-	if (key)  /* if we were passed a command string */
-	{
-		while (accel)
-		{
-			if (accel->accelFlags && accel->key == key)
-			{
-				if (accel->accelRoutineHelp)
-				{
+	if (key)  /* if we were passed a command string */ {
+		while (accel) {
+			if (accel->accelFlags && accel->key == key) {
+				if (accel->accelRoutineHelp) {
 					DBGPrint("Accelerator %08X\n",  (unsigned)accel->key);
 					(accel->accelRoutineHelp)(key,  accel);
 					return 1;
@@ -140,11 +131,9 @@ unsigned long AccelHelpRoutine(unsigned long key)
 		}
 		DBGPrint("Help for Accelerator [%08X] not found\n",  (unsigned)key);
 		return 1;
-	} else
-	{
+	} else {
 		DBGPrint("Accelerator(s)\n");
-		while (accel)
-		{
+		while (accel) {
 			if (accel->accelFlags && accel->key && !accel->supervisorCommand)
 				DBGPrint("%08X         - %s\n",
 					 (unsigned)accel->key,  accel->shortHelp);
@@ -158,24 +147,19 @@ ACCELERATOR *insertAccel(ACCELERATOR *i,  ACCELERATOR *top)
 {
 	ACCELERATOR *old,  *p;
 
-	if (!accelTail)
-	{
+	if (!accelTail) {
 		i->accelNext = i->accelPrior = NULL;
 		accelTail = i;
 		return i;
 	}
 	p = top;
 	old = NULL;
-	while (p)
-	{
-		if (p->key < i->key)
-		{
+	while (p) {
+		if (p->key < i->key) {
 			old = p;
 			p = p->accelNext;
-		} else
-		{
-			if (p->accelPrior)
-			{
+		} else {
+			if (p->accelPrior) {
 				p->accelPrior->accelNext = i;
 				i->accelNext = p;
 				i->accelPrior = p->accelPrior;
@@ -200,10 +184,8 @@ unsigned long AddAccelRoutine(ACCELERATOR *newAccel)
 	register ACCELERATOR *accel;
 
 	accel = accelHead;
-	while (accel)
-	{
-		if (accel == newAccel || accel->key == newAccel->key)
-		{
+	while (accel) {
+		if (accel == newAccel || accel->key == newAccel->key) {
 			return 1;
 		}
 		accel = accel->accelNext;
@@ -219,19 +201,15 @@ unsigned long RemoveAccelRoutine(ACCELERATOR *newAccel)
 	register ACCELERATOR *accel;
 
 	accel = accelHead;
-	while (accel)
-	{
-		if (accel == newAccel)   /* found,  remove from list */
-		{
-			if (accelHead == newAccel)
-			{
+	while (accel) {
+		if (accel == newAccel)   /* found,  remove from list */ {
+			if (accelHead == newAccel) {
 				accelHead = (void *)newAccel->accelNext;
 				if (accelHead)
 					accelHead->accelPrior = NULL;
 				else
 					accelTail = NULL;
-			} else
-			{
+			} else {
 				newAccel->accelPrior->accelNext = newAccel->accelNext;
 				if (newAccel != accelTail)
 					newAccel->accelNext->accelPrior = newAccel->accelPrior;
@@ -260,13 +238,10 @@ int AlternateDebuggerRoutine(int reason,  int error,  void *frame)
 
 	state = save_flags();
 	altDebug = altDebugHead;
-	while (altDebug)
-	{
-		if (altDebug->AlternateDebugger)
-		{
+	while (altDebug) {
+		if (altDebug->AlternateDebugger) {
 			retCode = (altDebug->AlternateDebugger)(reason,  error,  frame);
-			if (retCode)
-			{
+			if (retCode) {
 				restore_flags(state);
 				return retCode;
 			}
@@ -282,22 +257,18 @@ unsigned long AddAlternateDebugger(ALT_DEBUGGER *Debugger)
 	register ALT_DEBUGGER *altDebug;
 
 	altDebug = altDebugHead;
-	while (altDebug)
-	{
-		if (altDebug == Debugger)
-		{
+	while (altDebug) {
+		if (altDebug == Debugger) {
 			return 1;
 		}
 		altDebug = altDebug->altDebugNext;
 	}
-	if (!altDebugHead)
-	{
+	if (!altDebugHead) {
 		altDebugHead = Debugger;
 		altDebugTail = Debugger;
 		Debugger->altDebugNext = 0;
 		Debugger->altDebugPrior = 0;
-	} else
-	{
+	} else {
 		altDebugTail->altDebugNext = Debugger;
 		Debugger->altDebugNext = 0;
 		Debugger->altDebugPrior = altDebugTail;
@@ -312,19 +283,15 @@ unsigned long RemoveAlternateDebugger(ALT_DEBUGGER *Debugger)
 	register ALT_DEBUGGER *altDebug;
 
 	altDebug = altDebugHead;
-	while (altDebug)
-	{
-		if (altDebug == Debugger)   /* found,  remove from list */
-		{
-			if (altDebugHead == Debugger)
-			{
+	while (altDebug) {
+		if (altDebug == Debugger)   /* found,  remove from list */ {
+			if (altDebugHead == Debugger) {
 				altDebugHead = (void *)Debugger->altDebugNext;
 				if (altDebugHead)
 					altDebugHead->altDebugPrior = NULL;
 				else
 					altDebugTail = NULL;
-			} else
-			{
+			} else {
 				Debugger->altDebugPrior->altDebugNext = Debugger->altDebugNext;
 				if (Debugger != altDebugTail)
 					Debugger->altDebugNext->altDebugPrior = Debugger->altDebugPrior;
@@ -355,10 +322,8 @@ unsigned long DebuggerParserRoutine(unsigned char *command,  unsigned char *comm
 		return 0;
 
 	/* if a passed string is just whitespace,  return error */
-	while (*p)
-	{
-		if ((*p != ' ') && (*p != '\n') && (*p != '\r'))
-		{
+	while (*p) {
+		if ((*p != ' ') && (*p != '\n') && (*p != '\r')) {
 			valid = 1;
 			break;
 		}
@@ -371,12 +336,10 @@ unsigned long DebuggerParserRoutine(unsigned char *command,  unsigned char *comm
 	length = strlen(command);
 
 	debugParser = debugParserHead;
-	while (debugParser)
-	{
+	while (debugParser) {
 		if (debugParser->parserFlags && debugParser->DebugCommandParser &&
 		    (debugParser->debugCommandNameLength == length) &&
-			(!strcmp(debugParser->debugCommandName,  command)))
-		{
+			(!strcmp(debugParser->debugCommandName,  command))) {
 			retCode = (debugParser->DebugCommandParser)(commandLine,  stackFrame,
 								Exception,  debugParser);
 			if (retCode)
@@ -408,17 +371,13 @@ unsigned long DebuggerParserHelpRoutine(unsigned char *command,  unsigned char *
 
 	UpcaseString(command);
 	length = strlen(command);
-	if (*command)  /* if we were passed a command string */
-	{
+	if (*command)  /* if we were passed a command string */ {
 		debugParser = debugParserHead;
-		while (debugParser)
-		{
+		while (debugParser) {
 			if (debugParser->parserFlags &&
 			    (debugParser->debugCommandNameLength == length) &&
-				!strcmp(debugParser->debugCommandName,  command))
-			{
-				if (debugParser->DebugCommandParserHelp)
-				{
+				!strcmp(debugParser->debugCommandName,  command)) {
+				if (debugParser->DebugCommandParserHelp) {
 					DBGPrint("Help for Command %s\n",
 						 debugParser->debugCommandName);
 					(debugParser->DebugCommandParserHelp)(commandLine,  debugParser);
@@ -432,14 +391,12 @@ unsigned long DebuggerParserHelpRoutine(unsigned char *command,  unsigned char *
 
 		DBGPrint("Help for Command [%s] not found\n",  command);
 		return 1;
-	} else
-	{
+	} else {
 		DBGPrint("Debugger Command(s)\n");
 		DBGPrint("HELP         <enter>  - list all commands\n");
 		DBGPrint("HELP command <enter>  - help for a specific command\n");
 
-		for (i = 0; i < 13; i++)
-		{
+		for (i = 0; i < 13; i++) {
 			if (!category_strings[i])
 				break;
 
@@ -447,13 +404,11 @@ unsigned long DebuggerParserHelpRoutine(unsigned char *command,  unsigned char *
 				return 0;
 
 			debugParser = debugParserHead;
-			while (debugParser)
-			{
+			while (debugParser) {
 				unsigned char debugTemp[256];
 
 				if (debugParser->parserFlags && debugParser->debugCommandName &&
-				    !debugParser->supervisorCommand && debugParser->category == i)
-				{
+				    !debugParser->supervisorCommand && debugParser->category == i) {
 					strncpy2lower(debugTemp,  debugParser->debugCommandName,  256);
 					if (DBGPrint("  %-10s    - %s\n",  debugTemp,
 						     debugParser->shortHelp)) return 0;
@@ -470,24 +425,19 @@ DEBUGGER_PARSER *insertDebuggerParser(DEBUGGER_PARSER *i,  DEBUGGER_PARSER *top)
 {
 		DEBUGGER_PARSER *old,  *p;
 
-		if (!debugParserTail)
-		{
+		if (!debugParserTail) {
 			i->debugNext = i->debugPrior = NULL;
 			debugParserTail = i;
 			return i;
 		}
 		p = top;
 		old = NULL;
-		while (p)
-		{
-			if (strcmp(p->debugCommandName,  i->debugCommandName) < 0)
-			{
+		while (p) {
+			if (strcmp(p->debugCommandName,  i->debugCommandName) < 0) {
 				old = p;
 				p = p->debugNext;
-			} else
-			{
-				if (p->debugPrior)
-				{
+			} else {
+				if (p->debugPrior) {
 					p->debugPrior->debugNext = i;
 					i->debugNext = p;
 					i->debugPrior = p->debugPrior;
@@ -515,13 +465,11 @@ unsigned long AddDebuggerCommandParser(DEBUGGER_PARSER *parser)
 		parser->debugCommandNameLength = strlen(parser->debugCommandName);
 
 		debugParser = debugParserHead;
-		while (debugParser)
-		{
+		while (debugParser) {
 			if (debugParser == parser ||
 			    (parser->debugCommandNameLength ==
 				debugParser->debugCommandNameLength &&
-				(!strcasecmp(parser->debugCommandName,  debugParser->debugCommandName))))
-			{
+				(!strcasecmp(parser->debugCommandName,  debugParser->debugCommandName)))) {
 				return 1;
 			}
 			debugParser = debugParser->debugNext;
@@ -536,19 +484,15 @@ unsigned long RemoveDebuggerCommandParser(DEBUGGER_PARSER *parser)
 		register DEBUGGER_PARSER *debugParser;
 
 		debugParser = debugParserHead;
-		while (debugParser)
-		{
-			if (debugParser == parser)   /* found,  remove from list */
-			{
-				if (debugParserHead == parser)
-				{
+		while (debugParser) {
+			if (debugParser == parser)   /* found,  remove from list */ {
+				if (debugParserHead == parser) {
 					debugParserHead = (void *)parser->debugNext;
 					if (debugParserHead)
 						debugParserHead->debugPrior = NULL;
 					else
 						debugParserTail = NULL;
-				} else
-				{
+				} else {
 					parser->debugPrior->debugNext = parser->debugNext;
 					if (parser != debugParserTail)
 						parser->debugNext->debugPrior = parser->debugPrior;

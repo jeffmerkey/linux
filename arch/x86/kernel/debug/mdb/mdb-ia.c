@@ -980,8 +980,7 @@ void MDBInitializeDebugger(void)
    lastCommandEntry = 0;
    lastDisplayLength = 0;
 
-   for (i = 0; i < 4; i++)
-   {
+   for (i = 0; i < 4; i++) {
       BreakReserved[i] = 0;
       BreakPoints[i] = 0;
       BreakType[i] = 0;
@@ -1203,10 +1202,8 @@ void ClearTempBreakpoints(void)
 {
    register unsigned long i;
 
-   for (i = 0; i < 4; i++)
-   {
-      if (BreakTemp[i])
-      {
+   for (i = 0; i < 4; i++) {
+      if (BreakTemp[i]) {
 	 BreakTemp[i] = 0;
 	 BreakReserved[i] = 0;
 	 BreakPoints[i] = 0;
@@ -1224,8 +1221,7 @@ unsigned long ValidBreakpoint(unsigned long address)
 {
    register unsigned long i;
 
-   for (i = 0; i < 4; i++)
-   {
+   for (i = 0; i < 4; i++) {
       if (!BreakTemp[i])
 	 if (BreakPoints[i] == address)
 	    return 1;
@@ -1253,8 +1249,7 @@ unsigned long SSBUpdate(StackFrame *stackFrame, unsigned long processor)
     if (!ssbmode)
        return 0;
 
-    if (jmp_active)
-    {
+    if (jmp_active) {
        ssbmode = 0;
        return 0;
     }
@@ -1306,12 +1301,9 @@ unsigned long processProceedACC(unsigned long key, void *p, ACCELERATOR *accel)
 
      ssbmode = 0;
      DBGPrint("\n");
-     if (needs_proceed)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (needs_proceed) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      BreakReserved[i] = 1;
 	      BreakPoints[i] = nextUnasmAddress;
 	      BreakType[i] = BREAK_EXECUTE;
@@ -1425,12 +1417,9 @@ unsigned long processProceed(unsigned char *cmd,
      register unsigned long i;
 
      ssbmode = 0;
-     if (needs_proceed)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (needs_proceed) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      BreakReserved[i] = 1;
 	      BreakPoints[i] = nextUnasmAddress;
 	      BreakType[i] = BREAK_EXECUTE;
@@ -1533,12 +1522,9 @@ unsigned long processGo(unsigned char *cmd,
      ssbmode = 0;
      ClearTempBreakpoints();
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      BreakReserved[i] = 1;
 	      BreakPoints[i] = address;
 	      BreakType[i] = BREAK_EXECUTE;
@@ -1559,8 +1545,7 @@ unsigned long processGo(unsigned char *cmd,
 	      return -1;
 	   }
 	}
-     } else
-     {
+     } else {
 	DBGPrint("\n");
 	lastCommand = 'G';
 	lastCR0 = ReadCR0();
@@ -1599,26 +1584,20 @@ unsigned long breakProcessor(unsigned char *cmd,
         cmd++;
 
      cpunum = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-        if (cpunum == cpu)
-        {
+     if (valid) {
+        if (cpunum == cpu) {
            DBGPrint("debugger already running on processor %d\n", (int)cpunum);
            return 1;
         }
 
-	if ((cpunum > MAX_PROCESSORS) || !(cpu_online(cpunum)))
-        {
+	if ((cpunum > MAX_PROCESSORS) || !(cpu_online(cpunum))) {
 	   DBGPrint("invalid processor specified\n");
            return 1;
         }
 
-        for (i = 0; i < MAX_PROCESSORS; i++)
-        {
-           if (cpu_online(i))
-           {
-	      if (i == cpunum)
-              {
+        for (i = 0; i < MAX_PROCESSORS; i++) {
+           if (cpu_online(i)) {
+	      if (i == cpunum) {
 	         per_cpu(ProcessorState, i) = PROCESSOR_SWITCH;
                  smp_mb__before_atomic();
                  per_cpu(ProcessorHold, cpu) = 1;
@@ -1635,16 +1614,13 @@ unsigned long breakProcessor(unsigned char *cmd,
 	memmove((void *)&lastStackFrame, stackFrame,
 		sizeof(StackFrame));
 	return -1;
-     } else
-     {
+     } else {
 	DBGPrint("no target processor specified\n");
         DBGPrint("Current Processor: %d\n", get_processor_id());
         DBGPrint("Active Processors: ");
 
-        for (i = 0; i < MAX_PROCESSORS; i++)
-        {
-           if (cpu_online(i))
-           {
+        for (i = 0; i < MAX_PROCESSORS; i++) {
+           if (cpu_online(i)) {
 	      if (i)
                  DBGPrint(", ");
 
@@ -1671,26 +1647,20 @@ unsigned long nmiProcessor(unsigned char *cmd,
         cmd++;
 
      cpunum = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-        if (cpunum == cpu)
-        {
+     if (valid) {
+        if (cpunum == cpu) {
            DBGPrint("debugger already running on processor %d\n", (int)cpunum);
            return 1;
         }
 
-	if ((cpunum > MAX_PROCESSORS) || !(cpu_online(cpunum)))
-        {
+	if ((cpunum > MAX_PROCESSORS) || !(cpu_online(cpunum))) {
 	   DBGPrint("invalid processor specified\n");
            return 1;
         }
 
-        for (i = 0; i < MAX_PROCESSORS; i++)
-        {
-           if (cpu_online(i))
-           {
-	      if (i == cpunum)
-              {
+        for (i = 0; i < MAX_PROCESSORS; i++) {
+           if (cpu_online(i)) {
+	      if (i == cpunum) {
 	         per_cpu(ProcessorState, i) = PROCESSOR_SWITCH;
                  smp_mb__before_atomic();
                  per_cpu(ProcessorHold, cpu) = 1;
@@ -1707,16 +1677,13 @@ unsigned long nmiProcessor(unsigned char *cmd,
 	memmove((void *)&lastStackFrame, stackFrame,
 		sizeof(StackFrame));
 	return -1;
-     } else
-     {
+     } else {
 	DBGPrint("no target processor specified\n");
         DBGPrint("Current Processor: %d\n", get_processor_id());
         DBGPrint("Active Processors: ");
 
-        for (i = 0; i < MAX_PROCESSORS; i++)
-        {
-           if (cpu_online(i))
-           {
+        for (i = 0; i < MAX_PROCESSORS; i++) {
+           if (cpu_online(i)) {
 	      if (i)
                  DBGPrint(", ");
 
@@ -1745,8 +1712,7 @@ unsigned long listProcessorFrame(unsigned char *cmd,
         cmd++;
 
      pnum = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid && (pnum < MAX_PROCESSORS) && (cpu_online(pnum)))
-     {
+     if (valid && (pnum < MAX_PROCESSORS) && (cpu_online(pnum))) {
         StackFrame *listFrame = (StackFrame *)&per_cpu(CurrentStackFrame, pnum);
 
 	DBGPrint("Processor Frame %d -> (%lX)\n", pnum,
@@ -1766,13 +1732,11 @@ unsigned long ProcessTAToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
 		   DEBUGGER_PARSER *parser)
 {
-     if (general_toggle)
-     {
+     if (general_toggle) {
         general_toggle = 0;
         control_toggle = 0;
         segment_toggle = 0;
-     } else
-     {
+     } else {
         general_toggle = 1;
         control_toggle = 1;
         segment_toggle = 1;
@@ -1852,12 +1816,10 @@ unsigned long displayAllRegisters(unsigned char *cmd,
      DBGPrint("Control Registers\n");
      DisplayControlRegisters(processor, stackFrame);
 
-     if (fpu_present())
-     {
+     if (fpu_present()) {
 	DBGPrint("Coprocessor Registers\n");
 	DisplayNPXRegisters(stackFrame);
-     } else
-     {
+     } else {
 	DBGPrint("Coprocessor Not Present\n");
      }
 
@@ -1881,12 +1843,10 @@ unsigned long displayNumericRegisters(unsigned char *cmd,
 				      StackFrame *stackFrame, unsigned long Exception,
 			     DEBUGGER_PARSER *parser)
 {
-     if (fpu_present())
-     {
+     if (fpu_present()) {
 	DBGPrint("Coprocessor Registers\n");
 	DisplayNPXRegisters(stackFrame);
-     } else
-     {
+     } else {
 	DBGPrint("Coprocessor Not Present\n");
      }
      return 1;
@@ -1908,26 +1868,21 @@ double ldexp(double v, int e)
 {
    double two = 2.0;
 
-   if (e < 0)
-   {
+   if (e < 0) {
       e = -e; /* This just might overflow on two-complement machines. */
       if (e < 0)
          return 0.0;
 
-      while (e > 0)
-      {
-	 if (e & 1)
-         {
+      while (e > 0) {
+	 if (e & 1) {
             v = v / two;
          }
 	 two = two * two;
 	 e >>= 1;
       }
    } else
-   if (e > 0)
-   {
-      while (e > 0)
-      {
+   if (e > 0) {
+      while (e > 0) {
 	 if (e & 1)
             v = v * two;
 	 two = two * two;
@@ -1948,8 +1903,7 @@ void DisplayNPXRegisters(StackFrame *stackFrame)
      double d;
 #endif
 
-     if (!fpu_present())
-     {
+     if (!fpu_present()) {
         DBGPrint("numeric co-processor not present\n");
         return;
      }
@@ -1965,8 +1919,7 @@ void DisplayNPXRegisters(StackFrame *stackFrame)
                (unsigned)npx->tag & 0xFFFF,
                (int)tos, (int)get_processor_id());
 
-     for (i = 0; i < 8; i++)
-     {
+     for (i = 0; i < 8; i++) {
 	tos = (npx->status >> 11) & 7;
 	DBGPrint("st(%d)/MMX%d  ", i, (int)((tos + i) % 8));
 
@@ -1984,14 +1937,12 @@ void DisplayNPXRegisters(StackFrame *stackFrame)
 
 	 if (tos) {}
 	 tag = (npx->tag >> (((i + tos) % 8) * 2)) & 3;
-	 switch (tag)
-	 {
+	 switch (tag) {
 	    case 0:
 	       DBGPrint("Valid");
 #ifdef RENDER_NPX_VALUES
 	       if (((int)npx->reg[i].exponent - 16382 < 1000) &&
-		   ((int)npx->reg[i].exponent - 16382 > -1000))
-	       {
+		   ((int)npx->reg[i].exponent - 16382 > -1000)) {
 		  d =
                   npx->reg[i].sig3 / 65536.0 +
                   npx->reg[i].sig2 / 65536.0 / 65536.0 +
@@ -2079,8 +2030,7 @@ unsigned long ChangeORIGEAXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tReserved[1] = value;
 	DBGPrint("ORIGEAX changed to 0x%lX\n", (unsigned)value);
      } else
@@ -2108,8 +2058,7 @@ unsigned long ChangeEAXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
         switch (width) {
            case 0:
               stackFrame->tAX &= ~0xFFFFFFFF;
@@ -2163,8 +2112,7 @@ unsigned long ChangeEBXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
         switch (width) {
            case 0:
               stackFrame->tBX &= ~0xFFFFFFFF;
@@ -2218,8 +2166,7 @@ unsigned long ChangeECXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
         switch (width) {
            case 0:
               stackFrame->tCX &= ~0xFFFFFFFF;
@@ -2273,8 +2220,7 @@ unsigned long ChangeEDXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
         switch (width) {
            case 0:
               stackFrame->tDX &= ~0xFFFFFFFF;
@@ -2322,8 +2268,7 @@ unsigned long ChangeESIRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tSI = value;
 	DBGPrint("ESI changed to 0x%lX\n", (unsigned)value);
      } else
@@ -2350,8 +2295,7 @@ unsigned long ChangeEDIRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tDI = value;
 	DBGPrint("EDI changed to 0x%lX\n", (unsigned)value);
      } else
@@ -2378,8 +2322,7 @@ unsigned long ChangeEBPRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tBP = value;
 	DBGPrint("EBP changed to 0x%lX\n", (unsigned)value);
      } else
@@ -2406,8 +2349,7 @@ unsigned long ChangeESPRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tSP = value;
 	DBGPrint("ESP changed to 0x%lX\n", (unsigned)value);
      } else
@@ -2434,8 +2376,7 @@ unsigned long ChangeEIPRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tIP = value;
 	DBGPrint("EIP changed to 0x%lX\n", (unsigned)value);
      } else
@@ -2467,8 +2408,7 @@ unsigned long ChangeRAXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tAX = value;
 	DBGPrint("RAX changed to 0x%llX\n", value);
      } else
@@ -2490,8 +2430,7 @@ unsigned long ChangeORIGRAXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tReserved[1] = value;
 	DBGPrint("ORIGRAX changed to 0x%llX\n", value);
      } else
@@ -2518,8 +2457,7 @@ unsigned long ChangeRBXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tBX = value;
 	DBGPrint("RBX changed to 0x%llX\n", value);
      } else
@@ -2546,8 +2484,7 @@ unsigned long ChangeRCXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tCX = value;
 	DBGPrint("RCX changed to 0x%llX\n", value);
      } else
@@ -2574,8 +2511,7 @@ unsigned long ChangeRDXRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tDX = value;
 	DBGPrint("RDX changed to 0x%llX\n", value);
      } else
@@ -2602,8 +2538,7 @@ unsigned long ChangeRSIRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tSI = value;
 	DBGPrint("RSI changed to 0x%llX\n", value);
      } else
@@ -2630,8 +2565,7 @@ unsigned long ChangeRDIRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tDI = value;
 	DBGPrint("RDI changed to 0x%llX\n", value);
      } else
@@ -2658,8 +2592,7 @@ unsigned long ChangeRBPRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tBP = value;
 	DBGPrint("RBP changed to 0x%llX\n", value);
      } else
@@ -2686,8 +2619,7 @@ unsigned long ChangeRSPRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tSP = value;
 	DBGPrint("RSP changed to 0x%llX\n", value);
      } else
@@ -2714,8 +2646,7 @@ unsigned long ChangeRIPRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->tIP = value;
 	DBGPrint("RIP changed to 0x%llX\n", value);
      } else
@@ -2742,8 +2673,7 @@ unsigned long ChangeR8Register(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->r8 = value;
 	DBGPrint("R8 changed to 0x%llX\n", value);
      } else
@@ -2770,8 +2700,7 @@ unsigned long ChangeR9Register(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->r9 = value;
 	DBGPrint("R9 changed to 0x%llX\n", value);
      } else
@@ -2798,8 +2727,7 @@ unsigned long ChangeR10Register(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->r10 = value;
 	DBGPrint("R10 changed to 0x%llX\n", value);
      } else
@@ -2826,8 +2754,7 @@ unsigned long ChangeR11Register(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->r11 = value;
 	DBGPrint("R11 changed to 0x%llX\n", value);
      } else
@@ -2854,8 +2781,7 @@ unsigned long ChangeR12Register(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->r12 = value;
 	DBGPrint("R12 changed to 0x%llX\n", value);
      } else
@@ -2882,8 +2808,7 @@ unsigned long ChangeR13Register(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->r13 = value;
 	DBGPrint("R13 changed to 0x%llX\n", value);
      } else
@@ -2910,8 +2835,7 @@ unsigned long ChangeR14Register(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->r14 = value;
 	DBGPrint("R14 changed to 0x%llX\n", value);
      } else
@@ -2938,8 +2862,7 @@ unsigned long ChangeR15Register(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	stackFrame->r15 = value;
 	DBGPrint("R15 changed to 0x%llX\n", value);
      } else
@@ -2973,8 +2896,7 @@ unsigned long ChangeCSRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldW = stackFrame->tCS;
 	stackFrame->tCS = (unsigned short)value;
 	DBGPrint("CS: = [%04X] changed to CS: = [%04X]\n",
@@ -3005,8 +2927,7 @@ unsigned long ChangeDSRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldW = stackFrame->tDS;
 	stackFrame->tDS = (unsigned short)value;
 	DBGPrint("DS: = [%04X] changed to DS: = [%04X]\n",
@@ -3036,8 +2957,7 @@ unsigned long ChangeESRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldW = stackFrame->tES;
 	stackFrame->tES = (unsigned short)value;
 	DBGPrint("ES: = [%04X] changed to ES: = [%04X]\n",
@@ -3068,8 +2988,7 @@ unsigned long ChangeFSRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldW = stackFrame->tFS;
 	stackFrame->tFS = (unsigned short)value;
 	DBGPrint("FS: = [%04X] changed to FS: = [%04X]\n",
@@ -3099,8 +3018,7 @@ unsigned long ChangeGSRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldW = stackFrame->tGS;
 	stackFrame->tGS = (unsigned short)value;
 	DBGPrint("GS: = [%04X] changed to GS: = [%04X]\n",
@@ -3130,8 +3048,7 @@ unsigned long ChangeSSRegister(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldW = stackFrame->tSS;
 	stackFrame->tSS = (unsigned short)value;
 	DBGPrint("SS: = [%04X] changed to SS: = [%04X]\n",
@@ -3161,8 +3078,7 @@ unsigned long ChangeRFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & RF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= RF_FLAG) : (stackFrame->tSystemFlags &= ~RF_FLAG);
 	DBGPrint("EFlag RF[%lX] changed to (%d)\n",
@@ -3191,8 +3107,7 @@ unsigned long ChangeTFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & TF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= TF_FLAG) : (stackFrame->tSystemFlags &= ~TF_FLAG);
 	DBGPrint("EFlag TF[%lX] changed to (%d)\n",
@@ -3221,8 +3136,7 @@ unsigned long ChangeZFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & ZF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= ZF_FLAG) : (stackFrame->tSystemFlags &= ~ZF_FLAG);
 	DBGPrint("EFlag ZF[%lX] changed to (%d)\n",
@@ -3251,8 +3165,7 @@ unsigned long ChangeSFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & SF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= SF_FLAG) : (stackFrame->tSystemFlags &= ~SF_FLAG);
 	DBGPrint("EFlag SF[%lX] changed to (%d)\n",
@@ -3281,8 +3194,7 @@ unsigned long ChangePFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & PF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= PF_FLAG) : (stackFrame->tSystemFlags &= ~PF_FLAG);
 	DBGPrint("EFlag PF[%lX] changed to (%d)\n",
@@ -3311,8 +3223,7 @@ unsigned long ChangeCFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & CF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= CF_FLAG) : (stackFrame->tSystemFlags &= ~CF_FLAG);
 	DBGPrint("EFlag CF[%lX] changed to (%d)\n",
@@ -3341,8 +3252,7 @@ unsigned long ChangeOFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & OF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= OF_FLAG) : (stackFrame->tSystemFlags &= ~OF_FLAG);
 	DBGPrint("EFlag OF[%lX] changed to (%d)\n",
@@ -3371,8 +3281,7 @@ unsigned long ChangeIFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & IF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= IF_FLAG) : (stackFrame->tSystemFlags &= ~IF_FLAG);
 	DBGPrint("EFlag IF[%lX] changed to (%d)\n",
@@ -3401,8 +3310,7 @@ unsigned long ChangeIDFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & ID_FLAGS;
 	(value) ? (stackFrame->tSystemFlags |= ID_FLAGS) : (stackFrame->tSystemFlags &= ~ID_FLAGS);
 	DBGPrint("EFlag ID[%lX] changed to (%d)\n",
@@ -3431,8 +3339,7 @@ unsigned long ChangeDFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & DF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= DF_FLAG) : (stackFrame->tSystemFlags &= ~DF_FLAG);
 	DBGPrint("EFlag DF[%lX] changed to (%d)\n",
@@ -3461,8 +3368,7 @@ unsigned long ChangeNTFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & NT_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= NT_FLAG) : (stackFrame->tSystemFlags &= ~NT_FLAG);
 	DBGPrint("EFlag NT[%lX] changed to (%d)\n",
@@ -3491,8 +3397,7 @@ unsigned long ChangeVMFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & VM_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= VM_FLAG) : (stackFrame->tSystemFlags &= ~VM_FLAG);
 	DBGPrint("EFlag VM[%lX] changed to (%d)\n",
@@ -3521,8 +3426,7 @@ unsigned long ChangeVIFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & VIF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= VIF_FLAG) : (stackFrame->tSystemFlags &= ~VIF_FLAG);
 	DBGPrint("EFlag VIF[%lX] changed to (%d)\n",
@@ -3551,8 +3455,7 @@ unsigned long ChangeVIPFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & VIP_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= VIP_FLAG) : (stackFrame->tSystemFlags &= ~VIP_FLAG);
 	DBGPrint("EFlag VIP[%lX] changed to (%d)\n",
@@ -3581,8 +3484,7 @@ unsigned long ChangeAFFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & AF_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= AF_FLAG) : (stackFrame->tSystemFlags &= ~AF_FLAG);
 	DBGPrint("EFlag AF[%lX] changed to (%d)\n",
@@ -3611,8 +3513,7 @@ unsigned long ChangeACFlag(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	oldD = stackFrame->tSystemFlags & AC_FLAG;
 	(value) ? (stackFrame->tSystemFlags |= AC_FLAG) : (stackFrame->tSystemFlags &= ~AC_FLAG);
 	DBGPrint("EFlag AC[%lX] changed to (%d)\n",
@@ -3744,12 +3645,10 @@ unsigned long inputWordPort(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	DBGPrint("inportw (%04X) = %04X\n",
 		 (unsigned)address, (unsigned)inw(address));
-     } else
-     {
+     } else {
 	DBGPrint("bad port command\n");
      }
      return 1;
@@ -3769,12 +3668,10 @@ unsigned long inputDoublePort(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	DBGPrint("inportd (%04X) = %lX\n",
 		 (unsigned)address, (unsigned)inl(address));
-     } else
-     {
+     } else {
 	DBGPrint("bad port command\n");
      }
      return 1;
@@ -3794,12 +3691,10 @@ unsigned long inputBytePort(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	DBGPrint("inportb (%04X) = %02X\n",
 		 (unsigned)address, (unsigned)inb(address));
-     } else
-     {
+     } else {
 	DBGPrint("bad port command\n");
      }
      return 1;
@@ -3819,12 +3714,10 @@ unsigned long inputPort(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	DBGPrint("inportb (%04X) = %02X\n",
 		 (unsigned)address, (unsigned)inb(address));
-     } else
-     {
+     } else {
 	DBGPrint("bad port command\n");
      }
      return 1;
@@ -3844,11 +3737,9 @@ unsigned long outputWordPort(unsigned char *cmd,
         cmd++;
 
      port = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	value = EvaluateExpression(stackFrame, &cmd, &valid);
-	if (valid)
-	{
+	if (valid) {
 	   DBGPrint("outportw (%04X) = %04X\n",
 		    (unsigned)port, (unsigned)value);
 	   outw(port, value);
@@ -3874,11 +3765,9 @@ unsigned long outputDoublePort(unsigned char *cmd,
         cmd++;
 
      port = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	value = EvaluateExpression(stackFrame, &cmd, &valid);
-	if (valid)
-	{
+	if (valid) {
 	   DBGPrint("outportd (%04X) = %lX\n",
 		    (unsigned)port, (unsigned)value);
 	   outl(port, value);
@@ -3904,11 +3793,9 @@ unsigned long outputBytePort(unsigned char *cmd,
         cmd++;
 
      port = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	value = EvaluateExpression(stackFrame, &cmd, &valid);
-	if (valid)
-	{
+	if (valid) {
 	   DBGPrint("outportb (%04X) = %02X\n",
 		    (unsigned)port, (unsigned)value);
 	   outb(port, value);
@@ -3934,11 +3821,9 @@ unsigned long outputPort(unsigned char *cmd,
         cmd++;
 
      port = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	value = EvaluateExpression(stackFrame, &cmd, &valid);
-	if (valid)
-	{
+	if (valid) {
 	   DBGPrint("outportb (%04X) = %02X\n",
 		    (unsigned)port, (unsigned)value);
 	   outb(port, value);
@@ -3978,8 +3863,7 @@ unsigned long breakpointClearAll(unsigned char *cmd,
 {
      register unsigned long i;
 
-     for (i = 0; i < 4; i++)
-     {
+     for (i = 0; i < 4; i++) {
 	BreakReserved[i] = 0;
 	BreakPoints[i] = 0;
 	BreakType[i] = 0;
@@ -4008,11 +3892,9 @@ unsigned long breakpointClear(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	i = address;
-	if (i < 4)
-	{
+	if (i < 4) {
 	   symbolName = GetSymbolFromValue(BreakPoints[i], &symbuf[0],
 					   MAX_SYMBOL_LEN);
 	   moduleName = GetModuleInfoFromSymbolValue(BreakPoints[i],
@@ -4064,11 +3946,9 @@ unsigned long breakpointMask(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
+     if (valid) {
 	pnum = address;
-	if (pnum < MAX_PROCESSORS && cpu_online(pnum))
-	{
+	if (pnum < MAX_PROCESSORS && cpu_online(pnum)) {
 	   if (per_cpu(BreakMask, pnum))
 	      per_cpu(BreakMask, pnum) = 0;
 	   else
@@ -4077,12 +3957,9 @@ unsigned long breakpointMask(unsigned char *cmd,
 		    per_cpu(BreakMask, pnum) ? "BREAKS_MASKED" : "BREAKS_UNMASKED");
 	} else
 	   DBGPrint("processor (%i) invalid\n", (int)pnum);
-     } else
-     {
-	for (i = 0; i < MAX_PROCESSORS; i++)
-	{
-           if (cpu_online(i))
-           {
+     } else {
+	for (i = 0; i < MAX_PROCESSORS; i++) {
+           if (cpu_online(i)) {
 	      DBGPrint("processor %i : %s\n", (int)i,
 		       per_cpu(BreakMask, i) ? "BREAKS_MASKED" : "BREAKS_UNMASKED");
            }
@@ -4107,16 +3984,12 @@ unsigned long breakpointWord1(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4178,16 +4051,12 @@ unsigned long breakpointWord2(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4249,16 +4118,12 @@ unsigned long breakpointWord4(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4321,16 +4186,12 @@ unsigned long breakpointWord8(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4393,16 +4254,12 @@ unsigned long breakpointWord(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4464,16 +4321,12 @@ unsigned long breakpointRead1(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4535,16 +4388,12 @@ unsigned long breakpointRead2(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4606,16 +4455,12 @@ unsigned long breakpointRead4(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4678,16 +4523,12 @@ unsigned long breakpointRead8(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4750,16 +4591,12 @@ unsigned long breakpointRead(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4821,16 +4658,12 @@ unsigned long breakpointIO1(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4892,16 +4725,12 @@ unsigned long breakpointIO2(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -4963,16 +4792,12 @@ unsigned long breakpointIO4(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -5034,16 +4859,12 @@ unsigned long breakpointIO(unsigned char *cmd,
         cmd++;
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; (r < 255) && (*pB); r++)
 		    BreakCondition[i][r] = *pB++;
@@ -5104,14 +4925,11 @@ unsigned long breakpointExecute(unsigned char *cmd,
      while (*cmd && *cmd == ' ')
         cmd++;
 
-     if (!*cmd)
-     {
+     if (!*cmd) {
         register int found = 0;
 
-	for (i = 0; i < 4; i++)
-	{
-	   if (BreakReserved[i])
-	   {
+	for (i = 0; i < 4; i++) {
+	   if (BreakReserved[i]) {
 	      symbolName = GetSymbolFromValue(BreakPoints[i], &symbuf[0],
 					      MAX_SYMBOL_LEN);
 	      moduleName = GetModuleInfoFromSymbolValue(BreakPoints[i],
@@ -5147,16 +4965,12 @@ unsigned long breakpointExecute(unsigned char *cmd,
      }
 
      address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid)
-     {
-	for (i = 0; i < 4; i++)
-	{
-	   if (!BreakReserved[i])
-	   {
+     if (valid) {
+	for (i = 0; i < 4; i++) {
+	   if (!BreakReserved[i]) {
 	      pB = cmd;
 	      EvaluateExpression(stackFrame, &cmd, &valid);
-	      if (valid)
-	      {
+	      if (valid) {
 		 ConditionalBreakpoint[i] = 1;
 		 for (r = 0; r < 255 && *pB; r++)
 		    BreakCondition[i][r] = *pB++;
@@ -5213,10 +5027,8 @@ unsigned long breakpointShowTemp(unsigned char *cmd,
      register unsigned char *moduleName;
      register int found = 0;
 
-     for (i = 0; i < 4; i++)
-     {
-	if (BreakReserved[i] && BreakTemp[i])
-	{
+     for (i = 0; i < 4; i++) {
+	if (BreakReserved[i] && BreakTemp[i]) {
 	   symbolName = GetSymbolFromValue(BreakPoints[i], &symbuf[0],
 					   MAX_SYMBOL_LEN);
 	   moduleName = GetModuleInfoFromSymbolValue(BreakPoints[i],
@@ -5267,10 +5079,8 @@ unsigned long displayProcessorStatus(unsigned char *cmd,
 {
      register unsigned long i;
 
-     for (i = 0; i < MAX_PROCESSORS; i++)
-     {
-        if (cpu_online(i))
-        {
+     for (i = 0; i < MAX_PROCESSORS; i++) {
+        if (cpu_online(i)) {
 	   DBGPrint("Processor: (%i)  State:  %s\n",
 		    i, procState[per_cpu(ProcessorState, i) & 0xF]);
         }
@@ -5286,11 +5096,9 @@ void displayMTRRRegisters(void)
 
     extern unsigned long cpu_mttr_on(void);
 
-    if (cpu_mttr_on())
-    {
+    if (cpu_mttr_on()) {
        DBGPrint("memory type range registers\n");
-       for (i = 0; i < 8; i++)
-       {
+       for (i = 0; i < 8; i++) {
 	  ReadMSR(MTRR_BASE_REGS[i], &base1, &base2);
 	  ReadMSR(MTRR_MASK_VALUES[i], &mask1, &mask2);
 	  DBGPrint("MTRR_BASE_%i  %lX:%lX   MTRR_MASK_%i  %lX:%lX\n",
@@ -5333,8 +5141,7 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
     count = 0;
     gdt_index = (gdt_index + 7) / 8;
     p = (unsigned char *)gdt_pointer;
-    for (i = 0; i < gdt_index; i++)
-    {
+    for (i = 0; i < gdt_index; i++) {
        if (DBGPrint("%04X(%04i):", (unsigned)count, (int)i)) return;
        for (r = 0; r < 16; r++)
 	  lg.data[r] = (unsigned char)mdb_getword((unsigned long)&p[r], 1);
@@ -5368,25 +5175,21 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
     count = 0;
     gdt_index = (gdt_index + 7) / 8;
     p = (unsigned char *)gdt_pointer;
-    for (i = 0; i < gdt_index; i++)
-    {
+    for (i = 0; i < gdt_index; i++) {
        if (DBGPrint("%lX (%04i):", (unsigned)count, (int)i)) return;
-       for (r = 0; r < 8; r++)
-       {
+       for (r = 0; r < 8; r++) {
 	  lg.data[r] = (unsigned char)mdb_getword((unsigned long)&p[r], 1);
 	  if (DBGPrint(" %02X", (unsigned char)lg.data[r])) return;
        }
 
        gdt = (GDT *)&lg.lgdt;
-       if ((gdt->GDTType & 0x92) == 0x92)
-       {
+       if ((gdt->GDTType & 0x92) == 0x92) {
 	  if (DBGPrint("  b:%lX lim:%lX t:%02X ot:%02X",
 		       ((gdt->Base3 << 24) | (gdt->Base2 << 16) |
                    (gdt->Base1)),
 		   (((gdt->OtherType & 0xF) << 16) | (gdt->Limit)),
 		   gdt->GDTType, gdt->OtherType)) return;
-       } else if ((gdt->GDTType & 0x89) == 0x89)
-       {
+       } else if ((gdt->GDTType & 0x89) == 0x89) {
 	  tss = (TSS *)gdt;
 	  if (DBGPrint("  tss:%lX lim:%04X t:%02X ot:%02X",
 		       ((tss->TSSBase3 << 24) | (tss->TSSBase2 << 16) |
@@ -5432,8 +5235,7 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
     count = 0;
     idt_index = (idt_index + 7) / 8;
     p = (unsigned char *)idt_pointer;
-    for (i = 0; i < idt_index; i++)
-    {
+    for (i = 0; i < idt_index; i++) {
        unsigned char *symbolName, *moduleName;
        unsigned long idtAddress, temp;
 
@@ -5486,20 +5288,17 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
     count = 0;
     idt_index = (idt_index + 7) / 8;
     p = (unsigned char *)idt_pointer;
-    for (i = 0; i < idt_index; i++)
-    {
+    for (i = 0; i < idt_index; i++) {
        unsigned char *symbolName, *moduleName;
        unsigned long idtAddress;
 
        if (DBGPrint("%lX (%04i):", (unsigned)count, (int)i)) return;
-       for (r = 0; r < 8; r++)
-       {
+       for (r = 0; r < 8; r++) {
 	   id.data[r] = mdb_getword((unsigned long)&p[r], 1);
 	   if (DBGPrint(" %02X", (unsigned char)id.data[r])) return;
        }
        idt = (IDT *)&id.lidt;
-       if ((idt->IDTFlags & 0x8E) == 0x8E)
-       {
+       if ((idt->IDTFlags & 0x8E) == 0x8E) {
 	  if (DBGPrint("  b:%lX s:%04X t:%02X ot:%02X",
 		       ((idt->IDTHigh << 16) | (idt->IDTLow)),
 			     idt->IDTSegment,
@@ -5515,8 +5314,7 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
 		      ((char *)(symbolName) ? (char *)(symbolName) : (char *)("")));
           else
              DBGPrint(" %s", ((char *)(symbolName) ? (char *)(symbolName) : (char *)("")));
-       } else if ((idt->IDTFlags & 0x85) == 0x85)
-       {
+       } else if ((idt->IDTFlags & 0x85) == 0x85) {
 	  tss_gate = (TSS_GATE *)idt;
 	  if (DBGPrint("  task_gate: %04X t:%02X",
 		       tss_gate->TSSSelector, tss_gate->TSSFlags)) return;
@@ -5566,12 +5364,9 @@ void DisplayTSS(StackFrame *stackFrame)
 	     stackFrame->tIP, stackFrame->tSystemFlags);
 
     DBGPrint(" (");
-    for (i = 0; i < 22; i++)
-    {
-       if (IA32Flags[i])
-       {
-	  if ((stackFrame->tSystemFlags >> i) & 0x00000001)
-	  {
+    for (i = 0; i < 22; i++) {
+       if (IA32Flags[i]) {
+	  if ((stackFrame->tSystemFlags >> i) & 0x00000001) {
 	     if (f)
 		DBGPrint(" ");
 	     f = 1;
@@ -5609,12 +5404,9 @@ void DisplayTSS(StackFrame *stackFrame)
 	     (unsigned)stackFrame->tIP, (unsigned)stackFrame->tSystemFlags);
 
     DBGPrint(" (");
-    for (i = 0; i < 22; i++)
-    {
-       if (IA32Flags[i])
-       {
-	  if ((stackFrame->tSystemFlags >> i) & 0x00000001)
-	  {
+    for (i = 0; i < 22; i++) {
+       if (IA32Flags[i]) {
+	  if ((stackFrame->tSystemFlags >> i) & 0x00000001) {
 	     if (f)
 		DBGPrint(" ");
 	     f = 1;
@@ -5662,12 +5454,9 @@ void DisplayGeneralRegisters(StackFrame *stackFrame)
     DBGPrint("FLAGS: %016lX ", stackFrame->tSystemFlags);
 
     DBGPrint(" (");
-    for (i = 0; i < 22; i++)
-    {
-       if (IA32Flags[i])
-       {
-	  if ((stackFrame->tSystemFlags >> i) & 0x00000001)
-	  {
+    for (i = 0; i < 22; i++) {
+       if (IA32Flags[i]) {
+	  if ((stackFrame->tSystemFlags >> i) & 0x00000001) {
 	     if (f)
 		DBGPrint(" ");
 	     f = 1;
@@ -5696,12 +5485,9 @@ void DisplayGeneralRegisters(StackFrame *stackFrame)
     DBGPrint("EFLAGS: %08X ", (unsigned)stackFrame->tSystemFlags);
 
     DBGPrint(" (");
-    for (i = 0; i < 22; i++)
-    {
-       if (IA32Flags[i])
-       {
-	  if ((stackFrame->tSystemFlags >> i) & 0x00000001)
-	  {
+    for (i = 0; i < 22; i++) {
+       if (IA32Flags[i]) {
+	  if ((stackFrame->tSystemFlags >> i) & 0x00000001) {
 	     if (f)
 		DBGPrint(" ");
 	     f = 1;
@@ -5792,11 +5578,9 @@ unsigned long find_bp_index(unsigned long exception, StackFrame *stackFrame,
 {
    register int i;
 
-   switch (exception)
-   {
+   switch (exception) {
        case DEBUGGER_EXCEPTION:
-          for (i = 0; i < 4; i++)
-          {
+          for (i = 0; i < 4; i++) {
              if (per_cpu(CurrentDR6, processor) & (1 << i))
                    return i;
           }
@@ -5818,8 +5602,7 @@ unsigned long ConsoleDisplayBreakReason(StackFrame *stackFrame,
        if (last_mdb_oops)
           DBGPrint("\nKernel Oops reported (%s)\n", last_mdb_oops);
 
-	switch (Exception)
-	{
+	switch (Exception) {
 		case DEBUGGER_EXCEPTION:
 			if (i != -1 && BreakGo[i])
 				DBGPrint("\nBreak at 0x%lX due to - GO breakpoint (%d)\n",
@@ -5912,8 +5695,7 @@ void ReadStackFrame(void *frame, StackFrame *sf, unsigned long processor)
    sf->tES = regs->es;
    sf->tFS = ReadFS();
    sf->tGS = ReadGS();
-   if (user_mode(regs))
-   {
+   if (user_mode(regs)) {
       sf->tSS = regs->ss;
       sf->tSP = regs->sp;
    } else {
@@ -6019,18 +5801,14 @@ unsigned long is_processor_held(unsigned long cpu)
 unsigned long debug_lock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 {
 #if defined(CONFIG_SMP)
-    if (!spin_trylock_irqsave((spinlock_t *)lock, rlock->flags[p]))
-    {
+    if (!spin_trylock_irqsave((spinlock_t *)lock, rlock->flags[p])) {
        if (rlock->processor == p)
           rlock->count++;
-       else
-       {
-          while (1)
-          {
+       else {
+          while (1) {
              per_cpu(ProcessorState, p) = PROCESSOR_WAIT;
              while (atomic_read(&focusActive) &&
-		    !atomic_read(&per_cpu(traceProcessors, p)))
-             {
+		    !atomic_read(&per_cpu(traceProcessors, p))) {
                 cpu_relax();
                 mdb_watchdogs();
              }
@@ -6056,8 +5834,7 @@ void debug_unlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 #if defined(CONFIG_SMP)
     if (rlock->count)
        rlock->count--;
-    else
-    {
+    else {
        rlock->processor = -1;
        spin_unlock_irqrestore((spinlock_t *)lock, rlock->flags[p]);
     }
@@ -6068,14 +5845,11 @@ void debug_unlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 unsigned long debug_rlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 {
 #if defined(CONFIG_SMP)
-    if (!spin_trylock_irqsave((spinlock_t *)lock, rlock->flags[p]))
-    {
+    if (!spin_trylock_irqsave((spinlock_t *)lock, rlock->flags[p])) {
        if (rlock->processor == p)
           rlock->count++;
-       else
-       {
-          while (1)
-          {
+       else {
+          while (1) {
              if (spin_trylock_irqsave((spinlock_t *)lock,
                                       rlock->flags[p]))
                 break;
@@ -6097,8 +5871,7 @@ void debug_unrlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 #if defined(CONFIG_SMP)
     if (rlock->count)
        rlock->count--;
-    else
-    {
+    else {
        rlock->processor = -1;
        spin_unlock_irqrestore((spinlock_t *)lock, rlock->flags[p]);
     }
@@ -6133,14 +5906,12 @@ unsigned long StopProcessorsExclSelf(unsigned long self)
          if (i != self) {
 	    register unsigned long msecs = 3000;
 
-	    while (!atomic_read(&per_cpu(debuggerProcessors, i)) && msecs)
-	    {
+	    while (!atomic_read(&per_cpu(debuggerProcessors, i)) && msecs) {
 	       mdelay(1);
 	       msecs--;
 	    }
 
-	    if (!msecs)
-	    {
+	    if (!msecs) {
 	       failed++;
 	       DBGPrint("Processor %i could not be halted state:%s\n",
 			(int)i, procState[per_cpu(ProcessorState, i) & 0xF]);
@@ -6179,22 +5950,17 @@ unsigned long WaitRestartExclSelf(unsigned long self)
    register unsigned long failed;
    register int i;
 
-   for (i = 0, failed = 0; i < MAX_PROCESSORS; i++)
-   {
-      if (cpu_online(i))
-      {
-         if (i != self)
-         {
+   for (i = 0, failed = 0; i < MAX_PROCESSORS; i++) {
+      if (cpu_online(i)) {
+         if (i != self) {
 	    register unsigned long msecs = 3000;
 
-	    while (atomic_read(&per_cpu(nmiProcessors, i)) && msecs)
-	    {
+	    while (atomic_read(&per_cpu(nmiProcessors, i)) && msecs) {
 	       mdelay(1);
 	       msecs--;
 	    }
 
-	    if (!msecs)
-	    {
+	    if (!msecs) {
 	       failed++;
 	       DBGPrint("Processor %i did not restart state:%s\n",
 			(int)i, procState[per_cpu(ProcessorState, i) & 0xF]);
@@ -6213,13 +5979,10 @@ unsigned long breakpoint_active(unsigned long exception, StackFrame *stackFrame,
 {
    register int i;
 
-   switch (exception)
-   {
+   switch (exception) {
        case DEBUGGER_EXCEPTION:
-          for (i = 0; i < 4; i++)
-          {
-             if (per_cpu(CurrentDR6, processor) & (1 << i))
-             {
+          for (i = 0; i < 4; i++) {
+             if (per_cpu(CurrentDR6, processor) & (1 << i)) {
                 if (BreakReserved[i])
                    return 1;
                 else
@@ -6237,10 +6000,8 @@ unsigned long breakpoint_active(unsigned long exception, StackFrame *stackFrame,
 unsigned long enter_debugger(unsigned long exception, StackFrame *stackFrame,
                              unsigned long processor)
 {
-    if (debug_lock(&debuglock, &debug_mutex, processor))
-    {
-       if (!breakpoint_active(exception, stackFrame, processor))
-       {
+    if (debug_lock(&debuglock, &debug_mutex, processor)) {
+       if (!breakpoint_active(exception, stackFrame, processor)) {
           debug_unlock(&debuglock, &debug_mutex, processor);
 
           /* we can only get here if we got a debugger exception */
@@ -6263,8 +6024,7 @@ unsigned long enter_debugger(unsigned long exception, StackFrame *stackFrame,
 
        /*  do not release the processors for active trace, ssb, or proceed
         *  sessions on a focus processor. */
-       if (!atomic_read(&per_cpu(traceProcessors, processor)))
-       {
+       if (!atomic_read(&per_cpu(traceProcessors, processor))) {
           FreeProcessorsExclSelf(processor);
           WaitRestartExclSelf(processor);
        }
@@ -6284,12 +6044,9 @@ unsigned long check_conditional_breakpoint(StackFrame *stackFrame,
     unsigned char *cmd;
     unsigned long valid;
 
-    for (i = 0; i < 4; i++)
-    {
-       if (per_cpu(CurrentDR6, processor) & (1 << i))
-       {
-          if (ConditionalBreakpoint[i])
-          {
+    for (i = 0; i < 4; i++) {
+       if (per_cpu(CurrentDR6, processor) & (1 << i)) {
+          if (ConditionalBreakpoint[i]) {
              cmd = (unsigned char *)&BreakCondition[i][0];
              return EvaluateExpression(stackFrame, &cmd, &valid);
           }
@@ -6319,19 +6076,16 @@ unsigned long debugger_entry(unsigned long Exception, StackFrame *stackFrame,
 #endif
 
 MDBLoop:;
-    switch (Exception)
-    {
+    switch (Exception) {
           case 1:/* int 1 debug exception */
             if (current->thread.debugreg6 & DR_STEP)
 		current->thread.debugreg6 &= ~DR_STEP;
-	    if (per_cpu(BreakMask, processor))
-	    {
+	    if (per_cpu(BreakMask, processor)) {
 	       stackFrame->tSystemFlags &= ~SINGLE_STEP;
 	       stackFrame->tSystemFlags |= RESUME;
 	       break;
 	    } else
-	    if (!check_conditional_breakpoint(stackFrame, processor))
-	    {
+	    if (!check_conditional_breakpoint(stackFrame, processor)) {
 		stackFrame->tSystemFlags &= ~SINGLE_STEP;
 		stackFrame->tSystemFlags |= RESUME;
 		break;
@@ -6340,8 +6094,7 @@ MDBLoop:;
 	    break;
 
 	 case 3:/* int 3 breakpoint */
-	    if (per_cpu(BreakMask, processor))
-	    {
+	    if (per_cpu(BreakMask, processor)) {
 	       stackFrame->tSystemFlags &= ~SINGLE_STEP;
 	       stackFrame->tSystemFlags |= RESUME;
 	       break;
@@ -6350,8 +6103,7 @@ MDBLoop:;
 	    break;
 
          case 2: /* nmi */
-            if (per_cpu(ProcessorHold, processor))  /* hold processor */
-            {
+            if (per_cpu(ProcessorHold, processor))  /* hold processor */ {
 	       smp_mb__before_atomic();
 	       per_cpu(ProcessorState, processor) = PROCESSOR_SUSPEND;
                per_cpu(ProcessorHold, processor) = 0;
@@ -6360,11 +6112,9 @@ MDBLoop:;
                /* processor suspend loop */
                atomic_inc(&per_cpu(nmiProcessors, processor));
 	       while ((per_cpu(ProcessorState, processor) != PROCESSOR_RESUME) &&
-	              (per_cpu(ProcessorState, processor) != PROCESSOR_SWITCH))
-               {
+	              (per_cpu(ProcessorState, processor) != PROCESSOR_SWITCH)) {
 	          if ((per_cpu(ProcessorState, processor) == PROCESSOR_RESUME) ||
-	              (per_cpu(ProcessorState, processor) == PROCESSOR_SWITCH))
-                  {
+	              (per_cpu(ProcessorState, processor) == PROCESSOR_SWITCH)) {
                      break;
                   }
                   cpu_relax();
@@ -6384,8 +6134,7 @@ MDBLoop:;
 	    break;
     }
 
-    if (per_cpu(ProcessorHold, processor))
-    {
+    if (per_cpu(ProcessorHold, processor)) {
        Exception = 2;
        goto MDBLoop;
     }
@@ -6427,19 +6176,15 @@ void SetDebugRegisters(void)
 {
    register int i;
 
-   for (i = 0; i < 4; i++)
-   {
-      switch (i)
-      {
+   for (i = 0; i < 4; i++) {
+      switch (i) {
 	 case 0:
-	    if (BreakReserved[i])
-	    {
+	    if (BreakReserved[i]) {
 	       CurrentDR7 &= 0xFFF0FFFF;
 	       CurrentDR7 |= G0_BIT;
 	       CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
 			      (BreakLength[i] << ((i * 4) + 18)));
-	    } else
-	    {
+	    } else {
 	       CurrentDR7 &= 0xFFF0FFFF;
 	       CurrentDR7 &= ~G0_BIT;
 	       CurrentDR7 &= ~L0_BIT;
@@ -6448,14 +6193,12 @@ void SetDebugRegisters(void)
 	    break;
 
 	 case 1:
-	    if (BreakReserved[i])
-	    {
+	    if (BreakReserved[i]) {
 	       CurrentDR7 &= 0xFF0FFFFF;
 	       CurrentDR7 |= G1_BIT;
 	       CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
 			      (BreakLength[i] << ((i * 4) + 18)));
-	    } else
-	    {
+	    } else {
 	       CurrentDR7 &= 0xFF0FFFFF;
 	       CurrentDR7 &= ~G1_BIT;
 	       CurrentDR7 &= ~L1_BIT;
@@ -6464,14 +6207,12 @@ void SetDebugRegisters(void)
 	    break;
 
 	 case 2:
-	    if (BreakReserved[i])
-	    {
+	    if (BreakReserved[i]) {
 	       CurrentDR7 &= 0xF0FFFFFF;
 	       CurrentDR7 |= G2_BIT;
 	       CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
 			      (BreakLength[i] << ((i * 4) + 18)));
-	    } else
-	    {
+	    } else {
 	       CurrentDR7 &= 0xF0FFFFFF;
 	       CurrentDR7 &= ~G2_BIT;
 	       CurrentDR7 &= ~L2_BIT;
@@ -6480,14 +6221,12 @@ void SetDebugRegisters(void)
 	    break;
 
 	 case 3:
-	    if (BreakReserved[i])
-	    {
+	    if (BreakReserved[i]) {
 	       CurrentDR7 &= 0x0FFFFFFF;
 	       CurrentDR7 |= G3_BIT;
 	       CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
 			      (BreakLength[i] << ((i * 4) + 18)));
-	    } else
-	    {
+	    } else {
 	       CurrentDR7 &= 0x0FFFFFFF;
 	       CurrentDR7 &= ~G3_BIT;
 	       CurrentDR7 &= ~L3_BIT;
@@ -6504,10 +6243,8 @@ void LoadDebugRegisters(void)
    register int i;
 
    WriteDR6(0);
-   for (i = 0; i < 4; i++)
-   {
-      switch (i)
-      {
+   for (i = 0; i < 4; i++) {
+      switch (i) {
 	 case 0:
 	    if (BreakReserved[i])
 	       WriteDR0(BreakPoints[i]);
@@ -6551,8 +6288,7 @@ static void mdb_overflow_handler(struct perf_event *event,
 	struct perf_event *bp;
 	int cpu = raw_smp_processor_id();
 
-	for (i = 0; i < HBP_NUM; i++)
-        {
+	for (i = 0; i < HBP_NUM; i++) {
                 if (breakinfo[i].enabled)
 			tsk->thread.debugreg6 |= (DR_TRAP0 << i);
 
@@ -6677,8 +6413,7 @@ void SetDebugRegisters(void)
 
 unsigned long get_bp_type(unsigned long type)
 {
-   switch (type)
-   {
+   switch (type) {
 	case BREAK_EXECUTE:
             return X86_BREAKPOINT_EXECUTE;
 
@@ -6695,8 +6430,7 @@ unsigned long get_bp_type(unsigned long type)
 
 unsigned long get_bp_len(unsigned long len)
 {
-   switch (len)
-   {
+   switch (len) {
 	case ONE_BYTE_FIELD:
            return X86_BREAKPOINT_LEN_1;
 
@@ -6735,8 +6469,7 @@ void LoadDebugRegisters(void)
 	           bp->attr.disabled = 1;
                 }
 		info = counter_arch_bp(bp);
-		if (bp->attr.disabled == 1)
-                {
+		if (bp->attr.disabled == 1) {
 		   bp->attr.bp_addr = BreakPoints[i];
 		   bp->attr.bp_len = get_bp_len(BreakLength[i]);
 		   bp->attr.bp_type = get_bp_type(BreakType[i]);

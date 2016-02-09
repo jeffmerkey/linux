@@ -172,21 +172,17 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	}
 
 #ifdef CONFIG_FRAME_POINTER
-	if (!bp)
-        {
-		if (task == current)
-                {
+	if (!bp) {
+		if (task == current) {
 			get_bp(bp);
-                } else
-                {
+                } else {
 			bp = *(unsigned long *)task->thread.sp;
 		}
 	}
 #endif
 
 	tinfo = task_thread_info(task);
-	for (;;)
-        {
+	for (;;) {
 		char *id;
 		unsigned long *estack_end;
 
@@ -204,15 +200,13 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 			continue;
 		}
 
-		if (irq_stack_end)
-                {
+		if (irq_stack_end) {
 			unsigned long *irq_stack;
 
 			irq_stack = irq_stack_end -
 				(IRQ_STACK_SIZE - 64) / sizeof(*irq_stack);
 
-			if (in_irq_stack(stack, irq_stack, irq_stack_end))
-                        {
+			if (in_irq_stack(stack, irq_stack, irq_stack_end)) {
 			      if (DBGPrint("%s", "IRQ"))
 			         break;
 
@@ -355,11 +349,9 @@ int bt_stack(struct task_struct *task, struct pt_regs *regs,
     if (!task)
        task = current;
 
-    if (!stack)
-    {
+    if (!stack) {
        stack = &dummy;
-       if (task && task != current)
-       {
+       if (task && task != current) {
 #ifdef CONFIG_X86_64
 	  stack = (unsigned long *)task->thread.sp;
 #else
@@ -413,12 +405,10 @@ int mdb_printf(char *fmt, ...)
 	vsprintf(mdb_buffer, fmt, ap);
 	va_end(ap);
 
-	for (con = console_drivers; con; con = con->next)
-        {
+	for (con = console_drivers; con; con = con->next) {
 	   if ((con->flags & CON_ENABLED) && con->write &&
 	       (cpu_online(get_processor_id()) ||
-		(con->flags & CON_ANYTIME)))
-           {
+		(con->flags & CON_ANYTIME))) {
 	      con->write(con, mdb_buffer, strlen(mdb_buffer));
               mdb_watchdogs();
            }
@@ -427,17 +417,14 @@ int mdb_printf(char *fmt, ...)
 	if (strchr(mdb_buffer, '\n') != NULL)
 	   nextline++;
 
-	if (pause_mode && (nextline >= linecount))
-        {
+	if (pause_mode && (nextline >= linecount)) {
            if (nextline > linecount)
               nextline = linecount;
 
-	   for (con = console_drivers; con; con = con->next)
-           {
+	   for (con = console_drivers; con; con = con->next) {
 	      if ((con->flags & CON_ENABLED) && con->write &&
 		  (cpu_online(get_processor_id()) ||
-	           (con->flags & CON_ANYTIME)))
-              {
+	           (con->flags & CON_ANYTIME))) {
 	         con->write(con, mdbprompt, strlen(mdbprompt));
                  mdb_watchdogs();
               }
@@ -450,12 +437,10 @@ int mdb_printf(char *fmt, ...)
 	   if (mdb_keystroke[0] == ' ')
               nextline = 0;
 
-	   for (con = console_drivers; con; con = con->next)
-           {
+	   for (con = console_drivers; con; con = con->next) {
 	      if ((con->flags & CON_ENABLED) && con->write &&
 		  (cpu_online(get_processor_id()) ||
-	           (con->flags & CON_ANYTIME)))
-              {
+	           (con->flags & CON_ANYTIME))) {
                  memset(mdb_buffer, 0, 256);
 
                  memset(mdb_buffer, '\b', strlen(mdbprompt));
@@ -472,8 +457,7 @@ int mdb_printf(char *fmt, ...)
               }
 	   }
 
-	   if ((mdb_keystroke[0] == 'q') || (mdb_keystroke[0] == 'Q'))
-           {
+	   if ((mdb_keystroke[0] == 'q') || (mdb_keystroke[0] == 'Q')) {
               nextline = 0;
 
 #if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
@@ -508,11 +492,9 @@ int get_modem_char(void)
     if (mdb_serial_port == 0)
        return -1;
 
-    if ((status = inb(mdb_serial_port + UART_LSR)) & UART_LSR_DR)
-    {
+    if ((status = inb(mdb_serial_port + UART_LSR)) & UART_LSR_DR) {
        ch = inb(mdb_serial_port + UART_RX);
-       switch (ch)
-       {
+       switch (ch) {
 	   case 0x7f:
 	      ch = 8;
               break;
@@ -628,8 +610,7 @@ static int get_kbd_char(void)
 	 */
 
 	if (((scancode & 0x7f) == 0x2a) ||
-	    ((scancode & 0x7f) == 0x36))
-        {
+	    ((scancode & 0x7f) == 0x36)) {
 		/*
 		 * Next key may use shift table
 		 */
@@ -707,8 +688,7 @@ static int get_kbd_char(void)
 	if (keychar == '\t')
 		keychar = ' ';
 
-        switch (keychar)
-        {
+        switch (keychar) {
            case K_F1:
            case K_F2:
            case K_F3:
@@ -726,8 +706,7 @@ static int get_kbd_char(void)
               break;
         }
 
-	switch (KTYP(keychar))
-        {
+	switch (KTYP(keychar)) {
 	   case KT_LETTER:
 	   case KT_LATIN:
 		if (isprint(keychar))
@@ -738,8 +717,7 @@ static int get_kbd_char(void)
 			break;
 		/* drop through */
            case KT_PAD:
-                switch (keychar)
-                {
+                switch (keychar) {
                    case K_P0:
                    case K_P1:
                    case K_P2:
@@ -753,8 +731,7 @@ static int get_kbd_char(void)
                 return -1;
 
            case KT_CUR:
-                switch (keychar)
-                {
+                switch (keychar) {
                    case K_DOWN:
                    case K_LEFT:
                    case K_RIGHT:
@@ -780,8 +757,7 @@ static int get_kbd_char(void)
 		scancode = inb(KBD_DATA_REG);
 		scanstatus = inb(KBD_STATUS_REG);
 
-		while (scanstatus & KBD_STAT_MOUSE_OBF)
-                {
+		while (scanstatus & KBD_STAT_MOUSE_OBF) {
 		   scancode = inb(KBD_DATA_REG);
 		   scanstatus = inb(KBD_STATUS_REG);
 		}
@@ -808,8 +784,7 @@ int mdb_getkey(void)
 {
    int key = -1;
 
-   for (;;)
-   {
+   for (;;) {
       key = get_kbd_char();
       if (key != -1)
 	 break;
@@ -1072,14 +1047,12 @@ int DisplayClosestSymbol(unsigned long address)
     if (!name)
        return -1;
 
-    if (modname)
-    {
+    if (modname) {
        if (offset)
           DBGPrint("%s|%s+0x%X\n", modname, name, offset);
        else
           DBGPrint("%s|%s\n", modname, name);
-    } else
-    {
+    } else {
        if (offset)
           DBGPrint("%s+0x%X\n", name, offset);
        else
@@ -1107,8 +1080,7 @@ unsigned char *GetModuleInfoFromSymbolValue(unsigned long value, unsigned char *
     char namebuf[KSYM_NAME_LEN + 1];
 
     name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
-    if (name && modname && buf)
-    {
+    if (name && modname && buf) {
        mdb_copy(buf, modname, len);
        return (unsigned char *)buf;
     }
@@ -1126,8 +1098,7 @@ unsigned char *GetSymbolFromValue(unsigned long value, unsigned char *buf, unsig
     if (!name)
        return NULL;
 
-    if (!offset && buf)
-    {
+    if (!offset && buf) {
        mdb_copy(buf, namebuf, len);
        return (unsigned char *)buf;
     }
@@ -1260,8 +1231,7 @@ unsigned long ReadDR(unsigned long regnum)
 {
 	unsigned long contents = 0;
 
-	switch (regnum)
-        {
+	switch (regnum) {
 	   case 0:
 		__asm__ ("movq %%db0,%0\n\t" : "=r"(contents));
 		break;
@@ -1292,8 +1262,7 @@ unsigned long ReadDR(unsigned long regnum)
 
 void WriteDR(int regnum, unsigned long contents)
 {
-	switch (regnum)
-        {
+	switch (regnum) {
 	   case 0:
 		__asm__ ("movq %0,%%db0\n\t"::"r"(contents));
 		break;
@@ -1324,8 +1293,7 @@ unsigned long ReadCR(int regnum)
 {
 	unsigned long contents = 0;
 
-	switch (regnum)
-        {
+	switch (regnum) {
 	   case 0:
 		__asm__ ("movq %%cr0,%0\n\t" : "=r"(contents));
 		break;
@@ -1348,8 +1316,7 @@ unsigned long ReadCR(int regnum)
 
 void WriteCR(int regnum, unsigned long contents)
 {
-	switch (regnum)
-        {
+	switch (regnum) {
 	   case 0:
 		__asm__ ("movq %0,%%cr0\n\t"::"r"(contents));
 		break;
@@ -1375,8 +1342,7 @@ unsigned long ReadDR(unsigned long regnum)
 {
 	unsigned long contents = 0;
 
-	switch (regnum)
-        {
+	switch (regnum) {
 	   case 0:
 		__asm__ ("movl %%db0,%0\n\t" : "=r"(contents));
 		break;
@@ -1407,8 +1373,7 @@ unsigned long ReadDR(unsigned long regnum)
 
 void WriteDR(int regnum, unsigned long contents)
 {
-	switch (regnum)
-        {
+	switch (regnum) {
 	   case 0:
 		__asm__ ("movl %0,%%db0\n\t"::"r"(contents));
 		break;
@@ -1439,8 +1404,7 @@ unsigned long ReadCR(int regnum)
 {
 	unsigned long contents = 0;
 
-	switch (regnum)
-        {
+	switch (regnum) {
 	   case 0:
 		__asm__ ("movl %%cr0,%0\n\t" : "=r"(contents));
 		break;
@@ -1463,8 +1427,7 @@ unsigned long ReadCR(int regnum)
 
 void WriteCR(int regnum, unsigned long contents)
 {
-	switch (regnum)
-        {
+	switch (regnum) {
 	   case 0:
 		__asm__ ("movl %0,%%cr0\n\t"::"r"(contents));
 		break;

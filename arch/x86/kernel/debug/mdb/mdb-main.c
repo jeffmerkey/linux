@@ -102,8 +102,7 @@ static void SaveLastCommandInfo(unsigned long processor)
     atomic_set(&focusActive, 0);
     atomic_set(&per_cpu(traceProcessors, processor), 0);
 
-    for (i = 0; (i < 80) && (debugCommand[i]); i++)
-    {
+    for (i = 0; (i < 80) && (debugCommand[i]); i++) {
        if ((debugCommand[i] == '\n') || (debugCommand[i] == '\r'))
           lastDebugCommand[i] = '\0';
        else
@@ -147,15 +146,13 @@ int mdb(unsigned long reason, unsigned long error, void *frame)
        return retCode;
 
     last_mdb_oops = NULL;
-    if (mdb_oops)
-    {
+    if (mdb_oops) {
        last_mdb_oops = mdb_oops;
        mdb_oops = NULL;
     }
 
     /* if we are re-entered, report it */
-    if (atomic_read(&inmdb_processor[processor]))
-    {
+    if (atomic_read(&inmdb_processor[processor])) {
        DBGPrint("MDB re-entered.  exception: %d error: %d processor: %d\n",
                 reason, error, processor);
     }
@@ -256,21 +253,18 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
        *p++ = '\0';
 
     HistoryIndex = HistoryPointer;
-    while (1)
-    {
+    while (1) {
        key = mdb_getkey();
 
        if ((IsAccelerator(key)) && (key != 13))
 	  return key;
 
-       switch (key)
-       {
+       switch (key) {
           case -1:
              return key;
 
 	  case 8: /* backspace */
-	     if (buf_index)
-	     {
+	     if (buf_index) {
                 register int delta;
 
 		buf_index--;
@@ -313,16 +307,14 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
 	     break;
 
 	  case K_P4: /* left arrow */
-	     if (buf_index)
-	     {
+	     if (buf_index) {
 		buf_index--;
 		out_string("\b");
 	     }
 	     break;
 
 	  case K_P6: /* right arrow */
-	     if (buf_index < strlen(buf))
-	     {
+	     if (buf_index < strlen(buf)) {
                 out_char(buf[buf_index]);
 		buf_index++;
 	     }
@@ -353,10 +345,8 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
 	  case 13:  /* enter */
 	     if (strncmp(HistoryBuffer[(HistoryPointer - 1) & 0xF], buf,
 			 strlen(buf)) || (strlen(buf) !=
-                         strlen(HistoryBuffer[(HistoryPointer - 1) & 0xF])))
-	     {
-		for (r = 0; r < max_index; r++)
-		{
+                         strlen(HistoryBuffer[(HistoryPointer - 1) & 0xF]))) {
+		for (r = 0; r < max_index; r++) {
 		   if (buf[0])
 		      HistoryBuffer[HistoryPointer & 0xF][r] = buf[r];
 		}
@@ -366,8 +356,7 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
 	     return 13;
 
 	  case K_P8: /* up arrow */
-	     if (HistoryBuffer[(HistoryIndex - 1) & 0xF][0])
-	     {
+	     if (HistoryBuffer[(HistoryIndex - 1) & 0xF][0]) {
                 unsigned char *s = &workBuffer[0];
 
                 out_copy_chars_limit(buf_index, '\b', s, 255);
@@ -385,8 +374,7 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
 	     break;
 
 	  case K_P2: /* down arrow */
-	     if (HistoryBuffer[HistoryIndex & 0xF][0])
-	     {
+	     if (HistoryBuffer[HistoryIndex & 0xF][0]) {
                 unsigned char *s = &workBuffer[0];
 
                 out_copy_chars_limit(buf_index, '\b', s, 255);
@@ -406,10 +394,8 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
 	  default:
 	     if ((key > 0x7E) || (key < ' '))  /* if above or below text */
 		break;
-	     else
-	     {
-	        if (strlen(buf) < max_index)
-		{
+	     else {
+	        if (strlen(buf) < max_index) {
                    register int delta;
 
 		   for (i = max_index; i > buf_index; i--)
@@ -448,8 +434,7 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
     nextline = 0;
     pause_mode = 0;
 
-    if (!ssbmode)
-    {
+    if (!ssbmode) {
        if (reason_toggle && !ConsoleDisplayBreakReason(stackFrame,
 						       Exception, processor, lastCommand))
           return 0;
@@ -460,8 +445,7 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
     if (SSBUpdate(stackFrame, processor) == -1)
        return 0;
 
-    while (1)
-    {
+    while (1) {
        pause_mode = 1;
        nextline = 0;
        DBGPrint("(%i)> ", (int)processor);
@@ -471,13 +455,11 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
        if (key == -1)
           return -1;
 
-       if (key)
-       {
+       if (key) {
           extern unsigned long AccelRoutine(unsigned long key, void *p);
 
           retCode = AccelRoutine(key, stackFrame);
-          switch (retCode)
-          {
+          switch (retCode) {
              case 0:
                 break;
 
@@ -490,8 +472,7 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
           }
        }
 
-       if (*debugCommand)
-       {
+       if (*debugCommand) {
           count = 0;
           pp = (unsigned char *)debugCommand;
           vp = verb = &verbBuffer[0];
@@ -507,8 +488,7 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
 
           retCode = DebuggerParserRoutine(verb, (unsigned char *)debugCommand,
                                           stackFrame, Exception);
-          switch (retCode)
-          {
+          switch (retCode) {
              case -1:
 	       return retCode;
           }
@@ -559,22 +539,18 @@ static int mdb_notify(struct notifier_block *nb, unsigned long reason,
     DBGPrint("%i: notify reason:%lu\n", (int)get_processor_id(), reason);
 #endif
 
-    if (args)
-    {
-       switch (reason)
-       {
+    if (args) {
+       switch (reason) {
           case DIE_DIE:
           case DIE_PANIC:
           case DIE_OOPS:
              mdb_oops = (unsigned char *)args->str;
              if (args->regs)
                 err = mdb(SOFTWARE_EXCEPTION, args->err, args->regs);
-             else
-             {
+             else {
                 struct pt_regs *regs = get_irq_regs();
 
-                if (regs)
-                {
+                if (regs) {
                    err = mdb(SOFTWARE_EXCEPTION, args->err, regs);
                    break;
                 }
@@ -590,8 +566,7 @@ static int mdb_notify(struct notifier_block *nb, unsigned long reason,
              break;
 
 	  case DIE_INT3:
-             if (toggle_user_break)
-             {
+             if (toggle_user_break) {
                 if (user_mode(args->regs))
                    return NOTIFY_DONE;
              }
@@ -599,8 +574,7 @@ static int mdb_notify(struct notifier_block *nb, unsigned long reason,
              break;
 
           case DIE_DEBUG:
-             if (toggle_user_break)
-             {
+             if (toggle_user_break) {
                 if (user_mode(args->regs))
                    return NOTIFY_DONE;
                 else
@@ -654,12 +628,9 @@ static void sysrq_mdb(int key)
 #if MDB_DEBUG_DEBUGGER
    register int i, self = get_processor_id();
 
-   for (i = 0; i < MAX_PROCESSORS; i++)
-   {
-      if (cpu_online(i))
-      {
-         if (i == self)
-         {
+   for (i = 0; i < MAX_PROCESSORS; i++) {
+      if (cpu_online(i)) {
+         if (i == self) {
             apic->send_IPI_mask(cpumask_of(i), APIC_DM_NMI);
             return;
          }
@@ -680,13 +651,10 @@ static int mdb_nmi_handler(unsigned int cmd, struct pt_regs *regs)
     if (atomic_read(&kgdb_detected))
        return NMI_DONE;
 
-    switch (cmd)
-    {
+    switch (cmd) {
         case NMI_LOCAL:
-             if (atomic_read(&inmdb) && is_processor_held(processor))
-             {
-                if (!atomic_read(&inmdb_processor[processor]))
-                {
+             if (atomic_read(&inmdb) && is_processor_held(processor)) {
+                if (!atomic_read(&inmdb_processor[processor])) {
                    mdb(NMI_EXCEPTION, 0, regs);
                    debug_previous_nmi[processor] = 1;
                    mdb_watchdogs();
@@ -696,8 +664,7 @@ static int mdb_nmi_handler(unsigned int cmd, struct pt_regs *regs)
              break;
 
         case NMI_UNKNOWN:
-             if (debug_previous_nmi[processor])
-             {
+             if (debug_previous_nmi[processor]) {
                 debug_previous_nmi[processor] = 0;
                 return NMI_HANDLED;
              }
@@ -722,8 +689,7 @@ extern int disable_hw_bp_interface;
 
 static inline void strip_crlf(char *p, int limit)
 {
-   while (*p && limit)
-   {
+   while (*p && limit) {
       if (*p == '\n' || (*p) == '\r')
          *p = '\0';
       p++;
@@ -772,19 +738,16 @@ static int __init mdb_init_module(void)
 
     /* disable kgdb/kdb on module load if enabled */
     filp = filp_open("/sys/module/kgdboc/parameters/kgdboc", O_RDWR, 0);
-    if (!IS_ERR(filp))
-    {
+    if (!IS_ERR(filp)) {
        size = mdb_kernel_read(filp, kdbstate, 39, 0);
-       if (size)
-       {
+       if (size) {
           strip_crlf(kdbstate, 39);
 
           printk(KERN_WARNING "MDB:  kgdb currently set to [%s], attempting to disable.\n", kdbstate);
 
           kdbstate[0] = '\0';
           size = mdb_kernel_write(filp, kdbstate, 1, 0);
-          if (!size)
-          {
+          if (!size) {
              printk(KERN_WARNING "MDB:  kgdb/kdb active, MDB set to disabled. unload/reload to retry.\n");
              atomic_inc(&kgdb_detected);
           } else
@@ -796,23 +759,20 @@ static int __init mdb_init_module(void)
     MDBInitializeDebugger();
 
     ret = register_die_notifier(&mdb_notifier);
-    if (ret)
-    {
+    if (ret) {
        MDBClearDebuggerState();
        return ret;
     }
 
     ret = register_nmi_handler(NMI_LOCAL, mdb_nmi_handler, 0, "mdb");
-    if (ret)
-    {
+    if (ret) {
        unregister_die_notifier(&mdb_notifier);
        MDBClearDebuggerState();
        return ret;
     }
 
     ret = register_nmi_handler(NMI_UNKNOWN, mdb_nmi_handler, 0, "mdb");
-    if (ret)
-    {
+    if (ret) {
        unregister_die_notifier(&mdb_notifier);
        unregister_nmi_handler(NMI_LOCAL, "mdb");
        MDBClearDebuggerState();

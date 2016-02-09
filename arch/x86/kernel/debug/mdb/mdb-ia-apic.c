@@ -90,11 +90,9 @@ void dump_ioapic(unsigned long num)
 {
      unsigned long i, val;
 
-     if (num < nr_ioapics)
-     {
+     if (num < nr_ioapics) {
         DBGPrint("io_apic registers\n");
-        for (i = 0; i <= 0x2F; i++)
-        {
+        for (i = 0; i <= 0x2F; i++) {
 	   if ((i & 3) == 0)
 	      DBGPrint("%08X: ", i);
 
@@ -113,8 +111,7 @@ void dump_local_apic(void)
     unsigned long i, val;
 
     DBGPrint("local apic registers\n");
-    for (i = 0; i <= 0x3F; i++)
-    {
+    for (i = 0; i <= 0x3F; i++) {
        if ((i & 3) == 0)
 	  DBGPrint("%08X: ", i);
 
@@ -132,21 +129,18 @@ void dump_remote_apic(unsigned long cpu)
     register unsigned long val;
 
     DBGPrint("remote apic registers processor(%d)\n", cpu);
-    for (i = 0; i <= 0x3F; i++)
-    {
+    for (i = 0; i <= 0x3F; i++) {
        if ((i & 3) == 0)
 	  DBGPrint("%08X: ", i);
 
        apicid = apic->cpu_present_to_apicid(cpu);
-       if (apicid == BAD_APICID)
-       {
+       if (apicid == BAD_APICID) {
           DBGPrint("BADAPICX ");
           continue;
        }
 
        timeout = 0;
-       while (apic_read(APIC_ICR) & APIC_ICR_BUSY)
-       {
+       while (apic_read(APIC_ICR) & APIC_ICR_BUSY) {
           udelay(100);
           if (timeout++ >= 1000)
              break;
@@ -154,8 +148,7 @@ void dump_remote_apic(unsigned long cpu)
           mdb_watchdogs();
        }
 
-       if (timeout >= 1000)
-       {
+       if (timeout >= 1000) {
           DBGPrint("???????? ");
           continue;
        }
@@ -164,8 +157,7 @@ void dump_remote_apic(unsigned long cpu)
        apic_write(APIC_ICR, i | APIC_DEST_LOGICAL | APIC_DM_REMRD);
 
        timeout = 0;
-       while ((apic_read(APIC_ICR) & APIC_ICR_RR_MASK) == APIC_ICR_RR_INPROG)
-       {
+       while ((apic_read(APIC_ICR) & APIC_ICR_RR_MASK) == APIC_ICR_RR_INPROG) {
           udelay(100);
           if (timeout++ >= 1000)
              break;
@@ -174,18 +166,15 @@ void dump_remote_apic(unsigned long cpu)
           mdb_watchdogs();
        }
 
-       if (timeout >= 1000)
-       {
+       if (timeout >= 1000) {
           DBGPrint("???????? ");
           continue;
        }
 
-       if ((apic_read(APIC_ICR) & APIC_ICR_RR_MASK) == APIC_ICR_RR_VALID)
-       {
+       if ((apic_read(APIC_ICR) & APIC_ICR_RR_MASK) == APIC_ICR_RR_VALID) {
           val = apic_read(APIC_RRR);
           DBGPrint("%08X ", val);
-       } else
-       {
+       } else {
           DBGPrint("???????? ");
        }
 
@@ -215,8 +204,7 @@ unsigned long displayAPICInfo(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid && ((value >= MAX_PROCESSORS) || !cpu_online(value)))
-     {
+     if (valid && ((value >= MAX_PROCESSORS) || !cpu_online(value))) {
         DBGPrint("processor not found\n");
         return 1;
      }
@@ -247,8 +235,7 @@ unsigned long displayIOAPICInfo(unsigned char *cmd,
         cmd++;
 
      value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid && !(value < nr_ioapics))
-     {
+     if (valid && !(value < nr_ioapics)) {
         DBGPrint("ioapic not found\n");
         return 1;
      }

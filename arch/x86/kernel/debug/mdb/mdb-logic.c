@@ -590,50 +590,42 @@ static inline unsigned long long GetNumber(unsigned char *p,
        *rp = p;
     pp = op = p;
 
-    if (!strncasecmp(p, "0x", 2))
-    {
+    if (!strncasecmp(p, "0x", 2)) {
        hex_found = 1;
        p++;
        p++;
        pp = p;
     } else
-    if (*p == 'X' || *p == 'x')
-    {
+    if (*p == 'X' || *p == 'x') {
        hex_found = 1;
        p++;
        pp = p;
     }
 
-    while (*p)
-    {
-       if (*p >= '0' && *p <= '9')
-       {
+    while (*p) {
+       if (*p >= '0' && *p <= '9') {
           valid++;
 	  p++;
        } else
-       if (*p >= 'A' && *p <= 'F')
-       {
+       if (*p >= 'A' && *p <= 'F') {
 	  hex_found = 1;
           valid++;
 	  p++;
        } else
-       if (*p >= 'a' && *p <= 'f')
-       {
+       if (*p >= 'a' && *p <= 'f') {
 	  hex_found = 1;
           valid++;
 	  p++;
        } else
        if (delim_table[((*p) & 0xFF)])
 	  break;
-       else
-       {
+       else {
           invalid = 1;
           break;
        }
     }
 
-    if (invalid)
-    {
+    if (invalid) {
        if (retCode)
           *retCode = -1;   /* invalid string */
        return 0;
@@ -649,11 +641,9 @@ static inline unsigned long long GetNumber(unsigned char *p,
     if (mode)
        decimal = 1;
 
-    if (hex_found)
-    {
+    if (hex_found) {
        /* parse as hex number */
-       while (*p)
-       {
+       while (*p) {
 	  if (*p >= '0' && *p <= '9')
 	     c = (c << 4) | (*p - '0');
 	  else if (*p >= 'A' && *p <= 'F')
@@ -665,22 +655,18 @@ static inline unsigned long long GetNumber(unsigned char *p,
 	  p++;
        }
     } else
-    if (decimal)
-    {
+    if (decimal) {
        /* parse as decimal number */
-       while (*p)
-       {
+       while (*p) {
 	     if (*p >= '0' && *p <= '9')
 		c = (c * 10) + (*p - '0');
 	     else
 		break;
 	  p++;
        }
-    } else  /* default parses as decimal */
-    {
+    } else  /* default parses as decimal */ {
        /* parse as decimal number */
-       while (*p)
-       {
+       while (*p) {
 	     if (*p >= '0' && *p <= '9')
 		c = (c * 10) + (*p - '0');
 	     else
@@ -708,11 +694,9 @@ unsigned long GetValueFromToken(unsigned char *symbol, StackFrame *stackFrame,
 
     len = strlen(symbol);
     for (i = 0; len && i < ARRAY_SIZE(stackframeSymbols);
-         i++)
-    {
+         i++) {
        if ((len == stackframeSymbols[i].symbol_len) &&
-           (!strcasecmp(symbol, stackframeSymbols[i].symbol)))
-       {
+           (!strcasecmp(symbol, stackframeSymbols[i].symbol))) {
           if (type)
              *type = stackframeSymbols[i].type;
           if (retCode)
@@ -734,8 +718,7 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 
     op = p;
     TokenCount = 0;
-    while (TokenCount < 255 && (unsigned long)p - (unsigned long)op < 255)
-    {
+    while (TokenCount < 255 && (unsigned long)p - (unsigned long)op < 255) {
        for (prev = p, i = 0; i < 255; i++) {
            if (delim_table[((p[i]) & 0xFF)])
                 break;
@@ -751,32 +734,26 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
           DBGPrint("symbol: [%s]\n", symbol);
 #endif
           value = GetValueFromToken(symbol, stackFrame, &retCode, &type);
-          if (retCode)
-          {
+          if (retCode) {
 	     value = GetNumber(symbol, NULL, &delta, &retCode, mode);
-             if (retCode)
-             {
+             if (retCode) {
                 value = GetValueFromSymbol(symbol);
-                if (!value)
-                {
-	           TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+                if (!value) {
+	           TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
 	           TokenValue[TokenCount] = value;
 	           TokenType[TokenCount++] = INVALID_NUMBER_TOKEN;
-                } else
-                {
-                   TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+                } else {
+                   TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                    TokenValue[TokenCount] = value;
                    TokenType[TokenCount++] = NUMBER_TOKEN;
                 }
-             } else
-             {
-	        TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+             } else {
+	        TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
 	        TokenValue[TokenCount] = value;
 	        TokenType[TokenCount++] = NUMBER_TOKEN;
              }
-          } else
-          {
-	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+          } else {
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
 	     TokenValue[TokenCount] = value;
 	     TokenType[TokenCount++] = type;
           }
@@ -792,76 +769,76 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 #endif
           switch (*p) {
           case '\0':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = NULL_TOKEN;
 	      return (p);
 
 	  case ']':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = DREF_CLOSE_TOKEN;
 	      p++;
 	      break;
 
 	  case '(':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = BB_TOKEN;
 	      p++;
 	      break;
 
 	  case ')':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = EB_TOKEN;
 	      p++;
 	     break;
 
 	  case '+':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = PLUS_TOKEN;
 	      p++;
 	      break;
 
 	  case '-':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = MINUS_TOKEN;
 	      p++;
 	      break;
 
 	  case '*':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = MULTIPLY_TOKEN;
 	      p++;
 	      break;
 
 	  case '/':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = DIVIDE_TOKEN;
 	      p++;
 	      break;
 
 	  case '%':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = MOD_TOKEN;
 	      p++;
 	      break;
 
 	  case '~':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = NEG_TOKEN;
 	      p++;
 	      break;
 
 	  case '^':
-	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	      TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
               TokenValue[TokenCount] = 0;
 	      TokenType[TokenCount++] = XOR_TOKEN;
 	      p++;
@@ -869,15 +846,14 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 
 	  case '!':
 	     p++;
-	     if (*p == '=')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (*p == '=') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = NOT_EQUAL_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = NOT_TOKEN;
 	     break;
@@ -887,37 +863,33 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 	     break;
 
 	  case '[':
-	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = DREF_OPEN_TOKEN;
 	     p++;
-	     if (tolower(*p) == 'q' && *(p + 1) == ' ')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (tolower(*p) == 'q' && *(p + 1) == ' ') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = QWORD_TOKEN;
 		p++;
 		break;
 	     }
-	     if (tolower(*p) == 'd' && *(p + 1) == ' ')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (tolower(*p) == 'd' && *(p + 1) == ' ') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = DWORD_TOKEN;
 		p++;
 		break;
 	     }
-	     if (tolower(*p) == 'w' && *(p + 1) == ' ')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (tolower(*p) == 'w' && *(p + 1) == ' ') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = WORD_TOKEN;
 		p++;
 		break;
 	     }
-	     if (tolower(*p) == 'b' && *(p + 1) == ' ')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (tolower(*p) == 'b' && *(p + 1) == ' ') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = BYTE_TOKEN;
 		p++;
@@ -927,91 +899,84 @@ static inline unsigned char *parseTokens(StackFrame *stackFrame,
 
 	  case '=':
 	     p++;
-	     if (*p == '=')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (*p == '=') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = EQUAL_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = ASSIGNMENT_TOKEN;
 	     break;
 
 	  case '<':
 	     p++;
-	     if (*p == '<')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (*p == '<') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = LEFT_SHIFT_TOKEN;
 		p++;
 		break;
 	     }
-	     if (*p == '=')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (*p == '=') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = LESS_EQUAL_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = LESS_TOKEN;
 	     break;
 
 	  case '>':
 	     p++;
-	     if (*p == '>')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (*p == '>') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = RIGHT_SHIFT_TOKEN;
 		p++;
 		break;
 	     }
-	     if (*p == '=')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (*p == '=') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = GREATER_EQUAL_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = GREATER_TOKEN;
 	     break;
 
 	  case '|':
 	     p++;
-	     if (*p == '|')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (*p == '|') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = LOGICAL_OR_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = OR_TOKEN;
 	     break;
 
 	  case '&':
 	     p++;
-	     if (*p == '&')
-	     {
-		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     if (*p == '&') {
+		TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
                 TokenValue[TokenCount] = 0;
 		TokenType[TokenCount++] = LOGICAL_AND_TOKEN;
 		p++;
 		break;
 	     }
-	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long) op);
+	     TokenIndex[TokenCount] = (unsigned long)((unsigned long)p - (unsigned long)op);
              TokenValue[TokenCount] = 0;
 	     TokenType[TokenCount++] = AND_TOKEN;
 	     break;
@@ -1263,10 +1228,8 @@ static inline uint64_t deref(unsigned long type,
 #endif
 
    /* if a sizeflag was specified, override the type field */
-   if (sizeflag)
-   {
-      switch (sizeflag)
-      {
+   if (sizeflag) {
+      switch (sizeflag) {
            /* BYTE */
            case 1:
 	     pb = (unsigned char *)value;
@@ -1306,8 +1269,7 @@ static inline uint64_t deref(unsigned long type,
       }
    }
 
-   switch (type)
-   {
+   switch (type) {
       case ARCH_PTR:
 #ifdef CONFIG_X86_64
 	 pq = (uint64_t *)value;
@@ -1339,8 +1301,7 @@ static inline uint64_t deref(unsigned long type,
 
 static inline unsigned long SegmentPush(unsigned long i)
 {
-     if (s_sp > s_bos)
-     {
+     if (s_sp > s_bos) {
 #if (DEBUG_EXPRESS)
 	DBGPrint("spush : <err>\n");
 #endif
@@ -1357,8 +1318,7 @@ static inline unsigned long SegmentPush(unsigned long i)
 static inline unsigned long SegmentPop(void)
 {
     s_sp--;
-    if (s_sp < s_tos)
-    {
+    if (s_sp < s_tos) {
        s_sp++;
 #if (DEBUG_EXPRESS)
        DBGPrint("spop  : <err>\n");
@@ -1373,8 +1333,7 @@ static inline unsigned long SegmentPop(void)
 
 static inline unsigned long ExpressPush(unsigned long long i)
 {
-     if (sp > bos)
-     {
+     if (sp > bos) {
 #if (DEBUG_EXPRESS)
 	DBGPrint("push : <err>\n");
 #endif
@@ -1391,8 +1350,7 @@ static inline unsigned long ExpressPush(unsigned long long i)
 static inline unsigned long long ExpressPop(void)
 {
     sp--;
-    if (sp < tos)
-    {
+    if (sp < tos) {
        sp++;
 #if (DEBUG_EXPRESS)
        DBGPrint("pop  : <err>\n");
@@ -1407,8 +1365,7 @@ static inline unsigned long long ExpressPop(void)
 
 static inline unsigned long ContextPush(unsigned long long i)
 {
-     if (c_sp > c_bos)
-     {
+     if (c_sp > c_bos) {
 #if (DEBUG_EXPRESS)
 	DBGPrint("cpush: <err>\n");
 #endif
@@ -1425,8 +1382,7 @@ static inline unsigned long ContextPush(unsigned long long i)
 static inline unsigned long long ContextPop(void)
 {
     c_sp--;
-    if (c_sp < c_tos)
-    {
+    if (c_sp < c_tos) {
        c_sp++;
 #if (DEBUG_EXPRESS)
        DBGPrint("cpop : <err>\n");
@@ -1441,8 +1397,7 @@ static inline unsigned long long ContextPop(void)
 
 static inline unsigned long BooleanPush(unsigned long long i)
 {
-     if (b_sp > b_bos)
-     {
+     if (b_sp > b_bos) {
 #if (DEBUG_BOOL_STACK)
 	DBGPrint("bpush: <err>\n");
 #endif
@@ -1459,8 +1414,7 @@ static inline unsigned long BooleanPush(unsigned long long i)
 static inline unsigned long long BooleanPop(void)
 {
     b_sp--;
-    if (b_sp < b_tos)
-    {
+    if (b_sp < b_tos) {
        b_sp++;
 #if (DEBUG_BOOL_STACK)
        DBGPrint("bpop : <err>\n");
@@ -1475,8 +1429,7 @@ static inline unsigned long long BooleanPop(void)
 
 static inline unsigned long LogicalPush(unsigned long long i)
 {
-     if (l_sp > l_bos)
-     {
+     if (l_sp > l_bos) {
 #if (DEBUG_LOGICAL_STACK)
 	DBGPrint("lpush: <err>\n");
 #endif
@@ -1493,8 +1446,7 @@ static inline unsigned long LogicalPush(unsigned long long i)
 static inline unsigned long long LogicalPop(void)
 {
     l_sp--;
-    if (l_sp < l_tos)
-    {
+    if (l_sp < l_tos) {
        l_sp++;
 #if (DEBUG_LOGICAL_STACK)
        DBGPrint("lpop : <err>\n");
@@ -1536,8 +1488,7 @@ static inline unsigned long ProcessOperator(unsigned long oper)
 
     b = ExpressPop();
     a = ExpressPop();
-    switch (oper)
-    {
+    switch (oper) {
        case NEG_TOKEN:
 	  break;
 
@@ -1596,8 +1547,7 @@ static inline unsigned long ProcessBoolean(unsigned long oper)
 
     b = ExpressPop();
     a = ExpressPop();
-    switch (oper)
-    {
+    switch (oper) {
        case NOT_TOKEN:
 	  ExpressPush(a == b); /* we pushed an imaginary zero on the stack */
 	  break;             /* this operation returns the boolean for (!x) */
@@ -1635,8 +1585,7 @@ static inline unsigned long ProcessLogical(unsigned long oper)
 
     b = ExpressPop();
     a = ExpressPop();
-    switch (oper)
-    {
+    switch (oper) {
        case LOGICAL_AND_TOKEN:
 	  ExpressPush(a && b);
 	  break;
@@ -1657,8 +1606,7 @@ static inline unsigned long ParseLogical(unsigned long logicalCount)
     for (i = 0; i < logicalCount; i++)
        ExpressPush(LogicalPop());
 
-    for (i = 0, r = 0; i < (logicalCount / 2); i++)
-    {
+    for (i = 0, r = 0; i < (logicalCount / 2); i++) {
        a = ExpressPop();
        TokenType[r] = NUMBER_TOKEN;
        TokenValue[r++] = a;
@@ -1672,26 +1620,22 @@ static inline unsigned long ParseLogical(unsigned long logicalCount)
 #if (DEBUG_LOGICAL)
      DBGPrint("\n");
 #endif
-    for (i = 0; i < logicalCount; i++)
-    {
+    for (i = 0; i < logicalCount; i++) {
 #if DEBUG_LOGICAL
        DBGPrint("token: %02X  value: %lX  type: %s\n", TokenType[i],
 		TokenValue[i], parserDescription[TokenType[i]]);
 #endif
-       switch (TokenType[i])
-       {
+       switch (TokenType[i]) {
 	  case LOGICAL_AND_TOKEN:
 	  case LOGICAL_OR_TOKEN:
-	     if (lastClass != CLASS_BOOLEAN)
-	     {
+	     if (lastClass != CLASS_BOOLEAN) {
 		lastClass = CLASS_BOOLEAN;
 		oper = TokenType[i];
 	     }
 	     continue;
 
 	  case NUMBER_TOKEN:
-	     if (lastClass == CLASS_DATA)
-	     {
+	     if (lastClass == CLASS_DATA) {
 		c = ExpressPop();
 		return c;
 	     }
@@ -1722,8 +1666,7 @@ static inline unsigned long ParseBoolean(unsigned long booleanCount)
     for (i = 0; i < booleanCount; i++)
        ExpressPush(BooleanPop());
 
-    for (i = 0, r = 0; i < (booleanCount / 2); i++)
-    {
+    for (i = 0, r = 0; i < (booleanCount / 2); i++) {
        a = ExpressPop();
        TokenType[r] = NUMBER_TOKEN;
        TokenValue[r++] = a;
@@ -1737,14 +1680,12 @@ static inline unsigned long ParseBoolean(unsigned long booleanCount)
 #if (DEBUG_BOOL)
      DBGPrint("\n");
 #endif
-    for (i = 0; i < booleanCount; i++)
-    {
+    for (i = 0; i < booleanCount; i++) {
 #if DEBUG_BOOL
        DBGPrint("token: %02X  value: %lX  type: %s\n", TokenType[i],
 		TokenValue[i], parserDescription[TokenType[i]]);
 #endif
-       switch (TokenType[i])
-       {
+       switch (TokenType[i]) {
 	  /* partition operators */
 	  case LOGICAL_AND_TOKEN:
 	  case LOGICAL_OR_TOKEN:
@@ -1760,8 +1701,7 @@ static inline unsigned long ParseBoolean(unsigned long booleanCount)
 
 	  /* boolean operators */
 	  case NOT_TOKEN:
-	     if (lastClass != CLASS_BOOLEAN)
-	     {
+	     if (lastClass != CLASS_BOOLEAN) {
 		ExpressPush(0);
 		lastClass = CLASS_BOOLEAN;
 		oper = TokenType[i];
@@ -1774,19 +1714,16 @@ static inline unsigned long ParseBoolean(unsigned long booleanCount)
 	  case LESS_EQUAL_TOKEN:
 	  case EQUAL_TOKEN:
 	  case NOT_EQUAL_TOKEN:
-	     if (lastClass != CLASS_BOOLEAN)
-	     {
+	     if (lastClass != CLASS_BOOLEAN) {
 		lastClass = CLASS_BOOLEAN;
 		oper = TokenType[i];
 	     }
 	     continue;
 
 	  case NUMBER_TOKEN:
-	     if (lastClass == CLASS_DATA)
-	     {
+	     if (lastClass == CLASS_DATA) {
 		c = ExpressPop();
-		if (logicalCount)
-		{
+		if (logicalCount) {
 		   LogicalPush(c);
 		   logicalCount++;
 		   LogicalPush(0); /* push null token */
@@ -1805,8 +1742,7 @@ static inline unsigned long ParseBoolean(unsigned long booleanCount)
 
 	  case NULL_TOKEN:
 	     c = ExpressPop();
-	     if (logicalCount)
-	     {
+	     if (logicalCount) {
 		LogicalPush(c);
 		logicalCount++;
 		LogicalPush(0); /* push null token */
@@ -1851,25 +1787,21 @@ uint64_t Evaluate(StackFrame *stackFrame,
      DBGPrint("\np: %lX  %s\n", *p, *p);
 #endif
      parseTokens(stackFrame, *p, mode);
-     if (TokenCount)
-     {
+     if (TokenCount) {
 	initNumericStacks();
-	for (i = 0; i < TokenCount; i++)
-	{
+	for (i = 0; i < TokenCount; i++) {
 #if (DEBUG_EXPRESS)
 	   DBGPrint("token: %s value %0lX lastClass: %d\n",
 		    parserDescription[TokenType[i]],
                     TokenValue[i],
                     lastClass);
 #endif
-	   switch (TokenType[i])
-	   {
+	   switch (TokenType[i]) {
 	      case INVALID_NUMBER_TOKEN:
                  goto evaluate_error_exit;
 
 	      case NOT_TOKEN:
-		 if (lastClass != CLASS_DATA)
-		 {
+		 if (lastClass != CLASS_DATA) {
 		    if (oper)
 		       oper = ProcessOperator(oper);
 		    c = ExpressPop();
@@ -1887,8 +1819,7 @@ uint64_t Evaluate(StackFrame *stackFrame,
 
 	      /* assignment operators */
 	      case ASSIGNMENT_TOKEN:
-		 if (lastClass == CLASS_DATA)
-                 {
+		 if (lastClass == CLASS_DATA) {
 		    ExpressPop();
 		    dref_type = ARCH_PTR;
 		    lastClass = 0;
@@ -1947,19 +1878,16 @@ uint64_t Evaluate(StackFrame *stackFrame,
 		 continue;
 
 	      case DREF_OPEN_TOKEN:   /* push state and nest for de-reference */
-		 if (lastClass == CLASS_DATA)
-		 {
+		 if (lastClass == CLASS_DATA) {
 		    *p = (unsigned char *)((unsigned long)*p + (unsigned long)TokenIndex[i]);
-		    if (type)
-		    {
+		    if (type) {
 		       if (booleanCount)
 			  *type = BOOLEAN_EXPRESSION;
 		       else
 			  *type = NUMERIC_EXPRESSION;
 		    }
 		    c = ExpressPop();
-		    if (booleanCount)
-		    {
+		    if (booleanCount) {
 		       BooleanPush(c);
 		       booleanCount++;
 		       BooleanPush(0); /* last operator is the null token */
@@ -2026,19 +1954,16 @@ uint64_t Evaluate(StackFrame *stackFrame,
 		 continue;
 
 	      case BB_TOKEN:
-		 if (lastClass == CLASS_DATA)
-		 {
+		 if (lastClass == CLASS_DATA) {
 		    *p = (unsigned char *)((unsigned long)*p + (unsigned long)TokenIndex[i]);
-		    if (type)
-		    {
+		    if (type) {
 		       if (booleanCount)
 			  *type = BOOLEAN_EXPRESSION;
 		       else
 			  *type = NUMERIC_EXPRESSION;
 		    }
 		    c = ExpressPop();
-		    if (booleanCount)
-		    {
+		    if (booleanCount) {
 		       BooleanPush(c);
 		       booleanCount++;
 		       BooleanPush(0); /* last operator is the null token */
@@ -2102,14 +2027,12 @@ uint64_t Evaluate(StackFrame *stackFrame,
 		 continue;
 
 	      case MINUS_TOKEN:
-		 if (lastClass == CLASS_ARITHMETIC)
-		 {
+		 if (lastClass == CLASS_ARITHMETIC) {
 		    lastToken = MINUS_TOKEN;
 		    negative_flag = 1;
 		    continue;
 		 }
-		 if (lastClass != CLASS_ARITHMETIC)
-		 {
+		 if (lastClass != CLASS_ARITHMETIC) {
 		    lastClass = CLASS_ARITHMETIC;
 		    oper = TokenType[i];
 		 }
@@ -2125,8 +2048,7 @@ uint64_t Evaluate(StackFrame *stackFrame,
 	      case OR_TOKEN:
 	      case MULTIPLY_TOKEN:
 	      case DIVIDE_TOKEN:
-		 if (lastClass != CLASS_ARITHMETIC)
-		 {
+		 if (lastClass != CLASS_ARITHMETIC) {
 		    lastClass = CLASS_ARITHMETIC;
 		    oper = TokenType[i];
 		 }
@@ -2184,26 +2106,22 @@ uint64_t Evaluate(StackFrame *stackFrame,
 	      case RBP_TOKEN:
 	      case RSP_TOKEN:
                  /* get the last segment associated with this data token */
-                 if (segmentCount)
-                 {
+                 if (segmentCount) {
                     segment = SegmentPop();
                     segment_value = SegmentPop();
                     segmentCount--;
                  }
 
-		 if (lastClass == CLASS_DATA)
-		 {
+		 if (lastClass == CLASS_DATA) {
 		    *p = (unsigned char *)((unsigned long)*p + (unsigned long)TokenIndex[i]);
-		    if (type)
-		    {
+		    if (type) {
 		       if (booleanCount)
 			  *type = BOOLEAN_EXPRESSION;
 		       else
 			  *type = NUMERIC_EXPRESSION;
 		    }
 		    c = ExpressPop();
-		    if (booleanCount)
-		    {
+		    if (booleanCount) {
 		       BooleanPush(c);
 		       booleanCount++;
 		       BooleanPush(0); /* last operator is the null token */
@@ -2258,19 +2176,16 @@ uint64_t Evaluate(StackFrame *stackFrame,
 	      case FS_TOKEN:
 	      case GS_TOKEN:
 	      case SS_TOKEN:
-		 if (lastClass == CLASS_DATA)
-		 {
+		 if (lastClass == CLASS_DATA) {
 		    *p = (unsigned char *)((unsigned long)*p + (unsigned long)TokenIndex[i]);
-		    if (type)
-		    {
+		    if (type) {
 		       if (booleanCount)
 			  *type = BOOLEAN_EXPRESSION;
 		       else
 			  *type = NUMERIC_EXPRESSION;
 		    }
 		    c = ExpressPop();
-		    if (booleanCount)
-		    {
+		    if (booleanCount) {
 		       BooleanPush(c);
 		       booleanCount++;
 		       BooleanPush(0); /* last operator is the null token */
@@ -2308,16 +2223,14 @@ uint64_t Evaluate(StackFrame *stackFrame,
 
 	      case NULL_TOKEN:
 		 *p = (unsigned char *)((unsigned long)*p + (unsigned long)TokenIndex[i]);
-		 if (TokenCount > 1 && type)
-		 {
+		 if (TokenCount > 1 && type) {
 		    if (booleanCount)
 		       *type = BOOLEAN_EXPRESSION;
 		    else
 		       *type = NUMERIC_EXPRESSION;
 		 }
 		 c = ExpressPop();
-		 if (booleanCount)
-		 {
+		 if (booleanCount) {
 		    BooleanPush(c);
 		    booleanCount++;
 		    BooleanPush(0); /* last operator is the null token */
@@ -2410,13 +2323,11 @@ void EvaluateCommandExpression(StackFrame *stackFrame, unsigned char *p)
 #endif
      expr = p;
      c = EvaluateExpression(stackFrame, &p, &type);
-     if (type)
-     {
+     if (type) {
 	DBGPrint("expr: %s = 0x%llX (%lld) (%s) bool(%i) = %s\n",
 		 expr, c, c, exprDescription[type & 3],
 		    (c) ? 1 : 0, (c) ? "TRUE" : "FALSE");
-     } else
-     {
+     } else {
         DBGPrint("expression parameters invalid\n");
 	DBGPrint("expr: %s = 0x%llX (%lld) (results invalid) (%s)"
                  " bool(%i) = %s\n",
