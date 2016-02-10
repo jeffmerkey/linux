@@ -19,20 +19,20 @@
 ***************************************************************************/
 
 /* Print i386 instructions for GDB, the GNU debugger.
-   Copyright 1988, 1989, 1991, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-   2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+	Copyright 1988, 1989, 1991, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+	2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
-   This file is part of GDB.
+	This file is part of GDB.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
-   GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
+	GNU General Public License for more details.
 
  * Extracted from binutils 2.16.91.0.2 (OpenSUSE 10.0) and modified for kdb use.
  * Run through col -b to remove trailing whitespace and various #ifdef/ifndef
@@ -41,21 +41,21 @@
  */
 
 /* 80386 instruction printer by Pace Willisson (pace@prep.ai.mit.edu)
-   July 1988
-    modified by John Hassey (hassey@dg-rtp.dg.com)
-    x86-64 support added by Jan Hubicka (jh@suse.cz)
-    VIA PadLock support by Michal Ludvig (mludvig@suse.cz).  */
+	July 1988
+	 modified by John Hassey (hassey@dg-rtp.dg.com)
+	 x86-64 support added by Jan Hubicka (jh@suse.cz)
+	 VIA PadLock support by Michal Ludvig (mludvig@suse.cz).  */
 
 /* The main tables describing the instructions is essentially a copy
-   of the "Opcode Map" chapter (Appendix A) of the Intel 80386
-   Programmers Manual.	Usually, there is a capital letter, followed
-   by a small letter.  The capital letter tell the addressing mode,
-   and the small letter tells about the operand size.  Refer to
-   the Intel manual for details.  */
+	of the "Opcode Map" chapter (Appendix A) of the Intel 80386
+	Programmers Manual.	Usually, there is a capital letter, followed
+	by a small letter.  The capital letter tell the addressing mode,
+	and the small letter tells about the operand size.  Refer to
+	the Intel manual for details.  */
 
 /* 06-26-2010 Jeff V. Merkey - port GDB debugger to MDB and add memory
-   dereferencing, jump labeling, and opcode output.  Convert MDB to
-   conform to Linux hex and decimal notation and display.  */
+	dereferencing, jump labeling, and opcode output.  Convert MDB to
+	conform to Linux hex and decimal notation and display.  */
 
 #ifndef DIS_ASM_H
 #define DIS_ASM_H
@@ -240,4 +240,3 @@ void init_disassemble_info (struct disassemble_info *info, void *stream,
 #endif
 
 #endif
-

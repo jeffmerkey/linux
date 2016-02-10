@@ -78,86 +78,86 @@ unsigned long toggle_user_break = 1;
 unsigned long enterKeyACC(unsigned long key, void *stackFrame,
 			  ACCELERATOR *accel)
 {
-    unsigned char *verbBuffer = &workbuf[0];
+	 unsigned char *verbBuffer = &workbuf[0];
 
-    register unsigned char *verb, *pp, *vp;
-    register unsigned long count;
+	 register unsigned char *verb, *pp, *vp;
+	 register unsigned long count;
 
-    if (!debugCommand[0]) {
-       count = 0;
-       pp = (unsigned char *)lastDebugCommand;
-       vp = verb = &verbBuffer[0];
-       while (*pp && *pp == ' ' && count++ < 80)
+	 if (!debugCommand[0]) {
+		 count = 0;
+		 pp = (unsigned char *)lastDebugCommand;
+		 vp = verb = &verbBuffer[0];
+		 while (*pp && *pp == ' ' && count++ < 80)
 	  pp++;
 
-       while (*pp && *pp != ' ' && count++ < 80)
+		 while (*pp && *pp != ' ' && count++ < 80)
 	  *vp++ = *pp++;
-       *vp = '\0';
+		 *vp = '\0';
 
-       while (*pp && *pp == ' ' && count++ < 80)
+		 while (*pp && *pp == ' ' && count++ < 80)
 	  pp++;
 
-       UpcaseString(verb);
-       if (!strcmp(verb, "P") || (lastCommand == K_F8))
+		 UpcaseString(verb);
+		 if (!strcmp(verb, "P") || (lastCommand == K_F8))
 	  strcpy((char *)debugCommand, "P");
-       else
-       if (!strcmp(verb, "T") || (lastCommand == K_F7))
+		 else
+		 if (!strcmp(verb, "T") || (lastCommand == K_F7))
 	  strcpy((char *)debugCommand, "T");
-       else
-       if (!strcmp(verb, "W")   || !strcmp(verb, "D")   ||
-	   !strcmp(verb, "DB")  || !strcmp(verb, "DW")  ||
-	   !strcmp(verb, "DD")  || !strcmp(verb, "DDS") ||
-	   !strcmp(verb, "DQ")  || !strcmp(verb, "DQS") ||
-	   !strcmp(verb, "DS")  || !strcmp(verb, "DL")  ||
-	   !strcmp(verb, "U")   || !strcmp(verb, "UU")  ||
-	   !strcmp(verb, "S")   || !strcmp(verb, "SS")  ||
-	   !strcmp(verb, "DP")  || !strcmp(verb, "DPW")  ||
-	   !strcmp(verb, "DPD") || !strcmp(verb, "DPQ")  ||
-	   !strcmp(verb, "DPB") || !strcmp(verb, "SSB") ||
-	   !strcmp(verb, "ID")  || !strcmp(verb, "UX")) {
+		 else
+		 if (!strcmp(verb, "W")   || !strcmp(verb, "D")   ||
+		     !strcmp(verb, "DB")  || !strcmp(verb, "DW")  ||
+		!strcmp(verb, "DD")  || !strcmp(verb, "DDS") ||
+		!strcmp(verb, "DQ")  || !strcmp(verb, "DQS") ||
+		!strcmp(verb, "DS")  || !strcmp(verb, "DL")  ||
+		!strcmp(verb, "U")   || !strcmp(verb, "UU")  ||
+		!strcmp(verb, "S")   || !strcmp(verb, "SS")  ||
+		!strcmp(verb, "DP")  || !strcmp(verb, "DPW")  ||
+		!strcmp(verb, "DPD") || !strcmp(verb, "DPQ")  ||
+		!strcmp(verb, "DPB") || !strcmp(verb, "SSB") ||
+		!strcmp(verb, "ID")  || !strcmp(verb, "UX")) {
 	  strcpy((char *)debugCommand, verb);
 	  repeatCommand = 1;
-       }
-    }
-    return 0;
+		 }
+	 }
+	 return 0;
 }
 
 unsigned long displayDebuggerHelpHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("displays general help for all commands, or help for a specific command\n");
-    DBGPrint("HELP         <enter>  - list all commands\n");
-    DBGPrint("HELP command <enter>  - help for a specific command\n");
+	 DBGPrint("displays general help for all commands, or help for a specific command\n");
+	 DBGPrint("HELP         <enter>  - list all commands\n");
+	 DBGPrint("HELP command <enter>  - help for a specific command\n");
 
-    return 1;
+	 return 1;
 }
 
 unsigned long displayDebuggerHelp(unsigned char *commandLine,
 				  StackFrame *stackFrame, unsigned long Exception,
 			 DEBUGGER_PARSER *parser)
 {
-    register unsigned long count;
-    unsigned char *verbBuffer = &workbuf[0];
-    register unsigned char *verb, *pp, *vp;
+	 register unsigned long count;
+	 unsigned char *verbBuffer = &workbuf[0];
+	 register unsigned char *verb, *pp, *vp;
 
-    commandLine = &commandLine[parser->debugCommandNameLength];
-    while (*commandLine && *commandLine == ' ')
-       commandLine++;
+	 commandLine = &commandLine[parser->debugCommandNameLength];
+	 while (*commandLine && *commandLine == ' ')
+		 commandLine++;
 
-    count = 0;
-    pp = commandLine;
-    vp = verb = &verbBuffer[0];
-    while (*pp && *pp == ' ' && count++ < 80)
-       pp++;
+	 count = 0;
+	 pp = commandLine;
+	 vp = verb = &verbBuffer[0];
+	 while (*pp && *pp == ' ' && count++ < 80)
+		 pp++;
 
-    while (*pp && *pp != ' ' && count++ < 80)
-       *vp++ = *pp++;
-    *vp = '\0';
+	 while (*pp && *pp != ' ' && count++ < 80)
+		 *vp++ = *pp++;
+	 *vp = '\0';
 
-    while (*pp && *pp == ' ' && count++ < 80)
-       pp++;
+	 while (*pp && *pp == ' ' && count++ < 80)
+		 pp++;
 
-    DebuggerParserHelpRoutine(verb, commandLine);
-    return 1;
+	 DebuggerParserHelpRoutine(verb, commandLine);
+	 return 1;
 }
 
 /* TIMER */
@@ -166,72 +166,72 @@ struct timer_list debug_timer;
 
 void debug_timer_callback(void)
 {
-    debug_timer.expires = jiffies + (HZ * debug_timer.data);
-    debug_timer.function = (void (*)(unsigned long))debug_timer_callback;
-    add_timer(&debug_timer);
-    mdb_breakpoint();
-    return;
+	 debug_timer.expires = jiffies + (HZ * debug_timer.data);
+	 debug_timer.function = (void (*)(unsigned long))debug_timer_callback;
+	 add_timer(&debug_timer);
+	 mdb_breakpoint();
+	 return;
 }
 
 unsigned long timedBreakpointHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("addtimer <seconds>      - add int3 timer (lockup detection)\n");
-    DBGPrint("deltimer                - del int3 timer\n");
-    return 1;
+	 DBGPrint("addtimer <seconds>      - add int3 timer (lockup detection)\n");
+	 DBGPrint("deltimer                - del int3 timer\n");
+	 return 1;
 }
 
 unsigned long timerBreakpoint(unsigned char *cmd, StackFrame *stackFrame,
 			      unsigned long Exception, DEBUGGER_PARSER *parser)
 {
-    register int seconds;
-    unsigned long valid = 0;
+	 register int seconds;
+	 unsigned long valid = 0;
 
-    cmd = &cmd[parser->debugCommandNameLength];
-    while (*cmd && *cmd == ' ')
-       cmd++;
+	 cmd = &cmd[parser->debugCommandNameLength];
+	 while (*cmd && *cmd == ' ')
+		 cmd++;
 
-    if (debug_timer.data) {
-       DBGPrint("debug timer is already active.  seconds = %i\n",
-                (int)debug_timer.data);
-       return 1;
-    }
+	 if (debug_timer.data) {
+		 DBGPrint("debug timer is already active.  seconds = %i\n",
+			  (int)debug_timer.data);
+		 return 1;
+	 }
 
-    seconds = EvaluateNumericExpression(stackFrame, &cmd, &valid);
-    if (valid) {
-       init_timer(&debug_timer);
-       debug_timer.data = seconds;
-       debug_timer.expires = jiffies + (HZ * seconds);
-       debug_timer.function = (void (*)(unsigned long))debug_timer_callback;
-       add_timer(&debug_timer);
+	 seconds = EvaluateNumericExpression(stackFrame, &cmd, &valid);
+	 if (valid) {
+		 init_timer(&debug_timer);
+		 debug_timer.data = seconds;
+		 debug_timer.expires = jiffies + (HZ * seconds);
+		 debug_timer.function = (void (*)(unsigned long))debug_timer_callback;
+		 add_timer(&debug_timer);
 
-       DBGPrint("debug timer created.  seconds = %i\n", seconds);
-    }
-    return 1;
+		 DBGPrint("debug timer created.  seconds = %i\n", seconds);
+	 }
+	 return 1;
 }
 
 unsigned long timerBreakpointClear(unsigned char *cmd, StackFrame *stackFrame,
-                                   unsigned long Exception,
-                                   DEBUGGER_PARSER *parser)
+				   unsigned long Exception,
+											  DEBUGGER_PARSER *parser)
 {
-    del_timer(&debug_timer);
-    debug_timer.data = 0;
-    DBGPrint("debug timer deleted\n");
-    return 1;
+	 del_timer(&debug_timer);
+	 debug_timer.data = 0;
+	 DBGPrint("debug timer deleted\n");
+	 return 1;
 }
 
 /* PERCPU */
 
 unsigned long percpuHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("percpu <symbol> <cpu> <len> - display percpu variable\n");
-    return 1;
+	 DBGPrint("percpu <symbol> <cpu> <len> - display percpu variable\n");
+	 return 1;
 }
 
 unsigned long perCpu(unsigned char *cmd, StackFrame *stackFrame, unsigned long Exception,
 		     DEBUGGER_PARSER *parser)
 {
-    unsigned long address, addr, err;
-    unsigned long cpu, val, valid, p, len = 0;
+	 unsigned long address, addr, err;
+	 unsigned long cpu, val, valid, p, len = 0;
 
 #ifdef	__per_cpu_offset
 #define MDB_PCU(cpu) __per_cpu_offset(cpu)
@@ -243,39 +243,39 @@ unsigned long perCpu(unsigned char *cmd, StackFrame *stackFrame, unsigned long E
 #endif
 #endif
 
-    cmd = &cmd[parser->debugCommandNameLength];
-    while (*cmd && *cmd == ' ')
-       cmd++;
+	 cmd = &cmd[parser->debugCommandNameLength];
+	 while (*cmd && *cmd == ' ')
+		 cmd++;
 
-    address = EvaluateExpression(stackFrame, &cmd, &valid);
-    if (!valid) {
-       DBGPrint("invalid percpu symbol or address\n");
-       return 1;
-    }
+	 address = EvaluateExpression(stackFrame, &cmd, &valid);
+	 if (!valid) {
+		 DBGPrint("invalid percpu symbol or address\n");
+		 return 1;
+	 }
 
-    cpu = EvaluateExpression(stackFrame, &cmd, &valid);
-    if (valid) {
-       if (!cpu_online(cpu)) {
+	 cpu = EvaluateExpression(stackFrame, &cmd, &valid);
+	 if (valid) {
+		 if (!cpu_online(cpu)) {
 	  DBGPrint("cpu %ld is not online\n", cpu);
 	  return 1;
-       }
+		 }
 
-        len = EvaluateExpression(stackFrame, &cmd, &valid);
-        switch (len) {
-           case 1:
-           case 2:
-           case 4:
-           case 8:
-              break;
+		  len = EvaluateExpression(stackFrame, &cmd, &valid);
+		  switch (len) {
+			  case 1:
+			  case 2:
+			  case 4:
+			  case 8:
+				  break;
 
-           default:
+			  default:
 #ifdef CONFIG_X86_64
-              len = 8;
+				  len = 8;
 #else
-              len = 4;
+				  len = 4;
 #endif
-              break;
-        }
+				  break;
+		  }
 
 	for_each_online_cpu(p) {
 		if (cpu != p)
@@ -284,14 +284,14 @@ unsigned long perCpu(unsigned char *cmd, StackFrame *stackFrame, unsigned long E
 		err = mdb_getlword((uint64_t *)&val, addr, len);
 		if (err)
 			continue;
-                if (DBGPrint("0x%p  cpu %d:  %0llX  (len %ld)\n", addr, p, val, len))
-                   return 1;
+					 if (DBGPrint("0x%p  cpu %d:  %0llX  (len %ld)\n", addr, p, val, len))
+						 return 1;
 	}
-     } else {
+	  } else {
 #ifdef CONFIG_X86_64
-        len = 8;
+		  len = 8;
 #else
-        len = 4;
+		  len = 4;
 #endif
 	for_each_online_cpu(p) {
 		addr = address + MDB_PCU(p);
@@ -299,12 +299,12 @@ unsigned long perCpu(unsigned char *cmd, StackFrame *stackFrame, unsigned long E
 		if (err)
 			continue;
 
-                if (DBGPrint("0x%p  cpu %d:  %0llX  (len %ld)\n", addr, p, val, len))
-                   return 1;
+					 if (DBGPrint("0x%p  cpu %d:  %0llX  (len %ld)\n", addr, p, val, len))
+						 return 1;
 	}
-     }
+	  }
 #undef MDB_PCU
-    return 1;
+	 return 1;
 }
 
 /* BT, BTA, BTP */
@@ -314,157 +314,155 @@ extern int bt_stack(struct task_struct *task, struct pt_regs *regs,
 
 unsigned long backTraceHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("bt <addr>                - display stack backtrace\n");
-    DBGPrint("bta                      - display stack backtrace all pids\n");
-    DBGPrint("btp <pid>                - display stack backtrace by pid\n");
-    return 1;
+	 DBGPrint("bt <addr>                - display stack backtrace\n");
+	 DBGPrint("bta                      - display stack backtrace all pids\n");
+	 DBGPrint("btp <pid>                - display stack backtrace by pid\n");
+	 return 1;
 }
 
 unsigned long backTraceAllPID(unsigned char *cmd, StackFrame *stackFrame, unsigned long Exception,
 			      DEBUGGER_PARSER *parser)
 {
-    struct task_struct *p, *g;
+	 struct task_struct *p, *g;
 
-    cmd = &cmd[parser->debugCommandNameLength];
-    while (*cmd && *cmd == ' ')
-       cmd++;
+	 cmd = &cmd[parser->debugCommandNameLength];
+	 while (*cmd && *cmd == ' ')
+		 cmd++;
 
-    do_each_thread(g, p)
-    {
-       if (p) {
-          if (DBGPrint("Stack backtrace for pid %d\n", p->pid))
-             return 1;
+	 do_each_thread(g, p) {
+		 if (p) {
+			 if (DBGPrint("Stack backtrace for pid %d\n", p->pid))
+				 return 1;
 
-          if (bt_stack(p, NULL, NULL))
-             return 1;
-       }
-    } while_each_thread(g, p);
-    return 1;
+			 if (bt_stack(p, NULL, NULL))
+				 return 1;
+		 }
+	 } while_each_thread(g, p);
+	 return 1;
 }
 
 unsigned long backTracePID(unsigned char *cmd, StackFrame *stackFrame, unsigned long Exception,
 			   DEBUGGER_PARSER *parser)
 {
-    int pid;
-    unsigned long valid = 0;
-    struct task_struct *p, *g;
+	 int pid;
+	 unsigned long valid = 0;
+	 struct task_struct *p, *g;
 
-    cmd = &cmd[parser->debugCommandNameLength];
-    while (*cmd && *cmd == ' ')
-       cmd++;
+	 cmd = &cmd[parser->debugCommandNameLength];
+	 while (*cmd && *cmd == ' ')
+		 cmd++;
 
-    pid = EvaluateNumericExpression(stackFrame, &cmd, &valid);
-    if (valid) {
-       do_each_thread(g, p)
-       {
-          if (p && (p->pid == pid)) {
-             DBGPrint("Stack backtrace for pid %d\n", p->pid);
-             bt_stack(p, NULL, NULL);
-             return 1;
-          }
-       } while_each_thread(g, p);
-       DBGPrint("No process with pid %d found\n", pid);
-    } else
-       DBGPrint("invalid pid entered for backtrace\n");
+	 pid = EvaluateNumericExpression(stackFrame, &cmd, &valid);
+	 if (valid) {
+		 do_each_thread(g, p) {
+			 if (p && (p->pid == pid)) {
+				 DBGPrint("Stack backtrace for pid %d\n", p->pid);
+				 bt_stack(p, NULL, NULL);
+				 return 1;
+			 }
+		 } while_each_thread(g, p);
+		 DBGPrint("No process with pid %d found\n", pid);
+	 } else
+		 DBGPrint("invalid pid entered for backtrace\n");
 
-    return 1;
+	 return 1;
 }
 
 unsigned long backTraceStack(unsigned char *cmd, StackFrame *stackFrame, unsigned long Exception,
 			     DEBUGGER_PARSER *parser)
 {
-    unsigned long valid = 0, address;
+	 unsigned long valid = 0, address;
 
-    cmd = &cmd[parser->debugCommandNameLength];
-    while (*cmd && *cmd == ' ')
-       cmd++;
+	 cmd = &cmd[parser->debugCommandNameLength];
+	 while (*cmd && *cmd == ' ')
+		 cmd++;
 
-    address = EvaluateExpression(stackFrame, &cmd, &valid);
-    if (valid) {
-       DBGPrint("Stack backtrace for address 0x%p\n", (unsigned *)address);
-       bt_stack(NULL, NULL, (unsigned long *)address);
-       return 1;
-    } else {
-       DBGPrint("Stack backtrace for address 0x%p\n",
-                (unsigned *)GetStackAddress(stackFrame));
-       bt_stack(NULL, NULL, (unsigned long *)GetStackAddress(stackFrame));
-       return 1;
-    }
-    return 1;
+	 address = EvaluateExpression(stackFrame, &cmd, &valid);
+	 if (valid) {
+		 DBGPrint("Stack backtrace for address 0x%p\n", (unsigned *)address);
+		 bt_stack(NULL, NULL, (unsigned long *)address);
+		 return 1;
+	 } else {
+		 DBGPrint("Stack backtrace for address 0x%p\n",
+			  (unsigned *)GetStackAddress(stackFrame));
+		 bt_stack(NULL, NULL, (unsigned long *)GetStackAddress(stackFrame));
+		 return 1;
+	 }
+	 return 1;
 }
 
 void DisplayASCIITable(void)
 {
-    register unsigned long i;
-    union bhex {
-       unsigned int i;
-       struct btemp {
-	     unsigned one : 1;
-	     unsigned two : 1;
-	     unsigned three : 1;
-	     unsigned four : 1;
-	     unsigned five : 1;
-	     unsigned six : 1;
-	     unsigned seven : 1;
-	     unsigned eight : 1;
-       } b;
-    } val;
+	 register unsigned long i;
+	 union bhex {
+		 unsigned int i;
+		 struct btemp {
+		  unsigned one : 1;
+		  unsigned two : 1;
+		  unsigned three : 1;
+		  unsigned four : 1;
+		  unsigned five : 1;
+		  unsigned six : 1;
+		  unsigned seven : 1;
+		  unsigned eight : 1;
+		 } b;
+	 } val;
 
-    DBGPrint("ASCII Table\n");
-    for (i = 0; i < 256; i++) {
-       val.i = i;
-       switch (i) {
+	 DBGPrint("ASCII Table\n");
+	 for (i = 0; i < 256; i++) {
+		 val.i = i;
+		 switch (i) {
 	  case 0:
-	     if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | NULL  |", (int)i, (unsigned)i,
-			  (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
-                (int)val.b.five,  (int)val.b.four, (int)val.b.three,
-                (int)val.b.two, (int)val.b.one)) return;
-	     break;
+		  if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | NULL  |", (int)i, (unsigned)i,
+			       (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
+					 (int)val.b.five,  (int)val.b.four, (int)val.b.three,
+					 (int)val.b.two, (int)val.b.one)) return;
+		  break;
 
 	  case 8:
-	     if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | BKSP  |", (int)i, (unsigned)i,
-			  (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
-                (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
-                (int)val.b.two, (int)val.b.one)) return;
-	     break;
+		  if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | BKSP  |", (int)i, (unsigned)i,
+			       (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
+					 (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
+					 (int)val.b.two, (int)val.b.one)) return;
+		  break;
 
 	  case 9:
-	     if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | TAB   |", (int)i, (unsigned)i,
-			  (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
-                (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
-                (int)val.b.two, (int)val.b.one)) return;
-	     break;
+		  if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | TAB   |", (int)i, (unsigned)i,
+			       (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
+					 (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
+					 (int)val.b.two, (int)val.b.one)) return;
+		  break;
 
 	  case 10:
-	     if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | <CR>  |", (int)i, (unsigned)i,
-			  (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
-                (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
-                (int)val.b.two, (int)val.b.one)) return;
-	     break;
+		  if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | <CR>  |", (int)i, (unsigned)i,
+			       (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
+					 (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
+					 (int)val.b.two, (int)val.b.one)) return;
+		  break;
 
 	  case 13:
-	     if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | <LF>  |", (int)i, (unsigned)i,
-			  (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
-                (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
-                (int)val.b.two, (int)val.b.one)) return;
-	     break;
+		  if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | <LF>  |", (int)i, (unsigned)i,
+			       (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
+					 (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
+					 (int)val.b.two, (int)val.b.one)) return;
+		  break;
 
 	  case 32:
-	     if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | SPACE |", (int)i, (unsigned)i,
-			  (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
-                (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
-                (int)val.b.two, (int)val.b.one)) return;
-	     break;
+		  if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  | SPACE |", (int)i, (unsigned)i,
+			       (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
+					 (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
+					 (int)val.b.two, (int)val.b.one)) return;
+		  break;
 
 	  default:
-	     if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  |  %c    |", (int)i, (unsigned)i,
-			  (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
-                (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
-                (int)val.b.two, (int)val.b.one, (unsigned char)i)) return;
-	     break;
-       }
-       if (DBGPrint("\n")) return;
-    }
+		  if (DBGPrint("|  %3i  |  (0x%02X)  |  (%1i%1i%1i%1i%1i%1i%1i%1ib)  |  %c    |", (int)i, (unsigned)i,
+			       (int)val.b.eight, (int)val.b.seven, (int)val.b.six,
+					 (int)val.b.five,  (int)val.b.four,  (int)val.b.three,
+					 (int)val.b.two, (int)val.b.one, (unsigned char)i)) return;
+		  break;
+		 }
+		 if (DBGPrint("\n")) return;
+	 }
 }
 
 #if defined(CONFIG_MODULES)
@@ -473,35 +471,35 @@ void DisplayASCIITable(void)
 
 unsigned long listModulesHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint(".M                       - list loaded modules\n");
-    DBGPrint("lsmod                    - list loaded modules\n");
-    DBGPrint("rmmod <name>             - unload module\n");
-    return 1;
+	 DBGPrint(".M                       - list loaded modules\n");
+	 DBGPrint("lsmod                    - list loaded modules\n");
+	 DBGPrint("rmmod <name>             - unload module\n");
+	 return 1;
 }
 
 unsigned long listModules(unsigned char *cmd, StackFrame *stackFrame, unsigned long Exception,
 			  DEBUGGER_PARSER *parser)
 {
-    cmd = &cmd[parser->debugCommandNameLength];
-    while (*cmd && *cmd == ' ')
-       cmd++;
+	 cmd = &cmd[parser->debugCommandNameLength];
+	 while (*cmd && *cmd == ' ')
+		 cmd++;
 
-    if (*cmd)
-       mdb_modules(cmd, DBGPrint);
-    else
-       mdb_modules(NULL, DBGPrint);
-    return 1;
+	 if (*cmd)
+		 mdb_modules(cmd, DBGPrint);
+	 else
+		 mdb_modules(NULL, DBGPrint);
+	 return 1;
 }
 
 unsigned long unloadModule(unsigned char *cmd, StackFrame *stackFrame, unsigned long Exception,
 			   DEBUGGER_PARSER *parser)
 {
-    cmd = &cmd[parser->debugCommandNameLength];
-    while (*cmd && *cmd == ' ')
-       cmd++;
+	 cmd = &cmd[parser->debugCommandNameLength];
+	 while (*cmd && *cmd == ' ')
+		 cmd++;
 
-    DBGPrint("Module unload unsupported in this version\n");
-    return 0;
+	 DBGPrint("Module unload unsupported in this version\n");
+	 return 0;
 }
 
 #endif
@@ -510,16 +508,16 @@ unsigned long unloadModule(unsigned char *cmd, StackFrame *stackFrame, unsigned 
 
 unsigned long rebootSystemHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("reboot                   - reboot host system\n");
-    DBGPrint("reboot force             - reboot from current processor\n");
-    return 1;
+	 DBGPrint("reboot                   - reboot host system\n");
+	 DBGPrint("reboot force             - reboot from current processor\n");
+	 return 1;
 }
 
 static inline int mdb_strnicmp(const unsigned char *s1, const unsigned char *s2, int len)
 {
 	while (len--) {
-	   if (tolower(*s1++) != tolower(*s2++))
-	      return 1;
+		if (tolower(*s1++) != tolower(*s2++))
+			return 1;
 	}
 	return 0;
 }
@@ -527,1060 +525,1047 @@ static inline int mdb_strnicmp(const unsigned char *s1, const unsigned char *s2,
 unsigned long rebootSystem(unsigned char *cmd, StackFrame *stackFrame, unsigned long Exception,
 			   DEBUGGER_PARSER *parser)
 {
-    extern void machine_emergency_restart(void);
+	 extern void machine_emergency_restart(void);
 
-    cmd = &cmd[parser->debugCommandNameLength];
-    while (*cmd && *cmd == ' ')
-       cmd++;
+	 cmd = &cmd[parser->debugCommandNameLength];
+	 while (*cmd && *cmd == ' ')
+		 cmd++;
 
-    if (!mdb_strnicmp(cmd, "force", 5)) {
-       machine_emergency_restart();
-       return 1;
-    }
+	 if (!mdb_strnicmp(cmd, "force", 5)) {
+		 machine_emergency_restart();
+		 return 1;
+	 }
 
-    if (!get_processor_id())
-       machine_emergency_restart();
-    else
-       DBGPrint("not on processor 0.  try 'reboot force' or switch to \n"
-                "processor 0 with 'cpu 0' or 'nmi 0' commands and issue\n"
-                "the reboot command again\n");
-    return 1;
+	 if (!get_processor_id())
+		 machine_emergency_restart();
+	 else
+		 DBGPrint("not on processor 0.  try 'reboot force' or switch to\n"
+					 "processor 0 with 'cpu 0' or 'nmi 0' commands and issue\n"
+					 "the reboot command again\n");
+	 return 1;
 }
 
 /* SECTIONS, .S */
 
 unsigned long displaySectionsHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("sections                 - display kernel/module sections\n");
-    DBGPrint(".s                       - display kernel/module sections\n");
-    return 1;
+	 DBGPrint("sections                 - display kernel/module sections\n");
+	 DBGPrint(".s                       - display kernel/module sections\n");
+	 return 1;
 }
 
 unsigned long displaySections(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		      DEBUGGER_PARSER *parser)
+				DEBUGGER_PARSER *parser)
 {
-     DBGPrint("\n");
-     return 1;
+	  DBGPrint("\n");
+	  return 1;
 }
 
 /* PSW */
 
 static inline int mdb_process_cpu(const struct task_struct *p)
 {
-        unsigned int cpu = task_thread_info(p)->cpu;
+		  unsigned int cpu = task_thread_info(p)->cpu;
 
-        if (cpu > NR_CPUS)
-                cpu = 0;
-        return cpu;
+		  if (cpu > NR_CPUS)
+					 cpu = 0;
+		  return cpu;
 }
 
 unsigned long displayProcessSwitchHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    if (commandLine) {}
-    if (parser) {}
+	 if (commandLine) {}
+	 if (parser) {}
 
-    DBGPrint("pid <pid>                - switch to another process\n");
-    return 1;
+	 DBGPrint("pid <pid>                - switch to another process\n");
+	 return 1;
 }
 
 unsigned long switchKernelProcess(unsigned char *cmd,
 				  StackFrame *stackFrame, unsigned long Exception,
-		           DEBUGGER_PARSER *parser)
+					  DEBUGGER_PARSER *parser)
 {
-     int pid;
-     struct task_struct *p, *g;
-     unsigned long valid = 0;
+	  int pid;
+	  struct task_struct *p, *g;
+	  unsigned long valid = 0;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     pid = EvaluateNumericExpression(stackFrame, &cmd, &valid);
-     if (valid) {
-        do_each_thread(g, p)
-        {
-           if (p && (p->pid == pid)) {
-              DBGPrint("switching to pid %d\n", p->pid);
+	  pid = EvaluateNumericExpression(stackFrame, &cmd, &valid);
+	  if (valid) {
+		  do_each_thread(g, p) {
+			  if (p && (p->pid == pid)) {
+				  DBGPrint("switching to pid %d\n", p->pid);
 
-	      DBGPrint("%-*s      Pid   Parent [*] State %-*s CPU Command\n",
-		       (int)(2 * sizeof(void *)) + 2, "Task Addr",
-		       (int)(2 * sizeof(void *)) + 2, "Thread");
+			DBGPrint("%-*s      Pid   Parent[*] State %-*s CPU Command\n",
+				 (int)(2 * sizeof(void *)) + 2, "Task Addr",
+				 (int)(2 * sizeof(void *)) + 2, "Thread");
 
-	      if (DBGPrint("0x%p %8d %8d  %d    %c  0x%p %02u %c%s\n",
-			   (void *)p,
-                       p->pid,
-                       (mdb_verify_rw(p->real_parent, 4)
-                       ? 0 : p->real_parent->pid),
-                       task_curr(p),
-                       (p->state == 0) ? 'R' :
-	               (p->state < 0) ? 'U' :
-	               (p->state & TASK_UNINTERRUPTIBLE) ? 'D' :
-	               (p->state & TASK_STOPPED) ? 'T' :
-	               (p->state & TASK_TRACED) ? 'C' :
-	               (p->exit_state & EXIT_ZOMBIE) ? 'Z' :
-	               (p->exit_state & EXIT_DEAD) ? 'E' :
-	               (p->state & TASK_INTERRUPTIBLE) ? 'S' :
-                       (!p->mm && (p->state & TASK_INTERRUPTIBLE))
-                        ? 'M' : '?',
-	               (void *)(&p->thread),
-                       mdb_process_cpu(p),
-                       (p == curr_task(get_processor_id())) ? '*' : ' ',
-	                p->comm))
-                  return 1;
-              return 1;
-           }
-        } while_each_thread(g, p);
-        DBGPrint("No process with pid %d found\n", pid);
-     } else
-        DBGPrint("invalid pid entered\n");
+			if (DBGPrint("0x%p %8d %8d  %d    %c  0x%p %02u %c%s\n",
+				     (void *)p,
+							  p->pid,
+							  (mdb_verify_rw(p->real_parent, 4)
+							  ? 0 : p->real_parent->pid),
+							  task_curr(p),
+							  (p->state == 0) ? 'R' :
+						(p->state < 0) ? 'U' :
+						(p->state & TASK_UNINTERRUPTIBLE) ? 'D' :
+						(p->state & TASK_STOPPED) ? 'T' :
+						(p->state & TASK_TRACED) ? 'C' :
+						(p->exit_state & EXIT_ZOMBIE) ? 'Z' :
+						(p->exit_state & EXIT_DEAD) ? 'E' :
+						(p->state & TASK_INTERRUPTIBLE) ? 'S' :
+							  (!p->mm && (p->state & TASK_INTERRUPTIBLE))
+								? 'M' : '?',
+						(void *)(&p->thread),
+							  mdb_process_cpu(p),
+							  (p == curr_task(get_processor_id())) ? '*' : ' ',
+						 p->comm))
+						return 1;
+				  return 1;
+			  }
+		  } while_each_thread(g, p);
+		  DBGPrint("No process with pid %d found\n", pid);
+	  } else
+		  DBGPrint("invalid pid entered\n");
 
-     return 1;
+	  return 1;
 }
 
 /* PS, .P */
 
 unsigned long displayKernelProcessHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    if (commandLine) {}
-    if (parser) {}
+	 if (commandLine) {}
+	 if (parser) {}
 
-    DBGPrint("ps <pid>                 - display kernel processes\n");
-    DBGPrint(".p <pid>                 - display kernel processes\n");
-    return 1;
+	 DBGPrint("ps <pid>                 - display kernel processes\n");
+	 DBGPrint(".p <pid>                 - display kernel processes\n");
+	 return 1;
 }
 
 unsigned long displayKernelProcess(unsigned char *cmd,
 				   StackFrame *stackFrame, unsigned long Exception,
-		           DEBUGGER_PARSER *parser)
+					  DEBUGGER_PARSER *parser)
 {
-     int pid;
-     struct task_struct *p, *g;
-     unsigned long valid = 0;
-     StackFrame *searchFrame, taskFrame;
+	  int pid;
+	  struct task_struct *p, *g;
+	  unsigned long valid = 0;
+	  StackFrame *searchFrame, taskFrame;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     pid = EvaluateNumericExpression(stackFrame, &cmd, &valid);
-     if (valid) {
-        do_each_thread(g, p)
-        {
-           if (p && (p->pid == pid)) {
-	      DBGPrint("%-*s      Pid   Parent [*] State %-*sCPU Command\n",
-		       (int)(2 * sizeof(void *)) + 2, "Task Addr",
-		     (int)(2 * sizeof(void *)) + 2, "Thread");
+	  pid = EvaluateNumericExpression(stackFrame, &cmd, &valid);
+	  if (valid) {
+		  do_each_thread(g, p) {
+			  if (p && (p->pid == pid)) {
+			DBGPrint("%-*s      Pid   Parent[*] State %-*sCPU Command\n",
+				 (int)(2 * sizeof(void *)) + 2, "Task Addr",
+			  (int)(2 * sizeof(void *)) + 2, "Thread");
 
-	      if (DBGPrint("0x%p %8d %8d  %d    %c  0x%p %02u %c%s\n",
-			   (void *)p,
-               p->pid,
-               (mdb_verify_rw(p->real_parent, 4) ? 0 : p->real_parent->pid),
-               task_curr(p),
-               (p->state == 0) ? 'R' :
-	       (p->state < 0) ? 'U' :
-	       (p->state & TASK_UNINTERRUPTIBLE) ? 'D' :
-	       (p->state & TASK_STOPPED) ? 'T' :
-	       (p->state & TASK_TRACED) ? 'C' :
-	       (p->exit_state & EXIT_ZOMBIE) ? 'Z' :
-	       (p->exit_state & EXIT_DEAD) ? 'E' :
-	       (p->state & TASK_INTERRUPTIBLE) ? 'S' :
-               (!p->mm && (p->state & TASK_INTERRUPTIBLE)) ? 'M' : '?',
-	       (void *)(&p->thread),
-                mdb_process_cpu(p),
-                (p == curr_task(get_processor_id())) ? '*' : ' ',
-	        p->comm))
-                  return 1;
+			if (DBGPrint("0x%p %8d %8d  %d    %c  0x%p %02u %c%s\n",
+				     (void *)p,
+					p->pid,
+					(mdb_verify_rw(p->real_parent, 4) ? 0 : p->real_parent->pid),
+					task_curr(p),
+					(p->state == 0) ? 'R' :
+			 (p->state < 0) ? 'U' :
+			 (p->state & TASK_UNINTERRUPTIBLE) ? 'D' :
+			 (p->state & TASK_STOPPED) ? 'T' :
+			 (p->state & TASK_TRACED) ? 'C' :
+			 (p->exit_state & EXIT_ZOMBIE) ? 'Z' :
+			 (p->exit_state & EXIT_DEAD) ? 'E' :
+			 (p->state & TASK_INTERRUPTIBLE) ? 'S' :
+					(!p->mm && (p->state & TASK_INTERRUPTIBLE)) ? 'M' : '?',
+			 (void *)(&p->thread),
+					 mdb_process_cpu(p),
+					 (p == curr_task(get_processor_id())) ? '*' : ' ',
+			  p->comm))
+						return 1;
 
-               searchFrame = &taskFrame;
-               ReadTaskFrame(searchFrame, p);
-               DisplayTSS(searchFrame);
+					searchFrame = &taskFrame;
+					ReadTaskFrame(searchFrame, p);
+					DisplayTSS(searchFrame);
 #ifdef CONFIG_X86_32
-               disassemble(searchFrame, searchFrame->tIP, 1, -1, 0);
+					disassemble(searchFrame, searchFrame->tIP, 1, -1, 0);
 #endif
-               return 1;
-            }
-        } while_each_thread(g, p);
-        DBGPrint("invalid task pid\n");
-        return 1;
-     } else {
-	DBGPrint("%-*s      Pid   Parent [*] State %-*sCPU Command\n",
+					return 1;
+				}
+		  } while_each_thread(g, p);
+		  DBGPrint("invalid task pid\n");
+		  return 1;
+	  } else {
+	DBGPrint("%-*s      Pid   Parent[*] State %-*sCPU Command\n",
 		 (int)(2 * sizeof(void *)) + 2, "Task Addr",
 		(int)(2 * sizeof(void *)) + 2, "Thread");
 
-        do_each_thread(g, p)
-        {
-           if (p) {
-	      if (DBGPrint("0x%p %8d %8d  %d    %c  0x%p %02u %c%s\n",
-			   (void *)p,
-                  p->pid,
-                  (mdb_verify_rw(p->real_parent, 4) ? 0 : p->real_parent->pid),
-                  task_curr(p),
-                  (p->state == 0) ? 'R' :
-	          (p->state < 0) ? 'U' :
-	          (p->state & TASK_UNINTERRUPTIBLE) ? 'D' :
-	          (p->state & TASK_STOPPED) ? 'T' :
-	          (p->state & TASK_TRACED) ? 'C' :
-	          (p->exit_state & EXIT_ZOMBIE) ? 'Z' :
-	          (p->exit_state & EXIT_DEAD) ? 'E' :
-	          (p->state & TASK_INTERRUPTIBLE) ? 'S' :
-                  (!p->mm && (p->state & TASK_INTERRUPTIBLE)) ? 'M' : '?',
-	          (void *)(&p->thread),
-                   mdb_process_cpu(p),
-                  (p == curr_task(get_processor_id())) ? '*' : ' ',
-	           p->comm))
-                 return 1;
-           }
-        } while_each_thread(g, p);
-     }
-     return 1;
+		  do_each_thread(g, p) {
+			  if (p) {
+			if (DBGPrint("0x%p %8d %8d  %d    %c  0x%p %02u %c%s\n",
+				     (void *)p,
+						p->pid,
+						(mdb_verify_rw(p->real_parent, 4) ? 0 : p->real_parent->pid),
+						task_curr(p),
+						(p->state == 0) ? 'R' :
+				 (p->state < 0) ? 'U' :
+				 (p->state & TASK_UNINTERRUPTIBLE) ? 'D' :
+				 (p->state & TASK_STOPPED) ? 'T' :
+				 (p->state & TASK_TRACED) ? 'C' :
+				 (p->exit_state & EXIT_ZOMBIE) ? 'Z' :
+				 (p->exit_state & EXIT_DEAD) ? 'E' :
+				 (p->state & TASK_INTERRUPTIBLE) ? 'S' :
+						(!p->mm && (p->state & TASK_INTERRUPTIBLE)) ? 'M' : '?',
+				 (void *)(&p->thread),
+						 mdb_process_cpu(p),
+						(p == curr_task(get_processor_id())) ? '*' : ' ',
+				  p->comm))
+					  return 1;
+			  }
+		  } while_each_thread(g, p);
+	  }
+	  return 1;
 }
 
 /* A */
 
 unsigned long ascTableHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("a                        - display ASCII Table\n");
-    return 1;
+	 DBGPrint("a                        - display ASCII Table\n");
+	 return 1;
 }
 
 unsigned long displayASCTable(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		     DEBUGGER_PARSER *parser)
+			  DEBUGGER_PARSER *parser)
 {
-     DisplayASCIITable();
-     return 1;
+	  DisplayASCIITable();
+	  return 1;
 }
 
 typedef struct _LINE_INFO {
-   unsigned long SourcePresent;
-   unsigned char *SourceLine;
-   unsigned char *ModuleName;
-   unsigned long LineNumber;
+	unsigned long SourcePresent;
+	unsigned char *SourceLine;
+	unsigned char *ModuleName;
+	unsigned long LineNumber;
 } LINE_INFO;
 
 void GetLineInfoFromValue(unsigned long value, LINE_INFO *lineInfo, unsigned long *exact)
 {
-    if (exact)
-       *exact = 0;
+	 if (exact)
+		 *exact = 0;
 
-    if (lineInfo) {
-        lineInfo->SourcePresent = 0;
-        lineInfo->SourceLine = "";
-        lineInfo->ModuleName = "";
-        lineInfo->LineNumber = 0;
-    }
-    return;
+	 if (lineInfo) {
+		  lineInfo->SourcePresent = 0;
+		  lineInfo->SourceLine = "";
+		  lineInfo->ModuleName = "";
+		  lineInfo->LineNumber = 0;
+	 }
+	 return;
 }
 
 unsigned long disassemble(StackFrame *stackFrame, unsigned long p,
-                          unsigned long count, unsigned long use,
-                          unsigned long type)
+			  unsigned long count, unsigned long use,
+								  unsigned long type)
 {
-    register unsigned long i;
-    unsigned char *symbolName;
-    unsigned char *moduleName;
-    unsigned long exact = 0;
-    extern unsigned long line_info_toggle;
-    LINE_INFO lineInfo;
+	 register unsigned long i;
+	 unsigned char *symbolName;
+	 unsigned char *moduleName;
+	 unsigned long exact = 0;
+	 extern unsigned long line_info_toggle;
+	 LINE_INFO lineInfo;
 
-    for (i = 0; i < count; i++) {
-       GetLineInfoFromValue(p, &lineInfo, &exact);
+	 for (i = 0; i < count; i++) {
+		 GetLineInfoFromValue(p, &lineInfo, &exact);
 
-       if (line_info_toggle && exact) {
+		 if (line_info_toggle && exact) {
 	  if (lineInfo.SourcePresent && lineInfo.SourceLine) {
-	     register unsigned long length = strlen(lineInfo.SourceLine);
+		  register unsigned long length = strlen(lineInfo.SourceLine);
 
-	     i = length > 80
-             ? i + 1 + (length / 80)
-             : i + 1;
+		  i = length > 80
+				 ? i + 1 + (length / 80)
+				 : i + 1;
 
-	     DBGPrint("%s (%s : line %d)\n",
-		      lineInfo.SourceLine, lineInfo.ModuleName,
+		  DBGPrint("%s (%s : line %d)\n",
+			   lineInfo.SourceLine, lineInfo.ModuleName,
 				 lineInfo.LineNumber);
 	  } else if (line_info_toggle && lineInfo.LineNumber) {
-	     i++;
-	     DBGPrint("file %s  line %d\n",
-		      lineInfo.ModuleName, lineInfo.LineNumber);
+		  i++;
+		  DBGPrint("file %s  line %d\n",
+			   lineInfo.ModuleName, lineInfo.LineNumber);
 	  }
-       }
+		 }
 
-       if (i >= count && count != 1)
+		 if (i >= count && count != 1)
 	  break;
 
-       symbolName = GetSymbolFromValue(p, &symbuf[0], MAX_SYMBOL_LEN);
-       if (symbolName) {
+		 symbolName = GetSymbolFromValue(p, &symbuf[0], MAX_SYMBOL_LEN);
+		 if (symbolName) {
 	  i++;
-          moduleName = GetModuleInfoFromSymbolValue(p, &modbuf[0],
-                                                    MAX_SYMBOL_LEN);
-          if (moduleName) {
-	     if (DBGPrint("%s|%s:\n", moduleName, symbolName)) return p;
-          } else {
-	     if (DBGPrint("%s:\n", symbolName)) return p;
-          }
-       }
-       if (i >= count && count != 1)
+			 moduleName = GetModuleInfoFromSymbolValue(p, &modbuf[0],
+								   MAX_SYMBOL_LEN);
+			 if (moduleName) {
+		  if (DBGPrint("%s|%s:\n", moduleName, symbolName)) return p;
+			 } else
+		  if (DBGPrint("%s:\n", symbolName)) return p;
+		 }
+		 if (i >= count && count != 1)
 	  break;
 
-       if (unassemble(stackFrame, p, use, &p, type)) return p;
-    }
+		 if (unassemble(stackFrame, p, use, &p, type)) return p;
+	 }
 
-    return p;
+	 return p;
 }
 
 unsigned long dumpSearchResults(unsigned char *p, unsigned long count)
 {
-   unsigned char *symbolName;
-   unsigned char *moduleName;
-   register unsigned long i, r, total;
-   unsigned char ch;
+	unsigned char *symbolName;
+	unsigned char *moduleName;
+	register unsigned long i, r, total;
+	unsigned char ch;
 
-   for (r = 0; r < count; r++) {
-      symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
-      if (symbolName) {
-         moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
-                                                   MAX_SYMBOL_LEN);
-         if (moduleName) {
-	    if (DBGPrint("%s|%s:\n", moduleName, symbolName)) return 1;
-         } else {
-	    if (DBGPrint("%s:\n", symbolName)) return 1;
-         }
+	for (r = 0; r < count; r++) {
+		symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
+		if (symbolName) {
+			moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
+								  MAX_SYMBOL_LEN);
+			if (moduleName) {
+		 if (DBGPrint("%s|%s:\n", moduleName, symbolName)) return 1;
+			} else
+		 if (DBGPrint("%s:\n", symbolName)) return 1;
 	 if (r++ >= count && count != 1)
-	    break;
-      }
-      DBGPrint("%p ", p);
-      for (total = 0, i = 0; i < 16; i++, total++) {
+		 break;
+		}
+		DBGPrint("%p ", p);
+		for (total = 0, i = 0; i < 16; i++, total++)
 	 DBGPrint("%02X", (unsigned)mdb_getword((unsigned long)&p[i], 1));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < total; i++) {
-         ch = mdb_getword((unsigned long)&p[i], 1);
+		DBGPrint("  ");
+		for (i = 0; i < total; i++) {
+			ch = mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      if (DBGPrint("\n")) return 1;
+		}
+		if (DBGPrint("\n")) return 1;
 
-      p = (void *)((unsigned long)p + (unsigned long)total);
-   }
-   return 0;
+		p = (void *)((unsigned long)p + (unsigned long)total);
+	}
+	return 0;
 }
 
 unsigned char *dump(unsigned char *p, unsigned long count, unsigned long physical)
 {
-   unsigned char *symbolName;
-   unsigned char *moduleName;
-   register unsigned long i, r, total;
-   unsigned char ch;
+	unsigned char *symbolName;
+	unsigned char *moduleName;
+	register unsigned long i, r, total;
+	unsigned char ch;
 
-   for (r = 0; r < count; r++) {
-      symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
-      if (symbolName) {
-         moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
-                                                   MAX_SYMBOL_LEN);
-         if (moduleName)
-	    DBGPrint("%s|%s:\n", moduleName, symbolName);
-         else
-	    DBGPrint("%s:\n", symbolName);
+	for (r = 0; r < count; r++) {
+		symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
+		if (symbolName) {
+			moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
+								  MAX_SYMBOL_LEN);
+			if (moduleName)
+		 DBGPrint("%s|%s:\n", moduleName, symbolName);
+			else
+		 DBGPrint("%s:\n", symbolName);
 	 if (r++ >= count && count != 1)
-	    break;
-      }
+		 break;
+		}
 
-      DBGPrint("%p ", p);
-      for (total = 0, i = 0; i < 16; i++, total++) {
+		DBGPrint("%p ", p);
+		for (total = 0, i = 0; i < 16; i++, total++) {
 	 DBGPrint("%02X ", physical
 		? (unsigned)mdb_phys_getword((unsigned long)&p[i], 1)
 		: (unsigned)mdb_getword((unsigned long)&p[i], 1));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < total; i++) {
-         ch = physical
+		}
+		DBGPrint("  ");
+		for (i = 0; i < total; i++) {
+			ch = physical
 		? mdb_phys_getword((unsigned long)&p[i], 1)
 		: mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      DBGPrint("\n");
+		}
+		DBGPrint("\n");
 
-      p = (void *)((unsigned long)p + (unsigned long)total);
-   }
+		p = (void *)((unsigned long)p + (unsigned long)total);
+	}
 
-   return p;
+	return p;
 }
 
 unsigned long dumpWordSearchResults(unsigned char *p, unsigned long count)
 {
-   register int i, r;
-   unsigned short *wp;
-   unsigned char *symbolName;
-   unsigned char *moduleName;
-   unsigned char ch;
+	register int i, r;
+	unsigned short *wp;
+	unsigned char *symbolName;
+	unsigned char *moduleName;
+	unsigned char ch;
 
-   wp = (unsigned short *)p;
-   for (r = 0; r < count; r++) {
-      symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
-      if (symbolName) {
-         moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
-                                                   MAX_SYMBOL_LEN);
-         if (moduleName) {
-	    if (DBGPrint("%s|%s:\n", moduleName, symbolName)) return 1;
-         } else {
-	    if (DBGPrint("%s:\n", symbolName)) return 1;
-         }
+	wp = (unsigned short *)p;
+	for (r = 0; r < count; r++) {
+		symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
+		if (symbolName) {
+			moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
+								  MAX_SYMBOL_LEN);
+			if (moduleName) {
+		 if (DBGPrint("%s|%s:\n", moduleName, symbolName)) return 1;
+			} else
+		 if (DBGPrint("%s:\n", symbolName)) return 1;
 	 if (r++ >= count && count != 1)
-	    break;
-      }
-      DBGPrint("%p ", p);
-      for (i = 0; i < (16 / 2); i++) {
+		 break;
+		}
+		DBGPrint("%p ", p);
+		for (i = 0; i < (16 / 2); i++)
 	 DBGPrint(" %04X", (unsigned)mdb_getword((unsigned long)&wp[i], 2));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < 16; i++) {
-         ch = mdb_getword((unsigned long)&p[i], 1);
+		DBGPrint("  ");
+		for (i = 0; i < 16; i++) {
+			ch = mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      if (DBGPrint("\n")) return 1;
+		}
+		if (DBGPrint("\n")) return 1;
 
-      p = (void *)((unsigned long)p + (unsigned long)16);
-      wp = (unsigned short *)p;
-   }
+		p = (void *)((unsigned long)p + (unsigned long)16);
+		wp = (unsigned short *)p;
+	}
 
-   return 0;
+	return 0;
 }
 
 unsigned char *dumpWord(unsigned char *p, unsigned long count, unsigned long physical)
 {
-   register int i, r;
-   unsigned short *wp;
-   unsigned char *symbolName;
-   unsigned char *moduleName;
-   unsigned char ch;
+	register int i, r;
+	unsigned short *wp;
+	unsigned char *symbolName;
+	unsigned char *moduleName;
+	unsigned char ch;
 
-   wp = (unsigned short *)p;
-   for (r = 0; r < count; r++) {
-      symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
-      if (symbolName) {
-         moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
-                                                   MAX_SYMBOL_LEN);
-         if (moduleName)
-	    DBGPrint("%s|%s:\n", moduleName, symbolName);
-         else
-	    DBGPrint("%s:\n", symbolName);
+	wp = (unsigned short *)p;
+	for (r = 0; r < count; r++) {
+		symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
+		if (symbolName) {
+			moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
+								  MAX_SYMBOL_LEN);
+			if (moduleName)
+		 DBGPrint("%s|%s:\n", moduleName, symbolName);
+			else
+		 DBGPrint("%s:\n", symbolName);
 	 if (r++ >= count && count != 1)
-	    break;
-      }
-      DBGPrint("%p ", p);
-      for (i = 0; i < (16 / 2); i++) {
+		 break;
+		}
+		DBGPrint("%p ", p);
+		for (i = 0; i < (16 / 2); i++) {
 	 DBGPrint(" %04X", physical
 			? (unsigned)mdb_phys_getword((unsigned long)&wp[i], 2)
 			: (unsigned)mdb_getword((unsigned long)&wp[i], 2));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < 16; i++) {
-         ch = physical
+		}
+		DBGPrint("  ");
+		for (i = 0; i < 16; i++) {
+			ch = physical
 		? mdb_phys_getword((unsigned long)&p[i], 1)
 		: mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      DBGPrint("\n");
+		}
+		DBGPrint("\n");
 
-      p = (void *)((unsigned long)p + (unsigned long)16);
-      wp = (unsigned short *)p;
-   }
+		p = (void *)((unsigned long)p + (unsigned long)16);
+		wp = (unsigned short *)p;
+	}
 
-   return p;
+	return p;
 }
 
 unsigned long dumpDoubleSearchResults(unsigned char *p, unsigned long count)
 {
-   register int i, r;
-   uint32_t *lp;
-   unsigned char *symbolName;
-   unsigned char *moduleName;
-   unsigned char ch;
+	register int i, r;
+	uint32_t *lp;
+	unsigned char *symbolName;
+	unsigned char *moduleName;
+	unsigned char ch;
 
-   lp = (uint32_t *)p;
+	lp = (uint32_t *)p;
 
-   for (r = 0; r < count; r++) {
-      symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
-      if (symbolName) {
-         moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
-                                                   MAX_SYMBOL_LEN);
-         if (moduleName) {
-	    if (DBGPrint("%s|%s:\n", moduleName, symbolName)) return 1;
-         } else {
-	    if (DBGPrint("%s:\n", symbolName)) return 1;
-         }
+	for (r = 0; r < count; r++) {
+		symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
+		if (symbolName) {
+			moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
+								  MAX_SYMBOL_LEN);
+			if (moduleName) {
+		 if (DBGPrint("%s|%s:\n", moduleName, symbolName)) return 1;
+			} else
+		 if (DBGPrint("%s:\n", symbolName)) return 1;
 	 if (r++ >= count && count != 1)
-	    break;
-      }
-      DBGPrint("%p ", p);
-      for (i = 0; i < (16 / 4); i++) {
+		 break;
+		}
+		DBGPrint("%p ", p);
+		for (i = 0; i < (16 / 4); i++)
 	 DBGPrint(" %08X", (unsigned)mdb_getword((unsigned long)&lp[i], 4));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < 16; i++) {
-         ch = mdb_getword((unsigned long)&p[i], 1);
+		DBGPrint("  ");
+		for (i = 0; i < 16; i++) {
+			ch = mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      if (DBGPrint("\n")) return 1;
+		}
+		if (DBGPrint("\n")) return 1;
 
-      p = (void *)((unsigned long)p + (unsigned long)16);
-      lp = (uint32_t *)p;
-   }
+		p = (void *)((unsigned long)p + (unsigned long)16);
+		lp = (uint32_t *)p;
+	}
 
-   return 0;
+	return 0;
 }
 
 unsigned char *dumpQuad(unsigned char *p, unsigned long count, unsigned long physical)
 {
-   register int i, r;
-   uint64_t *lp;
-   unsigned char *symbolName;
-   unsigned char *moduleName;
-   unsigned char ch;
+	register int i, r;
+	uint64_t *lp;
+	unsigned char *symbolName;
+	unsigned char *moduleName;
+	unsigned char ch;
 
-   lp = (uint64_t *)p;
+	lp = (uint64_t *)p;
 
-   for (r = 0; r < count; r++) {
-      symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
-      if (symbolName) {
-         moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
-                                                   MAX_SYMBOL_LEN);
-         if (moduleName)
-	    DBGPrint("%s|%s:\n", moduleName, symbolName);
-         else
-	    DBGPrint("%s:\n", symbolName);
+	for (r = 0; r < count; r++) {
+		symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
+		if (symbolName) {
+			moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
+								  MAX_SYMBOL_LEN);
+			if (moduleName)
+		 DBGPrint("%s|%s:\n", moduleName, symbolName);
+			else
+		 DBGPrint("%s:\n", symbolName);
 	 if (r++ >= count && count != 1)
-	    break;
-      }
-      DBGPrint("%p ", p);
-      for (i = 0; i < (16 / 8); i++) {
+		 break;
+		}
+		DBGPrint("%p ", p);
+		for (i = 0; i < (16 / 8); i++) {
 	 DBGPrint(" %016llX", physical
-                   ? (uint64_t)mdb_phys_getqword(&lp[i], 8)
-                   : (uint64_t)mdb_getqword(&lp[i], 8));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < 16; i++) {
-         ch = physical
+						 ? (uint64_t)mdb_phys_getqword(&lp[i], 8)
+						 : (uint64_t)mdb_getqword(&lp[i], 8));
+		}
+		DBGPrint("  ");
+		for (i = 0; i < 16; i++) {
+			ch = physical
 		? mdb_phys_getword((unsigned long)&p[i], 1)
 		: mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      DBGPrint("\n");
+		}
+		DBGPrint("\n");
 
-      p = (void *)((unsigned long)p + (unsigned long)16);
-      lp = (uint64_t *)p;
-   }
+		p = (void *)((unsigned long)p + (unsigned long)16);
+		lp = (uint64_t *)p;
+	}
 
-   return p;
+	return p;
 }
 
 unsigned char *dumpDouble(unsigned char *p, unsigned long count, unsigned long physical)
 {
-   register int i, r;
-   uint32_t *lp;
-   unsigned char *symbolName;
-   unsigned char *moduleName;
-   unsigned char ch;
+	register int i, r;
+	uint32_t *lp;
+	unsigned char *symbolName;
+	unsigned char *moduleName;
+	unsigned char ch;
 
-   lp = (uint32_t *)p;
+	lp = (uint32_t *)p;
 
-   for (r = 0; r < count; r++) {
-      symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
-      if (symbolName) {
-         moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
-                                                   MAX_SYMBOL_LEN);
-         if (moduleName)
-	    DBGPrint("%s|%s:\n", moduleName, symbolName);
-         else
-	    DBGPrint("%s:\n", symbolName);
+	for (r = 0; r < count; r++) {
+		symbolName = GetSymbolFromValue((unsigned long)p, &symbuf[0], MAX_SYMBOL_LEN);
+		if (symbolName) {
+			moduleName = GetModuleInfoFromSymbolValue((unsigned long)p, &modbuf[0],
+								  MAX_SYMBOL_LEN);
+			if (moduleName)
+		 DBGPrint("%s|%s:\n", moduleName, symbolName);
+			else
+		 DBGPrint("%s:\n", symbolName);
 	 if (r++ >= count && count != 1)
-	    break;
-      }
-      DBGPrint("%p ", p);
-      for (i = 0; i < (16 / 4); i++) {
+		 break;
+		}
+		DBGPrint("%p ", p);
+		for (i = 0; i < (16 / 4); i++) {
 	 DBGPrint(" %08X", physical
 			? (unsigned)mdb_phys_getword((unsigned long)&lp[i], 4)
 			: (unsigned)mdb_getword((unsigned long)&lp[i], 4));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < 16; i++) {
-         ch = physical
+		}
+		DBGPrint("  ");
+		for (i = 0; i < 16; i++) {
+			ch = physical
 		? mdb_phys_getword((unsigned long)&p[i], 1)
 		: mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      DBGPrint("\n");
+		}
+		DBGPrint("\n");
 
-      p = (void *)((unsigned long)p + (unsigned long)16);
-      lp = (uint32_t *)p;
-   }
+		p = (void *)((unsigned long)p + (unsigned long)16);
+		lp = (uint32_t *)p;
+	}
 
-   return p;
+	return p;
 }
 
 unsigned char *dumpLinkedList(unsigned char *p, unsigned long count, unsigned long offset)
 {
-   register int i, r;
-   unsigned long *lp;
-   unsigned char ch;
+	register int i, r;
+	unsigned long *lp;
+	unsigned char ch;
 
-   lp = (unsigned long *)p;
+	lp = (unsigned long *)p;
 
-   DBGPrint("Linked List -> [%p + %X] = %08X\n", lp, (unsigned)offset,
-            (unsigned)mdb_getword((unsigned long)((unsigned long)lp + (unsigned long)offset), 4));
+	DBGPrint("Linked List ->[%p + %X] = %08X\n", lp, (unsigned)offset,
+		 (unsigned)mdb_getword((unsigned long)((unsigned long)lp + (unsigned long)offset), 4));
 
-   for (r = 0; r < count; r++) {
-      DBGPrint("%p ", p);
-      for (i = 0; i < 16; i++) {
+	for (r = 0; r < count; r++) {
+		DBGPrint("%p ", p);
+		for (i = 0; i < 16; i++)
 	 DBGPrint("%02X", (unsigned)mdb_getword((unsigned long)&p[i], 1));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < 16; i++) {
-         ch = mdb_getword((unsigned long)&p[i], 1);
+		DBGPrint("  ");
+		for (i = 0; i < 16; i++) {
+			ch = mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      DBGPrint("\n");
+		}
+		DBGPrint("\n");
 
-      p = (void *)((unsigned long)p + (unsigned long)16);
-   }
+		p = (void *)((unsigned long)p + (unsigned long)16);
+	}
 
-   return (unsigned char *)(mdb_getword((unsigned long)((unsigned long)lp + (unsigned long)offset), 4));
+	return (unsigned char *)(mdb_getword((unsigned long)((unsigned long)lp + (unsigned long)offset), 4));
 }
 
 unsigned char *dumpQuadStack(StackFrame *stackFrame, unsigned char *p, unsigned long count)
 {
-   register int i, r;
-   uint64_t *lp;
-   unsigned char ch;
+	register int i, r;
+	uint64_t *lp;
+	unsigned char ch;
 
-   lp = (uint64_t *)p;
+	lp = (uint64_t *)p;
 
-   DBGPrint("Stack = %04lX:%p\n",
-            (unsigned long)GetStackSegment(stackFrame), p);
+	DBGPrint("Stack = %04lX:%p\n",
+		 (unsigned long)GetStackSegment(stackFrame), p);
 
-   for (r = 0; r < count; r++) {
-      DBGPrint("%04X:", (unsigned)GetStackSegment(stackFrame));
-      DBGPrint("%p ", p);
-      for (i = 0; i < (16 / 8); i++) {
+	for (r = 0; r < count; r++) {
+		DBGPrint("%04X:", (unsigned)GetStackSegment(stackFrame));
+		DBGPrint("%p ", p);
+		for (i = 0; i < (16 / 8); i++)
 	 DBGPrint(" %016llX", (uint64_t)mdb_getqword(&lp[i], 8));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < 16; i++) {
-         ch = mdb_getword((unsigned long)&p[i], 1);
+		DBGPrint("  ");
+		for (i = 0; i < 16; i++) {
+			ch = mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      DBGPrint("\n");
+		}
+		DBGPrint("\n");
 
-      p = (void *)((unsigned long)p + (unsigned long)16);
-      lp = (uint64_t *)p;
-   }
+		p = (void *)((unsigned long)p + (unsigned long)16);
+		lp = (uint64_t *)p;
+	}
 
-   return p;
+	return p;
 }
 
 unsigned char *dumpDoubleStack(StackFrame *stackFrame, unsigned char *p, unsigned long count)
 {
-   register int i, r;
-   uint32_t *lp;
-   unsigned char ch;
+	register int i, r;
+	uint32_t *lp;
+	unsigned char ch;
 
-   lp = (uint32_t *)p;
+	lp = (uint32_t *)p;
 
-   DBGPrint("Stack = %04lX:%p\n",
-            (unsigned long)GetStackSegment(stackFrame), p);
+	DBGPrint("Stack = %04lX:%p\n",
+		 (unsigned long)GetStackSegment(stackFrame), p);
 
-   for (r = 0; r < count; r++) {
-      DBGPrint("%04X:", (unsigned)GetStackSegment(stackFrame));
-      DBGPrint("%p ", p);
-      for (i = 0; i < (16 / 4); i++) {
+	for (r = 0; r < count; r++) {
+		DBGPrint("%04X:", (unsigned)GetStackSegment(stackFrame));
+		DBGPrint("%p ", p);
+		for (i = 0; i < (16 / 4); i++)
 	 DBGPrint(" %08X", (unsigned)mdb_getword((unsigned long)&lp[i], 4));
-      }
-      DBGPrint("  ");
-      for (i = 0; i < 16; i++) {
-         ch = mdb_getword((unsigned long)&p[i], 1);
+		DBGPrint("  ");
+		for (i = 0; i < 16; i++) {
+			ch = mdb_getword((unsigned long)&p[i], 1);
 
 	 if (ch < 32 || ch > 126) DBGPrint(".");
 	 else DBGPrint("%c", ch);
-      }
-      DBGPrint("\n");
+		}
+		DBGPrint("\n");
 
-      p = (void *)((unsigned long)p + (unsigned long)16);
-      lp = (uint32_t *)p;
-   }
+		p = (void *)((unsigned long)p + (unsigned long)16);
+		lp = (uint32_t *)p;
+	}
 
-   return p;
+	return p;
 }
 
 #ifdef CONFIG_X86_64
 unsigned long dumpBacktrace(unsigned char *p, unsigned long count)
 {
-   register int r;
-   uint64_t *lp;
+	register int r;
+	uint64_t *lp;
 
-   lp = (uint64_t *)p;
+	lp = (uint64_t *)p;
 
-   for (r = 0; r < count; r++) {
-      if (__kernel_text_address(mdb_getqword((uint64_t *)lp, 8))) {
-         if (DBGPrint("%p ", p))
-            return 1;
+	for (r = 0; r < count; r++) {
+		if (__kernel_text_address(mdb_getqword((uint64_t *)lp, 8))) {
+			if (DBGPrint("%p ", p))
+				return 1;
 
-         if (DBGPrint("%016llX ", mdb_getqword((uint64_t *)lp, 8)))
-            return 1;
+			if (DBGPrint("%016llX ", mdb_getqword((uint64_t *)lp, 8)))
+				return 1;
 
-         if (DisplayClosestSymbol(mdb_getqword((uint64_t *)lp, 8)))
-            if (DBGPrint("\n"))
-               return 1;
-      }
-      p = (void *)((unsigned long)p + (unsigned long)8);
-      lp = (uint64_t *)p;
-   }
+			if (DisplayClosestSymbol(mdb_getqword((uint64_t *)lp, 8)))
+				if (DBGPrint("\n"))
+					return 1;
+		}
+		p = (void *)((unsigned long)p + (unsigned long)8);
+		lp = (uint64_t *)p;
+	}
 
-   return 0;
+	return 0;
 }
 
 #else
 
 unsigned long dumpBacktrace(unsigned char *p, unsigned long count)
 {
-   register int r;
-   unsigned long *lp;
+	register int r;
+	unsigned long *lp;
 
-   lp = (unsigned long *)p;
+	lp = (unsigned long *)p;
 
-   for (r = 0; r < count; r++) {
-      if (__kernel_text_address(mdb_getword((unsigned long)lp, 4))) {
-         if (DBGPrint("%p ", p))
-            return 1;
+	for (r = 0; r < count; r++) {
+		if (__kernel_text_address(mdb_getword((unsigned long)lp, 4))) {
+			if (DBGPrint("%p ", p))
+				return 1;
 
-         if (DBGPrint("%08X ", (unsigned)mdb_getword((unsigned long)lp, 4)))
-            return 1;
+			if (DBGPrint("%08X ", (unsigned)mdb_getword((unsigned long)lp, 4)))
+				return 1;
 
-         if (DisplayClosestSymbol(mdb_getword((unsigned long)lp, 4)))
-            if (DBGPrint("\n"))
-               return 1;
-      }
-      p = (void *)((unsigned long)p + (unsigned long)4);
-      lp = (unsigned long *)p;
-   }
+			if (DisplayClosestSymbol(mdb_getword((unsigned long)lp, 4)))
+				if (DBGPrint("\n"))
+					return 1;
+		}
+		p = (void *)((unsigned long)p + (unsigned long)4);
+		lp = (unsigned long *)p;
+	}
 
-   return 0;
+	return 0;
 }
 #endif
 
 #ifdef CONFIG_X86_64
 unsigned char *dumpStack(StackFrame *stackFrame, unsigned char *p, unsigned long count)
 {
-   register int r;
-   uint64_t *lp;
+	register int r;
+	uint64_t *lp;
 
-   lp = (uint64_t *)p;
+	lp = (uint64_t *)p;
 
-   DBGPrint("Stack = %04X:%p\n", (unsigned)GetStackSegment(stackFrame), p);
+	DBGPrint("Stack = %04X:%p\n", (unsigned)GetStackSegment(stackFrame), p);
 
-   for (r = 0; r < count; r++) {
-      DBGPrint("%p ", p);
-      DBGPrint("%016llX ", mdb_getqword((uint64_t *)lp, 8));
-      if (DisplayClosestSymbol(mdb_getqword((uint64_t *)lp, 8)))
-         DBGPrint("\n");
+	for (r = 0; r < count; r++) {
+		DBGPrint("%p ", p);
+		DBGPrint("%016llX ", mdb_getqword((uint64_t *)lp, 8));
+		if (DisplayClosestSymbol(mdb_getqword((uint64_t *)lp, 8)))
+			DBGPrint("\n");
 
-      p = (void *)((unsigned long)p + (unsigned long)8);
-      lp = (uint64_t *)p;
-   }
+		p = (void *)((unsigned long)p + (unsigned long)8);
+		lp = (uint64_t *)p;
+	}
 
-   return p;
+	return p;
 }
 
 #else
 
 unsigned char *dumpStack(StackFrame *stackFrame, unsigned char *p, unsigned long count)
 {
-   register int r;
-   unsigned long *lp;
+	register int r;
+	unsigned long *lp;
 
-   lp = (unsigned long *)p;
+	lp = (unsigned long *)p;
 
-   DBGPrint("Stack = %04X:%p\n", (unsigned)GetStackSegment(stackFrame), p);
+	DBGPrint("Stack = %04X:%p\n", (unsigned)GetStackSegment(stackFrame), p);
 
-   for (r = 0; r < count; r++) {
-      DBGPrint("%p ", p);
-      DBGPrint("%08X ", (unsigned)mdb_getword((unsigned long)lp, 4));
-      if (DisplayClosestSymbol(mdb_getword((unsigned long)lp, 4)))
-         DBGPrint("\n");
+	for (r = 0; r < count; r++) {
+		DBGPrint("%p ", p);
+		DBGPrint("%08X ", (unsigned)mdb_getword((unsigned long)lp, 4));
+		if (DisplayClosestSymbol(mdb_getword((unsigned long)lp, 4)))
+			DBGPrint("\n");
 
-      p = (void *)((unsigned long)p + (unsigned long)4);
-      lp = (unsigned long *)p;
-   }
+		p = (void *)((unsigned long)p + (unsigned long)4);
+		lp = (unsigned long *)p;
+	}
 
-   return p;
+	return p;
 }
 #endif
 
 unsigned long displayToggleHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint(".tb                      - toggles disable breakpoints in user address space (ON | OFF)\n");
-    DBGPrint(".tc                      - toggles control registers (ON | OFF)\n");
-    DBGPrint(".tn                      - toggles coprocessor registers (ON | OFF)\n");
-    DBGPrint(".ts                      - toggles segment registers (ON | OFF)\n");
-    DBGPrint(".tg                      - toggles general registers (ON | OFF)\n");
-    DBGPrint(".tr                      - toggles display of break reason (ON | OFF)\n");
-    DBGPrint(".td                      - toggles full dereference display (ON | OFF)\n");
-    DBGPrint(".tl                      - toggles source line display (ON | OFF)\n");
-    DBGPrint(".tm                      - toggles user space read/write for pages < PAGE_OFFSET (ON | OFF)\n");
-    DBGPrint(".tu                      - toggles unasm debug display (ON | OFF)\n");
-    DBGPrint(".t or .t <address>       - display task state segment (tss)\n");
-    DBGPrint(".toggle                  - show all current toggle settings\n");
-    DBGPrint("toggle                   - show all current toggle settings\n");
-    return 1;
+	 DBGPrint(".tb                      - toggles disable breakpoints in user address space (ON | OFF)\n");
+	 DBGPrint(".tc                      - toggles control registers (ON | OFF)\n");
+	 DBGPrint(".tn                      - toggles coprocessor registers (ON | OFF)\n");
+	 DBGPrint(".ts                      - toggles segment registers (ON | OFF)\n");
+	 DBGPrint(".tg                      - toggles general registers (ON | OFF)\n");
+	 DBGPrint(".tr                      - toggles display of break reason (ON | OFF)\n");
+	 DBGPrint(".td                      - toggles full dereference display (ON | OFF)\n");
+	 DBGPrint(".tl                      - toggles source line display (ON | OFF)\n");
+	 DBGPrint(".tm                      - toggles user space read/write for pages < PAGE_OFFSET (ON | OFF)\n");
+	 DBGPrint(".tu                      - toggles unasm debug display (ON | OFF)\n");
+	 DBGPrint(".t or .t <address>       - display task state segment (tss)\n");
+	 DBGPrint(".toggle                  - show all current toggle settings\n");
+	 DBGPrint("toggle                   - show all current toggle settings\n");
+	 return 1;
 }
 
 unsigned long displayToggleAll(unsigned char *cmd,
 			       StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     DBGPrint("unasm debug display           : (%s)\n",
-	      debug_deref ? "ON" : "OFF");
-     DBGPrint("full dereferencing info       : (%s) \n",
-	      full_deref_toggle ? "ON" : "OFF");
-     DBGPrint("source line info              : (%s) \n",
-	      line_info_toggle ? "ON" : "OFF");
-     DBGPrint("general registers             : (%s) \n",
-	      general_toggle ? "ON" : "OFF");
-     DBGPrint("disable debugger in userspace : (%s) \n",
-	      toggle_user_break ? "ON" : "OFF");
-     DBGPrint("control registers             : (%s) \n",
-	      control_toggle ? "ON" : "OFF");
-     DBGPrint("user space memory read/write  : (%s)\n",
-	      user_toggle ? "ON" : "OFF");
-     DBGPrint("coprocessor registers         : (%s) \n",
-	      numeric_toggle ? "ON" : "OFF");
-     DBGPrint("display break reason          : (%s) \n",
-	      reason_toggle ? "ON" : "OFF");
-     DBGPrint("segment registers             : (%s) \n",
-	      segment_toggle ? "ON" : "OFF");
+	  DBGPrint("unasm debug display           : (%s)\n",
+		   debug_deref ? "ON" : "OFF");
+	  DBGPrint("full dereferencing info       : (%s)\n",
+		   full_deref_toggle ? "ON" : "OFF");
+	  DBGPrint("source line info              : (%s)\n",
+		   line_info_toggle ? "ON" : "OFF");
+	  DBGPrint("general registers             : (%s)\n",
+		   general_toggle ? "ON" : "OFF");
+	  DBGPrint("disable debugger in userspace : (%s)\n",
+		   toggle_user_break ? "ON" : "OFF");
+	  DBGPrint("control registers             : (%s)\n",
+		   control_toggle ? "ON" : "OFF");
+	  DBGPrint("user space memory read/write  : (%s)\n",
+		   user_toggle ? "ON" : "OFF");
+	  DBGPrint("coprocessor registers         : (%s)\n",
+		   numeric_toggle ? "ON" : "OFF");
+	  DBGPrint("display break reason          : (%s)\n",
+		   reason_toggle ? "ON" : "OFF");
+	  DBGPrint("segment registers             : (%s)\n",
+		   segment_toggle ? "ON" : "OFF");
 
-     return 1;
+	  return 1;
 }
 
 /* .TU */
 
 unsigned long ProcessTUToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (debug_deref)
-     ? (debug_deref = 0)
-     : (debug_deref = 1);
-     DBGPrint("unasm dereferencing (%s)\n", debug_deref ? "ON" : "OFF");
-     return 1;
+	  (debug_deref)
+	  ? (debug_deref = 0)
+	  : (debug_deref = 1);
+	  DBGPrint("unasm dereferencing (%s)\n", debug_deref ? "ON" : "OFF");
+	  return 1;
 }
 
 /* .TD */
 
 unsigned long ProcessTDToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (full_deref_toggle)
-     ? (full_deref_toggle = 0)
-     : (full_deref_toggle = 1);
-     DBGPrint("full dereferencing info (%s) \n",
-	      full_deref_toggle ? "ON" : "OFF");
-     return 1;
+	  (full_deref_toggle)
+	  ? (full_deref_toggle = 0)
+	  : (full_deref_toggle = 1);
+	  DBGPrint("full dereferencing info (%s)\n",
+		   full_deref_toggle ? "ON" : "OFF");
+	  return 1;
 }
 
 /* .TL */
 
 unsigned long ProcessTLToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (line_info_toggle)
-     ? (line_info_toggle = 0)
-     : (line_info_toggle = 1);
-     DBGPrint("source line info (%s) \n", line_info_toggle ? "ON" : "OFF");
-     return 1;
+	  (line_info_toggle)
+	  ? (line_info_toggle = 0)
+	  : (line_info_toggle = 1);
+	  DBGPrint("source line info (%s)\n", line_info_toggle ? "ON" : "OFF");
+	  return 1;
 }
 
 /* .TG */
 
 unsigned long ProcessTGToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (general_toggle)
-     ? (general_toggle = 0)
-     : (general_toggle = 1);
-     DBGPrint("general registers (%s) \n", general_toggle ? "ON" : "OFF");
-     return 1;
+	  (general_toggle)
+	  ? (general_toggle = 0)
+	  : (general_toggle = 1);
+	  DBGPrint("general registers (%s)\n", general_toggle ? "ON" : "OFF");
+	  return 1;
 }
 
 /* .TB */
 
 unsigned long ProcessTBToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (toggle_user_break)
-     ? (toggle_user_break = 0)
-     : (toggle_user_break = 1);
-     DBGPrint("disable breakpoints in user address space (%s) \n",
-	      control_toggle ? "ON" : "OFF");
-     return 1;
+	  (toggle_user_break)
+	  ? (toggle_user_break = 0)
+	  : (toggle_user_break = 1);
+	  DBGPrint("disable breakpoints in user address space (%s)\n",
+		   control_toggle ? "ON" : "OFF");
+	  return 1;
 }
 
 /* .TC */
 
 unsigned long ProcessTCToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (control_toggle)
-     ? (control_toggle = 0)
-     : (control_toggle = 1);
-     DBGPrint("control registers (%s) \n", control_toggle ? "ON" : "OFF");
-     return 1;
+	  (control_toggle)
+	  ? (control_toggle = 0)
+	  : (control_toggle = 1);
+	  DBGPrint("control registers (%s)\n", control_toggle ? "ON" : "OFF");
+	  return 1;
 }
 
 /* .TM */
 
 unsigned long ProcessToggleUser(unsigned char *cmd,
 				StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (user_toggle)
-     ? (user_toggle = 0)
-     : (user_toggle = 1);
-     DBGPrint("user space read/write for pages < PAGE_OFFSET (%s)\n",
-	      user_toggle ? "ON" : "OFF");
-     return 1;
+	  (user_toggle)
+	  ? (user_toggle = 0)
+	  : (user_toggle = 1);
+	  DBGPrint("user space read/write for pages < PAGE_OFFSET (%s)\n",
+		   user_toggle ? "ON" : "OFF");
+	  return 1;
 }
 
 /* .TN */
 
 unsigned long ProcessTNToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (numeric_toggle)
-     ? (numeric_toggle = 0)
-     : (numeric_toggle = 1);
-     DBGPrint("coprocessor registers (%s) \n", numeric_toggle ? "ON" : "OFF");
-     return 1;
+	  (numeric_toggle)
+	  ? (numeric_toggle = 0)
+	  : (numeric_toggle = 1);
+	  DBGPrint("coprocessor registers (%s)\n", numeric_toggle ? "ON" : "OFF");
+	  return 1;
 }
 
 /* .TR */
 
 unsigned long ProcessTRToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (reason_toggle)
-     ? (reason_toggle = 0)
-     : (reason_toggle = 1);
-     DBGPrint("display break reason (%s) \n", reason_toggle ? "ON" : "OFF");
-     return 1;
+	  (reason_toggle)
+	  ? (reason_toggle = 0)
+	  : (reason_toggle = 1);
+	  DBGPrint("display break reason (%s)\n", reason_toggle ? "ON" : "OFF");
+	  return 1;
 }
 
 /* .TS */
 
 unsigned long ProcessTSToggle(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     (segment_toggle)
-     ? (segment_toggle = 0)
-     : (segment_toggle = 1);
-     DBGPrint("segment registers (%s) \n", segment_toggle ? "ON" : "OFF");
-     return 1;
+	  (segment_toggle)
+	  ? (segment_toggle = 0)
+	  : (segment_toggle = 1);
+	  DBGPrint("segment registers (%s)\n", segment_toggle ? "ON" : "OFF");
+	  return 1;
 }
 
 unsigned long displayDebuggerVersionHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint(".v                       - display version info\n");
-    return 1;
+	 DBGPrint(".v                       - display version info\n");
+	 return 1;
 }
 
 /* .V */
 
 unsigned long DisplayDebuggerVersion(unsigned char *cmd,
 				     StackFrame *stackFrame, unsigned long Exception,
-		   DEBUGGER_PARSER *parser)
+			DEBUGGER_PARSER *parser)
 {
-     DBGPrint("Minimal Kernel Debugger\n");
-     DBGPrint("v%ld\n", LINUX_VERSION_CODE);
+	  DBGPrint("Minimal Kernel Debugger\n");
+	  DBGPrint("v%ld\n", LINUX_VERSION_CODE);
 
-     return 1;
+	  return 1;
 }
 
 /* .Z */
 
 unsigned long displaySymbolsHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint(".z <name>                  - display or search symbol info (takes partial names)\n");
-    DBGPrint("symbol <name>              - display or search symbol info (takes partial names)\n");
-    return 1;
+	 DBGPrint(".z <name>                  - display or search symbol info (takes partial names)\n");
+	 DBGPrint("symbol <name>              - display or search symbol info (takes partial names)\n");
+	 return 1;
 }
 
 unsigned long displaySymbols(unsigned char *cmd,
 			     StackFrame *stackFrame, unsigned long Exception,
-		    DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     extern void DumpOSSymbolTableMatch(unsigned char *);
+	  extern void DumpOSSymbolTableMatch(unsigned char *);
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (*cmd)
+	  if (*cmd)
 	DumpOSSymbolTableMatch(cmd);
-     else
+	  else
 	DumpOSSymbolTableMatch(NULL);
 
-     return 1;
+	  return 1;
 }
 
 /* LCPU */
 
 unsigned long listProcessors(unsigned char *cmd,
 			     StackFrame *stackFrame, unsigned long Exception,
-		    DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     register int i;
+	  register int i;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     DBGPrint("Current Processor: %d\n", get_processor_id());
-     DBGPrint("Active Processors: \n");
-     for (i = 0; i < MAX_PROCESSORS; i++) {
-        if (cpu_online(i))
-	   DBGPrint("   Processor %d\n", i);
-     }
-     return 1;
+	  DBGPrint("Current Processor: %d\n", get_processor_id());
+	  DBGPrint("Active Processors:\n");
+	  for (i = 0; i < MAX_PROCESSORS; i++) {
+		  if (cpu_online(i))
+		DBGPrint("   Processor %d\n", i);
+	  }
+	  return 1;
 }
 
 unsigned long clearScreenHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("cls                      - clear the screen\n");
-    return 1;
+	 DBGPrint("cls                      - clear the screen\n");
+	 return 1;
 }
 
 /* CLS */
@@ -1589,20 +1574,20 @@ unsigned long clearDebuggerScreen(unsigned char *cmd,
 				  StackFrame *stackFrame, unsigned long Exception,
 			 DEBUGGER_PARSER *parser)
 {
-     extern void ClearScreen(void);
+	  extern void ClearScreen(void);
 
-     ClearScreen();
-     return 1;
+	  ClearScreen();
+	  return 1;
 }
 
 unsigned long SearchMemoryHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("s                        - search for bytes at address\n");
-    DBGPrint("sb                       - search for bytes at address\n");
-    DBGPrint("sw                       - search for words at address\n");
-    DBGPrint("sd                       - search for dwords at address\n");
-    DBGPrint("sq                       - search for qwords at address\n");
-    return 1;
+	 DBGPrint("s                        - search for bytes at address\n");
+	 DBGPrint("sb                       - search for bytes at address\n");
+	 DBGPrint("sw                       - search for words at address\n");
+	 DBGPrint("sd                       - search for dwords at address\n");
+	 DBGPrint("sq                       - search for qwords at address\n");
+	 return 1;
 }
 
 /* S */
@@ -1622,750 +1607,750 @@ unsigned long q_copyBuffer[16];
 
 unsigned long SearchMemory(unsigned char *cmd,
 			   StackFrame *stackFrame, unsigned long Exception,
-	       DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     unsigned char *changeBuffer = s_changeBuffer;
-     unsigned char *searchBuffer = b_searchBuffer;
-     unsigned char *copyBuffer = b_copyBuffer;
-     unsigned long maxlen = sizeof(b_searchBuffer);
-     register unsigned char *changeB;
-     unsigned char *pB;
-     register unsigned long address, r, value, count, len, i;
-     unsigned long valid, EndingAddress = (unsigned long)high_memory;
-     register int key;
+	  unsigned char *changeBuffer = s_changeBuffer;
+	  unsigned char *searchBuffer = b_searchBuffer;
+	  unsigned char *copyBuffer = b_copyBuffer;
+	  unsigned long maxlen = sizeof(b_searchBuffer);
+	  register unsigned char *changeB;
+	  unsigned char *pB;
+	  register unsigned long address, r, value, count, len, i;
+	  unsigned long valid, EndingAddress = (unsigned long)high_memory;
+	  register int key;
 
-     extern int mdb_getkey(void);
+	  extern int mdb_getkey(void);
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     memset((unsigned long *)searchBuffer, 0, sizeof(b_searchBuffer));
-     count = 0;
-     changeB = (unsigned char *)searchBuffer;
-     changeBuffer[0] = '\0';
-     DBGPrint("enter bytes to search for, '.' to end input\n");
-     while ((changeBuffer[0] != '.') && (count < maxlen)) {
+	  memset((unsigned long *)searchBuffer, 0, sizeof(b_searchBuffer));
+	  count = 0;
+	  changeB = (unsigned char *)searchBuffer;
+	  changeBuffer[0] = '\0';
+	  DBGPrint("enter bytes to search for, '.' to end input\n");
+	  while ((changeBuffer[0] != '.') && (count < maxlen)) {
 	for (r = 0; r < 8; r++) {
-	   DBGPrint("0x");
+		DBGPrint("0x");
 
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 4);
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 4);
 
-	   if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.'))
-	      break;
+		if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.'))
+			break;
 
-	   pB = (unsigned char *)&changeBuffer[0];
-	   len = strlen(pB);
+		pB = (unsigned char *)&changeBuffer[0];
+		len = strlen(pB);
 
-	   for (i = 0; i < len; i++)
-	      DBGPrint("\b");
+		for (i = 0; i < len; i++)
+			DBGPrint("\b");
 
-	   value = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      *changeB = (unsigned char)value;
-	   DBGPrint("%02X ", (unsigned char)*changeB);
+		value = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			*changeB = (unsigned char)value;
+		DBGPrint("%02X ", (unsigned char)*changeB);
 
-	   changeB++;
-	   if (count++ > maxlen)
-	      break;
+		changeB++;
+		if (count++ > maxlen)
+			break;
 	}
 	if (DBGPrint("\n")) return 1;
-     }
+	  }
 
-     if (count) {
+	  if (count) {
 	DBGPrint("enter start address for search:  ");
 	ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
 	pB = (unsigned char *)&changeBuffer[0];
 	address = EvaluateExpression(0, &pB, &valid);
 	if (valid) {
-	   register unsigned long temp;
+		register unsigned long temp;
 
-	   DBGPrint("start address = [%p]\n", (unsigned *)address);
-	   DBGPrint("enter ending address for search:  ");
+		DBGPrint("start address =[%p]\n", (unsigned *)address);
+		DBGPrint("enter ending address for search:  ");
 
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
-	   pB = (unsigned char *)&changeBuffer[0];
-	   temp = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      EndingAddress = temp;
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
+		pB = (unsigned char *)&changeBuffer[0];
+		temp = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			EndingAddress = temp;
 
-	   DBGPrint("\nsearching memory from 0x%p to 0x%p\n",
-		    (unsigned *)address, (unsigned *)EndingAddress);
-	   while (address < EndingAddress) {
-              read_memory((void *)address, copyBuffer, count);
-	      if (!memcmp(searchBuffer, copyBuffer, count)) {
-		 if (DBGPrint("match at address [%p]\n",
+		DBGPrint("\nsearching memory from 0x%p to 0x%p\n",
+			 (unsigned *)address, (unsigned *)EndingAddress);
+		while (address < EndingAddress) {
+				  read_memory((void *)address, copyBuffer, count);
+			if (!memcmp(searchBuffer, copyBuffer, count)) {
+		 if (DBGPrint("match at address[%p]\n",
 			      (unsigned *)address)) return 1;
 		 if (dumpSearchResults((unsigned char *)address, 4)) return 1;
 		 if (DBGPrint("searching\n")) return 1;
-	      }
-	      address++;
-	      if (!(address % 0x100000)) {
+			}
+			address++;
+			if (!(address % 0x100000)) {
 		  if (DBGPrint("searching memory at address 0x%p ..."
-                        " Q or q to abort - any key to proceed\n",
-                                (unsigned *)address)) return 1;
-                  key = mdb_getkey();
-                  if (((char)key == 'Q') || ((char)key == 'q'))
-                     break;
-	      }
-	   }
-	   if (DBGPrint("search completed.\n")) return 1;
-	   return 1;
+								" Q or q to abort - any key to proceed\n",
+										  (unsigned *)address)) return 1;
+						key = mdb_getkey();
+						if (((char)key == 'Q') || ((char)key == 'q'))
+							break;
+			}
+		}
+		if (DBGPrint("search completed.\n")) return 1;
+		return 1;
 	}
 	if (DBGPrint("invalid start address\n")) return 1;
 	return 1;
-     }
-     if (DBGPrint("no search pattern\n")) return 1;
-     return 1;
+	  }
+	  if (DBGPrint("no search pattern\n")) return 1;
+	  return 1;
 }
 
 /* SB */
 
 unsigned long SearchMemoryB(unsigned char *cmd,
 			    StackFrame *stackFrame, unsigned long Exception,
-	       DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     unsigned char *changeBuffer = s_changeBuffer;
-     unsigned char *searchBuffer = b_searchBuffer;
-     unsigned char *copyBuffer = b_copyBuffer;
-     unsigned long maxlen = sizeof(b_searchBuffer);
-     register unsigned char *changeB;
-     unsigned char *pB;
-     register unsigned long address, r, value, count, len, i;
-     unsigned long valid, EndingAddress = (unsigned long)high_memory;
-     register int key;
+	  unsigned char *changeBuffer = s_changeBuffer;
+	  unsigned char *searchBuffer = b_searchBuffer;
+	  unsigned char *copyBuffer = b_copyBuffer;
+	  unsigned long maxlen = sizeof(b_searchBuffer);
+	  register unsigned char *changeB;
+	  unsigned char *pB;
+	  register unsigned long address, r, value, count, len, i;
+	  unsigned long valid, EndingAddress = (unsigned long)high_memory;
+	  register int key;
 
-     extern int mdb_getkey(void);
+	  extern int mdb_getkey(void);
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     memset((unsigned long *)searchBuffer, 0, sizeof(b_searchBuffer));
-     count = 0;
-     changeB = (unsigned char *)searchBuffer;
-     changeBuffer[0] = '\0';
-     DBGPrint("enter bytes to search for, '.' to end input\n");
-     while (changeBuffer[0] != '.' && count < maxlen) {
+	  memset((unsigned long *)searchBuffer, 0, sizeof(b_searchBuffer));
+	  count = 0;
+	  changeB = (unsigned char *)searchBuffer;
+	  changeBuffer[0] = '\0';
+	  DBGPrint("enter bytes to search for, '.' to end input\n");
+	  while (changeBuffer[0] != '.' && count < maxlen) {
 	for (r = 0; r < 8; r++) {
-	   DBGPrint("0x");
+		DBGPrint("0x");
 
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 4);
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 4);
 
-	   if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.'))
-	      break;
+		if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.'))
+			break;
 
-	   pB = (unsigned char *)&changeBuffer[0];
-	   len = strlen(pB);
-	   for (i = 0; i < len; i++)
-	      DBGPrint("\b");
+		pB = (unsigned char *)&changeBuffer[0];
+		len = strlen(pB);
+		for (i = 0; i < len; i++)
+			DBGPrint("\b");
 
-	   value = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      *changeB = (unsigned char)value;
-	   DBGPrint("%02X ", (unsigned char)*changeB);
+		value = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			*changeB = (unsigned char)value;
+		DBGPrint("%02X ", (unsigned char)*changeB);
 
-	   changeB++;
-	   if (count++ > maxlen)
-	      break;
+		changeB++;
+		if (count++ > maxlen)
+			break;
 	}
 	if (DBGPrint("\n")) return 1;
-     }
+	  }
 
-     if (count) {
+	  if (count) {
 	DBGPrint("enter start address for search:  ");
 	ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
 	pB = (unsigned char *)&changeBuffer[0];
 	address = EvaluateExpression(0, &pB, &valid);
 	if (valid) {
-	   register unsigned long temp;
+		register unsigned long temp;
 
-	   DBGPrint("start address = [%p]\n", (unsigned *)address);
+		DBGPrint("start address =[%p]\n", (unsigned *)address);
 
-	   DBGPrint("enter ending address for search:  ");
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
-	   pB = (unsigned char *)&changeBuffer[0];
-	   temp = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      EndingAddress = temp;
+		DBGPrint("enter ending address for search:  ");
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
+		pB = (unsigned char *)&changeBuffer[0];
+		temp = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			EndingAddress = temp;
 
-	   DBGPrint("\nsearching memory from 0x%p to 0x%p\n",
-		    (unsigned *)address, (unsigned *)EndingAddress);
-	   while (address < EndingAddress) {
-              read_memory((void *)address, copyBuffer, count);
-	      if (!memcmp(searchBuffer, copyBuffer, count)) {
-		 if (DBGPrint("match at address [%p]\n",
+		DBGPrint("\nsearching memory from 0x%p to 0x%p\n",
+			 (unsigned *)address, (unsigned *)EndingAddress);
+		while (address < EndingAddress) {
+				  read_memory((void *)address, copyBuffer, count);
+			if (!memcmp(searchBuffer, copyBuffer, count)) {
+		 if (DBGPrint("match at address[%p]\n",
 			      (unsigned *)address)) return 1;
 		 if (dumpSearchResults((unsigned char *)address, 4)) return 1;
 		 if (DBGPrint("searching\n")) return 1;
-	      }
-	      address++;
-	      if (!(address % 0x100000)) {
+			}
+			address++;
+			if (!(address % 0x100000)) {
 		 if (DBGPrint("searching memory at address 0x%p ..."
-                        " Q or q to abort - any key to proceed\n",
-                              (unsigned *)address)) return 1;
-                 key = mdb_getkey();
-                 if (((char)key == 'Q') || ((char)key == 'q'))
-                    break;
-	      }
-	   }
-	   if (DBGPrint("search completed.\n")) return 1;
-	   return 1;
+								" Q or q to abort - any key to proceed\n",
+										(unsigned *)address)) return 1;
+					  key = mdb_getkey();
+					  if (((char)key == 'Q') || ((char)key == 'q'))
+						  break;
+			}
+		}
+		if (DBGPrint("search completed.\n")) return 1;
+		return 1;
 	}
 	if (DBGPrint("invalid start address\n")) return 1;
 	return 1;
-     }
-     if (DBGPrint("no search pattern\n")) return 1;
-     return 1;
+	  }
+	  if (DBGPrint("no search pattern\n")) return 1;
+	  return 1;
 }
 
 /* SW */
 
 unsigned long SearchMemoryW(unsigned char *cmd,
 			    StackFrame *stackFrame, unsigned long Exception,
-	       DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     unsigned char *changeBuffer = s_changeBuffer;
-     unsigned short *searchBuffer = w_searchBuffer;
-     unsigned short *copyBuffer = w_copyBuffer;
-     unsigned long maxlen = ARRAY_SIZE(w_searchBuffer);
-     register unsigned short *changeW;
-     unsigned char *pB;
-     register unsigned long address, r, value, count, len, i;
-     unsigned long valid, EndingAddress = (unsigned long)high_memory;
-     register int key;
+	  unsigned char *changeBuffer = s_changeBuffer;
+	  unsigned short *searchBuffer = w_searchBuffer;
+	  unsigned short *copyBuffer = w_copyBuffer;
+	  unsigned long maxlen = ARRAY_SIZE(w_searchBuffer);
+	  register unsigned short *changeW;
+	  unsigned char *pB;
+	  register unsigned long address, r, value, count, len, i;
+	  unsigned long valid, EndingAddress = (unsigned long)high_memory;
+	  register int key;
 
-     extern int mdb_getkey(void);
+	  extern int mdb_getkey(void);
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     memset((unsigned long *)searchBuffer, 0, sizeof(w_searchBuffer));
-     count = 0;
-     changeW = (unsigned short *)searchBuffer;
-     changeBuffer[0] = '\0';
-     DBGPrint("enter words to search for, '.' to end input\n");
-     while (changeBuffer[0] != '.' && count < maxlen) {
+	  memset((unsigned long *)searchBuffer, 0, sizeof(w_searchBuffer));
+	  count = 0;
+	  changeW = (unsigned short *)searchBuffer;
+	  changeBuffer[0] = '\0';
+	  DBGPrint("enter words to search for, '.' to end input\n");
+	  while (changeBuffer[0] != '.' && count < maxlen) {
 	for (r = 0; r < 4; r++) {
-	   DBGPrint("0x");
+		DBGPrint("0x");
 
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 6);
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 6);
 
-	   if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
-	       (changeBuffer[2] == '.') || (changeBuffer[3] == '.'))
-	      break;
+		if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
+		    (changeBuffer[2] == '.') || (changeBuffer[3] == '.'))
+			break;
 
-	   pB = (unsigned char *)&changeBuffer[0];
-	   len = strlen(pB);
-	   for (i = 0; i < len; i++)
-	      DBGPrint("\b");
+		pB = (unsigned char *)&changeBuffer[0];
+		len = strlen(pB);
+		for (i = 0; i < len; i++)
+			DBGPrint("\b");
 
-	   value = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      *changeW = value;
-	   DBGPrint("%04X ", *changeW);
+		value = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			*changeW = value;
+		DBGPrint("%04X ", *changeW);
 
-	   changeW++;
-	   if (count++ > maxlen)
-	      break;
+		changeW++;
+		if (count++ > maxlen)
+			break;
 	}
 	if (DBGPrint("\n")) return 1;
-     }
+	  }
 
-     if (count) {
+	  if (count) {
 	DBGPrint("enter start address for search:  ");
 	ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
 	pB = (unsigned char *)&changeBuffer[0];
 	address = EvaluateExpression(0, &pB, &valid);
 	if (valid) {
-	   register unsigned long temp;
+		register unsigned long temp;
 
-	   DBGPrint("start address = [%p]\n", (unsigned *)address);
+		DBGPrint("start address =[%p]\n", (unsigned *)address);
 
-	   DBGPrint("enter ending address for search:  ");
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
-	   pB = (unsigned char *)&changeBuffer[0];
-	   temp = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      EndingAddress = temp;
+		DBGPrint("enter ending address for search:  ");
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
+		pB = (unsigned char *)&changeBuffer[0];
+		temp = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			EndingAddress = temp;
 
-	   DBGPrint("searching memory from 0x%p to 0x%p\n",
-		    (unsigned *)address, (unsigned *)EndingAddress);
-	   while (address < EndingAddress) {
-              read_memory((void *)address, copyBuffer, count * sizeof(unsigned short));
-	      if (!memcmp(searchBuffer, copyBuffer, count * sizeof(unsigned short))) {
-		 if (DBGPrint("match at address [%p]\n",
+		DBGPrint("searching memory from 0x%p to 0x%p\n",
+			 (unsigned *)address, (unsigned *)EndingAddress);
+		while (address < EndingAddress) {
+				  read_memory((void *)address, copyBuffer, count * sizeof(unsigned short));
+			if (!memcmp(searchBuffer, copyBuffer, count * sizeof(unsigned short))) {
+		 if (DBGPrint("match at address[%p]\n",
 			      (unsigned *)address)) return 1;
 		 if (dumpWordSearchResults((unsigned char *)address, 4))
-                     return 1;
+							return 1;
 		 if (DBGPrint("searching\n")) return 1;
-	      }
-	      address++;
-	      if (!(address % 0x100000)) {
+			}
+			address++;
+			if (!(address % 0x100000)) {
 		 if (DBGPrint("searching memory at address 0x%p ..."
-                        " Q or q to abort - any key to proceed\n",
-                              (unsigned *)address)) return 1;
-                  key = mdb_getkey();
-                  if (((char)key == 'Q') || ((char)key == 'q'))
-                     break;
-	      }
-	   }
-	   if (DBGPrint("search completed.\n")) return 1;
-	   return 1;
+								" Q or q to abort - any key to proceed\n",
+										(unsigned *)address)) return 1;
+						key = mdb_getkey();
+						if (((char)key == 'Q') || ((char)key == 'q'))
+							break;
+			}
+		}
+		if (DBGPrint("search completed.\n")) return 1;
+		return 1;
 	}
 	if (DBGPrint("invalid start address\n")) return 1;
 	return 1;
-     }
-     if (DBGPrint("no search pattern\n")) return 1;
-     return 1;
+	  }
+	  if (DBGPrint("no search pattern\n")) return 1;
+	  return 1;
 }
 
 /* SD */
 
 unsigned long SearchMemoryD(unsigned char *cmd,
 			    StackFrame *stackFrame, unsigned long Exception,
-	       DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     register unsigned char *changeBuffer = s_changeBuffer;
-     register unsigned long *searchBuffer = d_searchBuffer;
-     register unsigned long *copyBuffer = d_copyBuffer;
-     register unsigned long maxlen = ARRAY_SIZE(d_searchBuffer);
-     register unsigned long *changeD;
-     unsigned char *pB;
-     register unsigned long address, r, value, count, len, i;
-     unsigned long valid, EndingAddress = (unsigned long)high_memory;
-     register int key;
+	  register unsigned char *changeBuffer = s_changeBuffer;
+	  register unsigned long *searchBuffer = d_searchBuffer;
+	  register unsigned long *copyBuffer = d_copyBuffer;
+	  register unsigned long maxlen = ARRAY_SIZE(d_searchBuffer);
+	  register unsigned long *changeD;
+	  unsigned char *pB;
+	  register unsigned long address, r, value, count, len, i;
+	  unsigned long valid, EndingAddress = (unsigned long)high_memory;
+	  register int key;
 
-     extern int mdb_getkey(void);
+	  extern int mdb_getkey(void);
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     memset((unsigned long *)searchBuffer, 0, sizeof(d_searchBuffer));
-     count = 0;
-     changeD = (unsigned long *)searchBuffer;
-     changeBuffer[0] = '\0';
-     DBGPrint("enter dwords to search for, '.' to end input\n");
-     while (changeBuffer[0] != '.' && count < maxlen) {
+	  memset((unsigned long *)searchBuffer, 0, sizeof(d_searchBuffer));
+	  count = 0;
+	  changeD = (unsigned long *)searchBuffer;
+	  changeBuffer[0] = '\0';
+	  DBGPrint("enter dwords to search for, '.' to end input\n");
+	  while (changeBuffer[0] != '.' && count < maxlen) {
 	for (r = 0; r < 2; r++) {
-	   DBGPrint("0x");
+		DBGPrint("0x");
 
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 8);
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 8);
 
-	   if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
-	       (changeBuffer[2] == '.') || (changeBuffer[3] == '.') ||
-	       (changeBuffer[4] == '.') || (changeBuffer[5] == '.') ||
-	       (changeBuffer[6] == '.') || (changeBuffer[7] == '.'))
-	      break;
+		if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
+		    (changeBuffer[2] == '.') || (changeBuffer[3] == '.') ||
+			 (changeBuffer[4] == '.') || (changeBuffer[5] == '.') ||
+			 (changeBuffer[6] == '.') || (changeBuffer[7] == '.'))
+			break;
 
-	   pB = (unsigned char *)&changeBuffer[0];
-	   len = strlen(pB);
-	   for (i = 0; i < len; i++)
-	      DBGPrint("\b");
+		pB = (unsigned char *)&changeBuffer[0];
+		len = strlen(pB);
+		for (i = 0; i < len; i++)
+			DBGPrint("\b");
 
-	   value = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      *changeD = value;
-	   DBGPrint("%08X ", (unsigned)*changeD);
+		value = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			*changeD = value;
+		DBGPrint("%08X ", (unsigned)*changeD);
 
-	   changeD++;
-	   if (count++ > maxlen)
-	      break;
+		changeD++;
+		if (count++ > maxlen)
+			break;
 	}
 	if (DBGPrint("\n")) return 1;
-     }
+	  }
 
-     if (count) {
+	  if (count) {
 	DBGPrint("enter start address for search:  ");
 	ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
 	pB = (unsigned char *)&changeBuffer[0];
 	address = EvaluateExpression(0, &pB, &valid);
 	if (valid) {
-	   register unsigned long temp;
+		register unsigned long temp;
 
-	   DBGPrint("start address = [%p]\n", (unsigned *)address);
+		DBGPrint("start address =[%p]\n", (unsigned *)address);
 
-	   DBGPrint("enter ending address for search:  ");
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
-	   pB = (unsigned char *)&changeBuffer[0];
-	   temp = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      EndingAddress = temp;
+		DBGPrint("enter ending address for search:  ");
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
+		pB = (unsigned char *)&changeBuffer[0];
+		temp = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			EndingAddress = temp;
 
-	   DBGPrint("searching memory from 0x%p to 0x%p\n",
-		    (unsigned *)address, (unsigned *)EndingAddress);
-	   while (address < EndingAddress) {
-              read_memory((void *)address, copyBuffer, count * sizeof(unsigned long));
-	      if (!memcmp(searchBuffer, copyBuffer, count * sizeof(unsigned long))) {
-		 if (DBGPrint("match at address [%p]\n",
+		DBGPrint("searching memory from 0x%p to 0x%p\n",
+			 (unsigned *)address, (unsigned *)EndingAddress);
+		while (address < EndingAddress) {
+				  read_memory((void *)address, copyBuffer, count * sizeof(unsigned long));
+			if (!memcmp(searchBuffer, copyBuffer, count * sizeof(unsigned long))) {
+		 if (DBGPrint("match at address[%p]\n",
 			      (unsigned *)address)) return 1;
 		 if (dumpDoubleSearchResults((unsigned char *)address, 4))
-                     return 1;
+							return 1;
 		 if (DBGPrint("searching\n")) return 1;
-	      }
-	      address++;
-	      if (!(address % 0x100000)) {
+			}
+			address++;
+			if (!(address % 0x100000)) {
 		 if (DBGPrint("searching memory at address 0x%p ..."
-                        " Q or q to abort - any key to proceed\n",
-                              (unsigned *)address)) return 1;
-                  key = mdb_getkey();
-                  if (((char)key == 'Q') || ((char)key == 'q'))
-                     break;
-	      }
-	   }
-	   if (DBGPrint("search completed.\n")) return 1;
-	   return 1;
+								" Q or q to abort - any key to proceed\n",
+										(unsigned *)address)) return 1;
+						key = mdb_getkey();
+						if (((char)key == 'Q') || ((char)key == 'q'))
+							break;
+			}
+		}
+		if (DBGPrint("search completed.\n")) return 1;
+		return 1;
 	}
 	if (DBGPrint("invalid start address\n")) return 1;
 	return 1;
-     }
-     if (DBGPrint("no search pattern\n")) return 1;
-     return 1;
+	  }
+	  if (DBGPrint("no search pattern\n")) return 1;
+	  return 1;
 }
 
 /* SQ */
 
 unsigned long SearchMemoryQ(unsigned char *cmd,
 			    StackFrame *stackFrame, unsigned long Exception,
-	       DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     register unsigned char *changeBuffer = s_changeBuffer;
-     register unsigned long *searchBuffer = q_searchBuffer;
-     register unsigned long *copyBuffer = q_copyBuffer;
-     register unsigned long maxlen = sizeof(q_searchBuffer) / sizeof(unsigned long long);
-     register unsigned long *changeQ;
-     unsigned char *pB;
-     register unsigned long address, r, value, count, len, i;
-     unsigned long valid, EndingAddress = (unsigned long)high_memory;
-     register int key;
+	  register unsigned char *changeBuffer = s_changeBuffer;
+	  register unsigned long *searchBuffer = q_searchBuffer;
+	  register unsigned long *copyBuffer = q_copyBuffer;
+	  register unsigned long maxlen = sizeof(q_searchBuffer) / sizeof(unsigned long long);
+	  register unsigned long *changeQ;
+	  unsigned char *pB;
+	  register unsigned long address, r, value, count, len, i;
+	  unsigned long valid, EndingAddress = (unsigned long)high_memory;
+	  register int key;
 
-     extern int mdb_getkey(void);
+	  extern int mdb_getkey(void);
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     memset((unsigned long *)searchBuffer, 0, sizeof(d_searchBuffer));
-     count = 0;
-     changeQ = (unsigned long *)searchBuffer;
-     changeBuffer[0] = '\0';
-     DBGPrint("enter dwords to search for, '.' to end input\n");
-     while (changeBuffer[0] != '.' && count < maxlen) {
+	  memset((unsigned long *)searchBuffer, 0, sizeof(d_searchBuffer));
+	  count = 0;
+	  changeQ = (unsigned long *)searchBuffer;
+	  changeBuffer[0] = '\0';
+	  DBGPrint("enter dwords to search for, '.' to end input\n");
+	  while (changeBuffer[0] != '.' && count < maxlen) {
 	for (r = 0; r < 1; r++) {
-	   DBGPrint("0x");
+		DBGPrint("0x");
 
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 8);
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 8);
 
-	   if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
-	       (changeBuffer[2] == '.') || (changeBuffer[3] == '.') ||
-	       (changeBuffer[4] == '.') || (changeBuffer[5] == '.') ||
-	       (changeBuffer[6] == '.') || (changeBuffer[7] == '.') ||
-	       (changeBuffer[8] == '.') || (changeBuffer[9] == '.') ||
-	       (changeBuffer[10] == '.') || (changeBuffer[11] == '.') ||
-	       (changeBuffer[12] == '.') || (changeBuffer[13] == '.') ||
-	       (changeBuffer[14] == '.') || (changeBuffer[15] == '.'))
-	      break;
+		if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
+		    (changeBuffer[2] == '.') || (changeBuffer[3] == '.') ||
+			 (changeBuffer[4] == '.') || (changeBuffer[5] == '.') ||
+			 (changeBuffer[6] == '.') || (changeBuffer[7] == '.') ||
+			 (changeBuffer[8] == '.') || (changeBuffer[9] == '.') ||
+			 (changeBuffer[10] == '.') || (changeBuffer[11] == '.') ||
+			 (changeBuffer[12] == '.') || (changeBuffer[13] == '.') ||
+			 (changeBuffer[14] == '.') || (changeBuffer[15] == '.'))
+			break;
 
-	   pB = (unsigned char *)&changeBuffer[0];
-	   len = strlen(pB);
-	   for (i = 0; i < len; i++)
-	      DBGPrint("\b");
+		pB = (unsigned char *)&changeBuffer[0];
+		len = strlen(pB);
+		for (i = 0; i < len; i++)
+			DBGPrint("\b");
 
-	   value = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      *changeQ = value;
-	   DBGPrint("%016X ", (unsigned)*changeQ);
+		value = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			*changeQ = value;
+		DBGPrint("%016X ", (unsigned)*changeQ);
 
-	   changeQ++;
-	   if (count++ > maxlen)
-	      break;
+		changeQ++;
+		if (count++ > maxlen)
+			break;
 	}
 	if (DBGPrint("\n")) return 1;
-     }
+	  }
 
-     if (count) {
+	  if (count) {
 	DBGPrint("enter start address for search:  ");
 	ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
 	pB = (unsigned char *)&changeBuffer[0];
 	address = EvaluateExpression(0, &pB, &valid);
 	if (valid) {
-	   register unsigned long temp;
+		register unsigned long temp;
 
-	   DBGPrint("start address = [%p]\n", (unsigned *)address);
+		DBGPrint("start address =[%p]\n", (unsigned *)address);
 
-	   DBGPrint("enter ending address for search:  ");
-	   ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
-	   pB = (unsigned char *)&changeBuffer[0];
-	   temp = EvaluateExpression(0, &pB, &valid);
-	   if (valid)
-	      EndingAddress = temp;
+		DBGPrint("enter ending address for search:  ");
+		ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
+		pB = (unsigned char *)&changeBuffer[0];
+		temp = EvaluateExpression(0, &pB, &valid);
+		if (valid)
+			EndingAddress = temp;
 
-	   DBGPrint("searching memory from 0x%p to 0x%p\n",
-		    (unsigned *)address, (unsigned *)EndingAddress);
-	   while (address < EndingAddress) {
-              read_memory((void *)address, copyBuffer, count * sizeof(unsigned long long));
-	      if (!memcmp(searchBuffer, copyBuffer, count * sizeof(unsigned long long))) {
-		 if (DBGPrint("match at address [%p]\n",
+		DBGPrint("searching memory from 0x%p to 0x%p\n",
+			 (unsigned *)address, (unsigned *)EndingAddress);
+		while (address < EndingAddress) {
+				  read_memory((void *)address, copyBuffer, count * sizeof(unsigned long long));
+			if (!memcmp(searchBuffer, copyBuffer, count * sizeof(unsigned long long))) {
+		 if (DBGPrint("match at address[%p]\n",
 			      (unsigned *)address)) return 1;
 		 if (dumpQuad((unsigned char *)address, 4, 0))
-                     return 1;
+							return 1;
 		 if (DBGPrint("searching\n")) return 1;
-	      }
-	      address++;
-	      if (!(address % 0x100000)) {
+			}
+			address++;
+			if (!(address % 0x100000)) {
 		 if (DBGPrint("searching memory at address 0x%p ..."
-                        " Q or q to abort - any key to proceed\n",
-                              (unsigned *)address)) return 1;
-                  key = mdb_getkey();
-                  if (((char)key == 'Q') || ((char)key == 'q'))
-                     break;
-	      }
-	   }
-	   if (DBGPrint("search completed.\n")) return 1;
-	   return 1;
+								" Q or q to abort - any key to proceed\n",
+										(unsigned *)address)) return 1;
+						key = mdb_getkey();
+						if (((char)key == 'Q') || ((char)key == 'q'))
+							break;
+			}
+		}
+		if (DBGPrint("search completed.\n")) return 1;
+		return 1;
 	}
 	if (DBGPrint("invalid start address\n")) return 1;
 	return 1;
-     }
-     if (DBGPrint("no search pattern\n")) return 1;
-     return 1;
+	  }
+	  if (DBGPrint("no search pattern\n")) return 1;
+	  return 1;
 }
 
 unsigned long changeMemoryHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("c   <address>            - change bytes at address\n");
-    DBGPrint("cb  <address>            - change bytes at address\n");
-    DBGPrint("cw  <address>            - change words at address\n");
-    DBGPrint("cd  <address>            - change dwords at address\n");
-    DBGPrint("cq  <address>            - change qwords at address\n");
-    return 1;
+	 DBGPrint("c   <address>            - change bytes at address\n");
+	 DBGPrint("cb  <address>            - change bytes at address\n");
+	 DBGPrint("cw  <address>            - change words at address\n");
+	 DBGPrint("cd  <address>            - change dwords at address\n");
+	 DBGPrint("cq  <address>            - change qwords at address\n");
+	 return 1;
 }
 
 /* CW */
 
 unsigned long changeWordValue(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-	       DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     register unsigned char *changeBuffer = &workbuf[0];
-     register unsigned short *changeW, oldW;
-     unsigned char *pB;
-     register unsigned long address, r, value, len, i;
-     unsigned long valid;
+	  register unsigned char *changeBuffer = &workbuf[0];
+	  register unsigned short *changeW, oldW;
+	  unsigned char *pB;
+	  register unsigned long address, r, value, len, i;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid) {
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (valid) {
 	changeW = (unsigned short *)address;
 	changeBuffer[0] = '\0';
 	DBGPrint("enter new value, <enter> to skip, or '.' to exit\n");
 	while (changeBuffer[0] != '.') {
-	   DBGPrint("[%p] ", changeW);
-	   for (r = 0; r < 4; r++) {
-	      oldW = (unsigned short)mdb_getword((unsigned long)changeW, 2);
-	      DBGPrint("(%04X)=", (unsigned)oldW);
+		DBGPrint("[%p] ", changeW);
+		for (r = 0; r < 4; r++) {
+			oldW = (unsigned short)mdb_getword((unsigned long)changeW, 2);
+			DBGPrint("(%04X)=", (unsigned)oldW);
 
-              ScreenInputFromKeyboard(&changeBuffer[0], 0, 6);
+				  ScreenInputFromKeyboard(&changeBuffer[0], 0, 6);
 
-	      if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
-		  (changeBuffer[2] == '.') || (changeBuffer[3] == '.'))
+			if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
+			    (changeBuffer[2] == '.') || (changeBuffer[3] == '.'))
 		 break;
-	      pB = (unsigned char *)&changeBuffer[0];
-	      len = strlen(pB);
+			pB = (unsigned char *)&changeBuffer[0];
+			len = strlen(pB);
 
-	      for (i = 0; i < len; i++)
+			for (i = 0; i < len; i++)
 		 DBGPrint("\b");
 
-	      value = EvaluateExpression(0, &pB, &valid);
-	      if (valid)
+			value = EvaluateExpression(0, &pB, &valid);
+			if (valid)
 		 mdb_putword((unsigned long)changeW, value, 2);
-	      DBGPrint("%04X ", (unsigned)mdb_getword((unsigned long)changeW, 2));
-	      changeW++;
-	   }
-	   if (DBGPrint("\n")) return 1;
+			DBGPrint("%04X ", (unsigned)mdb_getword((unsigned long)changeW, 2));
+			changeW++;
+		}
+		if (DBGPrint("\n")) return 1;
 	}
 	return 1;
-     }
-     DBGPrint("invalid change (word) address\n");
-     return 1;
+	  }
+	  DBGPrint("invalid change (word) address\n");
+	  return 1;
 }
 
 /* CQ */
 
 unsigned long changeQuadValue(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-	       DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     register unsigned char *changeBuffer = &workbuf[0];
-     register uint64_t *changeD, oldD;
-     register unsigned long address, r, value, len, i;
-     unsigned char *pB;
-     unsigned long valid;
+	  register unsigned char *changeBuffer = &workbuf[0];
+	  register uint64_t *changeD, oldD;
+	  register unsigned long address, r, value, len, i;
+	  unsigned char *pB;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid) {
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (valid) {
 	changeD = (uint64_t *)address;
 	changeBuffer[0] = '\0';
 	DBGPrint("enter new value, <enter> to skip, or '.' to exit\n");
 	while (changeBuffer[0] != '.') {
-	   DBGPrint("[%p] ", changeD);
-	   for (r = 0; r < 2; r++) {
-	      oldD = mdb_getqword(changeD, 8);
-	      DBGPrint("(%016llX)=", (unsigned)oldD);
+		DBGPrint("[%p] ", changeD);
+		for (r = 0; r < 2; r++) {
+			oldD = mdb_getqword(changeD, 8);
+			DBGPrint("(%016llX)=", (unsigned)oldD);
 
-	      ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
+			ScreenInputFromKeyboard(&changeBuffer[0], 0, 16);
 
-	      if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
-		  (changeBuffer[2] == '.') || (changeBuffer[3] == '.') ||
+			if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
+			    (changeBuffer[2] == '.') || (changeBuffer[3] == '.') ||
 		  (changeBuffer[4] == '.') || (changeBuffer[5] == '.') ||
 		  (changeBuffer[6] == '.') || (changeBuffer[7] == '.') ||
-	          (changeBuffer[8] == '.') || (changeBuffer[9] == '.') ||
+				 (changeBuffer[8] == '.') || (changeBuffer[9] == '.') ||
 		  (changeBuffer[10] == '.') || (changeBuffer[11] == '.') ||
 		  (changeBuffer[12] == '.') || (changeBuffer[13] == '.') ||
 		  (changeBuffer[14] == '.') || (changeBuffer[15] == '.') ||
-	           (changeBuffer[16] == '.') || (changeBuffer[17] == '.') ||
+				  (changeBuffer[16] == '.') || (changeBuffer[17] == '.') ||
 		  (changeBuffer[18] == '.') || (changeBuffer[19] == '.') ||
 		  (changeBuffer[20] == '.') || (changeBuffer[21] == '.') ||
 		  (changeBuffer[22] == '.') || (changeBuffer[23] == '.') ||
-	          (changeBuffer[24] == '.') || (changeBuffer[25] == '.') ||
+				 (changeBuffer[24] == '.') || (changeBuffer[25] == '.') ||
 		  (changeBuffer[26] == '.') || (changeBuffer[27] == '.') ||
 		  (changeBuffer[28] == '.') || (changeBuffer[29] == '.') ||
 		  (changeBuffer[30] == '.') || (changeBuffer[31] == '.'))
 		 break;
 
-	      pB = (unsigned char *)&changeBuffer[0];
-	      len = strlen(pB);
+			pB = (unsigned char *)&changeBuffer[0];
+			len = strlen(pB);
 
-	      for (i = 0; i < len; i++)
+			for (i = 0; i < len; i++)
 		 DBGPrint("\b");
 
-	      value = EvaluateExpression(0, &pB, &valid);
-	      if (valid)
+			value = EvaluateExpression(0, &pB, &valid);
+			if (valid)
 		 mdb_putqword(changeD, value, 8);
-	      DBGPrint("%016llX ", mdb_getqword(changeD, 8));
-	      changeD++;
-	   }
-	   if (DBGPrint("\n")) return 1;
+			DBGPrint("%016llX ", mdb_getqword(changeD, 8));
+			changeD++;
+		}
+		if (DBGPrint("\n")) return 1;
 	}
 	return 1;
-     }
-     DBGPrint("invalid change (qword) address\n");
-     return 1;
+	  }
+	  DBGPrint("invalid change (qword) address\n");
+	  return 1;
 }
 
 /* CD */
 
 unsigned long changeDoubleValue(unsigned char *cmd,
 				StackFrame *stackFrame, unsigned long Exception,
-	       DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     register unsigned char *changeBuffer = &workbuf[0];
-     register unsigned long *changeD, oldD;
-     register unsigned long address, r, value, len, i;
-     unsigned char *pB;
-     unsigned long valid;
+	  register unsigned char *changeBuffer = &workbuf[0];
+	  register unsigned long *changeD, oldD;
+	  register unsigned long address, r, value, len, i;
+	  unsigned char *pB;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid) {
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (valid) {
 	changeD = (unsigned long *)address;
 	changeBuffer[0] = '\0';
 	DBGPrint("enter new value, <enter> to skip, or '.' to exit\n");
 	while (changeBuffer[0] != '.') {
-	   DBGPrint("[%p] ", changeD);
-	   for (r = 0; r < 2; r++) {
-	      oldD = (unsigned long)mdb_getword((unsigned long)changeD, 4);
-	      DBGPrint("(%08X)=", (unsigned)oldD);
+		DBGPrint("[%p] ", changeD);
+		for (r = 0; r < 2; r++) {
+			oldD = (unsigned long)mdb_getword((unsigned long)changeD, 4);
+			DBGPrint("(%08X)=", (unsigned)oldD);
 
-	      ScreenInputFromKeyboard(&changeBuffer[0], 0, 8);
+			ScreenInputFromKeyboard(&changeBuffer[0], 0, 8);
 
-	      if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
-		  (changeBuffer[2] == '.') || (changeBuffer[3] == '.') ||
+			if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.') ||
+			    (changeBuffer[2] == '.') || (changeBuffer[3] == '.') ||
 		  (changeBuffer[4] == '.') || (changeBuffer[5] == '.') ||
 		  (changeBuffer[6] == '.') || (changeBuffer[7] == '.'))
 		 break;
 
-	      pB = (unsigned char *)&changeBuffer[0];
-	      len = strlen(pB);
+			pB = (unsigned char *)&changeBuffer[0];
+			len = strlen(pB);
 
-	      for (i = 0; i < len; i++)
+			for (i = 0; i < len; i++)
 		 DBGPrint("\b");
 
-	      value = EvaluateExpression(0, &pB, &valid);
-	      if (valid)
+			value = EvaluateExpression(0, &pB, &valid);
+			if (valid)
 		 mdb_putword((unsigned long)changeD, value, 4);
-	      DBGPrint("%08X ", (unsigned)mdb_getword((unsigned long)changeD, 4));
-	      changeD++;
-	   }
-	   if (DBGPrint("\n")) return 1;
+			DBGPrint("%08X ", (unsigned)mdb_getword((unsigned long)changeD, 4));
+			changeD++;
+		}
+		if (DBGPrint("\n")) return 1;
 	}
 	return 1;
-     }
-     DBGPrint("invalid change (dword) address\n");
-     return 1;
+	  }
+	  DBGPrint("invalid change (dword) address\n");
+	  return 1;
 }
 
 /* CB */
 
 unsigned long changeByteValue(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-	       DEBUGGER_PARSER *parser)
+			 DEBUGGER_PARSER *parser)
 {
-     unsigned char *changeBuffer = &workbuf[0];
-     register unsigned char *changeB, oldB;
-     unsigned char *pB;
-     register unsigned long address, r, value, len, i;
-     unsigned long valid;
+	  unsigned char *changeBuffer = &workbuf[0];
+	  register unsigned char *changeB, oldB;
+	  unsigned char *pB;
+	  register unsigned long address, r, value, len, i;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid) {
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (valid) {
 	changeB = (unsigned char *)address;
 	changeBuffer[0] = '\0';
 	DBGPrint("enter new value, <enter> to skip, or '.' to exit\n");
 	while (changeBuffer[0] != '.') {
-	   DBGPrint("[%p] ", changeB);
-	   for (r = 0; r < 8; r++) {
-	      oldB = (unsigned char)mdb_getword((unsigned long)changeB, 1);
-	      DBGPrint("(%02X)=", (unsigned)oldB);
+		DBGPrint("[%p] ", changeB);
+		for (r = 0; r < 8; r++) {
+			oldB = (unsigned char)mdb_getword((unsigned long)changeB, 1);
+			DBGPrint("(%02X)=", (unsigned)oldB);
 
-	      ScreenInputFromKeyboard(&changeBuffer[0], 0, 4);
+			ScreenInputFromKeyboard(&changeBuffer[0], 0, 4);
 
-	      if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.'))
+			if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.'))
 		 break;
 
-	      pB = (unsigned char *)&changeBuffer[0];
-	      len = strlen(pB);
-	      for (i = 0; i < len; i++)
+			pB = (unsigned char *)&changeBuffer[0];
+			len = strlen(pB);
+			for (i = 0; i < len; i++)
 		 DBGPrint("\b");
 
-	      value = EvaluateExpression(0, &pB, &valid);
-	      if (valid)
+			value = EvaluateExpression(0, &pB, &valid);
+			if (valid)
 		 mdb_putword((unsigned long)changeB, value, 1);
-	      DBGPrint("%02X ", (unsigned char)mdb_getword((unsigned long)changeB, 1));
-	      changeB++;
-	   }
-	   if (DBGPrint("\n")) return 1;
+			DBGPrint("%02X ", (unsigned char)mdb_getword((unsigned long)changeB, 1));
+			changeB++;
+		}
+		if (DBGPrint("\n")) return 1;
 	}
 	return 1;
-     }
-     DBGPrint("invalid change (byte) address\n");
-     return 1;
+	  }
+	  DBGPrint("invalid change (byte) address\n");
+	  return 1;
 }
 
 /* C */
@@ -2374,56 +2359,56 @@ unsigned long changeDefaultValue(unsigned char *cmd,
 				 StackFrame *stackFrame, unsigned long Exception,
 			DEBUGGER_PARSER *parser)
 {
-     unsigned char *changeBuffer = &workbuf[0];
-     register unsigned char *changeB, oldB;
-     unsigned char *pB;
-     register unsigned long address, r, value, len, i;
-     unsigned long valid;
+	  unsigned char *changeBuffer = &workbuf[0];
+	  register unsigned char *changeB, oldB;
+	  unsigned char *pB;
+	  register unsigned long address, r, value, len, i;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid) {
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (valid) {
 	changeB = (unsigned char *)address;
 	changeBuffer[0] = '\0';
 	DBGPrint("enter new value, <enter> to skip, or '.' to exit\n");
 	while (changeBuffer[0] != '.') {
-	   DBGPrint("[%p] ", changeB);
-	   for (r = 0; r < 8; r++) {
-	      oldB = (unsigned char)mdb_getword((unsigned long)changeB, 1);
-	      DBGPrint("(%02X)=", (unsigned char)oldB);
+		DBGPrint("[%p] ", changeB);
+		for (r = 0; r < 8; r++) {
+			oldB = (unsigned char)mdb_getword((unsigned long)changeB, 1);
+			DBGPrint("(%02X)=", (unsigned char)oldB);
 
-	      ScreenInputFromKeyboard(&changeBuffer[0], 0, 4);
+			ScreenInputFromKeyboard(&changeBuffer[0], 0, 4);
 
-	      if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.'))
+			if ((changeBuffer[0] == '.') || (changeBuffer[1] == '.'))
 		 break;
 
-	      pB = (unsigned char *)&changeBuffer[0];
-	      len = strlen(pB);
+			pB = (unsigned char *)&changeBuffer[0];
+			len = strlen(pB);
 
-	      for (i = 0; i < len; i++)
+			for (i = 0; i < len; i++)
 		 DBGPrint("\b");
 
-	      value = EvaluateExpression(0, &pB, &valid);
-	      if (valid)
+			value = EvaluateExpression(0, &pB, &valid);
+			if (valid)
 		 mdb_putword((unsigned long)changeB, value, 1);
-	      DBGPrint("%02X ", (unsigned char)mdb_getword((unsigned long)changeB, 1));
-	      changeB++;
-	   }
-	   if (DBGPrint("\n")) return 1;
+			DBGPrint("%02X ", (unsigned char)mdb_getword((unsigned long)changeB, 1));
+			changeB++;
+		}
+		if (DBGPrint("\n")) return 1;
 	}
 	return 1;
-     }
-     DBGPrint("invalid change (byte) address\n");
-     return 1;
+	  }
+	  DBGPrint("invalid change (byte) address\n");
+	  return 1;
 }
 
 unsigned long displayCloseHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("?   <address>            - display closest symbols to <address>\n");
-    return 1;
+	 DBGPrint("?   <address>            - display closest symbols to <address>\n");
+	 return 1;
 }
 
 /* ? */
@@ -2432,215 +2417,215 @@ unsigned long displayCloseSymbols(unsigned char *cmd,
 				  StackFrame *stackFrame, unsigned long Exception,
 			 DEBUGGER_PARSER *parser)
 {
-     register unsigned long oldD;
-     unsigned long valid;
+	  register unsigned long oldD;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     oldD = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!valid)
+	  oldD = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!valid)
 	oldD = GetIP(stackFrame);
-     DisplayClosestSymbol(oldD);
-     return 1;
+	  DisplayClosestSymbol(oldD);
+	  return 1;
 }
 
 unsigned long debuggerWalkStack(unsigned char *cmd,
 				StackFrame *stackFrame, unsigned long Exception,
-		       DEBUGGER_PARSER *parser)
+				 DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpStack(stackFrame,
 				    (unsigned char *)lastDumpAddress, lastDisplayLength);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpStack(stackFrame, (unsigned char *)lastDumpAddress, displayLength);
-     return 1;
+	  lastDumpAddress = dumpStack(stackFrame, (unsigned char *)lastDumpAddress, displayLength);
+	  return 1;
 }
 
 unsigned long displayDumpHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("d   <address> <#lines>   - dump memory as bytes (8 bit)\n");
-    DBGPrint("dw  <address> <#lines>   - dump memory as words (16 bit)\n");
-    DBGPrint("dd  <address> <#lines>   - dump memory as double words (32 bit)\n");
-    DBGPrint("dq  <address> <#lines>   - dump memory as quad words (64 bit)\n");
-    DBGPrint("dp  <address> <#lines>   - dump physical address as bytes (8 bit)\n");
-    DBGPrint("dpw <address> <#lines>   - dump physical address as words (16 bit)\n");
-    DBGPrint("dpd <address> <#lines>   - dump physical address as double words (32 bit)\n");
-    DBGPrint("dpq <address> <#lines>   - dump physical address as quad words (64 bit)\n");
-    DBGPrint("ds  <address> <#lines>   - dump stack\n");
-    DBGPrint("dds <address> <#lines>   - dump stack double word\n");
-    DBGPrint("dqs <address> <#lines>   - dump stack quad word\n");
-    DBGPrint("w   <address>            - display symbols on the stack\n");
+	 DBGPrint("d   <address> <#lines>   - dump memory as bytes (8 bit)\n");
+	 DBGPrint("dw  <address> <#lines>   - dump memory as words (16 bit)\n");
+	 DBGPrint("dd  <address> <#lines>   - dump memory as double words (32 bit)\n");
+	 DBGPrint("dq  <address> <#lines>   - dump memory as quad words (64 bit)\n");
+	 DBGPrint("dp  <address> <#lines>   - dump physical address as bytes (8 bit)\n");
+	 DBGPrint("dpw <address> <#lines>   - dump physical address as words (16 bit)\n");
+	 DBGPrint("dpd <address> <#lines>   - dump physical address as double words (32 bit)\n");
+	 DBGPrint("dpq <address> <#lines>   - dump physical address as quad words (64 bit)\n");
+	 DBGPrint("ds  <address> <#lines>   - dump stack\n");
+	 DBGPrint("dds <address> <#lines>   - dump stack double word\n");
+	 DBGPrint("dqs <address> <#lines>   - dump stack quad word\n");
+	 DBGPrint("w   <address>            - display symbols on the stack\n");
 
-    return 1;
+	 return 1;
 }
 
 /* DL */
 
 unsigned long debuggerDumpLinkedList(unsigned char *cmd,
 				     StackFrame *stackFrame, unsigned long Exception,
-			    DEBUGGER_PARSER *parser)
+				 DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
-     extern unsigned char *lastLinkAddress;
+	  unsigned long valid;
+	  extern unsigned char *lastLinkAddress;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastLinkAddress = dumpLinkedList((unsigned char *)lastLinkAddress, lastDisplayLength, 0);
 	return 1;
-     }
+	  }
 
 #ifdef CONFIG_X86_64
-     lastLinkAddress = (unsigned char *)EvaluateNumericExpression(stackFrame, &cmd, &valid);
+	  lastLinkAddress = (unsigned char *)EvaluateNumericExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateNumericExpression(stackFrame, &cmd, &valid);
-     lastLinkAddress = (unsigned char *)address;
+	  address = EvaluateNumericExpression(stackFrame, &cmd, &valid);
+	  lastLinkAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastLinkAddress = (unsigned char *)GetStackAddress(stackFrame);
 
-     displayLength = EvaluateNumericExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateNumericExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
 
-     lastLinkAddress = dumpLinkedList((unsigned char *)lastLinkAddress, displayLength, 0);
+	  lastLinkAddress = dumpLinkedList((unsigned char *)lastLinkAddress, displayLength, 0);
 
-     return 1;
+	  return 1;
 }
 
 /* DS */
 
 unsigned long debuggerDumpStack(unsigned char *cmd,
 				StackFrame *stackFrame, unsigned long Exception,
-		       DEBUGGER_PARSER *parser)
+				 DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpStack(stackFrame, (unsigned char *)lastDumpAddress, lastDisplayLength);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpStack(stackFrame, (unsigned char *)lastDumpAddress, displayLength);
-     return 1;
+	  lastDumpAddress = dumpStack(stackFrame, (unsigned char *)lastDumpAddress, displayLength);
+	  return 1;
 }
 
 /* DDS */
 
 unsigned long debuggerDumpDoubleStack(unsigned char *cmd,
 				      StackFrame *stackFrame, unsigned long Exception,
-			     DEBUGGER_PARSER *parser)
+				  DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpDoubleStack(stackFrame, (unsigned char *)lastDumpAddress,
 					  lastDisplayLength);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpDoubleStack(stackFrame, (unsigned char *)lastDumpAddress,
-				       displayLength);
-     return 1;
+	  lastDumpAddress = dumpDoubleStack(stackFrame, (unsigned char *)lastDumpAddress,
+					    displayLength);
+	  return 1;
 }
 
 /* DQS */
 
 unsigned long debuggerDumpQuadStack(unsigned char *cmd,
 				    StackFrame *stackFrame, unsigned long Exception,
-			     DEBUGGER_PARSER *parser)
+				  DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpQuadStack(stackFrame,
 					(unsigned char *)lastDumpAddress,
-			   lastDisplayLength);
+				lastDisplayLength);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpQuadStack(stackFrame,
-				     (unsigned char *)lastDumpAddress, displayLength);
-     return 1;
+	  lastDumpAddress = dumpQuadStack(stackFrame,
+					  (unsigned char *)lastDumpAddress, displayLength);
+	  return 1;
 }
 
 /* DQ */
@@ -2649,32 +2634,32 @@ unsigned long debuggerDumpQuad(unsigned char *cmd,
 			       StackFrame *stackFrame, unsigned long Exception,
 			DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpQuad((unsigned char *)lastDumpAddress, lastDisplayLength, 0);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpQuad((unsigned char *)lastDumpAddress, displayLength, 0);
-     return 1;
+	  lastDumpAddress = dumpQuad((unsigned char *)lastDumpAddress, displayLength, 0);
+	  return 1;
 }
 
 /* DD */
@@ -2683,100 +2668,100 @@ unsigned long debuggerDumpDouble(unsigned char *cmd,
 				 StackFrame *stackFrame, unsigned long Exception,
 			DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpDouble((unsigned char *)lastDumpAddress, lastDisplayLength, 0);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpDouble((unsigned char *)lastDumpAddress, displayLength, 0);
-     return 1;
+	  lastDumpAddress = dumpDouble((unsigned char *)lastDumpAddress, displayLength, 0);
+	  return 1;
 }
 
 /* DW */
 
 unsigned long debuggerDumpWord(unsigned char *cmd,
 			       StackFrame *stackFrame, unsigned long Exception,
-		      DEBUGGER_PARSER *parser)
+				DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpWord((unsigned char *)lastDumpAddress, lastDisplayLength, 0);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpWord((unsigned char *)lastDumpAddress, displayLength, 0);
-     return 1;
+	  lastDumpAddress = dumpWord((unsigned char *)lastDumpAddress, displayLength, 0);
+	  return 1;
 }
 
 /* D */
 
 unsigned long debuggerDumpByte(unsigned char *cmd,
 			       StackFrame *stackFrame, unsigned long Exception,
-		      DEBUGGER_PARSER *parser)
+				DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dump((unsigned char *)lastDumpAddress, lastDisplayLength, 0);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dump((unsigned char *)lastDumpAddress, displayLength, 0);
-     return 1;
+	  lastDumpAddress = dump((unsigned char *)lastDumpAddress, displayLength, 0);
+	  return 1;
 }
 
 /* DPQ */
@@ -2785,32 +2770,32 @@ unsigned long debuggerDumpQuadPhys(unsigned char *cmd,
 				   StackFrame *stackFrame, unsigned long Exception,
 			DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpQuad((unsigned char *)lastDumpAddress, lastDisplayLength, 1);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpQuad((unsigned char *)lastDumpAddress, displayLength, 1);
-     return 1;
+	  lastDumpAddress = dumpQuad((unsigned char *)lastDumpAddress, displayLength, 1);
+	  return 1;
 }
 
 /* DPD */
@@ -2819,109 +2804,109 @@ unsigned long debuggerDumpDoublePhys(unsigned char *cmd,
 				     StackFrame *stackFrame, unsigned long Exception,
 			DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpDouble((unsigned char *)lastDumpAddress, lastDisplayLength, 1);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpDouble((unsigned char *)lastDumpAddress, displayLength, 1);
-     return 1;
+	  lastDumpAddress = dumpDouble((unsigned char *)lastDumpAddress, displayLength, 1);
+	  return 1;
 }
 
 /* DPW */
 
 unsigned long debuggerDumpWordPhys(unsigned char *cmd,
 				   StackFrame *stackFrame, unsigned long Exception,
-		      DEBUGGER_PARSER *parser)
+				DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dumpWord((unsigned char *)lastDumpAddress, lastDisplayLength, 1);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dumpWord((unsigned char *)lastDumpAddress, displayLength, 1);
-     return 1;
+	  lastDumpAddress = dumpWord((unsigned char *)lastDumpAddress, displayLength, 1);
+	  return 1;
 }
 
 /* DP */
 
 unsigned long debuggerDumpBytePhys(unsigned char *cmd,
 				   StackFrame *stackFrame, unsigned long Exception,
-		      DEBUGGER_PARSER *parser)
+				DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 #ifndef CONFIG_X86_64
-     unsigned long address;
+	  unsigned long address;
 #endif
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastDumpAddress = dump((unsigned char *)lastDumpAddress, lastDisplayLength, 1);
 	return 1;
-     }
+	  }
 #ifdef CONFIG_X86_64
-     lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)EvaluateExpression(stackFrame, &cmd, &valid);
 #else
-     address = EvaluateExpression(stackFrame, &cmd, &valid);
-     lastDumpAddress = (unsigned char *)address;
+	  address = EvaluateExpression(stackFrame, &cmd, &valid);
+	  lastDumpAddress = (unsigned char *)address;
 #endif
-     if (!valid)
+	  if (!valid)
 	lastDumpAddress = (unsigned char *)GetStackAddress(stackFrame);
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastDumpAddress = dump((unsigned char *)lastDumpAddress, displayLength, 1);
-     return 1;
+	  lastDumpAddress = dump((unsigned char *)lastDumpAddress, displayLength, 1);
+	  return 1;
 }
 
 unsigned long displayDisassembleHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("id  <address> <#lines>   - unassemble code (GNU format)\n");
-    DBGPrint("u   <address> <#lines>   - unassemble code (INTEL format)\n");
-    DBGPrint("ux  <address> <#lines>   - unassemble code (32-bit)\n");
-    DBGPrint("uu  <address> <#lines>   - unassemble code (16-bit)\n");
-    return 1;
+	 DBGPrint("id  <address> <#lines>   - unassemble code (GNU format)\n");
+	 DBGPrint("u   <address> <#lines>   - unassemble code (INTEL format)\n");
+	 DBGPrint("ux  <address> <#lines>   - unassemble code (32-bit)\n");
+	 DBGPrint("uu  <address> <#lines>   - unassemble code (16-bit)\n");
+	 return 1;
 }
 
 /* UU */
@@ -2930,34 +2915,34 @@ unsigned long processDisassemble16(unsigned char *cmd,
 				   StackFrame *stackFrame, unsigned long Exception,
 			  DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastUnasmAddress = disassemble(stackFrame,
 				       (unsigned long)lastUnasmAddress,
-				       lastDisplayLength, 0, 0);
+						 lastDisplayLength, 0, 0);
 	return 1;
-     }
-     lastUnasmAddress = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!valid) {
-        if (!*cmd)
-	   lastUnasmAddress = GetIP(stackFrame);
-        else {
-           DBGPrint("invalid address for unassemble\n");
-           return 1;
-        }
-     }
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
-		     displayLength = 20;
-     lastUnasmAddress = disassemble(stackFrame,
-                                    (unsigned long)lastUnasmAddress,
-				    displayLength, 0, 0);
-     return 1;
+	  }
+	  lastUnasmAddress = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!valid) {
+		  if (!*cmd)
+		lastUnasmAddress = GetIP(stackFrame);
+		  else {
+			  DBGPrint("invalid address for unassemble\n");
+			  return 1;
+		  }
+	  }
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
+			  displayLength = 20;
+	  lastUnasmAddress = disassemble(stackFrame,
+					 (unsigned long)lastUnasmAddress,
+					 displayLength, 0, 0);
+	  return 1;
 }
 
 /* UX */
@@ -2966,35 +2951,35 @@ unsigned long processDisassemble32(unsigned char *cmd,
 				   StackFrame *stackFrame, unsigned long Exception,
 			  DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastUnasmAddress = disassemble(stackFrame,
 				       (unsigned long)lastUnasmAddress,
-				       lastDisplayLength, 1, 0);
+						 lastDisplayLength, 1, 0);
 	return 1;
-     }
+	  }
 
-     lastUnasmAddress = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!valid) {
-        if (!*cmd)
-	   lastUnasmAddress = GetIP(stackFrame);
-        else {
-           DBGPrint("invalid address for unassemble\n");
-           return 1;
-        }
-     }
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  lastUnasmAddress = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!valid) {
+		  if (!*cmd)
+		lastUnasmAddress = GetIP(stackFrame);
+		  else {
+			  DBGPrint("invalid address for unassemble\n");
+			  return 1;
+		  }
+	  }
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastUnasmAddress = disassemble(stackFrame,
-                                    (unsigned long)lastUnasmAddress,
-				    displayLength, 1, 0);
-     return 1;
+	  lastUnasmAddress = disassemble(stackFrame,
+					 (unsigned long)lastUnasmAddress,
+					 displayLength, 1, 0);
+	  return 1;
 }
 
 /* U */
@@ -3003,35 +2988,35 @@ unsigned long processDisassembleAny(unsigned char *cmd,
 				    StackFrame *stackFrame, unsigned long Exception,
 			  DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastUnasmAddress = disassemble(stackFrame,
 				       (unsigned long)lastUnasmAddress,
-				       lastDisplayLength, -1, 0);
+						 lastDisplayLength, -1, 0);
 	return 1;
-     }
+	  }
 
-     lastUnasmAddress = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!valid) {
-        if (!*cmd)
-	   lastUnasmAddress = GetIP(stackFrame);
-        else {
-           DBGPrint("invalid address for unassemble\n");
-           return 1;
-        }
-     }
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  lastUnasmAddress = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!valid) {
+		  if (!*cmd)
+		lastUnasmAddress = GetIP(stackFrame);
+		  else {
+			  DBGPrint("invalid address for unassemble\n");
+			  return 1;
+		  }
+	  }
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastUnasmAddress = disassemble(stackFrame,
-                                    (unsigned long)lastUnasmAddress,
-				    displayLength, -1, 0);
-     return 1;
+	  lastUnasmAddress = disassemble(stackFrame,
+					 (unsigned long)lastUnasmAddress,
+					 displayLength, -1, 0);
+	  return 1;
 }
 
 /* ID */
@@ -3040,34 +3025,33 @@ unsigned long processDisassembleATT(unsigned char *cmd,
 				    StackFrame *stackFrame, unsigned long Exception,
 			  DEBUGGER_PARSER *parser)
 {
-     unsigned long valid;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     if (repeatCommand) {
+	  if (repeatCommand) {
 	lastUnasmAddress = disassemble(stackFrame,
 				       (unsigned long)lastUnasmAddress,
-				       lastDisplayLength, -1, 1);
+						 lastDisplayLength, -1, 1);
 	return 1;
-     }
+	  }
 
-     lastUnasmAddress = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!valid) {
-        if (!*cmd)
-	   lastUnasmAddress = GetIP(stackFrame);
-        else {
-           DBGPrint("invalid address for unassemble\n");
-           return 1;
-        }
-     }
-     displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (!displayLength || displayLength > 20)
+	  lastUnasmAddress = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!valid) {
+		  if (!*cmd)
+		lastUnasmAddress = GetIP(stackFrame);
+		  else {
+			  DBGPrint("invalid address for unassemble\n");
+			  return 1;
+		  }
+	  }
+	  displayLength = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (!displayLength || displayLength > 20)
 	displayLength = 20;
-     lastUnasmAddress = disassemble(stackFrame,
-                                    (unsigned long)lastUnasmAddress,
-				    displayLength, -1, 1);
-     return 1;
+	  lastUnasmAddress = disassemble(stackFrame,
+					 (unsigned long)lastUnasmAddress,
+					 displayLength, -1, 1);
+	  return 1;
 }
-

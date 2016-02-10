@@ -90,7 +90,7 @@ extern unsigned char *category_strings[13];
 
 unsigned long disassemble(StackFrame *stackFrame, unsigned long p,
 			  unsigned long count, unsigned long use,
-                                 unsigned long type);
+											unsigned long type);
 void ClearDebuggerState(void);
 void displayMTRRRegisters(void);
 void DisplayGDT(unsigned char *GDT_ADDRESS);
@@ -109,36 +109,36 @@ unsigned char *dumpLinkedList(unsigned char *p, unsigned long count,
 			      unsigned long offset);
 unsigned char *dumpDoubleStack(StackFrame *stackFrame,
 			       unsigned char *p,
-                                      unsigned long count);
+												  unsigned long count);
 unsigned char *dumpStack(StackFrame *stackFrame,
 			 unsigned char *p,
-                                unsigned long count);
+										  unsigned long count);
 unsigned long dumpBacktrace(unsigned char *p, unsigned long count);
 unsigned long debugger_setup(unsigned long processor,
 			     unsigned long Exception,
-                                    StackFrame *stackFrame,
-                                    unsigned char *panicMsg);
+												StackFrame *stackFrame,
+												unsigned char *panicMsg);
 unsigned long debugger_entry(unsigned long Exception,
 			     StackFrame *stackFrame,
-                                    unsigned long processor);
+												unsigned long processor);
 unsigned long debugger_command_entry(unsigned long processor,
 				     unsigned long Exception,
-                                            StackFrame *stackFrame);
+														  StackFrame *stackFrame);
 unsigned long ConsoleDisplayBreakReason(StackFrame *stackFrame,
 					unsigned long reason,
-                                               unsigned long processor,
-			                       unsigned long lastCommand);
+															  unsigned long processor,
+										  unsigned long lastCommand);
 uint64_t EvaluateExpression(StackFrame *stackFrame,
 			    unsigned char **p,
-                                   unsigned long *type);
+											  unsigned long *type);
 uint64_t EvaluateNumericExpression(StackFrame *stackFrame,
 				   unsigned char **p,
-                                          unsigned long *type);
+														unsigned long *type);
 uint64_t EvaluateDisassemblyExpression(StackFrame *stackFrame,
 				       unsigned char **p,
-                                              unsigned long *type,
-                                              int sizeflag,
-                                              unsigned char **result);
+															 unsigned long *type,
+															 int sizeflag,
+															 unsigned char **result);
 unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
 			 unsigned long use, unsigned long *ret,
 				unsigned long type);

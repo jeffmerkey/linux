@@ -28,17 +28,13 @@
 #define KBC_TIMEOUT 250			/* Timeout in ms for sending to keyboard controller */
 #define KBD_TIMEOUT 1000		/* Timeout in ms for keyboard command acknowledge */
 
-/*
- *	Keyboard Controller Registers on normal PCs.
- */
+/*	Keyboard Controller Registers on normal PCs. */
 
 #define KBD_STATUS_REG		0x64	/* Status register (R) */
 #define KBD_CNTL_REG		0x64	/* Controller command register (W) */
 #define KBD_DATA_REG		0x60	/* Keyboard data register (R/W) */
 
-/*
- *	Keyboard Controller Commands
- */
+/*	Keyboard Controller Commands */
 
 #define KBD_CCMD_READ_MODE	0x20	/* Read mode bits */
 #define KBD_CCMD_WRITE_MODE	0x60	/* Write mode bits */
@@ -51,12 +47,10 @@
 #define KBD_CCMD_KBD_DISABLE	0xAD	/* Keyboard interface disable */
 #define KBD_CCMD_KBD_ENABLE	0xAE	/* Keyboard interface enable */
 #define KBD_CCMD_WRITE_AUX_OBUF	0xD3    /* Write to output buffer as if
-					   initiated by the auxiliary device */
+						initiated by the auxiliary device */
 #define KBD_CCMD_WRITE_MOUSE	0xD4	/* Write the following byte to the mouse */
 
-/*
- *	Keyboard Commands
- */
+/*	Keyboard Commands */
 
 #define KBD_CMD_SET_LEDS	0xED	/* Set keyboard leds */
 #define KBD_CMD_SET_RATE	0xF3	/* Set typematic rate */
@@ -64,17 +58,13 @@
 #define KBD_CMD_DISABLE		0xF5	/* Disable scanning */
 #define KBD_CMD_RESET		0xFF	/* Reset */
 
-/*
- *	Keyboard Replies
- */
+/*	Keyboard Replies */
 
 #define KBD_REPLY_POR		0xAA	/* Power on reset */
 #define KBD_REPLY_ACK		0xFA	/* Command ACK */
 #define KBD_REPLY_RESEND	0xFE	/* Command NACK, send the cmd again */
 
-/*
- *	Status Register Bits
- */
+/*	Status Register Bits */
 
 #define KBD_STAT_OBF		0x01	/* Keyboard output buffer full */
 #define KBD_STAT_IBF		0x02	/* Keyboard input buffer full */
@@ -87,9 +77,7 @@
 
 #define AUX_STAT_OBF (KBD_STAT_OBF | KBD_STAT_MOUSE_OBF)
 
-/*
- *	Controller Mode Register Bits
- */
+/*	Controller Mode Register Bits */
 
 #define KBD_MODE_KBD_INT	0x01	/* Keyboard data generate IRQ1 */
 #define KBD_MODE_MOUSE_INT	0x02	/* Mouse data generate IRQ12 */
@@ -100,9 +88,7 @@
 #define KBD_MODE_KCC		0x40	/* Scan code conversion to PC format */
 #define KBD_MODE_RFU		0x80
 
-/*
- *	Mouse Commands
- */
+/*	Mouse Commands */
 
 #define AUX_SET_RES		0xE8	/* Set resolution */
 #define AUX_SET_SCALE11		0xE6	/* Set 1:1 scaling */
@@ -116,13 +102,12 @@
 #define AUX_ACK			0xFA	/* Command byte ACK. */
 
 #define AUX_BUF_SIZE		2048
-                                           /* This might be better divisible by
-					   three to make overruns stay in sync
-					   but then the read function would need
-					   a lock etc - ick */
+														 /* This might be better divisible by
+						three to make overruns stay in sync
+						but then the read function would need
+						a lock etc - ick */
 
 #define kbd_read_input() inb(KBD_DATA_REG)
 #define kbd_read_status() inb(KBD_STATUS_REG)
 #define kbd_write_output(val) outb(val, KBD_DATA_REG)
 #define kbd_write_command(val) outb(val, KBD_CNTL_REG)
-

@@ -94,4 +94,3 @@ static inline unsigned long strhash(unsigned char *s, int len, int limit)
 }
 
 #endif
-

@@ -103,9 +103,8 @@ unsigned long IsAccelerator(unsigned long key)
 
 	accel = accelHead;
 	while (accel) {
-		if (accel->accelFlags && accel->accelRoutine && accel->key == key) {
+		if (accel->accelFlags && accel->accelRoutine && accel->key == key)
 			return 1;
-		}
 		accel = accel->accelNext;
 	}
 	return 0;
@@ -129,7 +128,7 @@ unsigned long AccelHelpRoutine(unsigned long key)
 			}
 			accel = accel->accelNext;
 		}
-		DBGPrint("Help for Accelerator [%08X] not found\n",  (unsigned)key);
+		DBGPrint("Help for Accelerator[%08X] not found\n",  (unsigned)key);
 		return 1;
 	} else {
 		DBGPrint("Accelerator(s)\n");
@@ -185,9 +184,8 @@ unsigned long AddAccelRoutine(ACCELERATOR *newAccel)
 
 	accel = accelHead;
 	while (accel) {
-		if (accel == newAccel || accel->key == newAccel->key) {
+		if (accel == newAccel || accel->key == newAccel->key)
 			return 1;
-		}
 		accel = accel->accelNext;
 	}
 	newAccel->accelFlags = -1;
@@ -258,9 +256,8 @@ unsigned long AddAlternateDebugger(ALT_DEBUGGER *Debugger)
 
 	altDebug = altDebugHead;
 	while (altDebug) {
-		if (altDebug == Debugger) {
+		if (altDebug == Debugger)
 			return 1;
-		}
 		altDebug = altDebug->altDebugNext;
 	}
 	if (!altDebugHead) {
@@ -389,7 +386,7 @@ unsigned long DebuggerParserHelpRoutine(unsigned char *command,  unsigned char *
 			debugParser = debugParser->debugNext;
 		}
 
-		DBGPrint("Help for Command [%s] not found\n",  command);
+		DBGPrint("Help for Command[%s] not found\n",  command);
 		return 1;
 	} else {
 		DBGPrint("Debugger Command(s)\n");
@@ -469,9 +466,8 @@ unsigned long AddDebuggerCommandParser(DEBUGGER_PARSER *parser)
 			if (debugParser == parser ||
 			    (parser->debugCommandNameLength ==
 				debugParser->debugCommandNameLength &&
-				(!strcasecmp(parser->debugCommandName,  debugParser->debugCommandName)))) {
+				(!strcasecmp(parser->debugCommandName,  debugParser->debugCommandName))))
 				return 1;
-			}
 			debugParser = debugParser->debugNext;
 		}
 		debugParserHead = insertDebuggerParser(parser,  debugParserHead);
@@ -508,4 +504,3 @@ unsigned long RemoveDebuggerCommandParser(DEBUGGER_PARSER *parser)
 		}
 		return -1;
 }
-

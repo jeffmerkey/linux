@@ -75,11 +75,11 @@ unsigned char *GetSymbolFromValue(unsigned long value,
 				unsigned long len);
 unsigned char *GetSymbolFromValueWithOffset(unsigned long value,
 					    unsigned long *sym_offset,
-                                unsigned char *buf,
+										  unsigned char *buf,
 				unsigned long len);
 unsigned char *GetSymbolFromValueOffsetModule(unsigned long value,
 					      unsigned long *sym_offset,
-                                unsigned char **module,
+										  unsigned char **module,
 				unsigned char *buf,
 				unsigned long len);
 unsigned long get_processor_id(void);

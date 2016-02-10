@@ -79,172 +79,171 @@ extern int nr_ioapics;
 
 unsigned long apic_directed_nmi(unsigned long cpu)
 {
-    apic->send_IPI_mask(cpumask_of(cpu),
-                        APIC_DM_NMI | APIC_INT_LEVELTRIG | APIC_INT_ASSERT);
-    apic->send_IPI_mask(cpumask_of(cpu),
-                        APIC_DM_NMI | APIC_INT_LEVELTRIG);
-    return 0;
+	 apic->send_IPI_mask(cpumask_of(cpu),
+								APIC_DM_NMI | APIC_INT_LEVELTRIG | APIC_INT_ASSERT);
+	 apic->send_IPI_mask(cpumask_of(cpu),
+								APIC_DM_NMI | APIC_INT_LEVELTRIG);
+	 return 0;
 }
 
 void dump_ioapic(unsigned long num)
 {
-     unsigned long i, val;
+	  unsigned long i, val;
 
-     if (num < nr_ioapics) {
-        DBGPrint("io_apic registers\n");
-        for (i = 0; i <= 0x2F; i++) {
-	   if ((i & 3) == 0)
-	      DBGPrint("%08X: ", i);
+	  if (num < nr_ioapics) {
+		  DBGPrint("io_apic registers\n");
+		  for (i = 0; i <= 0x2F; i++) {
+		if ((i & 3) == 0)
+			DBGPrint("%08X: ", i);
 
-	   val = native_io_apic_read(num, i * 4);
-	   DBGPrint("%08X ", val);
+		val = native_io_apic_read(num, i * 4);
+		DBGPrint("%08X ", val);
 
-	   if ((i & 3) == 3)
-	      DBGPrint("\n");
-        }
-     }
-     return;
+		if ((i & 3) == 3)
+			DBGPrint("\n");
+		  }
+	  }
+	  return;
 }
 
 void dump_local_apic(void)
 {
-    unsigned long i, val;
+	 unsigned long i, val;
 
-    DBGPrint("local apic registers\n");
-    for (i = 0; i <= 0x3F; i++) {
-       if ((i & 3) == 0)
+	 DBGPrint("local apic registers\n");
+	 for (i = 0; i <= 0x3F; i++) {
+		 if ((i & 3) == 0)
 	  DBGPrint("%08X: ", i);
 
-       val = apic_read(i * 4);
-       DBGPrint("%08X ", val);
+		 val = apic_read(i * 4);
+		 DBGPrint("%08X ", val);
 
-       if ((i & 3) == 3)
+		 if ((i & 3) == 3)
 	  DBGPrint("\n");
-    }
+	 }
 }
 
 void dump_remote_apic(unsigned long cpu)
 {
-    register unsigned long i, timeout, apicid;
-    register unsigned long val;
+	 register unsigned long i, timeout, apicid;
+	 register unsigned long val;
 
-    DBGPrint("remote apic registers processor(%d)\n", cpu);
-    for (i = 0; i <= 0x3F; i++) {
-       if ((i & 3) == 0)
+	 DBGPrint("remote apic registers processor(%d)\n", cpu);
+	 for (i = 0; i <= 0x3F; i++) {
+		 if ((i & 3) == 0)
 	  DBGPrint("%08X: ", i);
 
-       apicid = apic->cpu_present_to_apicid(cpu);
-       if (apicid == BAD_APICID) {
-          DBGPrint("BADAPICX ");
-          continue;
-       }
+		 apicid = apic->cpu_present_to_apicid(cpu);
+		 if (apicid == BAD_APICID) {
+			 DBGPrint("BADAPICX ");
+			 continue;
+		 }
 
-       timeout = 0;
-       while (apic_read(APIC_ICR) & APIC_ICR_BUSY) {
-          udelay(100);
-          if (timeout++ >= 1000)
-             break;
-          cpu_relax();
-          mdb_watchdogs();
-       }
+		 timeout = 0;
+		 while (apic_read(APIC_ICR) & APIC_ICR_BUSY) {
+			 udelay(100);
+			 if (timeout++ >= 1000)
+				 break;
+			 cpu_relax();
+			 mdb_watchdogs();
+		 }
 
-       if (timeout >= 1000) {
-          DBGPrint("???????? ");
-          continue;
-       }
+		 if (timeout >= 1000) {
+			 DBGPrint("???????? ");
+			 continue;
+		 }
 
-       apic_write(APIC_ICR2, SET_APIC_DEST_FIELD(apicid));
-       apic_write(APIC_ICR, i | APIC_DEST_LOGICAL | APIC_DM_REMRD);
+		 apic_write(APIC_ICR2, SET_APIC_DEST_FIELD(apicid));
+		 apic_write(APIC_ICR, i | APIC_DEST_LOGICAL | APIC_DM_REMRD);
 
-       timeout = 0;
-       while ((apic_read(APIC_ICR) & APIC_ICR_RR_MASK) == APIC_ICR_RR_INPROG) {
-          udelay(100);
-          if (timeout++ >= 1000)
-             break;
+		 timeout = 0;
+		 while ((apic_read(APIC_ICR) & APIC_ICR_RR_MASK) == APIC_ICR_RR_INPROG) {
+			 udelay(100);
+			 if (timeout++ >= 1000)
+				 break;
 
-          cpu_relax();
-          mdb_watchdogs();
-       }
+			 cpu_relax();
+			 mdb_watchdogs();
+		 }
 
-       if (timeout >= 1000) {
-          DBGPrint("???????? ");
-          continue;
-       }
+		 if (timeout >= 1000) {
+			 DBGPrint("???????? ");
+			 continue;
+		 }
 
-       if ((apic_read(APIC_ICR) & APIC_ICR_RR_MASK) == APIC_ICR_RR_VALID) {
-          val = apic_read(APIC_RRR);
-          DBGPrint("%08X ", val);
-       } else {
-          DBGPrint("???????? ");
-       }
+		 if ((apic_read(APIC_ICR) & APIC_ICR_RR_MASK) == APIC_ICR_RR_VALID) {
+			 val = apic_read(APIC_RRR);
+			 DBGPrint("%08X ", val);
+		 } else
+			 DBGPrint("???????? ");
 
-       if ((i & 3) == 3)
+		 if ((i & 3) == 3)
 	  DBGPrint("\n");
-    }
+	 }
 }
 
 unsigned long displayAPICHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("apic                     - display local apic regs\n");
-    DBGPrint("apic [p#]                - display remote apic regs\n");
-    return 1;
+	 DBGPrint("apic                     - display local apic regs\n");
+	 DBGPrint("apic[p#]                - display remote apic regs\n");
+	 return 1;
 }
 
 /* APIC */
 
 unsigned long displayAPICInfo(unsigned char *cmd,
 			      StackFrame *stackFrame, unsigned long Exception,
-		     DEBUGGER_PARSER *parser)
+			  DEBUGGER_PARSER *parser)
 {
-     register unsigned long value;
-     unsigned long valid;
+	  register unsigned long value;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid && ((value >= MAX_PROCESSORS) || !cpu_online(value))) {
-        DBGPrint("processor not found\n");
-        return 1;
-     }
-     if (valid && (value != get_processor_id()))
-        dump_remote_apic(value);
-     else
-        dump_local_apic();
-     return 1;
+	  value = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (valid && ((value >= MAX_PROCESSORS) || !cpu_online(value))) {
+		  DBGPrint("processor not found\n");
+		  return 1;
+	  }
+	  if (valid && (value != get_processor_id()))
+		  dump_remote_apic(value);
+	  else
+		  dump_local_apic();
+	  return 1;
 }
 
 unsigned long displayIOAPICHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 {
-    DBGPrint("ioapic [#]               - display specified ioapic [#] regs\n");
-    return 1;
+	 DBGPrint("ioapic[#]               - display specified ioapic[#] regs\n");
+	 return 1;
 }
 
 /* IOAPIC */
 
 unsigned long displayIOAPICInfo(unsigned char *cmd,
 				StackFrame *stackFrame, unsigned long Exception,
-		       DEBUGGER_PARSER *parser)
+				 DEBUGGER_PARSER *parser)
 {
-     register unsigned long value;
-     unsigned long valid;
+	  register unsigned long value;
+	  unsigned long valid;
 
-     cmd = &cmd[parser->debugCommandNameLength];
-     while (*cmd && *cmd == ' ')
-        cmd++;
+	  cmd = &cmd[parser->debugCommandNameLength];
+	  while (*cmd && *cmd == ' ')
+		  cmd++;
 
-     value = EvaluateExpression(stackFrame, &cmd, &valid);
-     if (valid && !(value < nr_ioapics)) {
-        DBGPrint("ioapic not found\n");
-        return 1;
-     }
-     if (valid)
-        dump_ioapic(value);
-     else
-        dump_ioapic(0);
+	  value = EvaluateExpression(stackFrame, &cmd, &valid);
+	  if (valid && !(value < nr_ioapics)) {
+		  DBGPrint("ioapic not found\n");
+		  return 1;
+	  }
+	  if (valid)
+		  dump_ioapic(value);
+	  else
+		  dump_ioapic(0);
 
-     return 1;
+	  return 1;
 }
 
 #endif /* CONFIG_SMP */

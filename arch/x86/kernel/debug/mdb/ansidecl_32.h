@@ -1,7 +1,7 @@
 /* ANSI and traditional C compatability macros
-   Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001
-   Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+	Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001
+	Free Software Foundation, Inc.
+	This file is part of the GNU C Library.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,128 +21,126 @@ GNU General Public License for more details. */
 
 /* ANSI and traditional C compatibility macros
 
-   ANSI C is assumed if __STDC__ is #defined.
+	ANSI C is assumed if __STDC__ is #defined.
 
-   Macro		ANSI C definition	Traditional C definition
-   -----		---- - ----------	----------- - ----------
-   ANSI_PROTOTYPES	1			not defined
-   PTR			`void *'		`char *'
-   PTRCONST		`void *const'		`char *'
-   LONG_DOUBLE		`long double'		`double'
-   const		not defined		`'
-   volatile		not defined		`'
-   signed		not defined		`'
-   VA_START(ap, var)	va_start(ap, var)	va_start(ap)
+	Macro		ANSI C definition	Traditional C definition
+	-----		---- - ----------	----------- - ----------
+	ANSI_PROTOTYPES	1			not defined
+	PTR			`void *'		`char *'
+	PTRCONST		`void *const'		`char *'
+	LONG_DOUBLE		`long double'		`double'
+	const		not defined		`'
+	volatile		not defined		`'
+	signed		not defined		`'
+	VA_START(ap, var)	va_start(ap, var)	va_start(ap)
 
-   Note that it is safe to write "void foo();" indicating a function
-   with no return value, in all K+R compilers we have been able to test.
+	Note that it is safe to write "void foo();" indicating a function
+	with no return value, in all K+R compilers we have been able to test.
 
-   For declaring functions with prototypes, we also provide these:
+	For declaring functions with prototypes, we also provide these:
 
-   PARAMS ((prototype))
-   -- for functions which take a fixed number of arguments.  Use this
-   when declaring the function.  When defining the function, write a
-   K+R style argument list.  For example:
+	PARAMS ((prototype))
+	-- for functions which take a fixed number of arguments.  Use this
+	when declaring the function.  When defining the function, write a
+	K+R style argument list.  For example:
 
 	char *strcpy PARAMS ((char *dest, char *source));
 	...
 	char *
 	strcpy (dest, source)
-	     char *dest;
-	     char *source;
+		  char *dest;
+		  char *source;
 	{ ... }
 
-   VPARAMS ((prototype, ...))
-   -- for functions which take a variable number of arguments.  Use
-   PARAMS to declare the function, VPARAMS to define it.  For example:
+	VPARAMS ((prototype, ...))
+	-- for functions which take a variable number of arguments.  Use
+	PARAMS to declare the function, VPARAMS to define it.  For example:
 
 	int printf PARAMS ((const char *format, ...));
 	...
 	int
-	printf VPARAMS ((const char *format, ...))
-	{
-	   ...
+	printf VPARAMS ((const char *format, ...)) {
+		...
 	}
 
-   For writing functions which take variable numbers of arguments, we
-   also provide the VA_OPEN, VA_CLOSE, and VA_FIXEDARG macros.  These
-   hide the differences between K+R <varargs.h> and C89 <stdarg.h> more
-   thoroughly than the simple VA_START() macro mentioned above.
+	For writing functions which take variable numbers of arguments, we
+	also provide the VA_OPEN, VA_CLOSE, and VA_FIXEDARG macros.  These
+	hide the differences between K+R <varargs.h> and C89 <stdarg.h> more
+	thoroughly than the simple VA_START() macro mentioned above.
 
-   VA_OPEN and VA_CLOSE are used *instead of* va_start and va_end.
-   Immediately after VA_OPEN, put a sequence of VA_FIXEDARG calls
-   corresponding to the list of fixed arguments.  Then use va_arg
-   normally to get the variable arguments, or pass your va_list object
-   around.  You do not declare the va_list yourself; VA_OPEN does it
-   for you.
+	VA_OPEN and VA_CLOSE are used *instead of* va_start and va_end.
+	Immediately after VA_OPEN, put a sequence of VA_FIXEDARG calls
+	corresponding to the list of fixed arguments.  Then use va_arg
+	normally to get the variable arguments, or pass your va_list object
+	around.  You do not declare the va_list yourself; VA_OPEN does it
+	for you.
 
-   Here is a complete example:
+	Here is a complete example:
 
 	int
-	printf VPARAMS ((const char *format, ...))
-	{
-	   int result;
+	printf VPARAMS ((const char *format, ...)) {
+		int result;
 
-	   VA_OPEN (ap, format);
-	   VA_FIXEDARG (ap, const char *, format);
+		VA_OPEN (ap, format);
+		VA_FIXEDARG (ap, const char *, format);
 
-	   result = vfprintf (stdout, format, ap);
-	   VA_CLOSE (ap);
+		result = vfprintf (stdout, format, ap);
+		VA_CLOSE (ap);
 
-	   return result;
+		return result;
 	}
 
-   You can declare variables either before or after the VA_OPEN,
-   VA_FIXEDARG sequence.  Also, VA_OPEN and VA_CLOSE are the beginning
-   and end of a block.  They must appear at the same nesting level,
-   and any variables declared after VA_OPEN go out of scope at
-   VA_CLOSE.  Unfortunately, with a K+R compiler, that includes the
-   argument list.  You can have multiple instances of VA_OPEN/VA_CLOSE
-   pairs in a single function in case you need to traverse the
-   argument list more than once.
+	You can declare variables either before or after the VA_OPEN,
+	VA_FIXEDARG sequence.  Also, VA_OPEN and VA_CLOSE are the beginning
+	and end of a block.  They must appear at the same nesting level,
+	and any variables declared after VA_OPEN go out of scope at
+	VA_CLOSE.  Unfortunately, with a K+R compiler, that includes the
+	argument list.  You can have multiple instances of VA_OPEN/VA_CLOSE
+	pairs in a single function in case you need to traverse the
+	argument list more than once.
 
-   For ease of writing code which uses GCC extensions but needs to be
-   portable to other compilers, we provide the GCC_VERSION macro that
-   simplifies testing __GNUC__ and __GNUC_MINOR__ together, and various
-   wrappers around __attribute__.  Also, __extension__ will be #defined
-   to nothing if it doesn't work.  See below.
+	For ease of writing code which uses GCC extensions but needs to be
+	portable to other compilers, we provide the GCC_VERSION macro that
+	simplifies testing __GNUC__ and __GNUC_MINOR__ together, and various
+	wrappers around __attribute__.  Also, __extension__ will be #defined
+	to nothing if it doesn't work.  See below.
 
-   This header also defines a lot of obsolete macros:
-   CONST, VOLATILE, SIGNED, PROTO, EXFUN, DEFUN, DEFUN_VOID,
-   AND, DOTS, NOARGS.  Don't use them.  */
+	This header also defines a lot of obsolete macros:
+	CONST, VOLATILE, SIGNED, PROTO, EXFUN, DEFUN, DEFUN_VOID,
+	AND, DOTS, NOARGS.  Don't use them.  */
 
 #ifndef	_ANSIDECL_H
 #define _ANSIDECL_H	1
 
 /* Every source file includes this file,
-   so they will all get the switch for lint.  */
+	so they will all get the switch for lint.  */
 /* LINTLIBRARY */
 
-/* Using MACRO(x,y) in cpp #if conditionals does not work with some
-   older preprocessors.  Thus we can't define something like this:
+/* Using MACRO(x, y) in cpp #if conditionals does not work with some
+	older preprocessors.  Thus we can't define something like this:
 
 #define HAVE_GCC_VERSION(MAJOR, MINOR) \
   (__GNUC__ > (MAJOR) || (__GNUC__ == (MAJOR) && __GNUC_MINOR__ >= (MINOR)))
 
-and then test "#if HAVE_GCC_VERSION(2,7)".
+and then test "#if HAVE_GCC_VERSION(2, 7)".
 
 So instead we use the macro below and test it against specific values.  */
 
 /* This macro simplifies testing whether we are using gcc, and if it
-   is of a particular minimum version. (Both major & minor numbers are
-   significant.)  This macro will evaluate to 0 if we are not using
-   gcc at all.  */
+	is of a particular minimum version. (Both major & minor numbers are
+	significant.)  This macro will evaluate to 0 if we are not using
+	gcc at all.  */
 #ifndef GCC_VERSION
 #define GCC_VERSION (__GNUC__ * 1000 + __GNUC_MINOR__)
 #endif /* GCC_VERSION */
 
 #if defined(__STDC__) || defined(_AIX) || (defined(__mips) && defined(_SYSTYPE_SVR4)) || defined(_WIN32) || (defined(__alpha) && defined(__cplusplus))
 /* All known AIX compilers implement these things (but don't always
-   define __STDC__).  The RISC/OS MIPS compiler defines these things
-   in SVR4 mode, but does not define __STDC__.  */
+	define __STDC__).  The RISC/OS MIPS compiler defines these things
+	in SVR4 mode, but does not define __STDC__.  */
 /* eraxxon@alumni.rice.edu: The Compaq C++ compiler, unlike many other
-   C++ compilers, does not define __STDC__, though it acts as if this
-   was so. (Verified versions: 5.7, 6.2, 6.3, 6.5) */
+	C++ compilers, does not define __STDC__, though it acts as if this
+	was so. (Verified versions: 5.7, 6.2, 6.3, 6.5) */
 
 #define ANSI_PROTOTYPES	1
 #define PTR		void *
@@ -150,7 +148,7 @@ So instead we use the macro below and test it against specific values.  */
 #define LONG_DOUBLE	long double
 
 /* PARAMS is often defined elsewhere (e.g. by libintl.h), so wrap it in
-   a #ifndef.  */
+	a #ifndef.  */
 /* #ifndef PARAMS */
 /* #define PARAMS(ARGS)		ARGS */
 /* #endif */
@@ -160,8 +158,8 @@ So instead we use the macro below and test it against specific values.  */
 
 /* variadic function helper macros */
 /* "struct Qdmy" swallows the semicolon after VA_OPEN/VA_FIXEDARG's
-   use without inhibiting further decls and without declaring an
-   actual variable.  */
+	use without inhibiting further decls and without declaring an
+	actual variable.  */
 #define VA_OPEN(AP, VAR)	{ va_list AP; va_start(AP, VAR); { struct Qdmy
 #define VA_CLOSE(AP)		} va_end(AP); }
 #define VA_FIXEDARG(AP, T, N)	struct Qdmy
@@ -177,7 +175,7 @@ So instead we use the macro below and test it against specific values.  */
 #endif	/* __KERNEL__ */
 
 /* inline requires special treatment; it's in C99, and GCC >=2.7 supports
-   it too, but it's not in C89.  */
+	it too, but it's not in C89.  */
 #undef inline
 #if __STDC_VERSION__ > 199901L
 /* it's a keyword */
@@ -244,8 +242,8 @@ So instead we use the macro below and test it against specific values.  */
 #endif	/* ANSI C.  */
 
 /* Define macros for some gcc attributes.  This permits us to use the
-   macros freely, and know that they will come into play for the
-   version of gcc in which they are supported.  */
+	macros freely, and know that they will come into play for the
+	version of gcc in which they are supported.  */
 
 #if (GCC_VERSION < 2007)
 # define __attribute__(x)
@@ -274,7 +272,7 @@ So instead we use the macro below and test it against specific values.  */
 #endif /* ATTRIBUTE_UNUSED */
 
 /* Before GCC 3.4, the C++ frontend couldn't parse attributes placed after the
-   identifier name.  */
+	identifier name.  */
 #if !defined(__cplusplus) || (GCC_VERSION >= 3004)
 # define ARG_UNUSED(NAME) NAME ATTRIBUTE_UNUSED
 #else /* !__cplusplus || GNUC >= 3.4 */
@@ -304,9 +302,9 @@ So instead we use the macro below and test it against specific values.  */
 #endif /* ATTRIBUTE_PURE */
 
 /* Use ATTRIBUTE_PRINTF when the format specifier must not be NULL.
-   This was the case for the `printf' format attribute by itself
-   before GCC 3.3, but as of 3.3 we need to add the `nonnull'
-   attribute to retain this behavior.  */
+	This was the case for the `printf' format attribute by itself
+	before GCC 3.3, but as of 3.3 we need to add the `nonnull'
+	attribute to retain this behavior.  */
 #ifndef ATTRIBUTE_PRINTF
 #define ATTRIBUTE_PRINTF(m, n) __attribute__ ((__format__(__printf__, m, n))) ATTRIBUTE_NONNULL(m)
 #define ATTRIBUTE_PRINTF_1 ATTRIBUTE_PRINTF(1, 2)
@@ -317,8 +315,8 @@ So instead we use the macro below and test it against specific values.  */
 #endif /* ATTRIBUTE_PRINTF */
 
 /* Use ATTRIBUTE_FPTR_PRINTF when the format attribute is to be set on
-   a function pointer.  Format attributes were allowed on function
-   pointers as of gcc 3.1.  */
+	a function pointer.  Format attributes were allowed on function
+	pointers as of gcc 3.1.  */
 #ifndef ATTRIBUTE_FPTR_PRINTF
 # if (GCC_VERSION >= 3001)
 #  define ATTRIBUTE_FPTR_PRINTF(m, n) ATTRIBUTE_PRINTF(m, n)
@@ -333,7 +331,7 @@ So instead we use the macro below and test it against specific values.  */
 #endif /* ATTRIBUTE_FPTR_PRINTF */
 
 /* Use ATTRIBUTE_NULL_PRINTF when the format specifier may be NULL.  A
-   NULL format specifier was allowed as of gcc 3.3.  */
+	NULL format specifier was allowed as of gcc 3.3.  */
 #ifndef ATTRIBUTE_NULL_PRINTF
 # if (GCC_VERSION >= 3003)
 #  define ATTRIBUTE_NULL_PRINTF(m, n) __attribute__ ((__format__(__printf__, m, n)))
@@ -365,8 +363,8 @@ So instead we use the macro below and test it against specific values.  */
 #endif /* ATTRIBUTE_ALIGNED_ALIGNOF */
 
 /* We use __extension__ in some places to suppress -pedantic warnings
-   about GCC extensions.  This feature didn't work properly before
-   gcc 2.8.  */
+	about GCC extensions.  This feature didn't work properly before
+	gcc 2.8.  */
 #if GCC_VERSION < 2008
 #define __extension__
 #endif

@@ -142,7 +142,7 @@ static inline unsigned long get_flags(void)
 		"pushfq ; popq %0"
 		: "=g" (flags)
 		:
-	);
+);
 	return flags;
 }
 
@@ -154,7 +154,7 @@ static inline unsigned long save_flags(void)
 		"pushfq ; popq %0"
 		: "=g" (flags)
 		:
-	);
+);
 	__asm__ __volatile__("cli" : : : "memory");
 	return flags;
 }
@@ -166,7 +166,7 @@ static inline void restore_flags(unsigned long flags)
 		:
 		: "g" (flags)
 		: "memory", "cc"
-	);
+);
 }
 #else
 static inline unsigned long get_flags(void)
@@ -177,7 +177,7 @@ static inline unsigned long get_flags(void)
 		"pushfl ; popl %0"
 		: "=g" (flags)
 		:
-	);
+);
 	return flags;
 }
 
@@ -189,7 +189,7 @@ static inline unsigned long save_flags(void)
 		"pushfl ; popl %0"
 		: "=g" (flags)
 		:
-	);
+);
 	__asm__ __volatile__("cli" : : : "memory");
 	return flags;
 }
@@ -201,10 +201,9 @@ static inline void restore_flags(unsigned long flags)
 		:
 		: "g" (flags)
 		: "memory", "cc"
-	);
+);
 }
 
 #endif
 
 #endif
-
