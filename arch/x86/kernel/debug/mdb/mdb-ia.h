@@ -1,22 +1,22 @@
 
 /***************************************************************************
-*
-*   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
-*   jeffmerkey@gmail.com
-*
-*   This program is free software; you can redistribute it and/or modify it
-*   under the terms of the GNU General Public License as published by the
-*   Free Software Foundation, version 2.
-*
-*   This program is distributed in the hope that it will be useful, but
-*   WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*   General Public License for more details.
-*
-*   AUTHOR   :  Jeff V. Merkey
-*   DESCRIP  :  Minimal Linux Debugger
-*
-***************************************************************************/
+ *
+ *   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
+ *   jeffmerkey@gmail.com
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the
+ *   Free Software Foundation, version 2.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *   General Public License for more details.
+ *
+ *   AUTHOR   :  Jeff V. Merkey
+ *   DESCRIP  :  Minimal Linux Debugger
+ *
+ ***************************************************************************/
 
 #ifndef _MDB_IA32_H
 #define _MDB_IA32_H
@@ -25,10 +25,10 @@
 #define SYMBOL_DEBUG             0
 
 /* recursive spin lock used by the debugger to gate processors acquiring
-	* the debugger console.  if the lock is already held on the current
-	* processor when called, increment a use counter.  this allows us to
-	* handle nested exceptions on the same processor without deadlocking.
-*/
+ * the debugger console.  if the lock is already held on the current
+ * processor when called, increment a use counter.  this allows us to
+ * handle nested exceptions on the same processor without deadlocking.
+ */
 
 struct _RLOCK {
 	unsigned long processor;
@@ -139,10 +139,10 @@ static inline unsigned long get_flags(void)
 	unsigned long flags;
 
 	__asm__ __volatile__(
-		"pushfq ; popq %0"
-		: "=g" (flags)
-		:
-);
+			"pushfq ; popq %0"
+			: "=g" (flags)
+			:
+			);
 	return flags;
 }
 
@@ -151,10 +151,10 @@ static inline unsigned long save_flags(void)
 	unsigned long flags;
 
 	__asm__ __volatile__(
-		"pushfq ; popq %0"
-		: "=g" (flags)
-		:
-);
+			"pushfq ; popq %0"
+			: "=g" (flags)
+			:
+			);
 	__asm__ __volatile__("cli" : : : "memory");
 	return flags;
 }
@@ -162,11 +162,11 @@ static inline unsigned long save_flags(void)
 static inline void restore_flags(unsigned long flags)
 {
 	__asm__ __volatile__(
-		"pushq %0 ; popfq"
-		:
-		: "g" (flags)
-		: "memory", "cc"
-);
+			"pushq %0 ; popfq"
+			:
+			: "g" (flags)
+			: "memory", "cc"
+			);
 }
 #else
 static inline unsigned long get_flags(void)
@@ -174,10 +174,10 @@ static inline unsigned long get_flags(void)
 	unsigned long flags;
 
 	__asm__ __volatile__(
-		"pushfl ; popl %0"
-		: "=g" (flags)
-		:
-);
+			"pushfl ; popl %0"
+			: "=g" (flags)
+			:
+			);
 	return flags;
 }
 
@@ -186,10 +186,10 @@ static inline unsigned long save_flags(void)
 	unsigned long flags;
 
 	__asm__ __volatile__(
-		"pushfl ; popl %0"
-		: "=g" (flags)
-		:
-);
+			"pushfl ; popl %0"
+			: "=g" (flags)
+			:
+			);
 	__asm__ __volatile__("cli" : : : "memory");
 	return flags;
 }
@@ -197,11 +197,11 @@ static inline unsigned long save_flags(void)
 static inline void restore_flags(unsigned long flags)
 {
 	__asm__ __volatile__(
-		"pushl %0 ; popfl"
-		:
-		: "g" (flags)
-		: "memory", "cc"
-);
+			"pushl %0 ; popfl"
+			:
+			: "g" (flags)
+			: "memory", "cc"
+			);
 }
 
 #endif

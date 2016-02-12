@@ -1,22 +1,22 @@
 
 /***************************************************************************
-*
-*   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
-*   jeffmerkey@gmail.com
-*
-*   This program is free software; you can redistribute it and/or modify it
-*   under the terms of the GNU General Public License as published by the
-*   Free Software Foundation, version 2.
-*
-*   This program is distributed in the hope that it will be useful, but
-*   WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*   General Public License for more details.
-*
-*   AUTHOR   :  Jeff V. Merkey
-*   DESCRIP  :  Minimal Linux Debugger
-*
-***************************************************************************/
+ *
+ *   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
+ *   jeffmerkey@gmail.com
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the
+ *   Free Software Foundation, version 2.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *   General Public License for more details.
+ *
+ *   AUTHOR   :  Jeff V. Merkey
+ *   DESCRIP  :  Minimal Linux Debugger
+ *
+ ***************************************************************************/
 
 #include <linux/version.h>
 #include <linux/types.h>
@@ -76,13 +76,13 @@ unsigned char workbuf[MAX_SYMBOL_LEN];
 #ifdef CONFIG_X86_64
 
 static inline int in_irq_stack(unsigned long *stack, unsigned long *irq_stack,
-			       unsigned long *irq_stack_end)
+		unsigned long *irq_stack_end)
 {
 	return stack >= irq_stack && stack < irq_stack_end;
 }
 
 static inline unsigned long fixup_bp_irq_link(unsigned long bp,
-					      unsigned long *stack, unsigned long *irq_stack, unsigned long *irq_stack_end)
+		unsigned long *stack, unsigned long *irq_stack, unsigned long *irq_stack_end)
 {
 #ifdef CONFIG_FRAME_POINTER
 	struct stack_frame *frame = (struct stack_frame *)bp;
@@ -93,7 +93,7 @@ static inline unsigned long fixup_bp_irq_link(unsigned long bp,
 			return next;
 		else
 			DBGPrint("MDB: bad frame pointer = %p in chain\n",
-				 &frame->next_frame);
+					&frame->next_frame);
 	}
 #endif
 	return bp;
@@ -102,17 +102,17 @@ static inline unsigned long fixup_bp_irq_link(unsigned long bp,
 #define get_bp(bp) asm("movq %%rbp, %0" : "=r" (bp) :)
 
 extern unsigned long *in_exception_stack(unsigned cpu, unsigned long stack,
-					 unsigned *usedp, char **idp);
+		unsigned *usedp, char **idp);
 extern unsigned long *get_irq_stack_end(const unsigned int cpu);
 
 void DBGPrint_address(unsigned long address, int reliable)
 {
 	DBGPrint("[<%p>] %s%pS\n", (void *)address,
-		 reliable ? "" : "? ", (void *)address);
+			reliable ? "" : "? ", (void *)address);
 }
 
 static inline int valid_stack_ptr(struct thread_info *tinfo,
-				  void *p, unsigned int size, void *end)
+		void *p, unsigned int size, void *end)
 {
 	void *t = tinfo;
 
@@ -125,9 +125,9 @@ static inline int valid_stack_ptr(struct thread_info *tinfo,
 	return p > t && p < t + THREAD_SIZE - size;
 }
 
-static inline unsigned long
+	static inline unsigned long
 print_context(struct thread_info *tinfo, unsigned long *stack,
-	      unsigned long bp, unsigned long *end)
+		unsigned long bp, unsigned long *end)
 {
 	struct stack_frame *frame = (struct stack_frame *)bp;
 
@@ -137,13 +137,13 @@ print_context(struct thread_info *tinfo, unsigned long *stack,
 		addr = *stack;
 		if (__kernel_text_address(addr)) {
 			if ((unsigned long)stack == bp + sizeof(long)) {
-									mdb_watchdogs();
-									DBGPrint_address(addr, 1);
+				mdb_watchdogs();
+				DBGPrint_address(addr, 1);
 				frame = frame->next_frame;
 				bp = (unsigned long)frame;
 			} else {
-									mdb_watchdogs();
-									DBGPrint_address(addr, bp == 0);
+				mdb_watchdogs();
+				DBGPrint_address(addr, bp == 0);
 			}
 		}
 		stack++;
@@ -152,9 +152,9 @@ print_context(struct thread_info *tinfo, unsigned long *stack,
 }
 
 void bt_stack(struct task_struct *task, struct pt_regs *regs,
-	      unsigned long *stack)
+		unsigned long *stack)
 {
-		  unsigned long bp = 0;
+	unsigned long bp = 0;
 	const unsigned cpu = get_cpu();
 	unsigned long *irq_stack_end = get_irq_stack_end(cpu);
 	unsigned used = 0;
@@ -175,7 +175,7 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	if (!bp) {
 		if (task == current) {
 			get_bp(bp);
-					 } else
+		} else
 			bp = *(unsigned long *)task->thread.sp;
 	}
 #endif
@@ -186,7 +186,7 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 		unsigned long *estack_end;
 
 		estack_end = in_exception_stack(cpu, (unsigned long)stack,
-						&used, &id);
+				&used, &id);
 
 		if (estack_end) {
 			if (DBGPrint("%s", id))
@@ -206,18 +206,18 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 				(IRQ_STACK_SIZE - 64) / sizeof(*irq_stack);
 
 			if (in_irq_stack(stack, irq_stack, irq_stack_end)) {
-					if (DBGPrint("%s", "IRQ"))
-						break;
+				if (DBGPrint("%s", "IRQ"))
+					break;
 
-					bp = print_context(tinfo, stack, bp,
-							   irq_stack_end);
+				bp = print_context(tinfo, stack, bp,
+						irq_stack_end);
 
-					stack = (unsigned long *)(irq_stack_end[-1]);
-					bp = fixup_bp_irq_link(bp, stack, irq_stack,
-							       irq_stack_end);
-					irq_stack_end = NULL;
-					DBGPrint("%s", "EOI");
-					continue;
+				stack = (unsigned long *)(irq_stack_end[-1]);
+				bp = fixup_bp_irq_link(bp, stack, irq_stack,
+						irq_stack_end);
+				irq_stack_end = NULL;
+				DBGPrint("%s", "EOI");
+				continue;
 			}
 		}
 		break;
@@ -233,7 +233,7 @@ extern void *is_hardirq_stack(unsigned long *stack, int cpu);
 extern void *is_softirq_stack(unsigned long *stack, int cpu);
 
 static inline int valid_stack_ptr(struct thread_info *tinfo,
-				  void *p, unsigned int size, void *end)
+		void *p, unsigned int size, void *end)
 {
 	void *t = tinfo;
 
@@ -249,13 +249,13 @@ static inline int valid_stack_ptr(struct thread_info *tinfo,
 static void print_stack_address(unsigned long address, int reliable)
 {
 	DBGPrint("[<%p>] %s%pB\n",
-		 (void *)address, reliable ? "" : "? ",
-		(void *)address);
+			(void *)address, reliable ? "" : "? ",
+			(void *)address);
 }
 
-unsigned long
+	unsigned long
 print_context(struct thread_info *tinfo,
-	      unsigned long *stack, unsigned long bp,
+		unsigned long *stack, unsigned long bp,
 		unsigned long *end)
 {
 	struct stack_frame *frame = (struct stack_frame *)bp;
@@ -266,12 +266,12 @@ print_context(struct thread_info *tinfo,
 		addr = *stack;
 		if (__kernel_text_address(addr)) {
 			if ((unsigned long)stack == bp + sizeof(long)) {
-										  mdb_watchdogs();
+				mdb_watchdogs();
 				print_stack_address(addr, 1);
 				frame = frame->next_frame;
 				bp = (unsigned long)frame;
 			} else {
-										  mdb_watchdogs();
+				mdb_watchdogs();
 				print_stack_address(addr, 0);
 			}
 		}
@@ -287,10 +287,10 @@ static int print_trace(char *name)
 }
 
 int bt_stack(struct task_struct *task, struct pt_regs *regs,
-	     unsigned long *stack)
+		unsigned long *stack)
 {
 	const unsigned cpu = get_cpu();
-		  unsigned long bp = 0;
+	unsigned long bp = 0;
 	u32 *prev_esp;
 
 	if (!task)
@@ -336,34 +336,34 @@ int bt_stack(struct task_struct *task, struct pt_regs *regs,
 	}
 	put_cpu();
 
-		  return 0;
+	return 0;
 }
 
 #if 0
 int bt_stack(struct task_struct *task, struct pt_regs *regs,
-	     unsigned long *stack)
+		unsigned long *stack)
 {
-	 unsigned long dummy;
+	unsigned long dummy;
 
-	 if (!task)
-		 task = current;
+	if (!task)
+		task = current;
 
-	 if (!stack) {
-		 stack = &dummy;
-		 if (task && task != current) {
+	if (!stack) {
+		stack = &dummy;
+		if (task && task != current) {
 #ifdef CONFIG_X86_64
-	  stack = (unsigned long *)task->thread.sp;
+			stack = (unsigned long *)task->thread.sp;
 #else
-			 if (mdb_verify_rw((void *)&task->thread.sp, 4))
-				 return 0;
+			if (mdb_verify_rw((void *)&task->thread.sp, 4))
+				return 0;
 
-			 stack = (unsigned long *)
-						mdb_getword((unsigned long)&task->thread.sp, 4);
+			stack = (unsigned long *)
+				mdb_getword((unsigned long)&task->thread.sp, 4);
 #endif
-		 }
-	 }
+		}
+	}
 
-	 return dumpBacktrace((unsigned char *)stack, 40);
+	return dumpBacktrace((unsigned char *)stack, 40);
 }
 #endif
 
@@ -396,9 +396,9 @@ int mdb_printf(char *fmt, ...)
 	debug_rlock(&mdb_lock, &mdb_mutex, get_processor_id());
 
 #if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
-		  consolestate = vt_kmsg_redirect(-1);
-		  if (consolestate)
-			  consolestate = vt_kmsg_redirect(0);
+	consolestate = vt_kmsg_redirect(-1);
+	if (consolestate)
+		consolestate = vt_kmsg_redirect(0);
 #endif
 	va_start(ap, fmt);
 	vsprintf(mdb_buffer, fmt, ap);
@@ -406,121 +406,121 @@ int mdb_printf(char *fmt, ...)
 
 	for (con = console_drivers; con; con = con->next) {
 		if ((con->flags & CON_ENABLED) && con->write &&
-		    (cpu_online(get_processor_id()) ||
-		(con->flags & CON_ANYTIME))) {
+				(cpu_online(get_processor_id()) ||
+				 (con->flags & CON_ANYTIME))) {
 			con->write(con, mdb_buffer, strlen(mdb_buffer));
-				  mdb_watchdogs();
-			  }
+			mdb_watchdogs();
+		}
 	}
 
 	if (strchr(mdb_buffer, '\n'))
 		nextline++;
 
 	if (pause_mode && (nextline >= linecount)) {
-			  if (nextline > linecount)
-				  nextline = linecount;
+		if (nextline > linecount)
+			nextline = linecount;
 
 		for (con = console_drivers; con; con = con->next) {
 			if ((con->flags & CON_ENABLED) && con->write &&
-			    (cpu_online(get_processor_id()) ||
-				  (con->flags & CON_ANYTIME))) {
+					(cpu_online(get_processor_id()) ||
+					 (con->flags & CON_ANYTIME))) {
 				con->write(con, mdbprompt, strlen(mdbprompt));
-					  mdb_watchdogs();
-				  }
+				mdb_watchdogs();
+			}
 		}
 
-			  mdb_suppress_crlf = 1;
+		mdb_suppress_crlf = 1;
 		mdb_keystroke[0] = (char)mdb_getkey();
-			  mdb_suppress_crlf = 0;
+		mdb_suppress_crlf = 0;
 
 		if (mdb_keystroke[0] == ' ')
-				  nextline = 0;
+			nextline = 0;
 
 		for (con = console_drivers; con; con = con->next) {
 			if ((con->flags & CON_ENABLED) && con->write &&
-			    (cpu_online(get_processor_id()) ||
-				  (con->flags & CON_ANYTIME))) {
-					  memset(mdb_buffer, 0, 256);
+					(cpu_online(get_processor_id()) ||
+					 (con->flags & CON_ANYTIME))) {
+				memset(mdb_buffer, 0, 256);
 
-					  memset(mdb_buffer, '\b', strlen(mdbprompt));
+				memset(mdb_buffer, '\b', strlen(mdbprompt));
 				con->write(con, mdb_buffer, strlen(mdb_buffer));
-					  mdb_watchdogs();
+				mdb_watchdogs();
 
-					  memset(mdb_buffer, ' ', strlen(mdbprompt));
+				memset(mdb_buffer, ' ', strlen(mdbprompt));
 				con->write(con, mdb_buffer, strlen(mdb_buffer));
-					  mdb_watchdogs();
+				mdb_watchdogs();
 
-					  memset(mdb_buffer, '\b', strlen(mdbprompt));
+				memset(mdb_buffer, '\b', strlen(mdbprompt));
 				con->write(con, mdb_buffer, strlen(mdb_buffer));
-					  mdb_watchdogs();
-				  }
+				mdb_watchdogs();
+			}
 		}
 
 		if ((mdb_keystroke[0] == 'q') || (mdb_keystroke[0] == 'Q')) {
-				  nextline = 0;
+			nextline = 0;
 
 #if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
-				  if (consolestate)
-					  vt_kmsg_redirect(consolestate);
+			if (consolestate)
+				vt_kmsg_redirect(consolestate);
 #endif
 
 			debug_unrlock(&mdb_lock, &mdb_mutex, get_processor_id());
-				  return 1;
-			  }
+			return 1;
+		}
 	}
 
 #if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
-		  if (consolestate)
-			  vt_kmsg_redirect(consolestate);
+	if (consolestate)
+		vt_kmsg_redirect(consolestate);
 #endif
 
 	debug_unrlock(&mdb_lock, &mdb_mutex, get_processor_id());
-		  return 0;
+	return 0;
 }
 
 unsigned int mdb_serial_port;
 module_param(mdb_serial_port, uint, 0644);
 MODULE_PARM_DESC(mdb_serial_port,
-		 "MDB serial port address.  i.e. 0x3f8(ttyS0), 0x2f8(ttyS1), 0x3e8(ttyS2), 0x2e8(ttyS3)");
+		"MDB serial port address.  i.e. 0x3f8(ttyS0), 0x2f8(ttyS1), 0x3e8(ttyS2), 0x2e8(ttyS3)");
 
 int get_modem_char(void)
 {
-	 unsigned char ch;
-	 int status;
+	unsigned char ch;
+	int status;
 
-	 if (mdb_serial_port == 0)
-		 return -1;
+	if (mdb_serial_port == 0)
+		return -1;
 
-	 status = inb(mdb_serial_port + UART_LSR);
-	 if (status & UART_LSR_DR) {
-		 ch = inb(mdb_serial_port + UART_RX);
-		 switch (ch) {
-		case 0x7f:
-			ch = 8;
-				  break;
+	status = inb(mdb_serial_port + UART_LSR);
+	if (status & UART_LSR_DR) {
+		ch = inb(mdb_serial_port + UART_RX);
+		switch (ch) {
+			case 0x7f:
+				ch = 8;
+				break;
 
-			  case '\t':
-			ch = ' ';
-				  break;
+			case '\t':
+				ch = ' ';
+				break;
 
-			  case 8:  /* backspace */
-				  break;
+			case 8:  /* backspace */
+				break;
 
-		case 13: /* enter */
-				  if (!mdb_suppress_crlf)
-				DBGPrint("\n");
-				  break;
+			case 13: /* enter */
+				if (!mdb_suppress_crlf)
+					DBGPrint("\n");
+				break;
 
-			  default:
-			if (!isprint(ch))
-				return -1;
-				  if (!mdb_suppress_crlf)
-				DBGPrint("%c", ch);
-				  break;
+			default:
+				if (!isprint(ch))
+					return -1;
+				if (!mdb_suppress_crlf)
+					DBGPrint("%c", ch);
+				break;
+		}
+		return ch;
 	}
-	return ch;
-	 }
-	 return -1;
+	return -1;
 }
 
 u_short m_plain_map[NR_KEYS] = {
@@ -605,7 +605,7 @@ static int get_kbd_char(void)
 	 */
 
 	if (((scancode & 0x7f) == 0x2a) ||
-	    ((scancode & 0x7f) == 0x36)) {
+			((scancode & 0x7f) == 0x36)) {
 		/* Next key may use shift table */
 		if ((scancode & 0x80) == 0) {
 			shift_key = 1;
@@ -668,60 +668,60 @@ static int get_kbd_char(void)
 	if (keychar == '\t')
 		keychar = ' ';
 
-		  switch (keychar) {
-			  case K_F1:
-			  case K_F2:
-			  case K_F3:
-			  case K_F4:
-			  case K_F5:
-			  case K_F6:
-			  case K_F7:
-			  case K_F8:
-			  case K_F9:
-			  case K_F10:
-			  case K_F11:
-			  case K_F12:
+	switch (keychar) {
+		case K_F1:
+		case K_F2:
+		case K_F3:
+		case K_F4:
+		case K_F5:
+		case K_F6:
+		case K_F7:
+		case K_F8:
+		case K_F9:
+		case K_F10:
+		case K_F11:
+		case K_F12:
 			return keychar;
-			  default:
-				  break;
-		  }
+		default:
+			break;
+	}
 
 	switch (KTYP(keychar)) {
 		case KT_LETTER:
 		case KT_LATIN:
-		if (isprint(keychar))
-			break;		/* printable characters */
-		/* drop through */
+			if (isprint(keychar))
+				break;		/* printable characters */
+			/* drop through */
 		case KT_SPEC:
-		if (keychar == K_ENTER)
-			break;
-		/* drop through */
-			  case KT_PAD:
-					 switch (keychar) {
-						 case K_P0:
-						 case K_P1:
-						 case K_P2:
-						 case K_P4:
-						 case K_P6:
-						 case K_P7:
-						 case K_P8:
-						 case K_PDOT:
-							 return keychar;
-					 }
-					 return -1;
+			if (keychar == K_ENTER)
+				break;
+			/* drop through */
+		case KT_PAD:
+			switch (keychar) {
+				case K_P0:
+				case K_P1:
+				case K_P2:
+				case K_P4:
+				case K_P6:
+				case K_P7:
+				case K_P8:
+				case K_PDOT:
+					return keychar;
+			}
+			return -1;
 
-			  case KT_CUR:
-					 switch (keychar) {
-						 case K_DOWN:
-						 case K_LEFT:
-						 case K_RIGHT:
-						 case K_UP:
-							 return keychar;
-					 }
-					 return -1;
+		case KT_CUR:
+			switch (keychar) {
+				case K_DOWN:
+				case K_LEFT:
+				case K_RIGHT:
+				case K_UP:
+					return keychar;
+			}
+			return -1;
 
 		default:
-		return -1;	/* ignore unprintables */
+			return -1;	/* ignore unprintables */
 	}
 
 	if ((scancode & 0x7f) == 0x1c) {
@@ -738,16 +738,16 @@ static int get_kbd_char(void)
 			scanstatus = inb(KBD_STATUS_REG);
 		}
 
-					 /* enter-release error */
+		/* enter-release error */
 		if (scancode != 0x9c) {}
 
-					 if (!mdb_suppress_crlf)
+		if (!mdb_suppress_crlf)
 			DBGPrint("\n");
 		return 13;
 	}
 
 	/* echo the character. */
-		  if (!mdb_suppress_crlf)
+	if (!mdb_suppress_crlf)
 		DBGPrint("%c", keychar & 0xff);
 	return keychar & 0xff;
 }
@@ -761,7 +761,7 @@ int mdb_getkey(void)
 	for (;;) {
 		key = get_kbd_char();
 		if (key != -1)
-	 break;
+			break;
 
 		mdb_watchdogs();
 
@@ -776,14 +776,14 @@ int mdb_getkey(void)
 
 int mdb_copy(void *to, void *from, size_t size)
 {
-	 return probe_kernel_write((char *)to, (char *)from, size);
+	return probe_kernel_write((char *)to, (char *)from, size);
 }
 
 int mdb_verify_rw(void *addr, size_t size)
 {
-	 unsigned char data[size];
+	unsigned char data[size];
 
-	 return mdb_copy(data, addr, size);
+	return mdb_copy(data, addr, size);
 }
 
 static int mdb_getphys(void *res, unsigned long addr, size_t size)
@@ -813,30 +813,30 @@ int mdb_getphysword(uint64_t *word, unsigned long addr, size_t size)
 	*word = 0;
 
 	switch (size) {
-	case 1:
-		err = mdb_getphys(&w1, addr, sizeof(w1));
-		if (!err)
-			*word = w1;
-		break;
-	case 2:
-		err = mdb_getphys(&w2, addr, sizeof(w2));
-		if (!err)
-			*word = w2;
-		break;
-	case 4:
-		err = mdb_getphys(&w4, addr, sizeof(w4));
-		if (!err)
-			*word = w4;
-		break;
-	case 8:
-		if (size <= sizeof(*word)) {
-			err = mdb_getphys(&w8, addr, sizeof(w8));
+		case 1:
+			err = mdb_getphys(&w1, addr, sizeof(w1));
 			if (!err)
-				*word = w8;
+				*word = w1;
 			break;
-		}
-	default:
-		err = -EFAULT;
+		case 2:
+			err = mdb_getphys(&w2, addr, sizeof(w2));
+			if (!err)
+				*word = w2;
+			break;
+		case 4:
+			err = mdb_getphys(&w4, addr, sizeof(w4));
+			if (!err)
+				*word = w4;
+			break;
+		case 8:
+			if (size <= sizeof(*word)) {
+				err = mdb_getphys(&w8, addr, sizeof(w8));
+				if (!err)
+					*word = w8;
+				break;
+			}
+		default:
+			err = -EFAULT;
 	}
 	return err;
 }
@@ -852,28 +852,28 @@ int mdb_getlword(uint64_t *word, unsigned long addr, size_t size)
 
 	*word = 0;	/* Default value if addr or size is invalid */
 	switch (size) {
-	case 1:
-		err = mdb_copy(&w1, (void *)addr, size);
-		if (!err)
-			*word = w1;
-		break;
-	case 2:
-		err = mdb_copy(&w2, (void *)addr, size);
-		if (!err)
-			*word = w2;
-		break;
-	case 4:
-		err = mdb_copy(&w4, (void *)addr, size);
-		if (!err)
-			*word = w4;
-		break;
-	case 8:
-		err = mdb_copy(&w8, (void *)addr, size);
-		if (!err)
-			*word = w8;
-		break;
-	default:
-		err = -EFAULT;
+		case 1:
+			err = mdb_copy(&w1, (void *)addr, size);
+			if (!err)
+				*word = w1;
+			break;
+		case 2:
+			err = mdb_copy(&w2, (void *)addr, size);
+			if (!err)
+				*word = w2;
+			break;
+		case 4:
+			err = mdb_copy(&w4, (void *)addr, size);
+			if (!err)
+				*word = w4;
+			break;
+		case 8:
+			err = mdb_copy(&w8, (void *)addr, size);
+			if (!err)
+				*word = w8;
+			break;
+		default:
+			err = -EFAULT;
 	}
 	return err;
 }
@@ -887,24 +887,24 @@ int mdb_putword(unsigned long addr, unsigned long word, size_t size)
 	__u64 w8;
 
 	switch (size) {
-	case 1:
-		w1 = word;
-		err = mdb_copy((void *)addr, &w1, size);
-		break;
-	case 2:
-		w2 = word;
-		err = mdb_copy((void *)addr, &w2, size);
-		break;
-	case 4:
-		w4 = word;
-		err = mdb_copy((void *)addr, &w4, size);
-		break;
-	case 8:
-			  w8 = word;
-			  err = mdb_copy((void *)addr, &w8, size);
-			  break;
-	default:
-		err = -EFAULT;
+		case 1:
+			w1 = word;
+			err = mdb_copy((void *)addr, &w1, size);
+			break;
+		case 2:
+			w2 = word;
+			err = mdb_copy((void *)addr, &w2, size);
+			break;
+		case 4:
+			w4 = word;
+			err = mdb_copy((void *)addr, &w4, size);
+			break;
+		case 8:
+			w8 = word;
+			err = mdb_copy((void *)addr, &w8, size);
+			break;
+		default:
+			err = -EFAULT;
 	}
 	return err;
 }
@@ -918,24 +918,24 @@ int mdb_putqword(uint64_t *addr, uint64_t word, size_t size)
 	__u64 w8;
 
 	switch (size) {
-	case 1:
-		w1 = word;
-		err = mdb_copy((void *)addr, &w1, size);
-		break;
-	case 2:
-		w2 = word;
-		err = mdb_copy((void *)addr, &w2, size);
-		break;
-	case 4:
-		w4 = word;
-		err = mdb_copy((void *)addr, &w4, size);
-		break;
-	case 8:
-			  w8 = word;
-			  err = mdb_copy((void *)addr, &w8, size);
-			  break;
-	default:
-		err = -EFAULT;
+		case 1:
+			w1 = word;
+			err = mdb_copy((void *)addr, &w1, size);
+			break;
+		case 2:
+			w2 = word;
+			err = mdb_copy((void *)addr, &w2, size);
+			break;
+		case 4:
+			w4 = word;
+			err = mdb_copy((void *)addr, &w4, size);
+			break;
+		case 8:
+			w8 = word;
+			err = mdb_copy((void *)addr, &w8, size);
+			break;
+		default:
+			err = -EFAULT;
 	}
 	return err;
 }
@@ -1002,7 +1002,7 @@ uint64_t mdb_segment_getqword(unsigned long sv, uint64_t *addr, size_t size)
 }
 
 unsigned long mdb_segment_getword(unsigned long sv, unsigned long addr,
-				  size_t size)
+		size_t size)
 {
 	uint64_t data = 0;
 	register int ret;
@@ -1016,33 +1016,33 @@ unsigned long mdb_segment_getword(unsigned long sv, unsigned long addr,
 
 int DisplayClosestSymbol(unsigned long address)
 {
-	 char *modname;
-	 const char *name;
-	 unsigned long offset = 0, size;
-	 char namebuf[KSYM_NAME_LEN + 1];
+	char *modname;
+	const char *name;
+	unsigned long offset = 0, size;
+	char namebuf[KSYM_NAME_LEN + 1];
 
-	 name = kallsyms_lookup(address, &size, &offset, &modname, namebuf);
-	 if (!name)
-		 return -1;
+	name = kallsyms_lookup(address, &size, &offset, &modname, namebuf);
+	if (!name)
+		return -1;
 
-	 if (modname) {
-		 if (offset)
-			 DBGPrint("%s|%s+0x%X\n", modname, name, offset);
-		 else
-			 DBGPrint("%s|%s\n", modname, name);
-	 } else {
-		 if (offset)
-			 DBGPrint("%s+0x%X\n", name, offset);
-		 else
-			 DBGPrint("%s\n", name);
-	 }
-	 return 0;
+	if (modname) {
+		if (offset)
+			DBGPrint("%s|%s+0x%X\n", modname, name, offset);
+		else
+			DBGPrint("%s|%s\n", modname, name);
+	} else {
+		if (offset)
+			DBGPrint("%s+0x%X\n", name, offset);
+		else
+			DBGPrint("%s\n", name);
+	}
+	return 0;
 }
 
 void DumpOSSymbolTableMatch(unsigned char *symbol)
 {
-	 mdb_kallsyms(symbol, DBGPrint);
-	 return;
+	mdb_kallsyms(symbol, DBGPrint);
+	return;
 }
 
 unsigned long GetValueFromSymbol(unsigned char *symbol)
@@ -1052,77 +1052,77 @@ unsigned long GetValueFromSymbol(unsigned char *symbol)
 
 unsigned char *GetModuleInfoFromSymbolValue(unsigned long value, unsigned char *buf, unsigned long len)
 {
-	 char *modname;
-	 const char *name;
-	 unsigned long offset, size;
-	 char namebuf[KSYM_NAME_LEN + 1];
+	char *modname;
+	const char *name;
+	unsigned long offset, size;
+	char namebuf[KSYM_NAME_LEN + 1];
 
-	 name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
-	 if (name && modname && buf) {
-		 mdb_copy(buf, modname, len);
-		 return (unsigned char *)buf;
-	 }
-	 return NULL;
+	name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
+	if (name && modname && buf) {
+		mdb_copy(buf, modname, len);
+		return (unsigned char *)buf;
+	}
+	return NULL;
 }
 
 unsigned char *GetSymbolFromValue(unsigned long value, unsigned char *buf, unsigned long len)
 {
-	 char *modname;
-	 const char *name;
-	 unsigned long offset, size;
-	 char namebuf[KSYM_NAME_LEN + 1];
+	char *modname;
+	const char *name;
+	unsigned long offset, size;
+	char namebuf[KSYM_NAME_LEN + 1];
 
-	 name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
-	 if (!name)
-		 return NULL;
+	name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
+	if (!name)
+		return NULL;
 
-	 if (!offset && buf) {
-		 mdb_copy(buf, namebuf, len);
-		 return (unsigned char *)buf;
-	 }
+	if (!offset && buf) {
+		mdb_copy(buf, namebuf, len);
+		return (unsigned char *)buf;
+	}
 
-	 return NULL;
+	return NULL;
 }
 
 unsigned char *GetSymbolFromValueWithOffset(unsigned long value, unsigned long *sym_offset,
-					    unsigned char *buf, unsigned long len)
+		unsigned char *buf, unsigned long len)
 {
-	 char *modname;
-	 const char *name;
-	 unsigned long offset, size;
-	 char namebuf[KSYM_NAME_LEN + 1];
+	char *modname;
+	const char *name;
+	unsigned long offset, size;
+	char namebuf[KSYM_NAME_LEN + 1];
 
-	 name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
-	 if (!name || !buf)
-		 return NULL;
+	name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
+	if (!name || !buf)
+		return NULL;
 
-	 if (sym_offset)
+	if (sym_offset)
 		*sym_offset = offset;
 
-	 mdb_copy(buf, namebuf, len);
-	 return (unsigned char *)buf;
+	mdb_copy(buf, namebuf, len);
+	return (unsigned char *)buf;
 }
 
 unsigned char *GetSymbolFromValueOffsetModule(unsigned long value, unsigned long *sym_offset,
-					      unsigned char **module, unsigned char *buf, unsigned long len)
+		unsigned char **module, unsigned char *buf, unsigned long len)
 {
-	 char *modname;
-	 const char *name;
-	 unsigned long offset, size;
-	 char namebuf[KSYM_NAME_LEN + 1];
+	char *modname;
+	const char *name;
+	unsigned long offset, size;
+	char namebuf[KSYM_NAME_LEN + 1];
 
-	 name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
-	 if (!name || !buf)
-		 return NULL;
+	name = kallsyms_lookup(value, &size, &offset, &modname, namebuf);
+	if (!name || !buf)
+		return NULL;
 
-	 if (sym_offset)
+	if (sym_offset)
 		*sym_offset = offset;
 
-	 if (module)
-		 *module = modname;
+	if (module)
+		*module = modname;
 
-	 mdb_copy(buf, namebuf, len);
-	 return (unsigned char *)buf;
+	mdb_copy(buf, namebuf, len);
+	return (unsigned char *)buf;
 }
 
 unsigned long get_processor_id(void)
@@ -1146,15 +1146,15 @@ unsigned long get_physical_processor(void)
 unsigned long fpu_present(void)
 {
 	if (boot_cpu_has(X86_FEATURE_FPU))
-		 return 1;
-	 return 0;
+		return 1;
+	return 0;
 }
 
 extern unsigned long cpu_mttr_on(void)
 {
 	if (boot_cpu_has(X86_FEATURE_MTRR))
-		 return 1;
-	 return 0;
+		return 1;
+	return 0;
 }
 
 unsigned char *UpcaseString(unsigned char *s)
@@ -1168,40 +1168,40 @@ unsigned char *UpcaseString(unsigned char *s)
 
 void ClearScreen(void)
 {
-	 mdb_printf("%c%c", 0x1B, 'c');
-	 return;
+	mdb_printf("%c%c", 0x1B, 'c');
+	return;
 }
 
 unsigned long ReadDS(void)
 {
-	 unsigned short contents = 0;
+	unsigned short contents = 0;
 
-	 __asm__ ("mov %%ds,%0\n\t" : "=r"(contents));
-	 return contents;
+	__asm__ ("mov %%ds,%0\n\t" : "=r"(contents));
+	return contents;
 }
 
 unsigned long ReadES(void)
 {
-	 unsigned short contents = 0;
+	unsigned short contents = 0;
 
-	 __asm__ ("mov %%es,%0\n\t" : "=r"(contents));
-	 return contents;
+	__asm__ ("mov %%es,%0\n\t" : "=r"(contents));
+	return contents;
 }
 
 unsigned long ReadFS(void)
 {
-	 unsigned short contents = 0;
+	unsigned short contents = 0;
 
-	 __asm__ ("mov %%fs,%0\n\t" : "=r"(contents));
-	 return contents;
+	__asm__ ("mov %%fs,%0\n\t" : "=r"(contents));
+	return contents;
 }
 
 unsigned long ReadGS(void)
 {
-	 unsigned short contents = 0;
+	unsigned short contents = 0;
 
-	 __asm__ ("mov %%gs,%0\n\t" : "=r"(contents));
-	 return contents;
+	__asm__ ("mov %%gs,%0\n\t" : "=r"(contents));
+	return contents;
 }
 
 #ifdef CONFIG_X86_64
@@ -1211,28 +1211,28 @@ unsigned long ReadDR(unsigned long regnum)
 
 	switch (regnum) {
 		case 0:
-		__asm__ ("movq %%db0,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%db0,%0\n\t" : "=r"(contents));
+			break;
 		case 1:
-		__asm__ ("movq %%db1,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%db1,%0\n\t" : "=r"(contents));
+			break;
 		case 2:
-		__asm__ ("movq %%db2,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%db2,%0\n\t" : "=r"(contents));
+			break;
 		case 3:
-		__asm__ ("movq %%db3,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%db3,%0\n\t" : "=r"(contents));
+			break;
 		case 4:
 		case 5:
-		break;
+			break;
 		case 6:
-		__asm__ ("movq %%db6,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%db6,%0\n\t" : "=r"(contents));
+			break;
 		case 7:
-		__asm__ ("movq %%db7,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%db7,%0\n\t" : "=r"(contents));
+			break;
 		default:
-		break;
+			break;
 	}
 
 	return contents;
@@ -1242,28 +1242,28 @@ void WriteDR(int regnum, unsigned long contents)
 {
 	switch (regnum) {
 		case 0:
-		__asm__ ("movq %0,%%db0\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%db0\n\t"::"r"(contents));
+			break;
 		case 1:
-		__asm__ ("movq %0,%%db1\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%db1\n\t"::"r"(contents));
+			break;
 		case 2:
-		__asm__ ("movq %0,%%db2\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%db2\n\t"::"r"(contents));
+			break;
 		case 3:
-		__asm__ ("movq %0,%%db3\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%db3\n\t"::"r"(contents));
+			break;
 		case 4:
 		case 5:
-		break;
+			break;
 		case 6:
-		__asm__ ("movq %0,%%db6\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%db6\n\t"::"r"(contents));
+			break;
 		case 7:
-		__asm__ ("movq %0,%%db7\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%db7\n\t"::"r"(contents));
+			break;
 		default:
-		break;
+			break;
 	}
 }
 
@@ -1273,21 +1273,21 @@ unsigned long ReadCR(int regnum)
 
 	switch (regnum) {
 		case 0:
-		__asm__ ("movq %%cr0,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%cr0,%0\n\t" : "=r"(contents));
+			break;
 		case 1:
-		break;
+			break;
 		case 2:
-		__asm__ ("movq %%cr2,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%cr2,%0\n\t" : "=r"(contents));
+			break;
 		case 3:
-		__asm__ ("movq %%cr3,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%cr3,%0\n\t" : "=r"(contents));
+			break;
 		case 4:
-		__asm__ ("movq %%cr4,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movq %%cr4,%0\n\t" : "=r"(contents));
+			break;
 		default:
-		break;
+			break;
 	}
 	return contents;
 }
@@ -1296,21 +1296,21 @@ void WriteCR(int regnum, unsigned long contents)
 {
 	switch (regnum) {
 		case 0:
-		__asm__ ("movq %0,%%cr0\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%cr0\n\t"::"r"(contents));
+			break;
 		case 1:
-		break;
+			break;
 		case 2:
-		__asm__ ("movq %0,%%cr2\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%cr2\n\t"::"r"(contents));
+			break;
 		case 3:
-		__asm__ ("movq %0,%%cr3\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%cr3\n\t"::"r"(contents));
+			break;
 		case 4:
-		__asm__ ("movq %0,%%cr4\n\t"::"r"(contents));
-		break;
+			__asm__ ("movq %0,%%cr4\n\t"::"r"(contents));
+			break;
 		default:
-		break;
+			break;
 	}
 	return;
 }
@@ -1322,28 +1322,28 @@ unsigned long ReadDR(unsigned long regnum)
 
 	switch (regnum) {
 		case 0:
-		__asm__ ("movl %%db0,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%db0,%0\n\t" : "=r"(contents));
+			break;
 		case 1:
-		__asm__ ("movl %%db1,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%db1,%0\n\t" : "=r"(contents));
+			break;
 		case 2:
-		__asm__ ("movl %%db2,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%db2,%0\n\t" : "=r"(contents));
+			break;
 		case 3:
-		__asm__ ("movl %%db3,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%db3,%0\n\t" : "=r"(contents));
+			break;
 		case 4:
 		case 5:
-		break;
+			break;
 		case 6:
-		__asm__ ("movl %%db6,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%db6,%0\n\t" : "=r"(contents));
+			break;
 		case 7:
-		__asm__ ("movl %%db7,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%db7,%0\n\t" : "=r"(contents));
+			break;
 		default:
-		break;
+			break;
 	}
 
 	return contents;
@@ -1353,28 +1353,28 @@ void WriteDR(int regnum, unsigned long contents)
 {
 	switch (regnum) {
 		case 0:
-		__asm__ ("movl %0,%%db0\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%db0\n\t"::"r"(contents));
+			break;
 		case 1:
-		__asm__ ("movl %0,%%db1\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%db1\n\t"::"r"(contents));
+			break;
 		case 2:
-		__asm__ ("movl %0,%%db2\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%db2\n\t"::"r"(contents));
+			break;
 		case 3:
-		__asm__ ("movl %0,%%db3\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%db3\n\t"::"r"(contents));
+			break;
 		case 4:
 		case 5:
-		break;
+			break;
 		case 6:
-		__asm__ ("movl %0,%%db6\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%db6\n\t"::"r"(contents));
+			break;
 		case 7:
-		__asm__ ("movl %0,%%db7\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%db7\n\t"::"r"(contents));
+			break;
 		default:
-		break;
+			break;
 	}
 }
 
@@ -1384,21 +1384,21 @@ unsigned long ReadCR(int regnum)
 
 	switch (regnum) {
 		case 0:
-		__asm__ ("movl %%cr0,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%cr0,%0\n\t" : "=r"(contents));
+			break;
 		case 1:
-		break;
+			break;
 		case 2:
-		__asm__ ("movl %%cr2,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%cr2,%0\n\t" : "=r"(contents));
+			break;
 		case 3:
-		__asm__ ("movl %%cr3,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%cr3,%0\n\t" : "=r"(contents));
+			break;
 		case 4:
-		__asm__ ("movl %%cr4,%0\n\t" : "=r"(contents));
-		break;
+			__asm__ ("movl %%cr4,%0\n\t" : "=r"(contents));
+			break;
 		default:
-		break;
+			break;
 	}
 	return contents;
 }
@@ -1407,21 +1407,21 @@ void WriteCR(int regnum, unsigned long contents)
 {
 	switch (regnum) {
 		case 0:
-		__asm__ ("movl %0,%%cr0\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%cr0\n\t"::"r"(contents));
+			break;
 		case 1:
-		break;
+			break;
 		case 2:
-		__asm__ ("movl %0,%%cr2\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%cr2\n\t"::"r"(contents));
+			break;
 		case 3:
-		__asm__ ("movl %0,%%cr3\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%cr3\n\t"::"r"(contents));
+			break;
 		case 4:
-		__asm__ ("movl %0,%%cr4\n\t"::"r"(contents));
-		break;
+			__asm__ ("movl %0,%%cr4\n\t"::"r"(contents));
+			break;
 		default:
-		break;
+			break;
 	}
 	return;
 }
@@ -1452,17 +1452,17 @@ void ReadGDTR(unsigned long *v)
 
 void ReadIDTR(unsigned long *v)
 {
-	 __asm__ __volatile__("sidt %0" : "=m"(*v));
+	__asm__ __volatile__("sidt %0" : "=m"(*v));
 }
 
 void save_npx(NUMERIC_FRAME *v)
 {
-	 __asm__ __volatile__("fsave %0" : "=m"(*v));
+	__asm__ __volatile__("fsave %0" : "=m"(*v));
 }
 
 void load_npx(NUMERIC_FRAME *v)
 {
-	 __asm__ __volatile__("frstor %0" : "=m"(*v));
+	__asm__ __volatile__("frstor %0" : "=m"(*v));
 }
 
 unsigned long ReadDR6(void)  {  return ReadDR(6); }
@@ -1492,24 +1492,24 @@ void WriteCR4(unsigned long v) { WriteCR(4, v); }
 
 void ReadMSR(unsigned long r, unsigned long *v1, unsigned long *v2)
 {
-	 unsigned long vv1, vv2;
+	unsigned long vv1, vv2;
 
-	 rdmsr(r, vv1, vv2);
+	rdmsr(r, vv1, vv2);
 
-	 if (v1)
-		 *v1 = vv1;
-	 if (v2)
-		 *v2 = vv2;
+	if (v1)
+		*v1 = vv1;
+	if (v2)
+		*v2 = vv2;
 }
 
 void WriteMSR(unsigned long r, unsigned long *v1, unsigned long *v2)
 {
-	 unsigned long vv1 = 0, vv2 = 0;
+	unsigned long vv1 = 0, vv2 = 0;
 
-	 if (v1)
-		 vv1 = *v1;
-	 if (v2)
-		 vv2 = *v2;
+	if (v1)
+		vv1 = *v1;
+	if (v2)
+		vv2 = *v2;
 
-	 wrmsr(r, vv1, vv2);
+	wrmsr(r, vv1, vv2);
 }

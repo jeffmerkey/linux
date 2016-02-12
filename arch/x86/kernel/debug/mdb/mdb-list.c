@@ -1,22 +1,22 @@
 
 /***************************************************************************
-*
-*   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
-*   jeffmerkey@gmail.com
-*
-*   This program is free software; you can redistribute it and/or modify it
-*   under the terms of the GNU General Public License as published by the
-*   Free Software Foundation,  version 2.
-*
-*   This program is distributed in the hope that it will be useful,  but
-*   WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*   General Public License for more details.
-*
-*   AUTHOR   :   Jeff V. Merkey
-*   DESCRIP  :   Minimal Linux Debugger
-*
-***************************************************************************/
+ *
+ *   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
+ *   jeffmerkey@gmail.com
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the
+ *   Free Software Foundation,  version 2.
+ *
+ *   This program is distributed in the hope that it will be useful,  but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *   General Public License for more details.
+ *
+ *   AUTHOR   :   Jeff V. Merkey
+ *   DESCRIP  :   Minimal Linux Debugger
+ *
+ ***************************************************************************/
 
 #include <linux/version.h>
 #include <linux/types.h>
@@ -135,7 +135,7 @@ unsigned long AccelHelpRoutine(unsigned long key)
 		while (accel) {
 			if (accel->accelFlags && accel->key && !accel->supervisorCommand)
 				DBGPrint("%08X         - %s\n",
-					 (unsigned)accel->key,  accel->shortHelp);
+						(unsigned)accel->key,  accel->shortHelp);
 			accel = accel->accelNext;
 		}
 	}
@@ -308,7 +308,7 @@ DEBUGGER_PARSER *debugParserHead;
 DEBUGGER_PARSER *debugParserTail;
 
 unsigned long DebuggerParserRoutine(unsigned char *command,  unsigned char *commandLine,
-				    StackFrame *stackFrame,  unsigned long Exception)
+		StackFrame *stackFrame,  unsigned long Exception)
 {
 	register DEBUGGER_PARSER *debugParser;
 	register unsigned long retCode,  valid = 0,  length;
@@ -335,10 +335,10 @@ unsigned long DebuggerParserRoutine(unsigned char *command,  unsigned char *comm
 	debugParser = debugParserHead;
 	while (debugParser) {
 		if (debugParser->parserFlags && debugParser->DebugCommandParser &&
-		    (debugParser->debugCommandNameLength == length) &&
-			(!strcmp(debugParser->debugCommandName,  command))) {
+				(debugParser->debugCommandNameLength == length) &&
+				(!strcmp(debugParser->debugCommandName,  command))) {
 			retCode = (debugParser->DebugCommandParser)(commandLine,  stackFrame,
-								Exception,  debugParser);
+					Exception,  debugParser);
 			if (retCode)
 				return retCode;
 		}
@@ -346,7 +346,7 @@ unsigned long DebuggerParserRoutine(unsigned char *command,  unsigned char *comm
 	}
 
 	DBGPrint("unknown mdb command -> %s\n",  command);
-		return 0;
+	return 0;
 }
 
 void strncpy2lower(unsigned char *dest,  unsigned char *src,  int len)
@@ -372,11 +372,11 @@ unsigned long DebuggerParserHelpRoutine(unsigned char *command,  unsigned char *
 		debugParser = debugParserHead;
 		while (debugParser) {
 			if (debugParser->parserFlags &&
-			    (debugParser->debugCommandNameLength == length) &&
-				!strcmp(debugParser->debugCommandName,  command)) {
+					(debugParser->debugCommandNameLength == length) &&
+					!strcmp(debugParser->debugCommandName,  command)) {
 				if (debugParser->DebugCommandParserHelp) {
 					DBGPrint("Help for Command %s\n",
-						 debugParser->debugCommandName);
+							debugParser->debugCommandName);
 					(debugParser->DebugCommandParserHelp)(commandLine,  debugParser);
 					return 1;
 				}
@@ -405,10 +405,10 @@ unsigned long DebuggerParserHelpRoutine(unsigned char *command,  unsigned char *
 				unsigned char debugTemp[256];
 
 				if (debugParser->parserFlags && debugParser->debugCommandName &&
-				    !debugParser->supervisorCommand && debugParser->category == i) {
+						!debugParser->supervisorCommand && debugParser->category == i) {
 					strncpy2lower(debugTemp,  debugParser->debugCommandName,  256);
 					if (DBGPrint("  %-10s    - %s\n",  debugTemp,
-						     debugParser->shortHelp)) return 0;
+								debugParser->shortHelp)) return 0;
 				}
 				debugParser = debugParser->debugNext;
 			}
@@ -420,87 +420,87 @@ unsigned long DebuggerParserHelpRoutine(unsigned char *command,  unsigned char *
 
 DEBUGGER_PARSER *insertDebuggerParser(DEBUGGER_PARSER *i,  DEBUGGER_PARSER *top)
 {
-		DEBUGGER_PARSER *old,  *p;
+	DEBUGGER_PARSER *old,  *p;
 
-		if (!debugParserTail) {
-			i->debugNext = i->debugPrior = NULL;
-			debugParserTail = i;
+	if (!debugParserTail) {
+		i->debugNext = i->debugPrior = NULL;
+		debugParserTail = i;
+		return i;
+	}
+	p = top;
+	old = NULL;
+	while (p) {
+		if (strcmp(p->debugCommandName,  i->debugCommandName) < 0) {
+			old = p;
+			p = p->debugNext;
+		} else {
+			if (p->debugPrior) {
+				p->debugPrior->debugNext = i;
+				i->debugNext = p;
+				i->debugPrior = p->debugPrior;
+				p->debugPrior = i;
+				return top;
+			}
+			i->debugNext = p;
+			i->debugPrior = NULL;
+			p->debugPrior = i;
 			return i;
 		}
-		p = top;
-		old = NULL;
-		while (p) {
-			if (strcmp(p->debugCommandName,  i->debugCommandName) < 0) {
-				old = p;
-				p = p->debugNext;
-			} else {
-				if (p->debugPrior) {
-					p->debugPrior->debugNext = i;
-					i->debugNext = p;
-					i->debugPrior = p->debugPrior;
-					p->debugPrior = i;
-					return top;
-				}
-				i->debugNext = p;
-				i->debugPrior = NULL;
-				p->debugPrior = i;
-				return i;
-			}
-		}
-		old->debugNext = i;
-		i->debugNext = NULL;
-		i->debugPrior = old;
-		debugParserTail = i;
-		return debugParserHead;
+	}
+	old->debugNext = i;
+	i->debugNext = NULL;
+	i->debugPrior = old;
+	debugParserTail = i;
+	return debugParserHead;
 }
 
 unsigned long AddDebuggerCommandParser(DEBUGGER_PARSER *parser)
 {
-		register DEBUGGER_PARSER *debugParser;
+	register DEBUGGER_PARSER *debugParser;
 
-		parser->parserFlags = -1;
-		parser->debugCommandNameLength = strlen(parser->debugCommandName);
+	parser->parserFlags = -1;
+	parser->debugCommandNameLength = strlen(parser->debugCommandName);
 
-		debugParser = debugParserHead;
-		while (debugParser) {
-			if (debugParser == parser ||
-			    (parser->debugCommandNameLength ==
-				debugParser->debugCommandNameLength &&
-				(!strcasecmp(parser->debugCommandName,  debugParser->debugCommandName))))
-				return 1;
-			debugParser = debugParser->debugNext;
-		}
-		debugParserHead = insertDebuggerParser(parser,  debugParserHead);
+	debugParser = debugParserHead;
+	while (debugParser) {
+		if (debugParser == parser ||
+				(parser->debugCommandNameLength ==
+				 debugParser->debugCommandNameLength &&
+				 (!strcasecmp(parser->debugCommandName,  debugParser->debugCommandName))))
+			return 1;
+		debugParser = debugParser->debugNext;
+	}
+	debugParserHead = insertDebuggerParser(parser,  debugParserHead);
 
-		return 0;
+	return 0;
 }
 
 unsigned long RemoveDebuggerCommandParser(DEBUGGER_PARSER *parser)
 {
-		register DEBUGGER_PARSER *debugParser;
+	register DEBUGGER_PARSER *debugParser;
 
-		debugParser = debugParserHead;
-		while (debugParser) {
-			if (debugParser == parser)   /* found,  remove from list */ {
-				if (debugParserHead == parser) {
-					debugParserHead = (void *)parser->debugNext;
-					if (debugParserHead)
-						debugParserHead->debugPrior = NULL;
-					else
-						debugParserTail = NULL;
-				} else {
-					parser->debugPrior->debugNext = parser->debugNext;
-					if (parser != debugParserTail)
-						parser->debugNext->debugPrior = parser->debugPrior;
-					else
-						debugParserTail = parser->debugPrior;
-				}
-				parser->debugNext = parser->debugPrior = 0;
-				parser->parserFlags = 0;
-
-				return 0;
+	debugParser = debugParserHead;
+	while (debugParser) {
+		if (debugParser == parser)   /* found,  remove from list */ {
+			if (debugParserHead == parser) {
+				debugParserHead = (void *)parser->debugNext;
+				if (debugParserHead)
+					debugParserHead->debugPrior = NULL;
+				else
+					debugParserTail = NULL;
+			} else {
+				parser->debugPrior->debugNext = parser->debugNext;
+				if (parser != debugParserTail)
+					parser->debugNext->debugPrior = parser->debugPrior;
+				else
+					debugParserTail = parser->debugPrior;
 			}
-			debugParser = debugParser->debugNext;
+			parser->debugNext = parser->debugPrior = 0;
+			parser->parserFlags = 0;
+
+			return 0;
 		}
-		return -1;
+		debugParser = debugParser->debugNext;
+	}
+	return -1;
 }

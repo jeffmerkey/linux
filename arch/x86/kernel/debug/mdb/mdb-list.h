@@ -1,22 +1,22 @@
 
 /***************************************************************************
-*
-*   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
-*   jeffmerkey@gmail.com
-*
-*   This program is free software; you can redistribute it and/or modify it
-*   under the terms of the GNU General Public License as published by the
-*   Free Software Foundation, version 2.
-*
-*   This program is distributed in the hope that it will be useful, but
-*   WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*   General Public License for more details.
-*
-*   AUTHOR   :  Jeff V. Merkey
-*   DESCRIP  :  Minimal Linux Debugger
-*
-***************************************************************************/
+ *
+ *   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
+ *   jeffmerkey@gmail.com
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the
+ *   Free Software Foundation, version 2.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *   General Public License for more details.
+ *
+ *   AUTHOR   :  Jeff V. Merkey
+ *   DESCRIP  :  Minimal Linux Debugger
+ *
+ ***************************************************************************/
 
 #ifndef _MDB_LIST
 #define _MDB_LIST
@@ -25,9 +25,9 @@ struct ACCELERATOR {
 	struct ACCELERATOR *accelNext;
 	struct ACCELERATOR *accelPrior;
 	unsigned long (*accelRoutine)(unsigned long key, void *p,
-				      struct ACCELERATOR *parser);
+			struct ACCELERATOR *parser);
 	unsigned long (*accelRoutineHelp)(unsigned long key,
-					  struct ACCELERATOR *parser);
+			struct ACCELERATOR *parser);
 	unsigned long accelFlags;
 	unsigned long key;
 	unsigned long supervisorCommand;
@@ -44,11 +44,11 @@ struct DEBUGGER_PARSER {
 	struct DEBUGGER_PARSER *debugNext;
 	struct DEBUGGER_PARSER *debugPrior;
 	unsigned long (*DebugCommandParser)(unsigned char *commandLine,
-					    StackFrame *stackFrame,
-				unsigned long Exception,
-				struct DEBUGGER_PARSER *parser);
+			StackFrame *stackFrame,
+			unsigned long Exception,
+			struct DEBUGGER_PARSER *parser);
 	unsigned long (*DebugCommandParserHelp)(unsigned char *commandLine,
-						struct DEBUGGER_PARSER *parser);
+			struct DEBUGGER_PARSER *parser);
 	unsigned long parserFlags;
 	unsigned char *debugCommandName;
 	unsigned long debugCommandNameLength;
@@ -72,11 +72,11 @@ int AlternateDebuggerRoutine(int reason, int error, void *frame);
 unsigned long AddAlternateDebugger(ALT_DEBUGGER *Debugger);
 unsigned long RemoveAlternateDebugger(ALT_DEBUGGER *Debugger);
 unsigned long DebuggerParserRoutine(unsigned char *command,
-				    unsigned char *commandLine,
+		unsigned char *commandLine,
 		StackFrame *stackFrame,
 		unsigned long Exception);
 unsigned long DebuggerParserHelpRoutine(unsigned char *command,
-					unsigned char *commandLine);
+		unsigned char *commandLine);
 unsigned long AddDebuggerCommandParser(DEBUGGER_PARSER *parser);
 unsigned long RemoveDebuggerCommandParser(DEBUGGER_PARSER *parser);
 
@@ -85,10 +85,10 @@ static inline unsigned long strhash(unsigned char *s, int len, int limit)
 	register unsigned long h = 0, a = 127, i;
 
 	if (!limit)
-	return -1;
+		return -1;
 
 	for (i = 0; i < len && *s; s++, i++)
-	h = ((a * h) + *s) % limit;
+		h = ((a * h) + *s) % limit;
 
 	return h;
 }

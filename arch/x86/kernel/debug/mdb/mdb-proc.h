@@ -1,22 +1,22 @@
 
 /***************************************************************************
-*
-*   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
-*   jeffmerkey@gmail.com
-*
-*   This program is free software; you can redistribute it and/or modify it
-*   under the terms of the GNU General Public License as published by the
-*   Free Software Foundation, version 2.
-*
-*   This program is distributed in the hope that it will be useful, but
-*   WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*   General Public License for more details.
-*
-*   AUTHOR   :  Jeff V. Merkey
-*   DESCRIP  :  Minimal Linux Debugger
-*
-***************************************************************************/
+ *
+ *   Copyright (c) 2000-2015 Jeff V. Merkey  All Rights Reserved.
+ *   jeffmerkey@gmail.com
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the
+ *   Free Software Foundation, version 2.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *   General Public License for more details.
+ *
+ *   AUTHOR   :  Jeff V. Merkey
+ *   DESCRIP  :  Minimal Linux Debugger
+ *
+ ***************************************************************************/
 
 #ifndef _MDB_PROC_H
 #define _MDB_PROC_H
@@ -89,8 +89,8 @@ extern int nextline;
 extern unsigned char *category_strings[13];
 
 unsigned long disassemble(StackFrame *stackFrame, unsigned long p,
-			  unsigned long count, unsigned long use,
-											unsigned long type);
+		unsigned long count, unsigned long use,
+		unsigned long type);
 void ClearDebuggerState(void);
 void displayMTRRRegisters(void);
 void DisplayGDT(unsigned char *GDT_ADDRESS);
@@ -100,53 +100,53 @@ void LoadDebugRegisters(void);
 void ClearTempBreakpoints(void);
 unsigned long ValidBreakpoint(unsigned long address);
 unsigned char *dump(unsigned char *p, unsigned long count,
-		    unsigned long physical);
+		unsigned long physical);
 unsigned char *dumpWord(unsigned char *p, unsigned long count,
-			unsigned long physical);
+		unsigned long physical);
 unsigned char *dumpDouble(unsigned char *p, unsigned long count,
-			  unsigned long physical);
+		unsigned long physical);
 unsigned char *dumpLinkedList(unsigned char *p, unsigned long count,
-			      unsigned long offset);
+		unsigned long offset);
 unsigned char *dumpDoubleStack(StackFrame *stackFrame,
-			       unsigned char *p,
-												  unsigned long count);
+		unsigned char *p,
+		unsigned long count);
 unsigned char *dumpStack(StackFrame *stackFrame,
-			 unsigned char *p,
-										  unsigned long count);
+		unsigned char *p,
+		unsigned long count);
 unsigned long dumpBacktrace(unsigned char *p, unsigned long count);
 unsigned long debugger_setup(unsigned long processor,
-			     unsigned long Exception,
-												StackFrame *stackFrame,
-												unsigned char *panicMsg);
+		unsigned long Exception,
+		StackFrame *stackFrame,
+		unsigned char *panicMsg);
 unsigned long debugger_entry(unsigned long Exception,
-			     StackFrame *stackFrame,
-												unsigned long processor);
+		StackFrame *stackFrame,
+		unsigned long processor);
 unsigned long debugger_command_entry(unsigned long processor,
-				     unsigned long Exception,
-														  StackFrame *stackFrame);
+		unsigned long Exception,
+		StackFrame *stackFrame);
 unsigned long ConsoleDisplayBreakReason(StackFrame *stackFrame,
-					unsigned long reason,
-															  unsigned long processor,
-										  unsigned long lastCommand);
+		unsigned long reason,
+		unsigned long processor,
+		unsigned long lastCommand);
 uint64_t EvaluateExpression(StackFrame *stackFrame,
-			    unsigned char **p,
-											  unsigned long *type);
+		unsigned char **p,
+		unsigned long *type);
 uint64_t EvaluateNumericExpression(StackFrame *stackFrame,
-				   unsigned char **p,
-														unsigned long *type);
+		unsigned char **p,
+		unsigned long *type);
 uint64_t EvaluateDisassemblyExpression(StackFrame *stackFrame,
-				       unsigned char **p,
-															 unsigned long *type,
-															 int sizeflag,
-															 unsigned char **result);
+		unsigned char **p,
+		unsigned long *type,
+		int sizeflag,
+		unsigned char **result);
 unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
-			 unsigned long use, unsigned long *ret,
-				unsigned long type);
+		unsigned long use, unsigned long *ret,
+		unsigned long type);
 void DisplayASCIITable(void);
 unsigned char *UpcaseString(unsigned char *);
 unsigned long validate_address(unsigned long addr);
 unsigned long ScreenInputFromKeyboard(unsigned char *buffer, unsigned long Start,
-				      unsigned long Length);
+		unsigned long Length);
 
 unsigned long GetIP(StackFrame *);
 unsigned long GetStackAddress(StackFrame *);
