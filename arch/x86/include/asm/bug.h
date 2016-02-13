@@ -11,13 +11,6 @@
 # define __BUG_C0	"2:\t.long 1b - 2b, %c0 - 2b\n"
 #endif
 
-#ifdef CONFIG_DEBUG_BUG
-#define BUG()							\
-do {								\
-	asm volatile("int3");					\
-	unreachable();						\
-} while (0)
-#else
 #define BUG()							\
 do {								\
 	asm volatile("1:\tud2\n"				\
@@ -30,14 +23,6 @@ do {								\
 		     "i" (sizeof(struct bug_entry)));		\
 	unreachable();						\
 } while (0)
-#endif
-#else
-#ifdef CONFIG_DEBUG_BUG
-#define BUG()							\
-do {								\
-	asm volatile("int3");					\
-	unreachable();						\
-} while (0)
 #else
 #define BUG()							\
 do {								\
@@ -45,7 +30,12 @@ do {								\
 	unreachable();						\
 } while (0)
 #endif
-#endif
+
+#define HAVE_ARCH_BREAK
+#define BREAK()							\
+do {								\
+	asm volatile("int3");					\
+} while (0)
 
 #include <asm-generic/bug.h>
 
