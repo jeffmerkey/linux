@@ -1260,7 +1260,7 @@ unsigned long SSBUpdate(StackFrame *stackFrame, unsigned long processor)
 	lastCR2 = ReadCR2();
 	lastCR4 = ReadCR4();
 	memmove((void *)&lastStackFrame, stackFrame,
-			sizeof(StackFrame));
+		sizeof(StackFrame));
 
 	stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
@@ -1317,7 +1317,7 @@ unsigned long processProceedACC(unsigned long key, void *p, ACCELERATOR *accel)
 				lastCR2 = ReadCR2();
 				lastCR4 = ReadCR4();
 				memmove((void *)&lastStackFrame, stackFrame,
-						sizeof(StackFrame));
+					sizeof(StackFrame));
 
 				stackFrame->tSystemFlags &= ~SINGLE_STEP;
 				stackFrame->tSystemFlags |= RESUME;
@@ -1336,7 +1336,7 @@ unsigned long processProceedACC(unsigned long key, void *p, ACCELERATOR *accel)
 	lastCR2 = ReadCR2();
 	lastCR4 = ReadCR4();
 	memmove((void *)&lastStackFrame, stackFrame,
-			sizeof(StackFrame));
+		sizeof(StackFrame));
 
 	stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
@@ -1360,7 +1360,7 @@ unsigned long processTraceACC(unsigned long key, void *p, ACCELERATOR *accel)
 	lastCR2 = ReadCR2();
 	lastCR4 = ReadCR4();
 	memmove((void *)&lastStackFrame, stackFrame,
-			sizeof(StackFrame));
+		sizeof(StackFrame));
 
 	stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
@@ -1411,8 +1411,8 @@ unsigned long executeCommandHelp(unsigned char *commandLine, DEBUGGER_PARSER *pa
 /* P */
 
 unsigned long processProceed(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			     StackFrame *stackFrame, unsigned long Exception,
+			     DEBUGGER_PARSER *parser)
 {
 	register unsigned long i;
 
@@ -1432,7 +1432,7 @@ unsigned long processProceed(unsigned char *cmd,
 				lastCR2 = ReadCR2();
 				lastCR4 = ReadCR4();
 				memmove((void *)&lastStackFrame, stackFrame,
-						sizeof(StackFrame));
+					sizeof(StackFrame));
 
 				stackFrame->tSystemFlags &= ~SINGLE_STEP;
 				stackFrame->tSystemFlags |= RESUME;
@@ -1450,7 +1450,7 @@ unsigned long processProceed(unsigned char *cmd,
 	lastCR2 = ReadCR2();
 	lastCR4 = ReadCR4();
 	memmove((void *)&lastStackFrame, stackFrame,
-			sizeof(StackFrame));
+		sizeof(StackFrame));
 
 	stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
@@ -1463,8 +1463,8 @@ unsigned long processProceed(unsigned char *cmd,
 /* SSB */
 
 unsigned long processTraceSSB(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	DBGPrint("\n");
 	ssbmode = 1;
@@ -1473,7 +1473,7 @@ unsigned long processTraceSSB(unsigned char *cmd,
 	lastCR2 = ReadCR2();
 	lastCR4 = ReadCR4();
 	memmove((void *)&lastStackFrame, stackFrame,
-			sizeof(StackFrame));
+		sizeof(StackFrame));
 
 	stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
@@ -1486,8 +1486,8 @@ unsigned long processTraceSSB(unsigned char *cmd,
 /* T */
 
 unsigned long processTrace(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	ssbmode = 0;
 	lastCommand = 'T';
@@ -1495,7 +1495,7 @@ unsigned long processTrace(unsigned char *cmd,
 	lastCR2 = ReadCR2();
 	lastCR4 = ReadCR4();
 	memmove((void *)&lastStackFrame, stackFrame,
-			sizeof(StackFrame));
+		sizeof(StackFrame));
 
 	stackFrame->tSystemFlags |= (SINGLE_STEP | RESUME);
 
@@ -1508,8 +1508,8 @@ unsigned long processTrace(unsigned char *cmd,
 /* G */
 
 unsigned long processGo(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			StackFrame *stackFrame, unsigned long Exception,
+			DEBUGGER_PARSER *parser)
 {
 	register unsigned long address;
 	unsigned long valid;
@@ -1538,7 +1538,7 @@ unsigned long processGo(unsigned char *cmd,
 				lastCR2 = ReadCR2();
 				lastCR4 = ReadCR4();
 				memmove((void *)&lastStackFrame, stackFrame,
-						sizeof(StackFrame));
+					sizeof(StackFrame));
 
 				stackFrame->tSystemFlags &= ~SINGLE_STEP;
 				stackFrame->tSystemFlags |= RESUME;
@@ -1552,7 +1552,7 @@ unsigned long processGo(unsigned char *cmd,
 		lastCR2 = ReadCR2();
 		lastCR4 = ReadCR4();
 		memmove((void *)&lastStackFrame, stackFrame,
-				sizeof(StackFrame));
+			sizeof(StackFrame));
 
 		stackFrame->tSystemFlags &= ~SINGLE_STEP;
 		stackFrame->tSystemFlags |= RESUME;
@@ -1573,8 +1573,8 @@ unsigned long processorCommandHelp(unsigned char *commandLine, DEBUGGER_PARSER *
 /* CPU */
 
 unsigned long breakProcessor(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			     StackFrame *stackFrame, unsigned long Exception,
+			     DEBUGGER_PARSER *parser)
 {
 	register unsigned long cpunum, cpu = get_processor_id();
 	unsigned long valid, i;
@@ -1612,7 +1612,7 @@ unsigned long breakProcessor(unsigned char *cmd,
 		lastCR2 = ReadCR2();
 		lastCR4 = ReadCR4();
 		memmove((void *)&lastStackFrame, stackFrame,
-				sizeof(StackFrame));
+			sizeof(StackFrame));
 		return -1;
 	} else {
 		DBGPrint("no target processor specified\n");
@@ -1636,8 +1636,8 @@ unsigned long breakProcessor(unsigned char *cmd,
 /* NMI */
 
 unsigned long nmiProcessor(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	register unsigned long cpunum, cpu = get_processor_id();
 	unsigned long valid, i;
@@ -1675,7 +1675,7 @@ unsigned long nmiProcessor(unsigned char *cmd,
 		lastCR2 = ReadCR2();
 		lastCR4 = ReadCR4();
 		memmove((void *)&lastStackFrame, stackFrame,
-				sizeof(StackFrame));
+			sizeof(StackFrame));
 		return -1;
 	} else {
 		DBGPrint("no target processor specified\n");
@@ -1699,11 +1699,11 @@ unsigned long nmiProcessor(unsigned char *cmd,
 /* LR */
 
 extern int bt_stack(struct task_struct *task, struct pt_regs *regs,
-		unsigned long *stack);
+		    unsigned long *stack);
 
 unsigned long listProcessorFrame(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				 StackFrame *stackFrame, unsigned long Exception,
+				 DEBUGGER_PARSER *parser)
 {
 	unsigned long valid, pnum;
 
@@ -1716,7 +1716,7 @@ unsigned long listProcessorFrame(unsigned char *cmd,
 		StackFrame *listFrame = (StackFrame *)&per_cpu(CurrentStackFrame, pnum);
 
 		DBGPrint("Processor Frame %d -> (%lX)\n", pnum,
-				&per_cpu(CurrentStackFrame, pnum));
+			 &per_cpu(CurrentStackFrame, pnum));
 		DisplayTSS(listFrame);
 		DisplayClosestSymbol(listFrame->tIP);
 		bt_stack(NULL, NULL, (unsigned long *)listFrame->tSP);
@@ -1729,8 +1729,8 @@ unsigned long listProcessorFrame(unsigned char *cmd,
 /* .TA */
 
 unsigned long ProcessTAToggle(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	if (general_toggle) {
 		general_toggle = 0;
@@ -1757,8 +1757,8 @@ unsigned long TSSDisplayHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* .T */
 
 unsigned long TSSDisplay(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			 StackFrame *stackFrame, unsigned long Exception,
+			 DEBUGGER_PARSER *parser)
 {
 	register unsigned long address;
 	unsigned long valid;
@@ -1791,8 +1791,8 @@ unsigned long displayRegistersHelp(unsigned char *commandLine, DEBUGGER_PARSER *
 /* RC */
 
 unsigned long displayControlRegisters(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				      StackFrame *stackFrame, unsigned long Exception,
+				      DEBUGGER_PARSER *parser)
 {
 	DBGPrint("Control Registers\n");
 	DisplayControlRegisters(get_processor_id(), stackFrame);
@@ -1802,8 +1802,8 @@ unsigned long displayControlRegisters(unsigned char *cmd,
 /* RA */
 
 unsigned long displayAllRegisters(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				  StackFrame *stackFrame, unsigned long Exception,
+				  DEBUGGER_PARSER *parser)
 {
 	register unsigned long processor = get_processor_id();
 
@@ -1828,8 +1828,8 @@ unsigned long displayAllRegisters(unsigned char *cmd,
 /* RS */
 
 unsigned long displaySegmentRegisters(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				      StackFrame *stackFrame, unsigned long Exception,
+				      DEBUGGER_PARSER *parser)
 {
 	DBGPrint("Segment Registers\n");
 	DisplaySegmentRegisters(stackFrame);
@@ -1839,8 +1839,8 @@ unsigned long displaySegmentRegisters(unsigned char *cmd,
 /* RN */
 
 unsigned long displayNumericRegisters(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				      StackFrame *stackFrame, unsigned long Exception,
+				      DEBUGGER_PARSER *parser)
 {
 	if (fpu_present()) {
 		DBGPrint("Coprocessor Registers\n");
@@ -1853,8 +1853,8 @@ unsigned long displayNumericRegisters(unsigned char *cmd,
 /* RG */
 
 unsigned long displayGeneralRegisters(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				      StackFrame *stackFrame, unsigned long Exception,
+				      DEBUGGER_PARSER *parser)
 {
 	DBGPrint("General Registers\n");
 	DisplayGeneralRegisters(stackFrame);
@@ -1911,10 +1911,10 @@ void DisplayNPXRegisters(StackFrame *stackFrame)
 	if (tos) {}
 
 	DBGPrint("Control: 0x%04X  Status: 0x%04X  Tag: 0x%04X  TOS: %i CPU: %i\n",
-			(unsigned)npx->control & 0xFFFF,
-			(unsigned)npx->status & 0xFFFF,
-			(unsigned)npx->tag & 0xFFFF,
-			(int)tos, (int)get_processor_id());
+		 (unsigned)npx->control & 0xFFFF,
+		 (unsigned)npx->status & 0xFFFF,
+		 (unsigned)npx->tag & 0xFFFF,
+		 (int)tos, (int)get_processor_id());
 
 	for (i = 0; i < 8; i++) {
 		tos = (npx->status >> 11) & 7;
@@ -1926,48 +1926,48 @@ void DisplayNPXRegisters(StackFrame *stackFrame)
 			DBGPrint("+");
 
 		DBGPrint(" %04X %04X %04X %04X e %04X    ",
-				(unsigned)npx->reg[i].sig3,
-				(unsigned)npx->reg[i].sig2,
-				(unsigned)npx->reg[i].sig1,
-				(unsigned)npx->reg[i].sig0,
-				(unsigned)npx->reg[i].exponent);
+			 (unsigned)npx->reg[i].sig3,
+			 (unsigned)npx->reg[i].sig2,
+			 (unsigned)npx->reg[i].sig1,
+			 (unsigned)npx->reg[i].sig0,
+			 (unsigned)npx->reg[i].exponent);
 
 		if (tos) {}
 		tag = (npx->tag >> (((i + tos) % 8) * 2)) & 3;
 		switch (tag) {
-			case 0:
-				DBGPrint("Valid");
+		case 0:
+			DBGPrint("Valid");
 #ifdef RENDER_NPX_VALUES
-				if (((int)npx->reg[i].exponent - 16382 < 1000) &&
-						((int)npx->reg[i].exponent - 16382 > -1000)) {
-					d =
-						npx->reg[i].sig3 / 65536.0 +
-						npx->reg[i].sig2 / 65536.0 / 65536.0 +
-						npx->reg[i].sig1 / 65536.0 / 65536.0 / 65536.0;
+			if (((int)npx->reg[i].exponent - 16382 < 1000) &&
+			    ((int)npx->reg[i].exponent - 16382 > -1000)) {
+				d =
+					npx->reg[i].sig3 / 65536.0 +
+					npx->reg[i].sig2 / 65536.0 / 65536.0 +
+					npx->reg[i].sig1 / 65536.0 / 65536.0 / 65536.0;
 
-					d = ldexp(d, (int)npx->reg[i].exponent - 16382);
+				d = ldexp(d, (int)npx->reg[i].exponent - 16382);
 
-					if (npx->reg[i].sign)
-						d = -d;
+				if (npx->reg[i].sign)
+					d = -d;
 
-					DBGPrint("  %.16g", d);
-				} else
-					DBGPrint("  (too big to display)");
+				DBGPrint("  %.16g", d);
+			} else
+				DBGPrint("  (too big to display)");
 #endif
-				DBGPrint("\n");
-				break;
+			DBGPrint("\n");
+			break;
 
-			case 1:
-				DBGPrint("Zero\n");
-				break;
+		case 1:
+			DBGPrint("Zero\n");
+			break;
 
-			case 2:
-				DBGPrint("Special\n");
-				break;
+		case 2:
+			DBGPrint("Special\n");
+			break;
 
-			case 3:
-				DBGPrint("Empty\n");
-				break;
+		case 3:
+			DBGPrint("Empty\n");
+			break;
 		}
 	}
 }
@@ -1975,8 +1975,8 @@ void DisplayNPXRegisters(StackFrame *stackFrame)
 /* R */
 
 unsigned long displayDefaultRegisters(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				      StackFrame *stackFrame, unsigned long Exception,
+				      DEBUGGER_PARSER *parser)
 {
 	register unsigned long processor = get_processor_id();
 
@@ -2016,8 +2016,8 @@ unsigned long displayEAXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* ORIGEAX */
 
 unsigned long ChangeORIGEAXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				    StackFrame *stackFrame, unsigned long Exception,
+				    DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2038,8 +2038,8 @@ unsigned long ChangeORIGEAXRegister(unsigned char *cmd,
 /* EAX */
 
 unsigned long ChangeEAXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid, width = 0;
 	register unsigned long value;
@@ -2057,27 +2057,27 @@ unsigned long ChangeEAXRegister(unsigned char *cmd,
 	value = EvaluateExpression(stackFrame, &cmd, &valid);
 	if (valid) {
 		switch (width) {
-			case 0:
-				stackFrame->tAX &= ~0xFFFFFFFF;
-				stackFrame->tAX |= value & 0xFFFFFFFF;
-				DBGPrint("EAX changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 0:
+			stackFrame->tAX &= ~0xFFFFFFFF;
+			stackFrame->tAX |= value & 0xFFFFFFFF;
+			DBGPrint("EAX changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			case 1:
-				stackFrame->tAX &= ~0xFFFF;
-				stackFrame->tAX |= value & 0xFFFF;
-				DBGPrint("AX changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 1:
+			stackFrame->tAX &= ~0xFFFF;
+			stackFrame->tAX |= value & 0xFFFF;
+			DBGPrint("AX changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			case 2:
-				stackFrame->tAX &= ~0xFF;
-				stackFrame->tAX |= value & 0xFF;
-				DBGPrint("AL changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 2:
+			stackFrame->tAX &= ~0xFF;
+			stackFrame->tAX |= value & 0xFF;
+			DBGPrint("AL changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			default:
-				stackFrame->tAX = value;
-				break;
+		default:
+			stackFrame->tAX = value;
+			break;
 		}
 	} else
 		DBGPrint("invalid change register command or address\n");
@@ -2092,8 +2092,8 @@ unsigned long displayEBXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* EBX */
 
 unsigned long ChangeEBXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid, width = 0;
 	register unsigned long value;
@@ -2111,27 +2111,27 @@ unsigned long ChangeEBXRegister(unsigned char *cmd,
 	value = EvaluateExpression(stackFrame, &cmd, &valid);
 	if (valid) {
 		switch (width) {
-			case 0:
-				stackFrame->tBX &= ~0xFFFFFFFF;
-				stackFrame->tBX |= value & 0xFFFFFFFF;
-				DBGPrint("EBX changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 0:
+			stackFrame->tBX &= ~0xFFFFFFFF;
+			stackFrame->tBX |= value & 0xFFFFFFFF;
+			DBGPrint("EBX changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			case 1:
-				stackFrame->tBX &= ~0xFFFF;
-				stackFrame->tBX |= value & 0xFFFF;
-				DBGPrint("BX changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 1:
+			stackFrame->tBX &= ~0xFFFF;
+			stackFrame->tBX |= value & 0xFFFF;
+			DBGPrint("BX changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			case 2:
-				stackFrame->tBX &= ~0xFF;
-				stackFrame->tBX |= value & 0xFF;
-				DBGPrint("BL changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 2:
+			stackFrame->tBX &= ~0xFF;
+			stackFrame->tBX |= value & 0xFF;
+			DBGPrint("BL changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			default:
-				stackFrame->tBX = value;
-				break;
+		default:
+			stackFrame->tBX = value;
+			break;
 		}
 	} else
 		DBGPrint("invalid change register command or address\n");
@@ -2146,8 +2146,8 @@ unsigned long displayECXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* ECX */
 
 unsigned long ChangeECXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid, width = 0;
 	register unsigned long value;
@@ -2165,27 +2165,27 @@ unsigned long ChangeECXRegister(unsigned char *cmd,
 	value = EvaluateExpression(stackFrame, &cmd, &valid);
 	if (valid) {
 		switch (width) {
-			case 0:
-				stackFrame->tCX &= ~0xFFFFFFFF;
-				stackFrame->tCX |= value & 0xFFFFFFFF;
-				DBGPrint("ECX changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 0:
+			stackFrame->tCX &= ~0xFFFFFFFF;
+			stackFrame->tCX |= value & 0xFFFFFFFF;
+			DBGPrint("ECX changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			case 1:
-				stackFrame->tCX &= ~0xFFFF;
-				stackFrame->tCX |= value & 0xFFFF;
-				DBGPrint("CX changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 1:
+			stackFrame->tCX &= ~0xFFFF;
+			stackFrame->tCX |= value & 0xFFFF;
+			DBGPrint("CX changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			case 2:
-				stackFrame->tCX &= ~0xFF;
-				stackFrame->tCX |= value & 0xFF;
-				DBGPrint("CL changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 2:
+			stackFrame->tCX &= ~0xFF;
+			stackFrame->tCX |= value & 0xFF;
+			DBGPrint("CL changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			default:
-				stackFrame->tCX = value;
-				break;
+		default:
+			stackFrame->tCX = value;
+			break;
 		}
 	} else
 		DBGPrint("invalid change register command or address\n");
@@ -2200,8 +2200,8 @@ unsigned long displayEDXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* EDX */
 
 unsigned long ChangeEDXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid, width = 0;
 	register unsigned long value;
@@ -2219,27 +2219,27 @@ unsigned long ChangeEDXRegister(unsigned char *cmd,
 	value = EvaluateExpression(stackFrame, &cmd, &valid);
 	if (valid) {
 		switch (width) {
-			case 0:
-				stackFrame->tDX &= ~0xFFFFFFFF;
-				stackFrame->tDX |= value & 0xFFFFFFFF;
-				DBGPrint("EDX changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 0:
+			stackFrame->tDX &= ~0xFFFFFFFF;
+			stackFrame->tDX |= value & 0xFFFFFFFF;
+			DBGPrint("EDX changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			case 1:
-				stackFrame->tDX &= ~0xFFFF;
-				stackFrame->tDX |= value & 0xFFFF;
-				DBGPrint("DX changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 1:
+			stackFrame->tDX &= ~0xFFFF;
+			stackFrame->tDX |= value & 0xFFFF;
+			DBGPrint("DX changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			case 2:
-				stackFrame->tDX &= ~0xFF;
-				stackFrame->tDX |= value & 0xFF;
-				DBGPrint("DL changed to 0x%lX\n", (unsigned)value);
-				break;
+		case 2:
+			stackFrame->tDX &= ~0xFF;
+			stackFrame->tDX |= value & 0xFF;
+			DBGPrint("DL changed to 0x%lX\n", (unsigned)value);
+			break;
 
-			default:
-				stackFrame->tDX = value;
-				break;
+		default:
+			stackFrame->tDX = value;
+			break;
 		}
 	} else
 		DBGPrint("invalid change register command or address\n");
@@ -2254,8 +2254,8 @@ unsigned long displayESIHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* ESI */
 
 unsigned long ChangeESIRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2281,8 +2281,8 @@ unsigned long displayEDIHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* EDI */
 
 unsigned long ChangeEDIRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2308,8 +2308,8 @@ unsigned long displayEBPHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* EBP */
 
 unsigned long ChangeEBPRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2335,8 +2335,8 @@ unsigned long displayESPHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* ESP */
 
 unsigned long ChangeESPRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2362,8 +2362,8 @@ unsigned long displayEIPHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* EIP */
 
 unsigned long ChangeEIPRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2394,8 +2394,8 @@ unsigned long displayRAXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* RAX */
 
 unsigned long ChangeRAXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2416,8 +2416,8 @@ unsigned long ChangeRAXRegister(unsigned char *cmd,
 /* ORIGRAX */
 
 unsigned long ChangeORIGRAXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				    StackFrame *stackFrame, unsigned long Exception,
+				    DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2443,8 +2443,8 @@ unsigned long displayRBXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* RBX */
 
 unsigned long ChangeRBXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2470,8 +2470,8 @@ unsigned long displayRCXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* RCX */
 
 unsigned long ChangeRCXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2497,8 +2497,8 @@ unsigned long displayRDXHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* RDX */
 
 unsigned long ChangeRDXRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2524,8 +2524,8 @@ unsigned long displayRSIHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* RSI */
 
 unsigned long ChangeRSIRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2551,8 +2551,8 @@ unsigned long displayRDIHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* RDI */
 
 unsigned long ChangeRDIRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2578,8 +2578,8 @@ unsigned long displayRBPHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* RBP */
 
 unsigned long ChangeRBPRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2605,8 +2605,8 @@ unsigned long displayRSPHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* RSP */
 
 unsigned long ChangeRSPRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2632,8 +2632,8 @@ unsigned long displayRIPHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* RIP */
 
 unsigned long ChangeRIPRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2659,8 +2659,8 @@ unsigned long displayR8Help(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* R8 */
 
 unsigned long ChangeR8Register(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			       StackFrame *stackFrame, unsigned long Exception,
+			       DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2686,8 +2686,8 @@ unsigned long displayR9Help(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* R9 */
 
 unsigned long ChangeR9Register(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			       StackFrame *stackFrame, unsigned long Exception,
+			       DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2713,8 +2713,8 @@ unsigned long displayR10Help(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* R10 */
 
 unsigned long ChangeR10Register(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2740,8 +2740,8 @@ unsigned long displayR11Help(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* R11 */
 
 unsigned long ChangeR11Register(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2767,8 +2767,8 @@ unsigned long displayR12Help(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* R12 */
 
 unsigned long ChangeR12Register(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2794,8 +2794,8 @@ unsigned long displayR13Help(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* R13 */
 
 unsigned long ChangeR13Register(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2821,8 +2821,8 @@ unsigned long displayR14Help(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* R14 */
 
 unsigned long ChangeR14Register(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2848,8 +2848,8 @@ unsigned long displayR15Help(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* R15 */
 
 unsigned long ChangeR15Register(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2881,8 +2881,8 @@ unsigned long displayCSHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* CS */
 
 unsigned long ChangeCSRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			       StackFrame *stackFrame, unsigned long Exception,
+			       DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2897,7 +2897,7 @@ unsigned long ChangeCSRegister(unsigned char *cmd,
 		oldW = stackFrame->tCS;
 		stackFrame->tCS = (unsigned short)value;
 		DBGPrint("CS: =[%04X] changed to CS: =[%04X]\n",
-				(unsigned)oldW, (unsigned)value);
+			 (unsigned)oldW, (unsigned)value);
 	} else
 		DBGPrint("invalid change segment register command or address\n");
 	return 1;
@@ -2912,8 +2912,8 @@ unsigned long displayDSHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* DS */
 
 unsigned long ChangeDSRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			       StackFrame *stackFrame, unsigned long Exception,
+			       DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2928,7 +2928,7 @@ unsigned long ChangeDSRegister(unsigned char *cmd,
 		oldW = stackFrame->tDS;
 		stackFrame->tDS = (unsigned short)value;
 		DBGPrint("DS: =[%04X] changed to DS: =[%04X]\n",
-				(unsigned)oldW, (unsigned)value);
+			 (unsigned)oldW, (unsigned)value);
 	} else
 		DBGPrint("invalid change segment register command or address\n");
 	return 1;
@@ -2942,8 +2942,8 @@ unsigned long displayESHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* ES */
 
 unsigned long ChangeESRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			       StackFrame *stackFrame, unsigned long Exception,
+			       DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2958,7 +2958,7 @@ unsigned long ChangeESRegister(unsigned char *cmd,
 		oldW = stackFrame->tES;
 		stackFrame->tES = (unsigned short)value;
 		DBGPrint("ES: =[%04X] changed to ES: =[%04X]\n",
-				(unsigned)oldW, (unsigned)value);
+			 (unsigned)oldW, (unsigned)value);
 	} else
 		DBGPrint("invalid change segment register command or address\n");
 	return 1;
@@ -2973,8 +2973,8 @@ unsigned long displayFSHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* FS */
 
 unsigned long ChangeFSRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			       StackFrame *stackFrame, unsigned long Exception,
+			       DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -2989,7 +2989,7 @@ unsigned long ChangeFSRegister(unsigned char *cmd,
 		oldW = stackFrame->tFS;
 		stackFrame->tFS = (unsigned short)value;
 		DBGPrint("FS: =[%04X] changed to FS: =[%04X]\n",
-				(unsigned)oldW, (unsigned)value);
+			 (unsigned)oldW, (unsigned)value);
 	} else
 		DBGPrint("invalid change segment register command or address\n");
 	return 1;
@@ -3003,8 +3003,8 @@ unsigned long displayGSHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* GS */
 
 unsigned long ChangeGSRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			       StackFrame *stackFrame, unsigned long Exception,
+			       DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -3019,7 +3019,7 @@ unsigned long ChangeGSRegister(unsigned char *cmd,
 		oldW = stackFrame->tGS;
 		stackFrame->tGS = (unsigned short)value;
 		DBGPrint("GS: =[%04X] changed to GS: =[%04X]\n",
-				(unsigned)oldW, (unsigned)value);
+			 (unsigned)oldW, (unsigned)value);
 	} else
 		DBGPrint("invalid change segment register command or address\n");
 	return 1;
@@ -3033,8 +3033,8 @@ unsigned long displaySSHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* SS */
 
 unsigned long ChangeSSRegister(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			       StackFrame *stackFrame, unsigned long Exception,
+			       DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value;
@@ -3049,7 +3049,7 @@ unsigned long ChangeSSRegister(unsigned char *cmd,
 		oldW = stackFrame->tSS;
 		stackFrame->tSS = (unsigned short)value;
 		DBGPrint("SS: =[%04X] changed to SS: =[%04X]\n",
-				(unsigned)oldW, (unsigned)value);
+			 (unsigned)oldW, (unsigned)value);
 	} else
 		DBGPrint("invalid change segment register command or address\n");
 
@@ -3064,8 +3064,8 @@ unsigned long displayRFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* RF */
 
 unsigned long ChangeRFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3079,7 +3079,7 @@ unsigned long ChangeRFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & RF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= RF_FLAG) : (stackFrame->tSystemFlags &= ~RF_FLAG);
 		DBGPrint("EFlag RF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3093,8 +3093,8 @@ unsigned long displayTFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* TF */
 
 unsigned long ChangeTFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3108,7 +3108,7 @@ unsigned long ChangeTFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & TF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= TF_FLAG) : (stackFrame->tSystemFlags &= ~TF_FLAG);
 		DBGPrint("EFlag TF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3122,8 +3122,8 @@ unsigned long displayZFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* ZF */
 
 unsigned long ChangeZFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3137,7 +3137,7 @@ unsigned long ChangeZFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & ZF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= ZF_FLAG) : (stackFrame->tSystemFlags &= ~ZF_FLAG);
 		DBGPrint("EFlag ZF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3151,8 +3151,8 @@ unsigned long displaySFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* SF */
 
 unsigned long ChangeSFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3166,7 +3166,7 @@ unsigned long ChangeSFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & SF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= SF_FLAG) : (stackFrame->tSystemFlags &= ~SF_FLAG);
 		DBGPrint("EFlag SF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3180,8 +3180,8 @@ unsigned long displayPFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* PF */
 
 unsigned long ChangePFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3195,7 +3195,7 @@ unsigned long ChangePFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & PF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= PF_FLAG) : (stackFrame->tSystemFlags &= ~PF_FLAG);
 		DBGPrint("EFlag PF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3209,8 +3209,8 @@ unsigned long displayCFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* CF */
 
 unsigned long ChangeCFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3224,7 +3224,7 @@ unsigned long ChangeCFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & CF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= CF_FLAG) : (stackFrame->tSystemFlags &= ~CF_FLAG);
 		DBGPrint("EFlag CF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3238,8 +3238,8 @@ unsigned long displayOFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* OF */
 
 unsigned long ChangeOFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3253,7 +3253,7 @@ unsigned long ChangeOFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & OF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= OF_FLAG) : (stackFrame->tSystemFlags &= ~OF_FLAG);
 		DBGPrint("EFlag OF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3267,8 +3267,8 @@ unsigned long displayIFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* IF */
 
 unsigned long ChangeIFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3282,7 +3282,7 @@ unsigned long ChangeIFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & IF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= IF_FLAG) : (stackFrame->tSystemFlags &= ~IF_FLAG);
 		DBGPrint("EFlag IF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3296,8 +3296,8 @@ unsigned long displayIDHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* ID */
 
 unsigned long ChangeIDFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3311,7 +3311,7 @@ unsigned long ChangeIDFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & ID_FLAGS;
 		(value) ? (stackFrame->tSystemFlags |= ID_FLAGS) : (stackFrame->tSystemFlags &= ~ID_FLAGS);
 		DBGPrint("EFlag ID[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3325,8 +3325,8 @@ unsigned long displayDFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* DF */
 
 unsigned long ChangeDFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3340,7 +3340,7 @@ unsigned long ChangeDFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & DF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= DF_FLAG) : (stackFrame->tSystemFlags &= ~DF_FLAG);
 		DBGPrint("EFlag DF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3354,8 +3354,8 @@ unsigned long displayNTHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* NT */
 
 unsigned long ChangeNTFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3369,7 +3369,7 @@ unsigned long ChangeNTFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & NT_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= NT_FLAG) : (stackFrame->tSystemFlags &= ~NT_FLAG);
 		DBGPrint("EFlag NT[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3383,8 +3383,8 @@ unsigned long displayVMHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* VM */
 
 unsigned long ChangeVMFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3398,7 +3398,7 @@ unsigned long ChangeVMFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & VM_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= VM_FLAG) : (stackFrame->tSystemFlags &= ~VM_FLAG);
 		DBGPrint("EFlag VM[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3412,8 +3412,8 @@ unsigned long displayVIFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* VIF */
 
 unsigned long ChangeVIFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			    StackFrame *stackFrame, unsigned long Exception,
+			    DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3427,7 +3427,7 @@ unsigned long ChangeVIFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & VIF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= VIF_FLAG) : (stackFrame->tSystemFlags &= ~VIF_FLAG);
 		DBGPrint("EFlag VIF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3441,8 +3441,8 @@ unsigned long displayVIPHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* VIP */
 
 unsigned long ChangeVIPFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			    StackFrame *stackFrame, unsigned long Exception,
+			    DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3456,7 +3456,7 @@ unsigned long ChangeVIPFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & VIP_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= VIP_FLAG) : (stackFrame->tSystemFlags &= ~VIP_FLAG);
 		DBGPrint("EFlag VIP[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3470,8 +3470,8 @@ unsigned long displayAFHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* AF */
 
 unsigned long ChangeAFFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3485,7 +3485,7 @@ unsigned long ChangeAFFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & AF_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= AF_FLAG) : (stackFrame->tSystemFlags &= ~AF_FLAG);
 		DBGPrint("EFlag AF[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3499,8 +3499,8 @@ unsigned long displayACHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 /* AC */
 
 unsigned long ChangeACFlag(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long value, oldD;
@@ -3514,7 +3514,7 @@ unsigned long ChangeACFlag(unsigned char *cmd,
 		oldD = stackFrame->tSystemFlags & AC_FLAG;
 		(value) ? (stackFrame->tSystemFlags |= AC_FLAG) : (stackFrame->tSystemFlags &= ~AC_FLAG);
 		DBGPrint("EFlag AC[%lX] changed to (%d)\n",
-				(unsigned)oldD, (int)value);
+			 (unsigned)oldD, (int)value);
 	} else
 		DBGPrint("invalid change flags command\n");
 	return 1;
@@ -3529,8 +3529,8 @@ unsigned long displayMTRRHelp(unsigned char *commandLine, DEBUGGER_PARSER *parse
 /* MTRR */
 
 unsigned long DisplayMTRRRegisters(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				   StackFrame *stackFrame, unsigned long Exception,
+				   DEBUGGER_PARSER *parser)
 {
 	displayMTRRRegisters();
 	return 1;
@@ -3545,8 +3545,8 @@ unsigned long displayGDTHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* .G */
 
 unsigned long displayGDT(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			 StackFrame *stackFrame, unsigned long Exception,
+			 DEBUGGER_PARSER *parser)
 {
 	register unsigned long address;
 	unsigned long valid;
@@ -3572,8 +3572,8 @@ unsigned long displayIDTHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser
 /* .I */
 
 unsigned long displayIDT(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			 StackFrame *stackFrame, unsigned long Exception,
+			 DEBUGGER_PARSER *parser)
 {
 	register unsigned long address;
 	unsigned long valid;
@@ -3601,11 +3601,11 @@ unsigned long evaluateExpressionHelp(unsigned char *commandLine, DEBUGGER_PARSER
 /* .E */
 
 unsigned long evaluateExpression(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				 StackFrame *stackFrame, unsigned long Exception,
+				 DEBUGGER_PARSER *parser)
 {
 	extern void EvaluateCommandExpression(StackFrame *stackFrame,
-			unsigned char *cmd);
+					      unsigned char *cmd);
 
 	cmd = &cmd[parser->debugCommandNameLength];
 	while (*cmd && *cmd == ' ')
@@ -3631,8 +3631,8 @@ unsigned long portCommandHelp(unsigned char *commandLine, DEBUGGER_PARSER *parse
 /* IW */
 
 unsigned long inputWordPort(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			    StackFrame *stackFrame, unsigned long Exception,
+			    DEBUGGER_PARSER *parser)
 {
 	register unsigned long address;
 	unsigned long valid;
@@ -3644,7 +3644,7 @@ unsigned long inputWordPort(unsigned char *cmd,
 	address = EvaluateExpression(stackFrame, &cmd, &valid);
 	if (valid) {
 		DBGPrint("inportw (%04X) = %04X\n",
-				(unsigned)address, (unsigned)inw(address));
+			 (unsigned)address, (unsigned)inw(address));
 	} else
 		DBGPrint("bad port command\n");
 	return 1;
@@ -3653,8 +3653,8 @@ unsigned long inputWordPort(unsigned char *cmd,
 /* ID */
 
 unsigned long inputDoublePort(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long address;
 	unsigned long valid;
@@ -3666,7 +3666,7 @@ unsigned long inputDoublePort(unsigned char *cmd,
 	address = EvaluateExpression(stackFrame, &cmd, &valid);
 	if (valid) {
 		DBGPrint("inportd (%04X) = %lX\n",
-				(unsigned)address, (unsigned)inl(address));
+			 (unsigned)address, (unsigned)inl(address));
 	} else
 		DBGPrint("bad port command\n");
 	return 1;
@@ -3675,8 +3675,8 @@ unsigned long inputDoublePort(unsigned char *cmd,
 /* IB */
 
 unsigned long inputBytePort(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			    StackFrame *stackFrame, unsigned long Exception,
+			    DEBUGGER_PARSER *parser)
 {
 	register unsigned long address;
 	unsigned long valid;
@@ -3688,7 +3688,7 @@ unsigned long inputBytePort(unsigned char *cmd,
 	address = EvaluateExpression(stackFrame, &cmd, &valid);
 	if (valid) {
 		DBGPrint("inportb (%04X) = %02X\n",
-				(unsigned)address, (unsigned)inb(address));
+			 (unsigned)address, (unsigned)inb(address));
 	} else
 		DBGPrint("bad port command\n");
 	return 1;
@@ -3697,8 +3697,8 @@ unsigned long inputBytePort(unsigned char *cmd,
 /* I */
 
 unsigned long inputPort(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			StackFrame *stackFrame, unsigned long Exception,
+			DEBUGGER_PARSER *parser)
 {
 	register unsigned long address;
 	unsigned long valid;
@@ -3710,7 +3710,7 @@ unsigned long inputPort(unsigned char *cmd,
 	address = EvaluateExpression(stackFrame, &cmd, &valid);
 	if (valid) {
 		DBGPrint("inportb (%04X) = %02X\n",
-				(unsigned)address, (unsigned)inb(address));
+			 (unsigned)address, (unsigned)inb(address));
 	} else
 		DBGPrint("bad port command\n");
 	return 1;
@@ -3719,8 +3719,8 @@ unsigned long inputPort(unsigned char *cmd,
 /* OW */
 
 unsigned long outputWordPort(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			     StackFrame *stackFrame, unsigned long Exception,
+			     DEBUGGER_PARSER *parser)
 {
 	register unsigned long port, value;
 	unsigned long valid;
@@ -3734,7 +3734,7 @@ unsigned long outputWordPort(unsigned char *cmd,
 		value = EvaluateExpression(stackFrame, &cmd, &valid);
 		if (valid) {
 			DBGPrint("outportw (%04X) = %04X\n",
-					(unsigned)port, (unsigned)value);
+				 (unsigned)port, (unsigned)value);
 			outw(port, value);
 			return 1;
 		}
@@ -3747,8 +3747,8 @@ unsigned long outputWordPort(unsigned char *cmd,
 /* OD */
 
 unsigned long outputDoublePort(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			       StackFrame *stackFrame, unsigned long Exception,
+			       DEBUGGER_PARSER *parser)
 {
 	register unsigned long port, value;
 	unsigned long valid;
@@ -3762,7 +3762,7 @@ unsigned long outputDoublePort(unsigned char *cmd,
 		value = EvaluateExpression(stackFrame, &cmd, &valid);
 		if (valid) {
 			DBGPrint("outportd (%04X) = %lX\n",
-					(unsigned)port, (unsigned)value);
+				 (unsigned)port, (unsigned)value);
 			outl(port, value);
 			return 1;
 		}
@@ -3775,8 +3775,8 @@ unsigned long outputDoublePort(unsigned char *cmd,
 /* OB */
 
 unsigned long outputBytePort(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			     StackFrame *stackFrame, unsigned long Exception,
+			     DEBUGGER_PARSER *parser)
 {
 	register unsigned long port, value;
 	unsigned long valid;
@@ -3790,7 +3790,7 @@ unsigned long outputBytePort(unsigned char *cmd,
 		value = EvaluateExpression(stackFrame, &cmd, &valid);
 		if (valid) {
 			DBGPrint("outportb (%04X) = %02X\n",
-					(unsigned)port, (unsigned)value);
+				 (unsigned)port, (unsigned)value);
 			outb(port, value);
 			return 1;
 		}
@@ -3803,8 +3803,8 @@ unsigned long outputBytePort(unsigned char *cmd,
 /* O */
 
 unsigned long outputPort(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			 StackFrame *stackFrame, unsigned long Exception,
+			 DEBUGGER_PARSER *parser)
 {
 	register unsigned long port, value;
 	unsigned long valid;
@@ -3818,7 +3818,7 @@ unsigned long outputPort(unsigned char *cmd,
 		value = EvaluateExpression(stackFrame, &cmd, &valid);
 		if (valid) {
 			DBGPrint("outportb (%04X) = %02X\n",
-					(unsigned)port, (unsigned)value);
+				 (unsigned)port, (unsigned)value);
 			outb(port, value);
 			return 1;
 		}
@@ -3851,8 +3851,8 @@ unsigned long breakpointCommandHelp(unsigned char *commandLine, DEBUGGER_PARSER 
 /* BCA */
 
 unsigned long breakpointClearAll(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				 StackFrame *stackFrame, unsigned long Exception,
+				 DEBUGGER_PARSER *parser)
 {
 	register unsigned long i;
 
@@ -3872,8 +3872,8 @@ unsigned long breakpointClearAll(unsigned char *cmd,
 /* BC */
 
 unsigned long breakpointClear(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	unsigned long valid;
 	register unsigned long i, address;
@@ -3889,27 +3889,27 @@ unsigned long breakpointClear(unsigned char *cmd,
 		i = address;
 		if (i < 4) {
 			symbolName = GetSymbolFromValue(BreakPoints[i], &symbuf[0],
-					MAX_SYMBOL_LEN);
+							MAX_SYMBOL_LEN);
 			moduleName = GetModuleInfoFromSymbolValue(BreakPoints[i],
-					&modbuf[0], MAX_SYMBOL_LEN);
+								  &modbuf[0], MAX_SYMBOL_LEN);
 			if (moduleName)
 				DBGPrint("breakpoint %i at 0x%p (%s %s) %s|%s cleared\n",
-						(int)i,
-						(unsigned *)BreakPoints[i],
-						BreakDescription[(BreakType[i] & 3)],
-						BreakLengthDescription[(BreakLength[i] & 3)],
-						((char *)(moduleName) ? (char *)(moduleName)
-						 : (char *)("")),
-						((char *)(symbolName) ? (char *)(symbolName)
-						 : (char *)("")));
+					 (int)i,
+					 (unsigned *)BreakPoints[i],
+					 BreakDescription[(BreakType[i] & 3)],
+					 BreakLengthDescription[(BreakLength[i] & 3)],
+					 ((char *)(moduleName) ? (char *)(moduleName)
+					  : (char *)("")),
+					 ((char *)(symbolName) ? (char *)(symbolName)
+					  : (char *)("")));
 			else
 				DBGPrint("breakpoint %i at 0x%p (%s %s) %s cleared\n",
-						(int)i,
-						(unsigned *)BreakPoints[i],
-						BreakDescription[(BreakType[i] & 3)],
-						BreakLengthDescription[(BreakLength[i] & 3)],
-						((char *)(symbolName) ? (char *)(symbolName)
-						 : (char *)("")));
+					 (int)i,
+					 (unsigned *)BreakPoints[i],
+					 BreakDescription[(BreakType[i] & 3)],
+					 BreakLengthDescription[(BreakLength[i] & 3)],
+					 ((char *)(symbolName) ? (char *)(symbolName)
+					  : (char *)("")));
 			BreakReserved[i] = 0;
 			BreakPoints[i] = 0;
 			BreakType[i] = 0;
@@ -3928,8 +3928,8 @@ unsigned long breakpointClear(unsigned char *cmd,
 /* BM */
 
 unsigned long breakpointMask(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			     StackFrame *stackFrame, unsigned long Exception,
+			     DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, pnum, i;
 	unsigned long valid;
@@ -3947,14 +3947,14 @@ unsigned long breakpointMask(unsigned char *cmd,
 			else
 				per_cpu(BreakMask, pnum) = 1;
 			DBGPrint("processor %i : %s\n", (int)pnum,
-					per_cpu(BreakMask, pnum) ? "BREAKS_MASKED" : "BREAKS_UNMASKED");
+				 per_cpu(BreakMask, pnum) ? "BREAKS_MASKED" : "BREAKS_UNMASKED");
 		} else
 			DBGPrint("processor (%i) invalid\n", (int)pnum);
 	} else {
 		for (i = 0; i < MAX_PROCESSORS; i++) {
 			if (cpu_online(i)) {
 				DBGPrint("processor %i : %s\n", (int)i,
-						per_cpu(BreakMask, i) ? "BREAKS_MASKED" : "BREAKS_UNMASKED");
+					 per_cpu(BreakMask, i) ? "BREAKS_MASKED" : "BREAKS_UNMASKED");
 			}
 		}
 	}
@@ -3964,8 +3964,8 @@ unsigned long breakpointMask(unsigned char *cmd,
 /* BW1 */
 
 unsigned long breakpointWord1(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -3993,27 +3993,27 @@ unsigned long breakpointWord1(unsigned char *cmd,
 				BreakType[i] = BREAK_WRITE;
 				BreakLength[i] = ONE_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4031,8 +4031,8 @@ unsigned long breakpointWord1(unsigned char *cmd,
 /* BW2 */
 
 unsigned long breakpointWord2(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4060,27 +4060,27 @@ unsigned long breakpointWord2(unsigned char *cmd,
 				BreakType[i] = BREAK_WRITE;
 				BreakLength[i] = TWO_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4098,8 +4098,8 @@ unsigned long breakpointWord2(unsigned char *cmd,
 /* BW4 */
 
 unsigned long breakpointWord4(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4127,27 +4127,27 @@ unsigned long breakpointWord4(unsigned char *cmd,
 				BreakType[i] = BREAK_WRITE;
 				BreakLength[i] = FOUR_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4166,8 +4166,8 @@ unsigned long breakpointWord4(unsigned char *cmd,
 
 #ifdef CONFIG_X86_64
 unsigned long breakpointWord8(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4195,27 +4195,27 @@ unsigned long breakpointWord8(unsigned char *cmd,
 				BreakType[i] = BREAK_WRITE;
 				BreakLength[i] = EIGHT_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4234,8 +4234,8 @@ unsigned long breakpointWord8(unsigned char *cmd,
 /* BW */
 
 unsigned long breakpointWord(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			     StackFrame *stackFrame, unsigned long Exception,
+			     DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4263,27 +4263,27 @@ unsigned long breakpointWord(unsigned char *cmd,
 				BreakType[i] = BREAK_WRITE;
 				BreakLength[i] = ONE_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4301,8 +4301,8 @@ unsigned long breakpointWord(unsigned char *cmd,
 /* BR1 */
 
 unsigned long breakpointRead1(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4330,27 +4330,27 @@ unsigned long breakpointRead1(unsigned char *cmd,
 				BreakType[i] = BREAK_READWRITE;
 				BreakLength[i] = ONE_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4368,8 +4368,8 @@ unsigned long breakpointRead1(unsigned char *cmd,
 /* BR2 */
 
 unsigned long breakpointRead2(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4397,27 +4397,27 @@ unsigned long breakpointRead2(unsigned char *cmd,
 				BreakType[i] = BREAK_READWRITE;
 				BreakLength[i] = TWO_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4435,8 +4435,8 @@ unsigned long breakpointRead2(unsigned char *cmd,
 /* BR4 */
 
 unsigned long breakpointRead4(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4464,27 +4464,27 @@ unsigned long breakpointRead4(unsigned char *cmd,
 				BreakType[i] = BREAK_READWRITE;
 				BreakLength[i] = FOUR_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4503,8 +4503,8 @@ unsigned long breakpointRead4(unsigned char *cmd,
 
 #ifdef CONFIG_X86_64
 unsigned long breakpointRead8(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4532,27 +4532,27 @@ unsigned long breakpointRead8(unsigned char *cmd,
 				BreakType[i] = BREAK_READWRITE;
 				BreakLength[i] = EIGHT_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4571,8 +4571,8 @@ unsigned long breakpointRead8(unsigned char *cmd,
 /* BR */
 
 unsigned long breakpointRead(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			     StackFrame *stackFrame, unsigned long Exception,
+			     DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4600,27 +4600,27 @@ unsigned long breakpointRead(unsigned char *cmd,
 				BreakType[i] = BREAK_READWRITE;
 				BreakLength[i] = ONE_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4638,8 +4638,8 @@ unsigned long breakpointRead(unsigned char *cmd,
 /* BI1 */
 
 unsigned long breakpointIO1(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			    StackFrame *stackFrame, unsigned long Exception,
+			    DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4667,27 +4667,27 @@ unsigned long breakpointIO1(unsigned char *cmd,
 				BreakType[i] = BREAK_IOPORT;
 				BreakLength[i] = ONE_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4705,8 +4705,8 @@ unsigned long breakpointIO1(unsigned char *cmd,
 /* BI2 */
 
 unsigned long breakpointIO2(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			    StackFrame *stackFrame, unsigned long Exception,
+			    DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4734,27 +4734,27 @@ unsigned long breakpointIO2(unsigned char *cmd,
 				BreakType[i] = BREAK_IOPORT;
 				BreakLength[i] = TWO_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4772,8 +4772,8 @@ unsigned long breakpointIO2(unsigned char *cmd,
 /* BI4 */
 
 unsigned long breakpointIO4(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			    StackFrame *stackFrame, unsigned long Exception,
+			    DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4801,27 +4801,27 @@ unsigned long breakpointIO4(unsigned char *cmd,
 				BreakType[i] = BREAK_IOPORT;
 				BreakLength[i] = FOUR_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4839,8 +4839,8 @@ unsigned long breakpointIO4(unsigned char *cmd,
 /* BI */
 
 unsigned long breakpointIO(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			   StackFrame *stackFrame, unsigned long Exception,
+			   DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4868,27 +4868,27 @@ unsigned long breakpointIO(unsigned char *cmd,
 				BreakType[i] = BREAK_IOPORT;
 				BreakLength[i] = ONE_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4906,8 +4906,8 @@ unsigned long breakpointIO(unsigned char *cmd,
 /* B */
 
 unsigned long breakpointExecute(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	register unsigned long address, i, r;
 	register unsigned char *pB, *symbolName;
@@ -4924,27 +4924,27 @@ unsigned long breakpointExecute(unsigned char *cmd,
 		for (i = 0; i < 4; i++) {
 			if (BreakReserved[i]) {
 				symbolName = GetSymbolFromValue(BreakPoints[i], &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(BreakPoints[i],
-						&modbuf[0], MAX_SYMBOL_LEN);
+									  &modbuf[0], MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("Break %i is at 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("Break %i is at 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -4974,27 +4974,27 @@ unsigned long breakpointExecute(unsigned char *cmd,
 				BreakType[i] = BREAK_EXECUTE;
 				BreakLength[i] = ONE_BYTE_FIELD;
 				symbolName = GetSymbolFromValue(address, &symbuf[0],
-						MAX_SYMBOL_LEN);
+								MAX_SYMBOL_LEN);
 				moduleName = GetModuleInfoFromSymbolValue(address, &modbuf[0],
-						MAX_SYMBOL_LEN);
+									  MAX_SYMBOL_LEN);
 				if (moduleName)
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(moduleName) ? (char *)(moduleName)
-							 : (char *)("")),
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(moduleName) ? (char *)(moduleName)
+						  : (char *)("")),
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 				else
 					DBGPrint("breakpoint %i set to 0x%p (%s %s) %s\n",
-							(int)i,
-							(unsigned *)BreakPoints[i],
-							BreakDescription[(BreakType[i] & 3)],
-							BreakLengthDescription[(BreakLength[i] & 3)],
-							((char *)(symbolName) ? (char *)(symbolName)
-							 : (char *)("")));
+						 (int)i,
+						 (unsigned *)BreakPoints[i],
+						 BreakDescription[(BreakType[i] & 3)],
+						 BreakLengthDescription[(BreakLength[i] & 3)],
+						 ((char *)(symbolName) ? (char *)(symbolName)
+						  : (char *)("")));
 
 				if (ConditionalBreakpoint[i])
 					DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
@@ -5012,8 +5012,8 @@ unsigned long breakpointExecute(unsigned char *cmd,
 /* BST */
 
 unsigned long breakpointShowTemp(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				 StackFrame *stackFrame, unsigned long Exception,
+				 DEBUGGER_PARSER *parser)
 {
 	register unsigned long i;
 	register unsigned char *symbolName;
@@ -5023,31 +5023,31 @@ unsigned long breakpointShowTemp(unsigned char *cmd,
 	for (i = 0; i < 4; i++) {
 		if (BreakReserved[i] && BreakTemp[i]) {
 			symbolName = GetSymbolFromValue(BreakPoints[i], &symbuf[0],
-					MAX_SYMBOL_LEN);
+							MAX_SYMBOL_LEN);
 			moduleName = GetModuleInfoFromSymbolValue(BreakPoints[i],
-					&modbuf[0], MAX_SYMBOL_LEN);
+								  &modbuf[0], MAX_SYMBOL_LEN);
 			if (moduleName)
 				DBGPrint("Break %i is at 0x%p (%s %s) %s|%s[%s]\n",
-						(int)i,
-						(unsigned *)BreakPoints[i],
-						BreakDescription[(BreakType[i] & 3)],
-						BreakLengthDescription[(BreakLength[i] & 3)],
-						((char *)(moduleName) ? (char *)(moduleName)
-						 : (char *)("")),
-						((char *)(symbolName) ? (char *)(symbolName)
-						 : (char *)("")),
-						BreakGo[i] ? "GO" : BreakProceed[i]
-						? "PROCEED" : "");
+					 (int)i,
+					 (unsigned *)BreakPoints[i],
+					 BreakDescription[(BreakType[i] & 3)],
+					 BreakLengthDescription[(BreakLength[i] & 3)],
+					 ((char *)(moduleName) ? (char *)(moduleName)
+					  : (char *)("")),
+					 ((char *)(symbolName) ? (char *)(symbolName)
+					  : (char *)("")),
+					 BreakGo[i] ? "GO" : BreakProceed[i]
+					 ? "PROCEED" : "");
 			else
 				DBGPrint("Break %i is at 0x%p (%s %s) %s[%s]\n",
-						(int)i,
-						(unsigned *)BreakPoints[i],
-						BreakDescription[(BreakType[i] & 3)],
-						BreakLengthDescription[(BreakLength[i] & 3)],
-						((char *)(symbolName) ? (char *)(symbolName)
-						 : (char *)("")),
-						BreakGo[i] ? "GO" : BreakProceed[i]
-						? "PROCEED" : "");
+					 (int)i,
+					 (unsigned *)BreakPoints[i],
+					 BreakDescription[(BreakType[i] & 3)],
+					 BreakLengthDescription[(BreakLength[i] & 3)],
+					 ((char *)(symbolName) ? (char *)(symbolName)
+					  : (char *)("")),
+					 BreakGo[i] ? "GO" : BreakProceed[i]
+					 ? "PROCEED" : "");
 			if (ConditionalBreakpoint[i])
 				DBGPrint("if (%s) is TRUE\n", BreakCondition[i]);
 
@@ -5067,15 +5067,15 @@ unsigned long displayProcessorStatusHelp(unsigned char *commandLine, DEBUGGER_PA
 }
 
 unsigned long displayProcessorStatus(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				     StackFrame *stackFrame, unsigned long Exception,
+				     DEBUGGER_PARSER *parser)
 {
 	register unsigned long i;
 
 	for (i = 0; i < MAX_PROCESSORS; i++) {
 		if (cpu_online(i)) {
 			DBGPrint("Processor: (%i)  State:  %s\n",
-					i, procState[per_cpu(ProcessorState, i) & 0xF]);
+				 i, procState[per_cpu(ProcessorState, i) & 0xF]);
 		}
 	}
 	return 1;
@@ -5095,10 +5095,10 @@ void displayMTRRRegisters(void)
 			ReadMSR(MTRR_BASE_REGS[i], &base1, &base2);
 			ReadMSR(MTRR_MASK_VALUES[i], &mask1, &mask2);
 			DBGPrint("MTRR_BASE_%i  %lX:%lX   MTRR_MASK_%i  %lX:%lX\n",
-					(int)i,
-					(unsigned)base1, (unsigned)base2,
-					(int)i,
-					(unsigned)mask1, (unsigned)mask2);
+				 (int)i,
+				 (unsigned)base1, (unsigned)base2,
+				 (int)i,
+				 (unsigned)mask1, (unsigned)mask2);
 		}
 	} else
 		DBGPrint("memory type range registers are Pentium Pro/II/Xeon and above\n");
@@ -5128,8 +5128,8 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
 	gdt_pointer = mdb_getword((unsigned long)&GDTR[2], 8);
 
 	DBGPrint("GDTR: %04X:%llX  Processor: %i\n",
-			(unsigned)gdt_index, (unsigned long long)gdt_pointer,
-			(int)get_processor_id());
+		 (unsigned)gdt_index, (unsigned long long)gdt_pointer,
+		 (int)get_processor_id());
 
 	count = 0;
 	gdt_index = (gdt_index + 7) / 8;
@@ -5141,15 +5141,15 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
 
 		gdt = (GDT *)&lg.lgdt;
 		if (DBGPrint(
-					"0x%08lX%04X%04X seg:%04X dpl:%02X type:%02X p:%02X ist:%02X",
-					gdt->offset_high,
-					gdt->offset_middle,
-					gdt->offset_low,
-					gdt->segment,
-					gdt->dpl,
-					gdt->type,
-					gdt->p,
-					gdt->ist)) return;
+			     "0x%08lX%04X%04X seg:%04X dpl:%02X type:%02X p:%02X ist:%02X",
+			     gdt->offset_high,
+			     gdt->offset_middle,
+			     gdt->offset_low,
+			     gdt->segment,
+			     gdt->dpl,
+			     gdt->type,
+			     gdt->p,
+			     gdt->ist)) return;
 		if (DBGPrint("\n")) return;
 
 		p = (void *)((unsigned long)p + (unsigned long)16);
@@ -5162,8 +5162,8 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
 	gdt_pointer = mdb_getword((unsigned long)&GDTR[2], 4);
 
 	DBGPrint("GDTR: %04X:%lX  Processor: %i\n",
-			(unsigned)gdt_index, (unsigned)gdt_pointer,
-			(int)get_processor_id());
+		 (unsigned)gdt_index, (unsigned)gdt_pointer,
+		 (int)get_processor_id());
 
 	count = 0;
 	gdt_index = (gdt_index + 7) / 8;
@@ -5178,17 +5178,17 @@ void DisplayGDT(unsigned char *GDT_ADDRESS)
 		gdt = (GDT *)&lg.lgdt;
 		if ((gdt->GDTType & 0x92) == 0x92) {
 			if (DBGPrint("  b:%lX lim:%lX t:%02X ot:%02X",
-						((gdt->Base3 << 24) | (gdt->Base2 << 16) |
-						 (gdt->Base1)),
-						(((gdt->OtherType & 0xF) << 16) | (gdt->Limit)),
-						gdt->GDTType, gdt->OtherType)) return;
+				     ((gdt->Base3 << 24) | (gdt->Base2 << 16) |
+				      (gdt->Base1)),
+				     (((gdt->OtherType & 0xF) << 16) | (gdt->Limit)),
+				     gdt->GDTType, gdt->OtherType)) return;
 		} else if ((gdt->GDTType & 0x89) == 0x89) {
 			tss = (TSS *)gdt;
 			if (DBGPrint("  tss:%lX lim:%04X t:%02X ot:%02X",
-						((tss->TSSBase3 << 24) | (tss->TSSBase2 << 16) |
-						 (tss->TSSBase1)),
-						tss->TSSLimit, tss->TSSType,
-						tss->TSSOtherType)) return;
+				     ((tss->TSSBase3 << 24) | (tss->TSSBase2 << 16) |
+				      (tss->TSSBase1)),
+				     tss->TSSLimit, tss->TSSType,
+				     tss->TSSOtherType)) return;
 		}
 		if (DBGPrint("\n")) return;
 
@@ -5222,8 +5222,8 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
 	idt_pointer = mdb_getword((unsigned long)&IDTR[2], 8);
 
 	DBGPrint("IDTR: %04X:%llX  Processor: %i\n",
-			(unsigned)idt_index, (unsigned long long)idt_pointer,
-			(int)get_processor_id());
+		 (unsigned)idt_index, (unsigned long long)idt_pointer,
+		 (int)get_processor_id());
 
 	count = 0;
 	idt_index = (idt_index + 7) / 8;
@@ -5238,15 +5238,15 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
 
 		idt = (IDT *)&id.lidt;
 		if (DBGPrint(
-					"0x%08lX%04X%04X seg:%04X dpl:%02X type:%02X p:%02X ist:%02X",
-					idt->offset_high,
-					idt->offset_middle,
-					idt->offset_low,
-					idt->segment,
-					idt->dpl,
-					idt->type,
-					idt->p,
-					idt->ist)) return;
+			     "0x%08lX%04X%04X seg:%04X dpl:%02X type:%02X p:%02X ist:%02X",
+			     idt->offset_high,
+			     idt->offset_middle,
+			     idt->offset_low,
+			     idt->segment,
+			     idt->dpl,
+			     idt->type,
+			     idt->p,
+			     idt->ist)) return;
 
 		idtAddress = idt->offset_high;
 		idtAddress <<= 32;
@@ -5260,7 +5260,7 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
 
 		if (moduleName)
 			DBGPrint(" %s|%s", ((char *)(moduleName) ? (char *)(moduleName) : (char *)("")),
-					((char *)(symbolName) ? (char *)(symbolName) : (char *)("")));
+				 ((char *)(symbolName) ? (char *)(symbolName) : (char *)("")));
 		else
 			DBGPrint(" %s", ((char *)(symbolName) ? (char *)(symbolName) : (char *)("")));
 
@@ -5275,8 +5275,8 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
 	idt_pointer = mdb_getword((unsigned long)&IDTR[2], 4);
 
 	DBGPrint("IDTR: %04X:%lX  Processor: %i\n",
-			(unsigned)idt_index, (unsigned)idt_pointer,
-			(int)get_processor_id());
+		 (unsigned)idt_index, (unsigned)idt_pointer,
+		 (int)get_processor_id());
 
 	count = 0;
 	idt_index = (idt_index + 7) / 8;
@@ -5293,9 +5293,9 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
 		idt = (IDT *)&id.lidt;
 		if ((idt->IDTFlags & 0x8E) == 0x8E) {
 			if (DBGPrint("  b:%lX s:%04X t:%02X ot:%02X",
-						((idt->IDTHigh << 16) | (idt->IDTLow)),
-						idt->IDTSegment,
-						idt->IDTFlags, idt->IDTSkip)) return;
+				     ((idt->IDTHigh << 16) | (idt->IDTLow)),
+				     idt->IDTSegment,
+				     idt->IDTFlags, idt->IDTSkip)) return;
 
 			idtAddress = idt->IDTHigh << 16 | idt->IDTLow;
 
@@ -5304,13 +5304,13 @@ void DisplayIDT(unsigned char *IDT_ADDRESS)
 
 			if (moduleName)
 				DBGPrint(" %s|%s", ((char *)(moduleName) ? (char *)(moduleName) : (char *)("")),
-						((char *)(symbolName) ? (char *)(symbolName) : (char *)("")));
+					 ((char *)(symbolName) ? (char *)(symbolName) : (char *)("")));
 			else
 				DBGPrint(" %s", ((char *)(symbolName) ? (char *)(symbolName) : (char *)("")));
 		} else if ((idt->IDTFlags & 0x85) == 0x85) {
 			tss_gate = (TSS_GATE *)idt;
 			if (DBGPrint("  task_gate: %04X t:%02X",
-						tss_gate->TSSSelector, tss_gate->TSSFlags)) return;
+				     tss_gate->TSSSelector, tss_gate->TSSFlags)) return;
 		}
 
 		if (DBGPrint("\n")) return;
@@ -5330,31 +5330,31 @@ void DisplayTSS(StackFrame *stackFrame)
 	DBGPrint("Task State Segment at 0x%p\n", stackFrame);
 
 	DBGPrint("RAX: %016lX  RBX: %016lX  RCX: %016lX\n",
-			stackFrame->tAX, stackFrame->tBX, stackFrame->tCX);
+		 stackFrame->tAX, stackFrame->tBX, stackFrame->tCX);
 
 	DBGPrint("RDX: %016lX  RSI: %016lX  RDI: %016lX\n",
-			stackFrame->tDX, stackFrame->tSI, stackFrame->tDI);
+		 stackFrame->tDX, stackFrame->tSI, stackFrame->tDI);
 
 	DBGPrint("RSP: %016lX  RBP: %016lX   R8: %016lX\n",
-			stackFrame->tSP, stackFrame->tBP, stackFrame->r8);
+		 stackFrame->tSP, stackFrame->tBP, stackFrame->r8);
 
 	DBGPrint(" R9: %016lX  R10: %016lX  R11: %016lX\n",
-			stackFrame->r9, stackFrame->r10, stackFrame->r11);
+		 stackFrame->r9, stackFrame->r10, stackFrame->r11);
 
 	DBGPrint("R12: %016lX  R13: %016lX  R14: %016lX\n",
-			stackFrame->r12, stackFrame->r13, stackFrame->r14);
+		 stackFrame->r12, stackFrame->r13, stackFrame->r14);
 
 	DBGPrint("R15: %016lX\n", stackFrame->r15);
 
 	DBGPrint(
-			"CS: %04X  DS: %04X  ES: %04X  FS: %04X  GS: %04X  SS: %04X  LDT: %04X\n",
-			(unsigned)stackFrame->tCS, (unsigned)stackFrame->tDS,
-			(unsigned)stackFrame->tES, (unsigned)stackFrame->tFS,
-			(unsigned)stackFrame->tGS, (unsigned)stackFrame->tSS,
-			(unsigned)stackFrame->tLDT);
+		 "CS: %04X  DS: %04X  ES: %04X  FS: %04X  GS: %04X  SS: %04X  LDT: %04X\n",
+		 (unsigned)stackFrame->tCS, (unsigned)stackFrame->tDS,
+		 (unsigned)stackFrame->tES, (unsigned)stackFrame->tFS,
+		 (unsigned)stackFrame->tGS, (unsigned)stackFrame->tSS,
+		 (unsigned)stackFrame->tLDT);
 
 	DBGPrint("RIP: %016lX  FLAGS: %016lX ",
-			stackFrame->tIP, stackFrame->tSystemFlags);
+		 stackFrame->tIP, stackFrame->tSystemFlags);
 
 	DBGPrint(" (");
 	for (i = 0; i < 22; i++) {
@@ -5370,8 +5370,8 @@ void DisplayTSS(StackFrame *stackFrame)
 	DBGPrint(")\n");
 
 	DBGPrint("CR3: %016lX  IOMAP: %016lX  BLINK: %016lX\n",
-			(unsigned)stackFrame->tCR3, (unsigned)stackFrame->tIOMap,
-			(unsigned)stackFrame->tReserved[0]);
+		 (unsigned)stackFrame->tCR3, (unsigned)stackFrame->tIOMap,
+		 (unsigned)stackFrame->tReserved[0]);
 
 #else
 	unsigned long i, f = 0;
@@ -5379,22 +5379,22 @@ void DisplayTSS(StackFrame *stackFrame)
 	DBGPrint("Task State Segment at 0x%p\n", stackFrame);
 
 	DBGPrint("EAX: %08X  EBX: %08X  ECX: %08X  EDX: %08X\n",
-			(unsigned)stackFrame->tAX, (unsigned)stackFrame->tBX,
-			(unsigned)stackFrame->tCX, (unsigned)stackFrame->tDX);
+		 (unsigned)stackFrame->tAX, (unsigned)stackFrame->tBX,
+		 (unsigned)stackFrame->tCX, (unsigned)stackFrame->tDX);
 
 	DBGPrint("ESI: %08X  EDI: %08X  ESP: %08X  EBP: %08X\n",
-			(unsigned)stackFrame->tSI, (unsigned)stackFrame->tDI,
-			(unsigned)stackFrame->tSP, (unsigned)stackFrame->tBP);
+		 (unsigned)stackFrame->tSI, (unsigned)stackFrame->tDI,
+		 (unsigned)stackFrame->tSP, (unsigned)stackFrame->tBP);
 
 	DBGPrint(
-			"CS: %04X  DS: %04X  ES: %04X  FS: %04X  GS: %04X  SS: %04X  LDT: %04X\n",
-			(unsigned)stackFrame->tCS, (unsigned)stackFrame->tDS,
-			(unsigned)stackFrame->tES, (unsigned)stackFrame->tFS,
-			(unsigned)stackFrame->tGS, (unsigned)stackFrame->tSS,
-			(unsigned)stackFrame->tLDT);
+		 "CS: %04X  DS: %04X  ES: %04X  FS: %04X  GS: %04X  SS: %04X  LDT: %04X\n",
+		 (unsigned)stackFrame->tCS, (unsigned)stackFrame->tDS,
+		 (unsigned)stackFrame->tES, (unsigned)stackFrame->tFS,
+		 (unsigned)stackFrame->tGS, (unsigned)stackFrame->tSS,
+		 (unsigned)stackFrame->tLDT);
 
 	DBGPrint("EIP: %08X  FLAGS: %08X ",
-			(unsigned)stackFrame->tIP, (unsigned)stackFrame->tSystemFlags);
+		 (unsigned)stackFrame->tIP, (unsigned)stackFrame->tSystemFlags);
 
 	DBGPrint(" (");
 	for (i = 0; i < 22; i++) {
@@ -5410,8 +5410,8 @@ void DisplayTSS(StackFrame *stackFrame)
 	DBGPrint(")\n");
 
 	DBGPrint("CR3: %08X  IOMAP: %08X  BLINK: %08X\n",
-			(unsigned)stackFrame->tCR3, (unsigned)stackFrame->tIOMap,
-			(unsigned)stackFrame->tReserved[0]);
+		 (unsigned)stackFrame->tCR3, (unsigned)stackFrame->tIOMap,
+		 (unsigned)stackFrame->tReserved[0]);
 
 #endif
 }
@@ -5535,13 +5535,13 @@ void DisplayControlRegisters(unsigned long processor, StackFrame *stackFrame)
 	ReadIDTR((unsigned long *)&IDTR[0]);
 
 	DBGPrint("GDTR: %04X:%llX IDTR: %04X:%llX\n",
-			(unsigned)*(unsigned short *)&GDTR[0],
-			*(unsigned long long *)&GDTR[2],
-			(unsigned)*(unsigned short *)&IDTR[0],
-			*(unsigned long long *)&IDTR[2]);
+		 (unsigned)*(unsigned short *)&GDTR[0],
+		 *(unsigned long long *)&GDTR[2],
+		 (unsigned)*(unsigned short *)&IDTR[0],
+		 *(unsigned long long *)&IDTR[2]);
 	DBGPrint("LDTR: %04X  TR: %04X\n",
-			(unsigned)ReadLDTR(),
-			(unsigned)ReadTR());
+		 (unsigned)ReadLDTR(),
+		 (unsigned)ReadTR());
 #else
 	DBGPrint("CR0: %08X ", (unsigned)ReadCR0());
 	DBGPrint("CR2: %08X ", (unsigned)ReadCR2());
@@ -5557,38 +5557,38 @@ void DisplayControlRegisters(unsigned long processor, StackFrame *stackFrame)
 	DBGPrint("VR7: %08X\n", (unsigned)CurrentDR7);
 
 	DBGPrint("GDTR: %04X:%08X IDTR: %04X:%08X  LDTR: %04X  TR: %04X\n",
-			(unsigned)*(unsigned short *)&GDTR[0],
-			(unsigned)*(unsigned long *)&GDTR[2],
-			(unsigned)*(unsigned short *)&IDTR[0],
-			(unsigned)*(unsigned long *)&IDTR[2],
-			(unsigned)ReadLDTR(),
-			(unsigned)ReadTR());
+		 (unsigned)*(unsigned short *)&GDTR[0],
+		 (unsigned)*(unsigned long *)&GDTR[2],
+		 (unsigned)*(unsigned short *)&IDTR[0],
+		 (unsigned)*(unsigned long *)&IDTR[2],
+		 (unsigned)ReadLDTR(),
+		 (unsigned)ReadTR());
 #endif
 }
 
 unsigned long find_bp_index(unsigned long exception, StackFrame *stackFrame,
-		unsigned long processor)
+			    unsigned long processor)
 {
 	register int i;
 
 	switch (exception) {
-		case DEBUGGER_EXCEPTION:
-			for (i = 0; i < 4; i++) {
-				if (per_cpu(CurrentDR6, processor) & (1 << i))
-					return i;
-			}
-			break;
+	case DEBUGGER_EXCEPTION:
+		for (i = 0; i < 4; i++) {
+			if (per_cpu(CurrentDR6, processor) & (1 << i))
+				return i;
+		}
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 	return -1;
 }
 
 unsigned long ConsoleDisplayBreakReason(StackFrame *stackFrame,
-		unsigned long Exception,
-		unsigned long processor,
-		unsigned long lastCommand)
+					unsigned long Exception,
+					unsigned long processor,
+					unsigned long lastCommand)
 {
 	register int i = find_bp_index(Exception, stackFrame, processor);
 
@@ -5596,55 +5596,55 @@ unsigned long ConsoleDisplayBreakReason(StackFrame *stackFrame,
 		DBGPrint("\nKernel Oops reported (%s)\n", last_mdb_oops);
 
 	switch (Exception) {
-		case DEBUGGER_EXCEPTION:
-			if (i != -1 && BreakGo[i])
-				DBGPrint("\nBreak at 0x%lX due to - GO breakpoint (%d)\n",
-						stackFrame->tIP, i);
+	case DEBUGGER_EXCEPTION:
+		if (i != -1 && BreakGo[i])
+			DBGPrint("\nBreak at 0x%lX due to - GO breakpoint (%d)\n",
+				 stackFrame->tIP, i);
+		else
+			if (i != -1 && BreakProceed[i])
+				DBGPrint("\nBreak at 0x%lX due to - Proceed breakpoint (%d)\n",
+					 stackFrame->tIP, i);
 			else
-				if (i != -1 && BreakProceed[i])
-					DBGPrint("\nBreak at 0x%lX due to - Proceed breakpoint (%d)\n",
-							stackFrame->tIP, i);
-				else
-					if (i != -1 && BreakPoints[i] && ConditionalBreakpoint[i]) {
+				if (i != -1 && BreakPoints[i] && ConditionalBreakpoint[i]) {
+					DBGPrint("\nBreak at 0x%lX due to - breakpoint %d (%s)\n",
+						 stackFrame->tIP, i,
+						 BreakDescription[(BreakType[i] & 3)]);
+					DBGPrint("expr: %s was TRUE\n", BreakCondition[i]);
+				} else
+					if (i != -1 && BreakPoints[i])
 						DBGPrint("\nBreak at 0x%lX due to - breakpoint %d (%s)\n",
-								stackFrame->tIP, i,
-								BreakDescription[(BreakType[i] & 3)]);
-						DBGPrint("expr: %s was TRUE\n", BreakCondition[i]);
-					} else
-						if (i != -1 && BreakPoints[i])
-							DBGPrint("\nBreak at 0x%lX due to - breakpoint %d (%s)\n",
-									stackFrame->tIP, i,
-									BreakDescription[(BreakType[i] & 3)]);
+							 stackFrame->tIP, i,
+							 BreakDescription[(BreakType[i] & 3)]);
+					else
+						if (lastCommandEntry == 'P' || lastCommandEntry == K_F8)
+							DBGPrint("\nBreak at 0x%lX due to - Proceed (single step)\n",
+								 stackFrame->tIP);
 						else
-							if (lastCommandEntry == 'P' || lastCommandEntry == K_F8)
-								DBGPrint("\nBreak at 0x%lX due to - Proceed (single step)\n",
-										stackFrame->tIP);
+							if (lastCommandEntry == 'T' || lastCommandEntry == K_F7)
+								DBGPrint("\nBreak at 0x%lX due to - Trace (single step)\n",
+									 stackFrame->tIP);
 							else
-								if (lastCommandEntry == 'T' || lastCommandEntry == K_F7)
-									DBGPrint("\nBreak at 0x%lX due to - Trace (single step)\n",
-											stackFrame->tIP);
+								if (lastCommandEntry == K_F6)
+									DBGPrint("\nBreak at 0x%lX due to - SSB (step til branch)\n",
+										 stackFrame->tIP);
 								else
-									if (lastCommandEntry == K_F6)
-										DBGPrint("\nBreak at 0x%lX due to - SSB (step til branch)\n",
-												stackFrame->tIP);
-									else
-										DBGPrint("\nBreak at 0x%lX due to - INT1 breakpoint\n",
-												stackFrame->tIP);
-			break;
+									DBGPrint("\nBreak at 0x%lX due to - INT1 breakpoint\n",
+										 stackFrame->tIP);
+		break;
 
-		case BREAKPOINT_EXCEPTION:
-			DBGPrint("\nBreak at 0x%lX due to - INT3 breakpoint\n",
-					stackFrame->tIP);
-			break;
+	case BREAKPOINT_EXCEPTION:
+		DBGPrint("\nBreak at 0x%lX due to - INT3 breakpoint\n",
+			 stackFrame->tIP);
+		break;
 
-		default:
-			if ((Exception < exceptions) && ExceptionDescription[Exception % exceptions])
-				DBGPrint("\nBreak at 0x%lX due to - %s\n",
-						stackFrame->tIP, ExceptionDescription[Exception % exceptions]);
-			else
-				DBGPrint("\nBreak at 0x%lX due to - Unknown Reason\n",
-						stackFrame->tIP);
-			break;
+	default:
+		if ((Exception < exceptions) && ExceptionDescription[Exception % exceptions])
+			DBGPrint("\nBreak at 0x%lX due to - %s\n",
+				 stackFrame->tIP, ExceptionDescription[Exception % exceptions]);
+		else
+			DBGPrint("\nBreak at 0x%lX due to - Unknown Reason\n",
+				 stackFrame->tIP);
+		break;
 	}
 	return 1;
 }
@@ -5656,8 +5656,8 @@ unsigned long ReasonHelp(unsigned char *commandLine, DEBUGGER_PARSER *parser)
 }
 
 unsigned long ReasonDisplay(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			    StackFrame *stackFrame, unsigned long Exception,
+			    DEBUGGER_PARSER *parser)
 {
 	ConsoleDisplayBreakReason(stackFrame, Exception, get_processor_id(), 0);
 	return 1;
@@ -5800,13 +5800,13 @@ unsigned long debug_lock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 			while (1) {
 				per_cpu(ProcessorState, p) = PROCESSOR_WAIT;
 				while (atomic_read(&focusActive) &&
-						!atomic_read(&per_cpu(traceProcessors, p))) {
+				       !atomic_read(&per_cpu(traceProcessors, p))) {
 					cpu_relax();
 					mdb_watchdogs();
 				}
 
 				if (spin_trylock_irqsave((spinlock_t *)lock,
-							rlock->flags[p]))
+							 rlock->flags[p]))
 					break;
 
 				mdb_watchdogs();
@@ -5843,7 +5843,7 @@ unsigned long debug_rlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 		else {
 			while (1) {
 				if (spin_trylock_irqsave((spinlock_t *)lock,
-							rlock->flags[p]))
+							 rlock->flags[p]))
 					break;
 
 				cpu_relax();
@@ -5906,7 +5906,7 @@ unsigned long StopProcessorsExclSelf(unsigned long self)
 				if (!msecs) {
 					failed++;
 					DBGPrint("Processor %i could not be halted state:%s\n",
-							(int)i, procState[per_cpu(ProcessorState, i) & 0xF]);
+						 (int)i, procState[per_cpu(ProcessorState, i) & 0xF]);
 				}
 			}
 		}
@@ -5955,7 +5955,7 @@ unsigned long WaitRestartExclSelf(unsigned long self)
 				if (!msecs) {
 					failed++;
 					DBGPrint("Processor %i did not restart state:%s\n",
-							(int)i, procState[per_cpu(ProcessorState, i) & 0xF]);
+						 (int)i, procState[per_cpu(ProcessorState, i) & 0xF]);
 				}
 			}
 		}
@@ -5967,30 +5967,30 @@ unsigned long WaitRestartExclSelf(unsigned long self)
 }
 
 unsigned long breakpoint_active(unsigned long exception, StackFrame *stackFrame,
-		unsigned long processor)
+				unsigned long processor)
 {
 	register int i;
 
 	switch (exception) {
-		case DEBUGGER_EXCEPTION:
-			for (i = 0; i < 4; i++) {
-				if (per_cpu(CurrentDR6, processor) & (1 << i)) {
-					if (BreakReserved[i])
-						return 1;
-					else
-						return 0;
-				}
+	case DEBUGGER_EXCEPTION:
+		for (i = 0; i < 4; i++) {
+			if (per_cpu(CurrentDR6, processor) & (1 << i)) {
+				if (BreakReserved[i])
+					return 1;
+				else
+					return 0;
 			}
-			break;
+		}
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 	return -1;
 }
 
 unsigned long enter_debugger(unsigned long exception, StackFrame *stackFrame,
-		unsigned long processor)
+			     unsigned long processor)
 {
 	if (debug_lock(&debuglock, &debug_mutex, processor)) {
 		if (!breakpoint_active(exception, stackFrame, processor)) {
@@ -6030,7 +6030,7 @@ unsigned long enter_debugger(unsigned long exception, StackFrame *stackFrame,
 }
 
 unsigned long check_conditional_breakpoint(StackFrame *stackFrame,
-		unsigned long processor)
+					   unsigned long processor)
 {
 	register int i = 0;
 	unsigned char *cmd;
@@ -6051,7 +6051,7 @@ extern unsigned long curr_dr6;
 extern unsigned long curr_dr7;
 
 unsigned long debugger_entry(unsigned long Exception, StackFrame *stackFrame,
-		unsigned long processor)
+			     unsigned long processor)
 {
 	register unsigned long retCode = 1;
 
@@ -6069,60 +6069,60 @@ unsigned long debugger_entry(unsigned long Exception, StackFrame *stackFrame,
 
 MDBLoop:;
 	switch (Exception) {
-		case 1:/* int 1 debug exception */
-			if (current->thread.debugreg6 & DR_STEP)
-				current->thread.debugreg6 &= ~DR_STEP;
-			if (per_cpu(BreakMask, processor)) {
-				stackFrame->tSystemFlags &= ~SINGLE_STEP;
-				stackFrame->tSystemFlags |= RESUME;
-				break;
-			} else
-				if (!check_conditional_breakpoint(stackFrame, processor)) {
-					stackFrame->tSystemFlags &= ~SINGLE_STEP;
-					stackFrame->tSystemFlags |= RESUME;
-					break;
-				}
-			retCode = enter_debugger(Exception, stackFrame, processor);
+	case 1:/* int 1 debug exception */
+		if (current->thread.debugreg6 & DR_STEP)
+			current->thread.debugreg6 &= ~DR_STEP;
+		if (per_cpu(BreakMask, processor)) {
+			stackFrame->tSystemFlags &= ~SINGLE_STEP;
+			stackFrame->tSystemFlags |= RESUME;
 			break;
-
-		case 3:/* int 3 breakpoint */
-			if (per_cpu(BreakMask, processor)) {
+		} else
+			if (!check_conditional_breakpoint(stackFrame, processor)) {
 				stackFrame->tSystemFlags &= ~SINGLE_STEP;
 				stackFrame->tSystemFlags |= RESUME;
 				break;
 			}
+		retCode = enter_debugger(Exception, stackFrame, processor);
+		break;
+
+	case 3:/* int 3 breakpoint */
+		if (per_cpu(BreakMask, processor)) {
+			stackFrame->tSystemFlags &= ~SINGLE_STEP;
+			stackFrame->tSystemFlags |= RESUME;
+			break;
+		}
+		retCode = enter_debugger(Exception, stackFrame, processor);
+		break;
+
+	case 2: /* nmi */
+		if (per_cpu(ProcessorHold, processor))  /* hold processor */ {
+			smp_mb__before_atomic();
+			per_cpu(ProcessorState, processor) = PROCESSOR_SUSPEND;
+			per_cpu(ProcessorHold, processor) = 0;
+			smp_mb__after_atomic();
+
+			/* processor suspend loop */
+			atomic_inc(&per_cpu(nmiProcessors, processor));
+			while ((per_cpu(ProcessorState, processor) != PROCESSOR_RESUME) &&
+			       (per_cpu(ProcessorState, processor) != PROCESSOR_SWITCH)) {
+				if ((per_cpu(ProcessorState, processor) == PROCESSOR_RESUME) ||
+				    (per_cpu(ProcessorState, processor) == PROCESSOR_SWITCH))
+					break;
+				cpu_relax();
+				mdb_watchdogs();
+			}
+			atomic_dec(&per_cpu(nmiProcessors, processor));
+
+			if (per_cpu(ProcessorState, processor) == PROCESSOR_SWITCH)
+				retCode = enter_debugger(21, stackFrame, processor);
+			break;
+		} else
 			retCode = enter_debugger(Exception, stackFrame, processor);
-			break;
+		break;
 
-		case 2: /* nmi */
-			if (per_cpu(ProcessorHold, processor))  /* hold processor */ {
-				smp_mb__before_atomic();
-				per_cpu(ProcessorState, processor) = PROCESSOR_SUSPEND;
-				per_cpu(ProcessorHold, processor) = 0;
-				smp_mb__after_atomic();
-
-				/* processor suspend loop */
-				atomic_inc(&per_cpu(nmiProcessors, processor));
-				while ((per_cpu(ProcessorState, processor) != PROCESSOR_RESUME) &&
-						(per_cpu(ProcessorState, processor) != PROCESSOR_SWITCH)) {
-					if ((per_cpu(ProcessorState, processor) == PROCESSOR_RESUME) ||
-							(per_cpu(ProcessorState, processor) == PROCESSOR_SWITCH))
-						break;
-					cpu_relax();
-					mdb_watchdogs();
-				}
-				atomic_dec(&per_cpu(nmiProcessors, processor));
-
-				if (per_cpu(ProcessorState, processor) == PROCESSOR_SWITCH)
-					retCode = enter_debugger(21, stackFrame, processor);
-				break;
-			} else
-				retCode = enter_debugger(Exception, stackFrame, processor);
-			break;
-
-		default:
-			retCode = enter_debugger(Exception, stackFrame, processor);
-			break;
+	default:
+		retCode = enter_debugger(Exception, stackFrame, processor);
+		break;
 	}
 
 	if (per_cpu(ProcessorHold, processor)) {
@@ -6169,61 +6169,61 @@ void SetDebugRegisters(void)
 
 	for (i = 0; i < 4; i++) {
 		switch (i) {
-			case 0:
-				if (BreakReserved[i]) {
-					CurrentDR7 &= 0xFFF0FFFF;
-					CurrentDR7 |= G0_BIT;
-					CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
-							(BreakLength[i] << ((i * 4) + 18)));
-				} else {
-					CurrentDR7 &= 0xFFF0FFFF;
-					CurrentDR7 &= ~G0_BIT;
-					CurrentDR7 &= ~L0_BIT;
-				}
-				WriteDR0(BreakPoints[i]);
-				break;
+		case 0:
+			if (BreakReserved[i]) {
+				CurrentDR7 &= 0xFFF0FFFF;
+				CurrentDR7 |= G0_BIT;
+				CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
+					       (BreakLength[i] << ((i * 4) + 18)));
+			} else {
+				CurrentDR7 &= 0xFFF0FFFF;
+				CurrentDR7 &= ~G0_BIT;
+				CurrentDR7 &= ~L0_BIT;
+			}
+			WriteDR0(BreakPoints[i]);
+			break;
 
-			case 1:
-				if (BreakReserved[i]) {
-					CurrentDR7 &= 0xFF0FFFFF;
-					CurrentDR7 |= G1_BIT;
-					CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
-							(BreakLength[i] << ((i * 4) + 18)));
-				} else {
-					CurrentDR7 &= 0xFF0FFFFF;
-					CurrentDR7 &= ~G1_BIT;
-					CurrentDR7 &= ~L1_BIT;
-				}
-				WriteDR1(BreakPoints[i]);
-				break;
+		case 1:
+			if (BreakReserved[i]) {
+				CurrentDR7 &= 0xFF0FFFFF;
+				CurrentDR7 |= G1_BIT;
+				CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
+					       (BreakLength[i] << ((i * 4) + 18)));
+			} else {
+				CurrentDR7 &= 0xFF0FFFFF;
+				CurrentDR7 &= ~G1_BIT;
+				CurrentDR7 &= ~L1_BIT;
+			}
+			WriteDR1(BreakPoints[i]);
+			break;
 
-			case 2:
-				if (BreakReserved[i]) {
-					CurrentDR7 &= 0xF0FFFFFF;
-					CurrentDR7 |= G2_BIT;
-					CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
-							(BreakLength[i] << ((i * 4) + 18)));
-				} else {
-					CurrentDR7 &= 0xF0FFFFFF;
-					CurrentDR7 &= ~G2_BIT;
-					CurrentDR7 &= ~L2_BIT;
-				}
-				WriteDR2(BreakPoints[i]);
-				break;
+		case 2:
+			if (BreakReserved[i]) {
+				CurrentDR7 &= 0xF0FFFFFF;
+				CurrentDR7 |= G2_BIT;
+				CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
+					       (BreakLength[i] << ((i * 4) + 18)));
+			} else {
+				CurrentDR7 &= 0xF0FFFFFF;
+				CurrentDR7 &= ~G2_BIT;
+				CurrentDR7 &= ~L2_BIT;
+			}
+			WriteDR2(BreakPoints[i]);
+			break;
 
-			case 3:
-				if (BreakReserved[i]) {
-					CurrentDR7 &= 0x0FFFFFFF;
-					CurrentDR7 |= G3_BIT;
-					CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
-							(BreakLength[i] << ((i * 4) + 18)));
-				} else {
-					CurrentDR7 &= 0x0FFFFFFF;
-					CurrentDR7 &= ~G3_BIT;
-					CurrentDR7 &= ~L3_BIT;
-				}
-				WriteDR3(BreakPoints[i]);
-				break;
+		case 3:
+			if (BreakReserved[i]) {
+				CurrentDR7 &= 0x0FFFFFFF;
+				CurrentDR7 |= G3_BIT;
+				CurrentDR7 |= ((BreakType[i] << ((i * 4) + 16)) |
+					       (BreakLength[i] << ((i * 4) + 18)));
+			} else {
+				CurrentDR7 &= 0x0FFFFFFF;
+				CurrentDR7 &= ~G3_BIT;
+				CurrentDR7 &= ~L3_BIT;
+			}
+			WriteDR3(BreakPoints[i]);
+			break;
 		}
 	}
 	return;
@@ -6236,25 +6236,25 @@ void LoadDebugRegisters(void)
 	WriteDR6(0);
 	for (i = 0; i < 4; i++) {
 		switch (i) {
-			case 0:
-				if (BreakReserved[i])
-					WriteDR0(BreakPoints[i]);
-				break;
+		case 0:
+			if (BreakReserved[i])
+				WriteDR0(BreakPoints[i]);
+			break;
 
-			case 1:
-				if (BreakReserved[i])
-					WriteDR1(BreakPoints[i]);
-				break;
+		case 1:
+			if (BreakReserved[i])
+				WriteDR1(BreakPoints[i]);
+			break;
 
-			case 2:
-				if (BreakReserved[i])
-					WriteDR2(BreakPoints[i]);
-				break;
+		case 2:
+			if (BreakReserved[i])
+				WriteDR2(BreakPoints[i]);
+			break;
 
-			case 3:
-				if (BreakReserved[i])
-					WriteDR3(BreakPoints[i]);
-				break;
+		case 3:
+			if (BreakReserved[i])
+				WriteDR3(BreakPoints[i]);
+			break;
 		}
 	}
 	WriteDR7(CurrentDR7);
@@ -6272,7 +6272,7 @@ static struct hw_breakpoint {
 } breakinfo[HBP_NUM];
 
 static void mdb_overflow_handler(struct perf_event *event,
-		struct perf_sample_data *data, struct pt_regs *regs)
+				 struct perf_sample_data *data, struct pt_regs *regs)
 {
 	struct task_struct *tsk = current;
 	int i;
@@ -6407,38 +6407,38 @@ void SetDebugRegisters(void)
 unsigned long get_bp_type(unsigned long type)
 {
 	switch (type) {
-		case BREAK_EXECUTE:
-			return X86_BREAKPOINT_EXECUTE;
+	case BREAK_EXECUTE:
+		return X86_BREAKPOINT_EXECUTE;
 
-		case BREAK_WRITE:
-			return X86_BREAKPOINT_WRITE;
+	case BREAK_WRITE:
+		return X86_BREAKPOINT_WRITE;
 
-		case BREAK_READWRITE:
-			return X86_BREAKPOINT_RW;
+	case BREAK_READWRITE:
+		return X86_BREAKPOINT_RW;
 
-		default:
-			return X86_BREAKPOINT_EXECUTE;
+	default:
+		return X86_BREAKPOINT_EXECUTE;
 	}
 }
 
 unsigned long get_bp_len(unsigned long len)
 {
 	switch (len) {
-		case ONE_BYTE_FIELD:
-			return X86_BREAKPOINT_LEN_1;
+	case ONE_BYTE_FIELD:
+		return X86_BREAKPOINT_LEN_1;
 
-		case TWO_BYTE_FIELD:
-			return X86_BREAKPOINT_LEN_2;
+	case TWO_BYTE_FIELD:
+		return X86_BREAKPOINT_LEN_2;
 
-		case FOUR_BYTE_FIELD:
-			return X86_BREAKPOINT_LEN_4;
+	case FOUR_BYTE_FIELD:
+		return X86_BREAKPOINT_LEN_4;
 
 #ifdef CONFIG_X86_64
-		case EIGHT_BYTE_FIELD:
-			return X86_BREAKPOINT_LEN_8;
+	case EIGHT_BYTE_FIELD:
+		return X86_BREAKPOINT_LEN_8;
 #endif
-		default:
-			return X86_BREAKPOINT_LEN_1;
+	default:
+		return X86_BREAKPOINT_LEN_1;
 	}
 }
 

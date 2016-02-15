@@ -25,9 +25,9 @@ struct ACCELERATOR {
 	struct ACCELERATOR *accelNext;
 	struct ACCELERATOR *accelPrior;
 	unsigned long (*accelRoutine)(unsigned long key, void *p,
-			struct ACCELERATOR *parser);
+				      struct ACCELERATOR *parser);
 	unsigned long (*accelRoutineHelp)(unsigned long key,
-			struct ACCELERATOR *parser);
+					  struct ACCELERATOR *parser);
 	unsigned long accelFlags;
 	unsigned long key;
 	unsigned long supervisorCommand;
@@ -44,11 +44,11 @@ struct DEBUGGER_PARSER {
 	struct DEBUGGER_PARSER *debugNext;
 	struct DEBUGGER_PARSER *debugPrior;
 	unsigned long (*DebugCommandParser)(unsigned char *commandLine,
-			StackFrame *stackFrame,
-			unsigned long Exception,
-			struct DEBUGGER_PARSER *parser);
+					    StackFrame *stackFrame,
+					    unsigned long Exception,
+					    struct DEBUGGER_PARSER *parser);
 	unsigned long (*DebugCommandParserHelp)(unsigned char *commandLine,
-			struct DEBUGGER_PARSER *parser);
+						struct DEBUGGER_PARSER *parser);
 	unsigned long parserFlags;
 	unsigned char *debugCommandName;
 	unsigned long debugCommandNameLength;
@@ -72,11 +72,11 @@ int AlternateDebuggerRoutine(int reason, int error, void *frame);
 unsigned long AddAlternateDebugger(ALT_DEBUGGER *Debugger);
 unsigned long RemoveAlternateDebugger(ALT_DEBUGGER *Debugger);
 unsigned long DebuggerParserRoutine(unsigned char *command,
-		unsigned char *commandLine,
-		StackFrame *stackFrame,
-		unsigned long Exception);
+				    unsigned char *commandLine,
+				    StackFrame *stackFrame,
+				    unsigned long Exception);
 unsigned long DebuggerParserHelpRoutine(unsigned char *command,
-		unsigned char *commandLine);
+					unsigned char *commandLine);
 unsigned long AddDebuggerCommandParser(DEBUGGER_PARSER *parser);
 unsigned long RemoveDebuggerCommandParser(DEBUGGER_PARSER *parser);
 

@@ -404,15 +404,15 @@ extern "C" {
 	extern bfd_boolean bfd_hash_table_init
 		(struct bfd_hash_table *,
 		 struct bfd_hash_entry *(*)(struct bfd_hash_entry *,
-			 struct bfd_hash_table *,
-			 const char *));
+					    struct bfd_hash_table *,
+					    const char *));
 
 	/* Initialize a hash table specifying a size.  */
 	extern bfd_boolean bfd_hash_table_init_n
 		(struct bfd_hash_table *,
 		 struct bfd_hash_entry *(*)(struct bfd_hash_entry *,
-			 struct bfd_hash_table *,
-			 const char *),
+					    struct bfd_hash_table *,
+					    const char *),
 		 unsigned int size);
 
 	/* Free up a hash table.  */
@@ -905,7 +905,7 @@ extern "C" {
 
 	/* Extracted from opncls.c.  */
 	bfd *bfd_fopen(const char *filename, const char *target,
-			const char *mode, int fd);
+		       const char *mode, int fd);
 
 	bfd *bfd_openr(const char *filename, const char *target);
 
@@ -914,16 +914,16 @@ extern "C" {
 	bfd *bfd_openstreamr(const char *, const char *, void *);
 
 	bfd *bfd_openr_iovec(const char *filename, const char *target,
-			void *(*open)(struct bfd *nbfd,
-				void *open_closure),
-			void *open_closure,
-			file_ptr (*pread)(struct bfd *nbfd,
-				void *stream,
-				void *buf,
-				file_ptr nbytes,
-				file_ptr offset),
-			int (*close)(struct bfd *nbfd,
-				void *stream));
+			     void *(*open)(struct bfd *nbfd,
+					   void *open_closure),
+			     void *open_closure,
+			     file_ptr (*pread)(struct bfd *nbfd,
+					       void *stream,
+					       void *buf,
+					       file_ptr nbytes,
+					       file_ptr offset),
+			     int (*close)(struct bfd *nbfd,
+					  void *stream));
 
 	bfd *bfd_openw(const char *filename, const char *target);
 
@@ -1608,7 +1608,7 @@ extern "C" {
 
 #define bfd_copy_private_section_data(ibfd, isection, obfd, osection) \
 	BFD_SEND(obfd, _bfd_copy_private_section_data, \
-			(ibfd, isection, obfd, osection))
+		 (ibfd, isection, obfd, osection))
 	bfd_boolean bfd_generic_is_group_section(bfd *, const asection *sec);
 
 	bfd_boolean bfd_generic_discard_group(bfd *abfd, asection *group);
@@ -2124,11 +2124,11 @@ extern "C" {
 	{ (unsigned)C, R, S, B, P, BI, O, SF, NAME, INPLACE, MASKSRC, MASKDST, PC }
 #define NEWHOWTO(FUNCTION, NAME, SIZE, REL, IN) \
 	HOWTO(0, 0, SIZE, 0, REL, 0, complain_overflow_dont, FUNCTION, \
-			NAME, FALSE, 0, 0, IN)
+	      NAME, FALSE, 0, 0, IN)
 
 #define EMPTY_HOWTO(C) \
 	HOWTO((C), 0, 0, 0, FALSE, 0, complain_overflow_dont, NULL, \
-			NULL, FALSE, 0, 0, FALSE)
+	      NULL, FALSE, 0, 0, FALSE)
 
 #define HOWTO_PREPARE(relocation, symbol)               \
 	{                                                     \
@@ -4093,7 +4093,7 @@ extern "C" {
 
 #define bfd_copy_private_symbol_data(ibfd, isymbol, obfd, osymbol) \
 	BFD_SEND(obfd, _bfd_copy_private_symbol_data, \
-			(ibfd, isymbol, obfd, osymbol))
+		 (ibfd, isymbol, obfd, osymbol))
 
 	/* Extracted from bfd.c.  */
 	struct bfd {
@@ -4326,17 +4326,17 @@ extern "C" {
 
 #define bfd_copy_private_header_data(ibfd, obfd) \
 	BFD_SEND(obfd, _bfd_copy_private_header_data, \
-			(ibfd, obfd))
+		 (ibfd, obfd))
 	bfd_boolean bfd_copy_private_bfd_data(bfd *ibfd, bfd *obfd);
 
 #define bfd_copy_private_bfd_data(ibfd, obfd) \
 	BFD_SEND(obfd, _bfd_copy_private_bfd_data, \
-			(ibfd, obfd))
+		 (ibfd, obfd))
 	bfd_boolean bfd_merge_private_bfd_data(bfd *ibfd, bfd *obfd);
 
 #define bfd_merge_private_bfd_data(ibfd, obfd) \
 	BFD_SEND(obfd, _bfd_merge_private_bfd_data, \
-			(ibfd, obfd))
+		 (ibfd, obfd))
 	bfd_boolean bfd_set_private_flags(bfd *abfd, flagword flags);
 
 #define bfd_set_private_flags(abfd, flags) \
@@ -4346,15 +4346,15 @@ extern "C" {
 
 #define bfd_find_nearest_line(abfd, sec, syms, off, file, func, line) \
 	BFD_SEND(abfd, _bfd_find_nearest_line, \
-			(abfd, sec, syms, off, file, func, line))
+		 (abfd, sec, syms, off, file, func, line))
 
 #define bfd_find_line(abfd, syms, sym, file, line) \
 	BFD_SEND(abfd, _bfd_find_line, \
-			(abfd, syms, sym, file, line))
+		 (abfd, syms, sym, file, line))
 
 #define bfd_find_inliner_info(abfd, file, func, line) \
 	BFD_SEND(abfd, _bfd_find_inliner_info, \
-			(abfd, file, func, line))
+		 (abfd, file, func, line))
 
 #define bfd_debug_info_start(abfd) \
 	BFD_SEND(abfd, _bfd_debug_info_start, (abfd))
@@ -4418,7 +4418,7 @@ extern "C" {
 
 #define bfd_get_synthetic_symtab(abfd, count, syms, dyncount, dynsyms, ret) \
 	BFD_SEND(abfd, _bfd_get_synthetic_symtab, (abfd, count, syms, \
-				dyncount, dynsyms, ret))
+						   dyncount, dynsyms, ret))
 
 #define bfd_get_dynamic_reloc_upper_bound(abfd) \
 	BFD_SEND(abfd, _bfd_get_dynamic_reloc_upper_bound, (abfd))

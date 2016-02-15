@@ -76,13 +76,13 @@ unsigned char workbuf[MAX_SYMBOL_LEN];
 #ifdef CONFIG_X86_64
 
 static inline int in_irq_stack(unsigned long *stack, unsigned long *irq_stack,
-		unsigned long *irq_stack_end)
+			       unsigned long *irq_stack_end)
 {
 	return stack >= irq_stack && stack < irq_stack_end;
 }
 
 static inline unsigned long fixup_bp_irq_link(unsigned long bp,
-		unsigned long *stack, unsigned long *irq_stack, unsigned long *irq_stack_end)
+					      unsigned long *stack, unsigned long *irq_stack, unsigned long *irq_stack_end)
 {
 #ifdef CONFIG_FRAME_POINTER
 	struct stack_frame *frame = (struct stack_frame *)bp;
@@ -93,7 +93,7 @@ static inline unsigned long fixup_bp_irq_link(unsigned long bp,
 			return next;
 		else
 			DBGPrint("MDB: bad frame pointer = %p in chain\n",
-					&frame->next_frame);
+				 &frame->next_frame);
 	}
 #endif
 	return bp;
@@ -102,17 +102,17 @@ static inline unsigned long fixup_bp_irq_link(unsigned long bp,
 #define get_bp(bp) asm("movq %%rbp, %0" : "=r" (bp) :)
 
 extern unsigned long *in_exception_stack(unsigned cpu, unsigned long stack,
-		unsigned *usedp, char **idp);
+					 unsigned *usedp, char **idp);
 extern unsigned long *get_irq_stack_end(const unsigned int cpu);
 
 void DBGPrint_address(unsigned long address, int reliable)
 {
 	DBGPrint("[<%p>] %s%pS\n", (void *)address,
-			reliable ? "" : "? ", (void *)address);
+		 reliable ? "" : "? ", (void *)address);
 }
 
 static inline int valid_stack_ptr(struct thread_info *tinfo,
-		void *p, unsigned int size, void *end)
+				  void *p, unsigned int size, void *end)
 {
 	void *t = tinfo;
 
@@ -125,9 +125,9 @@ static inline int valid_stack_ptr(struct thread_info *tinfo,
 	return p > t && p < t + THREAD_SIZE - size;
 }
 
-	static inline unsigned long
+static inline unsigned long
 print_context(struct thread_info *tinfo, unsigned long *stack,
-		unsigned long bp, unsigned long *end)
+	      unsigned long bp, unsigned long *end)
 {
 	struct stack_frame *frame = (struct stack_frame *)bp;
 
@@ -152,7 +152,7 @@ print_context(struct thread_info *tinfo, unsigned long *stack,
 }
 
 void bt_stack(struct task_struct *task, struct pt_regs *regs,
-		unsigned long *stack)
+	      unsigned long *stack)
 {
 	unsigned long bp = 0;
 	const unsigned cpu = get_cpu();
@@ -186,7 +186,7 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 		unsigned long *estack_end;
 
 		estack_end = in_exception_stack(cpu, (unsigned long)stack,
-				&used, &id);
+						&used, &id);
 
 		if (estack_end) {
 			if (DBGPrint("%s", id))
@@ -210,11 +210,11 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 					break;
 
 				bp = print_context(tinfo, stack, bp,
-						irq_stack_end);
+						   irq_stack_end);
 
 				stack = (unsigned long *)(irq_stack_end[-1]);
 				bp = fixup_bp_irq_link(bp, stack, irq_stack,
-						irq_stack_end);
+						       irq_stack_end);
 				irq_stack_end = NULL;
 				DBGPrint("%s", "EOI");
 				continue;
@@ -233,7 +233,7 @@ extern void *is_hardirq_stack(unsigned long *stack, int cpu);
 extern void *is_softirq_stack(unsigned long *stack, int cpu);
 
 static inline int valid_stack_ptr(struct thread_info *tinfo,
-		void *p, unsigned int size, void *end)
+				  void *p, unsigned int size, void *end)
 {
 	void *t = tinfo;
 
@@ -249,14 +249,14 @@ static inline int valid_stack_ptr(struct thread_info *tinfo,
 static void print_stack_address(unsigned long address, int reliable)
 {
 	DBGPrint("[<%p>] %s%pB\n",
-			(void *)address, reliable ? "" : "? ",
-			(void *)address);
+		 (void *)address, reliable ? "" : "? ",
+		 (void *)address);
 }
 
-	unsigned long
+unsigned long
 print_context(struct thread_info *tinfo,
-		unsigned long *stack, unsigned long bp,
-		unsigned long *end)
+	      unsigned long *stack, unsigned long bp,
+	      unsigned long *end)
 {
 	struct stack_frame *frame = (struct stack_frame *)bp;
 
@@ -287,7 +287,7 @@ static int print_trace(char *name)
 }
 
 int bt_stack(struct task_struct *task, struct pt_regs *regs,
-		unsigned long *stack)
+	     unsigned long *stack)
 {
 	const unsigned cpu = get_cpu();
 	unsigned long bp = 0;
@@ -341,7 +341,7 @@ int bt_stack(struct task_struct *task, struct pt_regs *regs,
 
 #if 0
 int bt_stack(struct task_struct *task, struct pt_regs *regs,
-		unsigned long *stack)
+	     unsigned long *stack)
 {
 	unsigned long dummy;
 
@@ -406,8 +406,8 @@ int mdb_printf(char *fmt, ...)
 
 	for (con = console_drivers; con; con = con->next) {
 		if ((con->flags & CON_ENABLED) && con->write &&
-				(cpu_online(get_processor_id()) ||
-				 (con->flags & CON_ANYTIME))) {
+		    (cpu_online(get_processor_id()) ||
+		     (con->flags & CON_ANYTIME))) {
 			con->write(con, mdb_buffer, strlen(mdb_buffer));
 			mdb_watchdogs();
 		}
@@ -422,8 +422,8 @@ int mdb_printf(char *fmt, ...)
 
 		for (con = console_drivers; con; con = con->next) {
 			if ((con->flags & CON_ENABLED) && con->write &&
-					(cpu_online(get_processor_id()) ||
-					 (con->flags & CON_ANYTIME))) {
+			    (cpu_online(get_processor_id()) ||
+			     (con->flags & CON_ANYTIME))) {
 				con->write(con, mdbprompt, strlen(mdbprompt));
 				mdb_watchdogs();
 			}
@@ -438,8 +438,8 @@ int mdb_printf(char *fmt, ...)
 
 		for (con = console_drivers; con; con = con->next) {
 			if ((con->flags & CON_ENABLED) && con->write &&
-					(cpu_online(get_processor_id()) ||
-					 (con->flags & CON_ANYTIME))) {
+			    (cpu_online(get_processor_id()) ||
+			     (con->flags & CON_ANYTIME))) {
 				memset(mdb_buffer, 0, 256);
 
 				memset(mdb_buffer, '\b', strlen(mdbprompt));
@@ -481,7 +481,7 @@ int mdb_printf(char *fmt, ...)
 unsigned int mdb_serial_port;
 module_param(mdb_serial_port, uint, 0644);
 MODULE_PARM_DESC(mdb_serial_port,
-		"MDB serial port address.  i.e. 0x3f8(ttyS0), 0x2f8(ttyS1), 0x3e8(ttyS2), 0x2e8(ttyS3)");
+		 "MDB serial port address.  i.e. 0x3f8(ttyS0), 0x2f8(ttyS1), 0x3e8(ttyS2), 0x2e8(ttyS3)");
 
 int get_modem_char(void)
 {
@@ -495,28 +495,28 @@ int get_modem_char(void)
 	if (status & UART_LSR_DR) {
 		ch = inb(mdb_serial_port + UART_RX);
 		switch (ch) {
-			case 0x7f:
-				ch = 8;
-				break;
+		case 0x7f:
+			ch = 8;
+			break;
 
-			case '\t':
-				ch = ' ';
-				break;
+		case '\t':
+			ch = ' ';
+			break;
 
-			case 8:  /* backspace */
-				break;
+		case 8:  /* backspace */
+			break;
 
-			case 13: /* enter */
-				if (!mdb_suppress_crlf)
-					DBGPrint("\n");
-				break;
+		case 13: /* enter */
+			if (!mdb_suppress_crlf)
+				DBGPrint("\n");
+			break;
 
-			default:
-				if (!isprint(ch))
-					return -1;
-				if (!mdb_suppress_crlf)
-					DBGPrint("%c", ch);
-				break;
+		default:
+			if (!isprint(ch))
+				return -1;
+			if (!mdb_suppress_crlf)
+				DBGPrint("%c", ch);
+			break;
 		}
 		return ch;
 	}
@@ -605,7 +605,7 @@ static int get_kbd_char(void)
 	 */
 
 	if (((scancode & 0x7f) == 0x2a) ||
-			((scancode & 0x7f) == 0x36)) {
+	    ((scancode & 0x7f) == 0x36)) {
 		/* Next key may use shift table */
 		if ((scancode & 0x80) == 0) {
 			shift_key = 1;
@@ -669,59 +669,59 @@ static int get_kbd_char(void)
 		keychar = ' ';
 
 	switch (keychar) {
-		case K_F1:
-		case K_F2:
-		case K_F3:
-		case K_F4:
-		case K_F5:
-		case K_F6:
-		case K_F7:
-		case K_F8:
-		case K_F9:
-		case K_F10:
-		case K_F11:
-		case K_F12:
-			return keychar;
-		default:
-			break;
+	case K_F1:
+	case K_F2:
+	case K_F3:
+	case K_F4:
+	case K_F5:
+	case K_F6:
+	case K_F7:
+	case K_F8:
+	case K_F9:
+	case K_F10:
+	case K_F11:
+	case K_F12:
+		return keychar;
+	default:
+		break;
 	}
 
 	switch (KTYP(keychar)) {
-		case KT_LETTER:
-		case KT_LATIN:
-			if (isprint(keychar))
-				break;		/* printable characters */
-			/* drop through */
-		case KT_SPEC:
-			if (keychar == K_ENTER)
-				break;
-			/* drop through */
-		case KT_PAD:
-			switch (keychar) {
-				case K_P0:
-				case K_P1:
-				case K_P2:
-				case K_P4:
-				case K_P6:
-				case K_P7:
-				case K_P8:
-				case K_PDOT:
-					return keychar;
-			}
-			return -1;
+	case KT_LETTER:
+	case KT_LATIN:
+		if (isprint(keychar))
+			break;		/* printable characters */
+		/* drop through */
+	case KT_SPEC:
+		if (keychar == K_ENTER)
+			break;
+		/* drop through */
+	case KT_PAD:
+		switch (keychar) {
+		case K_P0:
+		case K_P1:
+		case K_P2:
+		case K_P4:
+		case K_P6:
+		case K_P7:
+		case K_P8:
+		case K_PDOT:
+			return keychar;
+		}
+		return -1;
 
-		case KT_CUR:
-			switch (keychar) {
-				case K_DOWN:
-				case K_LEFT:
-				case K_RIGHT:
-				case K_UP:
-					return keychar;
-			}
-			return -1;
+	case KT_CUR:
+		switch (keychar) {
+		case K_DOWN:
+		case K_LEFT:
+		case K_RIGHT:
+		case K_UP:
+			return keychar;
+		}
+		return -1;
 
-		default:
-			return -1;	/* ignore unprintables */
+	default:
+		return -1;	/* ignore unprintables */
 	}
 
 	if ((scancode & 0x7f) == 0x1c) {
@@ -813,30 +813,30 @@ int mdb_getphysword(uint64_t *word, unsigned long addr, size_t size)
 	*word = 0;
 
 	switch (size) {
-		case 1:
-			err = mdb_getphys(&w1, addr, sizeof(w1));
+	case 1:
+		err = mdb_getphys(&w1, addr, sizeof(w1));
+		if (!err)
+			*word = w1;
+		break;
+	case 2:
+		err = mdb_getphys(&w2, addr, sizeof(w2));
+		if (!err)
+			*word = w2;
+		break;
+	case 4:
+		err = mdb_getphys(&w4, addr, sizeof(w4));
+		if (!err)
+			*word = w4;
+		break;
+	case 8:
+		if (size <= sizeof(*word)) {
+			err = mdb_getphys(&w8, addr, sizeof(w8));
 			if (!err)
-				*word = w1;
+				*word = w8;
 			break;
-		case 2:
-			err = mdb_getphys(&w2, addr, sizeof(w2));
-			if (!err)
-				*word = w2;
-			break;
-		case 4:
-			err = mdb_getphys(&w4, addr, sizeof(w4));
-			if (!err)
-				*word = w4;
-			break;
-		case 8:
-			if (size <= sizeof(*word)) {
-				err = mdb_getphys(&w8, addr, sizeof(w8));
-				if (!err)
-					*word = w8;
-				break;
-			}
-		default:
-			err = -EFAULT;
+		}
+	default:
+		err = -EFAULT;
 	}
 	return err;
 }
@@ -852,28 +852,28 @@ int mdb_getlword(uint64_t *word, unsigned long addr, size_t size)
 
 	*word = 0;	/* Default value if addr or size is invalid */
 	switch (size) {
-		case 1:
-			err = mdb_copy(&w1, (void *)addr, size);
-			if (!err)
-				*word = w1;
-			break;
-		case 2:
-			err = mdb_copy(&w2, (void *)addr, size);
-			if (!err)
-				*word = w2;
-			break;
-		case 4:
-			err = mdb_copy(&w4, (void *)addr, size);
-			if (!err)
-				*word = w4;
-			break;
-		case 8:
-			err = mdb_copy(&w8, (void *)addr, size);
-			if (!err)
-				*word = w8;
-			break;
-		default:
-			err = -EFAULT;
+	case 1:
+		err = mdb_copy(&w1, (void *)addr, size);
+		if (!err)
+			*word = w1;
+		break;
+	case 2:
+		err = mdb_copy(&w2, (void *)addr, size);
+		if (!err)
+			*word = w2;
+		break;
+	case 4:
+		err = mdb_copy(&w4, (void *)addr, size);
+		if (!err)
+			*word = w4;
+		break;
+	case 8:
+		err = mdb_copy(&w8, (void *)addr, size);
+		if (!err)
+			*word = w8;
+		break;
+	default:
+		err = -EFAULT;
 	}
 	return err;
 }
@@ -887,24 +887,24 @@ int mdb_putword(unsigned long addr, unsigned long word, size_t size)
 	__u64 w8;
 
 	switch (size) {
-		case 1:
-			w1 = word;
-			err = mdb_copy((void *)addr, &w1, size);
-			break;
-		case 2:
-			w2 = word;
-			err = mdb_copy((void *)addr, &w2, size);
-			break;
-		case 4:
-			w4 = word;
-			err = mdb_copy((void *)addr, &w4, size);
-			break;
-		case 8:
-			w8 = word;
-			err = mdb_copy((void *)addr, &w8, size);
-			break;
-		default:
-			err = -EFAULT;
+	case 1:
+		w1 = word;
+		err = mdb_copy((void *)addr, &w1, size);
+		break;
+	case 2:
+		w2 = word;
+		err = mdb_copy((void *)addr, &w2, size);
+		break;
+	case 4:
+		w4 = word;
+		err = mdb_copy((void *)addr, &w4, size);
+		break;
+	case 8:
+		w8 = word;
+		err = mdb_copy((void *)addr, &w8, size);
+		break;
+	default:
+		err = -EFAULT;
 	}
 	return err;
 }
@@ -918,24 +918,24 @@ int mdb_putqword(uint64_t *addr, uint64_t word, size_t size)
 	__u64 w8;
 
 	switch (size) {
-		case 1:
-			w1 = word;
-			err = mdb_copy((void *)addr, &w1, size);
-			break;
-		case 2:
-			w2 = word;
-			err = mdb_copy((void *)addr, &w2, size);
-			break;
-		case 4:
-			w4 = word;
-			err = mdb_copy((void *)addr, &w4, size);
-			break;
-		case 8:
-			w8 = word;
-			err = mdb_copy((void *)addr, &w8, size);
-			break;
-		default:
-			err = -EFAULT;
+	case 1:
+		w1 = word;
+		err = mdb_copy((void *)addr, &w1, size);
+		break;
+	case 2:
+		w2 = word;
+		err = mdb_copy((void *)addr, &w2, size);
+		break;
+	case 4:
+		w4 = word;
+		err = mdb_copy((void *)addr, &w4, size);
+		break;
+	case 8:
+		w8 = word;
+		err = mdb_copy((void *)addr, &w8, size);
+		break;
+	default:
+		err = -EFAULT;
 	}
 	return err;
 }
@@ -1002,7 +1002,7 @@ uint64_t mdb_segment_getqword(unsigned long sv, uint64_t *addr, size_t size)
 }
 
 unsigned long mdb_segment_getword(unsigned long sv, unsigned long addr,
-		size_t size)
+				  size_t size)
 {
 	uint64_t data = 0;
 	register int ret;
@@ -1085,7 +1085,7 @@ unsigned char *GetSymbolFromValue(unsigned long value, unsigned char *buf, unsig
 }
 
 unsigned char *GetSymbolFromValueWithOffset(unsigned long value, unsigned long *sym_offset,
-		unsigned char *buf, unsigned long len)
+					    unsigned char *buf, unsigned long len)
 {
 	char *modname;
 	const char *name;
@@ -1104,7 +1104,7 @@ unsigned char *GetSymbolFromValueWithOffset(unsigned long value, unsigned long *
 }
 
 unsigned char *GetSymbolFromValueOffsetModule(unsigned long value, unsigned long *sym_offset,
-		unsigned char **module, unsigned char *buf, unsigned long len)
+					      unsigned char **module, unsigned char *buf, unsigned long len)
 {
 	char *modname;
 	const char *name;
@@ -1210,29 +1210,29 @@ unsigned long ReadDR(unsigned long regnum)
 	unsigned long contents = 0;
 
 	switch (regnum) {
-		case 0:
-			__asm__ ("movq %%db0,%0\n\t" : "=r"(contents));
-			break;
-		case 1:
-			__asm__ ("movq %%db1,%0\n\t" : "=r"(contents));
-			break;
-		case 2:
-			__asm__ ("movq %%db2,%0\n\t" : "=r"(contents));
-			break;
-		case 3:
-			__asm__ ("movq %%db3,%0\n\t" : "=r"(contents));
-			break;
-		case 4:
-		case 5:
-			break;
-		case 6:
-			__asm__ ("movq %%db6,%0\n\t" : "=r"(contents));
-			break;
-		case 7:
-			__asm__ ("movq %%db7,%0\n\t" : "=r"(contents));
-			break;
-		default:
-			break;
+	case 0:
+		__asm__ ("movq %%db0,%0\n\t" : "=r"(contents));
+		break;
+	case 1:
+		__asm__ ("movq %%db1,%0\n\t" : "=r"(contents));
+		break;
+	case 2:
+		__asm__ ("movq %%db2,%0\n\t" : "=r"(contents));
+		break;
+	case 3:
+		__asm__ ("movq %%db3,%0\n\t" : "=r"(contents));
+		break;
+	case 4:
+	case 5:
+		break;
+	case 6:
+		__asm__ ("movq %%db6,%0\n\t" : "=r"(contents));
+		break;
+	case 7:
+		__asm__ ("movq %%db7,%0\n\t" : "=r"(contents));
+		break;
+	default:
+		break;
 	}
 
 	return contents;
@@ -1241,29 +1241,29 @@ unsigned long ReadDR(unsigned long regnum)
 void WriteDR(int regnum, unsigned long contents)
 {
 	switch (regnum) {
-		case 0:
-			__asm__ ("movq %0,%%db0\n\t"::"r"(contents));
-			break;
-		case 1:
-			__asm__ ("movq %0,%%db1\n\t"::"r"(contents));
-			break;
-		case 2:
-			__asm__ ("movq %0,%%db2\n\t"::"r"(contents));
-			break;
-		case 3:
-			__asm__ ("movq %0,%%db3\n\t"::"r"(contents));
-			break;
-		case 4:
-		case 5:
-			break;
-		case 6:
-			__asm__ ("movq %0,%%db6\n\t"::"r"(contents));
-			break;
-		case 7:
-			__asm__ ("movq %0,%%db7\n\t"::"r"(contents));
-			break;
-		default:
-			break;
+	case 0:
+		__asm__ ("movq %0,%%db0\n\t"::"r"(contents));
+		break;
+	case 1:
+		__asm__ ("movq %0,%%db1\n\t"::"r"(contents));
+		break;
+	case 2:
+		__asm__ ("movq %0,%%db2\n\t"::"r"(contents));
+		break;
+	case 3:
+		__asm__ ("movq %0,%%db3\n\t"::"r"(contents));
+		break;
+	case 4:
+	case 5:
+		break;
+	case 6:
+		__asm__ ("movq %0,%%db6\n\t"::"r"(contents));
+		break;
+	case 7:
+		__asm__ ("movq %0,%%db7\n\t"::"r"(contents));
+		break;
+	default:
+		break;
 	}
 }
 
@@ -1272,22 +1272,22 @@ unsigned long ReadCR(int regnum)
 	unsigned long contents = 0;
 
 	switch (regnum) {
-		case 0:
-			__asm__ ("movq %%cr0,%0\n\t" : "=r"(contents));
-			break;
-		case 1:
-			break;
-		case 2:
-			__asm__ ("movq %%cr2,%0\n\t" : "=r"(contents));
-			break;
-		case 3:
-			__asm__ ("movq %%cr3,%0\n\t" : "=r"(contents));
-			break;
-		case 4:
-			__asm__ ("movq %%cr4,%0\n\t" : "=r"(contents));
-			break;
-		default:
-			break;
+	case 0:
+		__asm__ ("movq %%cr0,%0\n\t" : "=r"(contents));
+		break;
+	case 1:
+		break;
+	case 2:
+		__asm__ ("movq %%cr2,%0\n\t" : "=r"(contents));
+		break;
+	case 3:
+		__asm__ ("movq %%cr3,%0\n\t" : "=r"(contents));
+		break;
+	case 4:
+		__asm__ ("movq %%cr4,%0\n\t" : "=r"(contents));
+		break;
+	default:
+		break;
 	}
 	return contents;
 }
@@ -1295,22 +1295,22 @@ unsigned long ReadCR(int regnum)
 void WriteCR(int regnum, unsigned long contents)
 {
 	switch (regnum) {
-		case 0:
-			__asm__ ("movq %0,%%cr0\n\t"::"r"(contents));
-			break;
-		case 1:
-			break;
-		case 2:
-			__asm__ ("movq %0,%%cr2\n\t"::"r"(contents));
-			break;
-		case 3:
-			__asm__ ("movq %0,%%cr3\n\t"::"r"(contents));
-			break;
-		case 4:
-			__asm__ ("movq %0,%%cr4\n\t"::"r"(contents));
-			break;
-		default:
-			break;
+	case 0:
+		__asm__ ("movq %0,%%cr0\n\t"::"r"(contents));
+		break;
+	case 1:
+		break;
+	case 2:
+		__asm__ ("movq %0,%%cr2\n\t"::"r"(contents));
+		break;
+	case 3:
+		__asm__ ("movq %0,%%cr3\n\t"::"r"(contents));
+		break;
+	case 4:
+		__asm__ ("movq %0,%%cr4\n\t"::"r"(contents));
+		break;
+	default:
+		break;
 	}
 	return;
 }
@@ -1321,29 +1321,29 @@ unsigned long ReadDR(unsigned long regnum)
 	unsigned long contents = 0;
 
 	switch (regnum) {
-		case 0:
-			__asm__ ("movl %%db0,%0\n\t" : "=r"(contents));
-			break;
-		case 1:
-			__asm__ ("movl %%db1,%0\n\t" : "=r"(contents));
-			break;
-		case 2:
-			__asm__ ("movl %%db2,%0\n\t" : "=r"(contents));
-			break;
-		case 3:
-			__asm__ ("movl %%db3,%0\n\t" : "=r"(contents));
-			break;
-		case 4:
-		case 5:
-			break;
-		case 6:
-			__asm__ ("movl %%db6,%0\n\t" : "=r"(contents));
-			break;
-		case 7:
-			__asm__ ("movl %%db7,%0\n\t" : "=r"(contents));
-			break;
-		default:
-			break;
+	case 0:
+		__asm__ ("movl %%db0,%0\n\t" : "=r"(contents));
+		break;
+	case 1:
+		__asm__ ("movl %%db1,%0\n\t" : "=r"(contents));
+		break;
+	case 2:
+		__asm__ ("movl %%db2,%0\n\t" : "=r"(contents));
+		break;
+	case 3:
+		__asm__ ("movl %%db3,%0\n\t" : "=r"(contents));
+		break;
+	case 4:
+	case 5:
+		break;
+	case 6:
+		__asm__ ("movl %%db6,%0\n\t" : "=r"(contents));
+		break;
+	case 7:
+		__asm__ ("movl %%db7,%0\n\t" : "=r"(contents));
+		break;
+	default:
+		break;
 	}
 
 	return contents;
@@ -1352,29 +1352,29 @@ unsigned long ReadDR(unsigned long regnum)
 void WriteDR(int regnum, unsigned long contents)
 {
 	switch (regnum) {
-		case 0:
-			__asm__ ("movl %0,%%db0\n\t"::"r"(contents));
-			break;
-		case 1:
-			__asm__ ("movl %0,%%db1\n\t"::"r"(contents));
-			break;
-		case 2:
-			__asm__ ("movl %0,%%db2\n\t"::"r"(contents));
-			break;
-		case 3:
-			__asm__ ("movl %0,%%db3\n\t"::"r"(contents));
-			break;
-		case 4:
-		case 5:
-			break;
-		case 6:
-			__asm__ ("movl %0,%%db6\n\t"::"r"(contents));
-			break;
-		case 7:
-			__asm__ ("movl %0,%%db7\n\t"::"r"(contents));
-			break;
-		default:
-			break;
+	case 0:
+		__asm__ ("movl %0,%%db0\n\t"::"r"(contents));
+		break;
+	case 1:
+		__asm__ ("movl %0,%%db1\n\t"::"r"(contents));
+		break;
+	case 2:
+		__asm__ ("movl %0,%%db2\n\t"::"r"(contents));
+		break;
+	case 3:
+		__asm__ ("movl %0,%%db3\n\t"::"r"(contents));
+		break;
+	case 4:
+	case 5:
+		break;
+	case 6:
+		__asm__ ("movl %0,%%db6\n\t"::"r"(contents));
+		break;
+	case 7:
+		__asm__ ("movl %0,%%db7\n\t"::"r"(contents));
+		break;
+	default:
+		break;
 	}
 }
 
@@ -1383,22 +1383,22 @@ unsigned long ReadCR(int regnum)
 	unsigned long contents = 0;
 
 	switch (regnum) {
-		case 0:
-			__asm__ ("movl %%cr0,%0\n\t" : "=r"(contents));
-			break;
-		case 1:
-			break;
-		case 2:
-			__asm__ ("movl %%cr2,%0\n\t" : "=r"(contents));
-			break;
-		case 3:
-			__asm__ ("movl %%cr3,%0\n\t" : "=r"(contents));
-			break;
-		case 4:
-			__asm__ ("movl %%cr4,%0\n\t" : "=r"(contents));
-			break;
-		default:
-			break;
+	case 0:
+		__asm__ ("movl %%cr0,%0\n\t" : "=r"(contents));
+		break;
+	case 1:
+		break;
+	case 2:
+		__asm__ ("movl %%cr2,%0\n\t" : "=r"(contents));
+		break;
+	case 3:
+		__asm__ ("movl %%cr3,%0\n\t" : "=r"(contents));
+		break;
+	case 4:
+		__asm__ ("movl %%cr4,%0\n\t" : "=r"(contents));
+		break;
+	default:
+		break;
 	}
 	return contents;
 }
@@ -1406,22 +1406,22 @@ unsigned long ReadCR(int regnum)
 void WriteCR(int regnum, unsigned long contents)
 {
 	switch (regnum) {
-		case 0:
-			__asm__ ("movl %0,%%cr0\n\t"::"r"(contents));
-			break;
-		case 1:
-			break;
-		case 2:
-			__asm__ ("movl %0,%%cr2\n\t"::"r"(contents));
-			break;
-		case 3:
-			__asm__ ("movl %0,%%cr3\n\t"::"r"(contents));
-			break;
-		case 4:
-			__asm__ ("movl %0,%%cr4\n\t"::"r"(contents));
-			break;
-		default:
-			break;
+	case 0:
+		__asm__ ("movl %0,%%cr0\n\t"::"r"(contents));
+		break;
+	case 1:
+		break;
+	case 2:
+		__asm__ ("movl %0,%%cr2\n\t"::"r"(contents));
+		break;
+	case 3:
+		__asm__ ("movl %0,%%cr3\n\t"::"r"(contents));
+		break;
+	case 4:
+		__asm__ ("movl %0,%%cr4\n\t"::"r"(contents));
+		break;
+	default:
+		break;
 	}
 	return;
 }

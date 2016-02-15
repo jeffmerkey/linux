@@ -154,7 +154,7 @@ int mdb(unsigned long reason, unsigned long error, void *frame)
 	/* if we are re-entered, report it */
 	if (atomic_read(&inmdb_processor[processor])) {
 		DBGPrint("MDB re-entered.  exception: %d error: %d processor: %d\n",
-				reason, error, processor);
+			 reason, error, processor);
 	}
 
 	local_irq_save(flagstate);
@@ -187,7 +187,7 @@ static inline void out_chars(int c, unsigned char ch)
 }
 
 static inline void out_copy_chars_limit(int c, unsigned char ch,
-		unsigned char *s, int limit)
+					unsigned char *s, int limit)
 {
 	register int i;
 
@@ -208,7 +208,7 @@ static inline void out_buffer_chars_limit(unsigned char *s, int limit)
 }
 
 static inline void out_buffer_chars_limit_index(unsigned char *s, int limit,
-		int index)
+						int index)
 {
 	register int i;
 
@@ -230,8 +230,8 @@ static inline void out_char(unsigned char ch)
 }
 
 unsigned long ScreenInputFromKeyboard(unsigned char *buf,
-		unsigned long buf_index,
-		unsigned long max_index)
+				      unsigned long buf_index,
+				      unsigned long max_index)
 {
 	register unsigned long key;
 	register unsigned char *p;
@@ -260,162 +260,162 @@ unsigned long ScreenInputFromKeyboard(unsigned char *buf,
 			return key;
 
 		switch (key) {
-			case -1:
-				return key;
+		case -1:
+			return key;
 
-			case 8: /* backspace */
-				if (buf_index) {
-					register int delta;
+		case 8: /* backspace */
+			if (buf_index) {
+				register int delta;
 
-					buf_index--;
-					out_string("\b \b");
+				buf_index--;
+				out_string("\b \b");
 
-					delta = strlen(buf) - buf_index;
-					out_chars(delta, ' ');
-					out_chars(delta, '\b');
+				delta = strlen(buf) - buf_index;
+				out_chars(delta, ' ');
+				out_chars(delta, '\b');
 
-					p = (unsigned char *)&buf[buf_index];
-					temp = buf_index;
-					p++;
-					while ((*p) && (temp < max_index))
-						buf[temp++] = *p++;
-					buf[temp] = '\0';
+				p = (unsigned char *)&buf[buf_index];
+				temp = buf_index;
+				p++;
+				while ((*p) && (temp < max_index))
+					buf[temp++] = *p++;
+				buf[temp] = '\0';
 
-					delta = strlen(buf) - buf_index;
-					out_buffer_chars_limit_index(buf, delta, buf_index);
-					out_chars(delta, '\b');
-				}
-				break;
+				delta = strlen(buf) - buf_index;
+				out_buffer_chars_limit_index(buf, delta, buf_index);
+				out_chars(delta, '\b');
+			}
+			break;
 
-			case K_P7: /* home */
-				{
-					unsigned char *s = &workBuffer[0];
+		case K_P7: /* home */
+			{
+				unsigned char *s = &workBuffer[0];
 
-					out_copy_chars_limit(buf_index, '\b', s, 255);
-					buf_index = orig_index;
-				}
-				break;
+				out_copy_chars_limit(buf_index, '\b', s, 255);
+				buf_index = orig_index;
+			}
+			break;
 
-			case K_P1: /* end */
-				{
-					unsigned char *s = &workBuffer[0];
+		case K_P1: /* end */
+			{
+				unsigned char *s = &workBuffer[0];
 
-					out_copy_chars_limit(buf_index, '\b', s, 255);
-					out_buffer_chars_limit(buf, 255);
-					buf_index = strlen(buf);
-				}
-				break;
+				out_copy_chars_limit(buf_index, '\b', s, 255);
+				out_buffer_chars_limit(buf, 255);
+				buf_index = strlen(buf);
+			}
+			break;
 
-			case K_P4: /* left arrow */
-				if (buf_index) {
-					buf_index--;
-					out_string("\b");
-				}
-				break;
+		case K_P4: /* left arrow */
+			if (buf_index) {
+				buf_index--;
+				out_string("\b");
+			}
+			break;
 
-			case K_P6: /* right arrow */
-				if (buf_index < strlen(buf)) {
-					out_char(buf[buf_index]);
-					buf_index++;
-				}
-				break;
+		case K_P6: /* right arrow */
+			if (buf_index < strlen(buf)) {
+				out_char(buf[buf_index]);
+				buf_index++;
+			}
+			break;
 
-			case K_PDOT:
-				{
-					register int delta;
+		case K_PDOT:
+			{
+				register int delta;
 
-					delta = strlen(buf) - buf_index;
+				delta = strlen(buf) - buf_index;
 
-					out_chars(delta, ' ');
-					out_chars(delta, '\b');
+				out_chars(delta, ' ');
+				out_chars(delta, '\b');
 
-					p = (unsigned char *)&buf[buf_index];
-					temp = buf_index;
-					p++;
-					while ((*p) && (temp < max_index))
-						buf[temp++] = *p++;
-					buf[temp] = '\0';
+				p = (unsigned char *)&buf[buf_index];
+				temp = buf_index;
+				p++;
+				while ((*p) && (temp < max_index))
+					buf[temp++] = *p++;
+				buf[temp] = '\0';
 
-					delta = strlen(buf) - buf_index;
-					out_buffer_chars_limit_index(buf, delta, buf_index);
-					out_chars(delta, '\b');
-				}
-				break;
+				delta = strlen(buf) - buf_index;
+				out_buffer_chars_limit_index(buf, delta, buf_index);
+				out_chars(delta, '\b');
+			}
+			break;
 
-			case 13:  /* enter */
-				if (strncmp(HistoryBuffer[(HistoryPointer - 1) & 0xF], buf,
-							strlen(buf)) || (strlen(buf) !=
-							strlen(HistoryBuffer[(HistoryPointer - 1) & 0xF]))) {
-					for (r = 0; r < max_index; r++) {
-						if (buf[0])
-							HistoryBuffer[HistoryPointer & 0xF][r] = buf[r];
-					}
+		case 13:  /* enter */
+			if (strncmp(HistoryBuffer[(HistoryPointer - 1) & 0xF], buf,
+				    strlen(buf)) || (strlen(buf) !=
+						     strlen(HistoryBuffer[(HistoryPointer - 1) & 0xF]))) {
+				for (r = 0; r < max_index; r++) {
 					if (buf[0])
-						HistoryPointer++;
+						HistoryBuffer[HistoryPointer & 0xF][r] = buf[r];
 				}
-				return 13;
+				if (buf[0])
+					HistoryPointer++;
+			}
+			return 13;
 
-			case K_P8: /* up arrow */
-				if (HistoryBuffer[(HistoryIndex - 1) & 0xF][0]) {
-					unsigned char *s = &workBuffer[0];
+		case K_P8: /* up arrow */
+			if (HistoryBuffer[(HistoryIndex - 1) & 0xF][0]) {
+				unsigned char *s = &workBuffer[0];
 
-					out_copy_chars_limit(buf_index, '\b', s, 255);
-					out_copy_chars_limit(buf_index, ' ', s, 255);
-					out_copy_chars_limit(buf_index, '\b', s, 255);
+				out_copy_chars_limit(buf_index, '\b', s, 255);
+				out_copy_chars_limit(buf_index, ' ', s, 255);
+				out_copy_chars_limit(buf_index, '\b', s, 255);
 
-					HistoryIndex--;
+				HistoryIndex--;
 
-					for (r = 0; r < max_index; r++)
-						buf[r] = HistoryBuffer[HistoryIndex & 0xF][r];
-					buf_index = strlen(buf);
+				for (r = 0; r < max_index; r++)
+					buf[r] = HistoryBuffer[HistoryIndex & 0xF][r];
+				buf_index = strlen(buf);
 
-					out_string(buf);
-				}
+				out_string(buf);
+			}
+			break;
+
+		case K_P2: /* down arrow */
+			if (HistoryBuffer[HistoryIndex & 0xF][0]) {
+				unsigned char *s = &workBuffer[0];
+
+				out_copy_chars_limit(buf_index, '\b', s, 255);
+				out_copy_chars_limit(buf_index, ' ', s, 255);
+				out_copy_chars_limit(buf_index, '\b', s, 255);
+
+				HistoryIndex++;
+
+				for (r = 0; r < max_index; r++)
+					buf[r] = HistoryBuffer[HistoryIndex & 0xF][r];
+				buf_index = strlen(buf);
+
+				out_string(buf);
+			}
+			break;
+
+		default:
+			if ((key > 0x7E) || (key < ' '))  /* if above or below text */
 				break;
+			else {
+				if (strlen(buf) < max_index) {
+					register int delta;
 
-			case K_P2: /* down arrow */
-				if (HistoryBuffer[HistoryIndex & 0xF][0]) {
-					unsigned char *s = &workBuffer[0];
+					for (i = max_index; i > buf_index; i--)
+						buf[i] = buf[i - 1];
+					buf[buf_index] = (unsigned char)key;
+					if (buf_index < max_index)
+						buf_index++;
 
-					out_copy_chars_limit(buf_index, '\b', s, 255);
-					out_copy_chars_limit(buf_index, ' ', s, 255);
-					out_copy_chars_limit(buf_index, '\b', s, 255);
-
-					HistoryIndex++;
-
-					for (r = 0; r < max_index; r++)
-						buf[r] = HistoryBuffer[HistoryIndex & 0xF][r];
-					buf_index = strlen(buf);
-
-					out_string(buf);
+					delta = strlen(buf) - buf_index;
+					out_buffer_chars_limit_index(buf, delta, buf_index);
+					out_chars(delta, '\b');
 				}
-				break;
-
-			default:
-				if ((key > 0x7E) || (key < ' '))  /* if above or below text */
-					break;
-				else {
-					if (strlen(buf) < max_index) {
-						register int delta;
-
-						for (i = max_index; i > buf_index; i--)
-							buf[i] = buf[i - 1];
-						buf[buf_index] = (unsigned char)key;
-						if (buf_index < max_index)
-							buf_index++;
-
-						delta = strlen(buf) - buf_index;
-						out_buffer_chars_limit_index(buf, delta, buf_index);
-						out_chars(delta, '\b');
-					}
-				}
-				break;
+			}
+			break;
 		}
 	}
 }
 
 unsigned long debugger_command_entry(unsigned long processor, unsigned long Exception,
-		StackFrame *stackFrame)
+				     StackFrame *stackFrame)
 {
 	register unsigned char *verb, *pp, *vp;
 	register unsigned long count, retCode, key;
@@ -436,7 +436,7 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
 
 	if (!ssbmode) {
 		if (reason_toggle && !ConsoleDisplayBreakReason(stackFrame,
-					Exception, processor, lastCommand))
+								Exception, processor, lastCommand))
 			return 0;
 		displayRegisters(stackFrame, processor);
 	}
@@ -460,15 +460,15 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
 
 			retCode = AccelRoutine(key, stackFrame);
 			switch (retCode) {
-				case 0:
-					break;
+			case 0:
+				break;
 
-				case -1:
-					return retCode;
+			case -1:
+				return retCode;
 
-				default:
-					DBGPrint("\n");
-					continue;
+			default:
+				DBGPrint("\n");
+				continue;
 			}
 		}
 
@@ -487,10 +487,10 @@ unsigned long debugger_command_entry(unsigned long processor, unsigned long Exce
 				pp++;
 
 			retCode = DebuggerParserRoutine(verb, (unsigned char *)debugCommand,
-					stackFrame, Exception);
+							stackFrame, Exception);
 			switch (retCode) {
-				case -1:
-					return retCode;
+			case -1:
+				return retCode;
 			}
 		}
 	}
@@ -522,7 +522,7 @@ static unsigned char kdbstate[40];
 static atomic_t kgdb_detected;
 
 static int mdb_notify(struct notifier_block *nb, unsigned long reason,
-		void *data)
+		      void *data)
 {
 	register struct die_args *args = (struct die_args *)data;
 	register unsigned long cr3;
@@ -541,72 +541,72 @@ static int mdb_notify(struct notifier_block *nb, unsigned long reason,
 
 	if (args) {
 		switch (reason) {
-			case DIE_DIE:
-			case DIE_PANIC:
-			case DIE_OOPS:
-				mdb_oops = (unsigned char *)args->str;
-				if (args->regs)
-					err = mdb(SOFTWARE_EXCEPTION, args->err, args->regs);
-				else {
-					struct pt_regs *regs = get_irq_regs();
+		case DIE_DIE:
+		case DIE_PANIC:
+		case DIE_OOPS:
+			mdb_oops = (unsigned char *)args->str;
+			if (args->regs)
+				err = mdb(SOFTWARE_EXCEPTION, args->err, args->regs);
+			else {
+				struct pt_regs *regs = get_irq_regs();
 
-					if (regs) {
-						err = mdb(SOFTWARE_EXCEPTION, args->err, regs);
-						break;
-					}
-
-					/* if there are no regs passed on DIE_PANIC, or we
-					 * cannot locate a local interrupt context, trigger an
-					 * int 3 breakpoint and get the register context since
-					 * we were apparently called from panic() outside of an
-					 * exception.
-					 */
-					mdb_breakpoint();
+				if (regs) {
+					err = mdb(SOFTWARE_EXCEPTION, args->err, regs);
+					break;
 				}
-				break;
 
-			case DIE_INT3:
-				if (toggle_user_break) {
-					if (user_mode(args->regs))
+				/* if there are no regs passed on DIE_PANIC, or we
+				 * cannot locate a local interrupt context, trigger an
+				 * int 3 breakpoint and get the register context since
+				 * we were apparently called from panic() outside of an
+				 * exception.
+				 */
+				mdb_breakpoint();
+			}
+			break;
+
+		case DIE_INT3:
+			if (toggle_user_break) {
+				if (user_mode(args->regs))
+					return NOTIFY_DONE;
+			}
+			err = mdb(BREAKPOINT_EXCEPTION, args->err, args->regs);
+			break;
+
+		case DIE_DEBUG:
+			if (toggle_user_break) {
+				if (user_mode(args->regs))
+					return NOTIFY_DONE;
+				else
+					if (test_thread_flag(TIF_SINGLESTEP))
 						return NOTIFY_DONE;
-				}
-				err = mdb(BREAKPOINT_EXCEPTION, args->err, args->regs);
-				break;
+			}
+			err = mdb(DEBUGGER_EXCEPTION, args->err, args->regs);
+			break;
 
-			case DIE_DEBUG:
-				if (toggle_user_break) {
-					if (user_mode(args->regs))
-						return NOTIFY_DONE;
-					else
-						if (test_thread_flag(TIF_SINGLESTEP))
-							return NOTIFY_DONE;
-				}
-				err = mdb(DEBUGGER_EXCEPTION, args->err, args->regs);
-				break;
+		case DIE_NMI:
+		case DIE_NMIUNKNOWN:
+			err = mdb(NMI_EXCEPTION, args->err, args->regs);
+			break;
 
-			case DIE_NMI:
-			case DIE_NMIUNKNOWN:
-				err = mdb(NMI_EXCEPTION, args->err, args->regs);
-				break;
+		case DIE_CALL:
+			err = mdb(KEYBOARD_ENTRY, args->err, args->regs);
+			break;
 
-			case DIE_CALL:
-				err = mdb(KEYBOARD_ENTRY, args->err, args->regs);
-				break;
+		case DIE_KERNELDEBUG:
+			err = mdb(KEYBOARD_ENTRY, args->err, args->regs);
+			break;
 
-			case DIE_KERNELDEBUG:
-				err = mdb(KEYBOARD_ENTRY, args->err, args->regs);
-				break;
+		case DIE_GPF:
+			err = mdb(GENERAL_PROTECTION, args->err, args->regs);
+			break;
 
-			case DIE_GPF:
-				err = mdb(GENERAL_PROTECTION, args->err, args->regs);
-				break;
+		case DIE_PAGE_FAULT:
+			err = mdb(PAGE_FAULT_EXCEPTION, args->err, args->regs);
+			break;
 
-			case DIE_PAGE_FAULT:
-				err = mdb(PAGE_FAULT_EXCEPTION, args->err, args->regs);
-				break;
-
-			default:
-				break;
+		default:
+			break;
 		}
 	}
 #if MDB_DEBUG_DEBUGGER
@@ -652,26 +652,26 @@ static int mdb_nmi_handler(unsigned int cmd, struct pt_regs *regs)
 		return NMI_DONE;
 
 	switch (cmd) {
-		case NMI_LOCAL:
-			if (atomic_read(&inmdb) && is_processor_held(processor)) {
-				if (!atomic_read(&inmdb_processor[processor])) {
-					mdb(NMI_EXCEPTION, 0, regs);
-					debug_previous_nmi[processor] = 1;
-					mdb_watchdogs();
-					return NMI_HANDLED;
-				}
-			}
-			break;
-
-		case NMI_UNKNOWN:
-			if (debug_previous_nmi[processor]) {
-				debug_previous_nmi[processor] = 0;
+	case NMI_LOCAL:
+		if (atomic_read(&inmdb) && is_processor_held(processor)) {
+			if (!atomic_read(&inmdb_processor[processor])) {
+				mdb(NMI_EXCEPTION, 0, regs);
+				debug_previous_nmi[processor] = 1;
+				mdb_watchdogs();
 				return NMI_HANDLED;
 			}
-			break;
+		}
+		break;
 
-		default:
-			break;
+	case NMI_UNKNOWN:
+		if (debug_previous_nmi[processor]) {
+			debug_previous_nmi[processor] = 0;
+			return NMI_HANDLED;
+		}
+		break;
+
+	default:
+		break;
 	}
 	return NMI_DONE;
 }
@@ -698,7 +698,7 @@ static inline void strip_crlf(char *p, int limit)
 }
 
 static ssize_t mdb_kernel_read(struct file *file, char *buf,
-		size_t count, loff_t offset)
+			       size_t count, loff_t offset)
 {
 	mm_segment_t old_fs;
 	loff_t pos = offset;
@@ -712,7 +712,7 @@ static ssize_t mdb_kernel_read(struct file *file, char *buf,
 }
 
 static ssize_t mdb_kernel_write(struct file *file, const char *buf,
-		size_t count, loff_t pos)
+				size_t count, loff_t pos)
 {
 	mm_segment_t old_fs;
 	ssize_t res;

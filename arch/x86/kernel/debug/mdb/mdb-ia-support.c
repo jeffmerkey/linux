@@ -258,7 +258,7 @@ unsigned long columns = 0;
 void *vaddr = NULL;
 extern unsigned long full_deref_toggle;
 
-	static int
+static int
 fetch_data(struct disassemble_info *info, bfd_byte *addr)
 {
 	int status;
@@ -266,9 +266,9 @@ fetch_data(struct disassemble_info *info, bfd_byte *addr)
 	bfd_vma start = priv->insn_start + (priv->max_fetched - priv->the_buffer);
 
 	status = (*info->read_memory_func) (start,
-			priv->max_fetched,
-			addr - priv->max_fetched,
-			info);
+					    priv->max_fetched,
+					    addr - priv->max_fetched,
+					    info);
 	if (status != 0) {
 		/* If we did manage to read at least one byte, then
 		   print_insn_i386 will do something sensible.  Otherwise, print
@@ -1853,7 +1853,7 @@ static const struct dis386 x86_64_table[][2] = {
 #define INTERNAL_DISASSEMBLER_ERROR _("<???>")
 #endif	/* __KERNEL__ */
 
-	static void
+static void
 ckprefix(void)
 {
 	int newrex;
@@ -1867,73 +1867,73 @@ ckprefix(void)
 		newrex = 0;
 		switch (*codep) {
 			/* REX prefixes family.	 */
-			case 0x40:
-			case 0x41:
-			case 0x42:
-			case 0x43:
-			case 0x44:
-			case 0x45:
-			case 0x46:
-			case 0x47:
-			case 0x48:
-			case 0x49:
-			case 0x4a:
-			case 0x4b:
-			case 0x4c:
-			case 0x4d:
-			case 0x4e:
-			case 0x4f:
-				if (mode_64bit)
-					newrex = *codep;
-				else
-					return;
-				break;
-			case 0xf3:
-				prefixes |= PREFIX_REPZ;
-				break;
-			case 0xf2:
-				prefixes |= PREFIX_REPNZ;
-				break;
-			case 0xf0:
-				prefixes |= PREFIX_LOCK;
-				break;
-			case 0x2e:
-				prefixes |= PREFIX_CS;
-				break;
-			case 0x36:
-				prefixes |= PREFIX_SS;
-				break;
-			case 0x3e:
-				prefixes |= PREFIX_DS;
-				break;
-			case 0x26:
-				prefixes |= PREFIX_ES;
-				break;
-			case 0x64:
-				prefixes |= PREFIX_FS;
-				break;
-			case 0x65:
-				prefixes |= PREFIX_GS;
-				break;
-			case 0x66:
-				prefixes |= PREFIX_DATA;
-				break;
-			case 0x67:
-				prefixes |= PREFIX_ADDR;
-				break;
-			case FWAIT_OPCODE:
-				/* fwait is really an instruction.  If there are prefixes
-				   before the fwait, they belong to the fwait, *not* to the
-				   following instruction.  */
-				if (prefixes) {
-					prefixes |= PREFIX_FWAIT;
-					codep++;
-					return;
-				}
-				prefixes = PREFIX_FWAIT;
-				break;
-			default:
+		case 0x40:
+		case 0x41:
+		case 0x42:
+		case 0x43:
+		case 0x44:
+		case 0x45:
+		case 0x46:
+		case 0x47:
+		case 0x48:
+		case 0x49:
+		case 0x4a:
+		case 0x4b:
+		case 0x4c:
+		case 0x4d:
+		case 0x4e:
+		case 0x4f:
+			if (mode_64bit)
+				newrex = *codep;
+			else
 				return;
+			break;
+		case 0xf3:
+			prefixes |= PREFIX_REPZ;
+			break;
+		case 0xf2:
+			prefixes |= PREFIX_REPNZ;
+			break;
+		case 0xf0:
+			prefixes |= PREFIX_LOCK;
+			break;
+		case 0x2e:
+			prefixes |= PREFIX_CS;
+			break;
+		case 0x36:
+			prefixes |= PREFIX_SS;
+			break;
+		case 0x3e:
+			prefixes |= PREFIX_DS;
+			break;
+		case 0x26:
+			prefixes |= PREFIX_ES;
+			break;
+		case 0x64:
+			prefixes |= PREFIX_FS;
+			break;
+		case 0x65:
+			prefixes |= PREFIX_GS;
+			break;
+		case 0x66:
+			prefixes |= PREFIX_DATA;
+			break;
+		case 0x67:
+			prefixes |= PREFIX_ADDR;
+			break;
+		case FWAIT_OPCODE:
+			/* fwait is really an instruction.  If there are prefixes
+			   before the fwait, they belong to the fwait, *not* to the
+			   following instruction.  */
+			if (prefixes) {
+				prefixes |= PREFIX_FWAIT;
+				codep++;
+				return;
+			}
+			prefixes = PREFIX_FWAIT;
+			break;
+		default:
+			return;
 		}
 		/* Rex is ignored when followed by another prefix.  */
 		if (rex) {
@@ -1948,72 +1948,72 @@ ckprefix(void)
 /* Return the name of the prefix byte PREF, or NULL if PREF is not a
    prefix byte.	 */
 
-	static const char *
+static const char *
 prefix_name(int pref, int sizeflag)
 {
 	switch (pref) {
 		/* REX prefixes family.  */
-		case 0x40:
-			return "rex";
-		case 0x41:
-			return "rexZ";
-		case 0x42:
-			return "rexY";
-		case 0x43:
-			return "rexYZ";
-		case 0x44:
-			return "rexX";
-		case 0x45:
-			return "rexXZ";
-		case 0x46:
-			return "rexXY";
-		case 0x47:
-			return "rexXYZ";
-		case 0x48:
-			return "rex64";
-		case 0x49:
-			return "rex64Z";
-		case 0x4a:
-			return "rex64Y";
-		case 0x4b:
-			return "rex64YZ";
-		case 0x4c:
-			return "rex64X";
-		case 0x4d:
-			return "rex64XZ";
-		case 0x4e:
-			return "rex64XY";
-		case 0x4f:
-			return "rex64XYZ";
-		case 0xf3:
-			return "repz";
-		case 0xf2:
-			return "repnz";
-		case 0xf0:
-			return "lock";
-		case 0x2e:
-			return "cs";
-		case 0x36:
-			return "ss";
-		case 0x3e:
-			return "ds";
-		case 0x26:
-			return "es";
-		case 0x64:
-			return "fs";
-		case 0x65:
-			return "gs";
-		case 0x66:
-			return (sizeflag & DFLAG) ? "data16" : "data32";
-		case 0x67:
-			if (mode_64bit)
-				return (sizeflag & AFLAG) ? "addr32" : "addr64";
-			else
-				return (sizeflag & AFLAG) ? "addr16" : "addr32";
-		case FWAIT_OPCODE:
-			return "fwait";
-		default:
-			return NULL;
+	case 0x40:
+		return "rex";
+	case 0x41:
+		return "rexZ";
+	case 0x42:
+		return "rexY";
+	case 0x43:
+		return "rexYZ";
+	case 0x44:
+		return "rexX";
+	case 0x45:
+		return "rexXZ";
+	case 0x46:
+		return "rexXY";
+	case 0x47:
+		return "rexXYZ";
+	case 0x48:
+		return "rex64";
+	case 0x49:
+		return "rex64Z";
+	case 0x4a:
+		return "rex64Y";
+	case 0x4b:
+		return "rex64YZ";
+	case 0x4c:
+		return "rex64X";
+	case 0x4d:
+		return "rex64XZ";
+	case 0x4e:
+		return "rex64XY";
+	case 0x4f:
+		return "rex64XYZ";
+	case 0xf3:
+		return "repz";
+	case 0xf2:
+		return "repnz";
+	case 0xf0:
+		return "lock";
+	case 0x2e:
+		return "cs";
+	case 0x36:
+		return "ss";
+	case 0x3e:
+		return "ds";
+	case 0x26:
+		return "es";
+	case 0x64:
+		return "fs";
+	case 0x65:
+		return "gs";
+	case 0x66:
+		return (sizeflag & DFLAG) ? "data16" : "data32";
+	case 0x67:
+		if (mode_64bit)
+			return (sizeflag & AFLAG) ? "addr32" : "addr64";
+		else
+			return (sizeflag & AFLAG) ? "addr16" : "addr32";
+	case FWAIT_OPCODE:
+		return "fwait";
+	default:
+		return NULL;
 	}
 }
 
@@ -2041,25 +2041,25 @@ static char scale_char;
 /* Here for backwards compatibility.  When gdb stops using
    print_insn_i386_att and print_insn_i386_intel these functions can
    disappear, and print_insn_i386 be merged into print_insn.  */
-	int
+int
 print_insn_i386_att(bfd_vma pc, disassemble_info *info,
-		StackFrame *stackFrame)
+		    StackFrame *stackFrame)
 {
 	intel_syntax = 0;
 
 	return print_insn(pc, info, stackFrame);
 }
 
-	int
+int
 print_insn_i386_intel(bfd_vma pc, disassemble_info *info,
-		StackFrame *stackFrame)
+		      StackFrame *stackFrame)
 {
 	intel_syntax = 1;
 
 	return print_insn(pc, info, stackFrame);
 }
 
-	int
+int
 print_insn_i386(bfd_vma pc, disassemble_info *info,
 		StackFrame *stackFrame)
 {
@@ -2070,78 +2070,78 @@ print_insn_i386(bfd_vma pc, disassemble_info *info,
 
 #ifdef MDB_ENHANCEMENTS
 static inline int evaluate_jump_condition(StackFrame *stackFrame,
-		unsigned long val,
-		char *ubuf,
-		disassemble_info *info)
+					  unsigned long val,
+					  char *ubuf,
+					  disassemble_info *info)
 {
 	if ((!strncasecmp(ubuf, "jbe", 3) &&
-				((stackFrame->tSystemFlags & ZF_FLAG) ||
-				 (stackFrame->tSystemFlags & CF_FLAG))) ||
-			(!strncasecmp(ubuf, "jcxz", 4) &&
-			 (!stackFrame->tCX)) ||
-			(!strncasecmp(ubuf, "jecxz", 5) &&
-			 (!stackFrame->tCX)) ||
-			(!strncasecmp(ubuf, "jc", 2) &&
-			 (stackFrame->tSystemFlags & CF_FLAG)) ||
-			(!strncasecmp(ubuf, "jle", 3) &&
-			 ((stackFrame->tSystemFlags & ZF_FLAG) ||
-			  ((stackFrame->tSystemFlags & ~SF_FLAG) !=
-			   (stackFrame->tSystemFlags & ~OF_FLAG)))) ||
-			(!strncasecmp(ubuf, "jl", 2) &&
-			 ((stackFrame->tSystemFlags & ~SF_FLAG) !=
-			  (stackFrame->tSystemFlags & ~OF_FLAG))) ||
-			(!strncasecmp(ubuf, "jmp", 3)) ||
-			(!strncasecmp(ubuf, "jge", 3) &&
-			 ((stackFrame->tSystemFlags & ~SF_FLAG) ==
-			  (stackFrame->tSystemFlags & ~OF_FLAG))) ||
-			(!strncasecmp(ubuf, "jg", 2) &&
-			 ((!(stackFrame->tSystemFlags & ZF_FLAG)) &&
-			  ((stackFrame->tSystemFlags & ~SF_FLAG) ==
-			   (stackFrame->tSystemFlags & ~OF_FLAG)))) ||
-			(!strncasecmp(ubuf, "jnbe", 4) &&
-			 (!(stackFrame->tSystemFlags & CF_FLAG)) &&
-			 (!(stackFrame->tSystemFlags & ZF_FLAG))) ||
-			(!strncasecmp(ubuf, "jno", 3) &&
-			 (!(stackFrame->tSystemFlags & OF_FLAG))) ||
-			(!strncasecmp(ubuf, "jnc", 3) &&
-			 (!(stackFrame->tSystemFlags & CF_FLAG))) ||
-			(!strncasecmp(ubuf, "jnz", 3) &&
-			 (!(stackFrame->tSystemFlags & ZF_FLAG))) ||
-			(!strncasecmp(ubuf, "jns", 3) &&
-			 (!(stackFrame->tSystemFlags & SF_FLAG))) ||
-			(!strncasecmp(ubuf, "jo", 2) &&
-			 (stackFrame->tSystemFlags & OF_FLAG)) ||
-			(!strncasecmp(ubuf, "jpe", 3) &&
-			 (stackFrame->tSystemFlags & PF_FLAG)) ||
-			(!strncasecmp(ubuf, "jpo", 3) &&
-			 (!(stackFrame->tSystemFlags & PF_FLAG))) ||
-			(!strncasecmp(ubuf, "js", 2) &&
-			 (stackFrame->tSystemFlags & SF_FLAG)) ||
-			(!strncasecmp(ubuf, "jz", 2) &&
-			 (stackFrame->tSystemFlags & ZF_FLAG)) ||
-			(!strncasecmp(ubuf, "loopne", 6) &&
-			 (stackFrame->tCX) &&
-			 (!(stackFrame->tSystemFlags & ZF_FLAG))) ||
-			(!strncasecmp(ubuf, "loope", 5) &&
-			 (stackFrame->tCX) &&
-			 (stackFrame->tSystemFlags & ZF_FLAG)) ||
-			(!strncasecmp(ubuf, "loop", 4))) {
-				jmp_active = 1;
-				if (intel_syntax)
-					(*info->fprintf_func)(info->stream, " (0x%p) %s", (void *)val,
-							(val < (unsigned long)vaddr) ? "(up)" : "(down)");
-				else
-					(*info->fprintf_func)(info->stream, " %s",
-							(val < (unsigned long)vaddr) ? "(up)" : "(down)");
-				return 1;
-			}
+	     ((stackFrame->tSystemFlags & ZF_FLAG) ||
+	      (stackFrame->tSystemFlags & CF_FLAG))) ||
+	    (!strncasecmp(ubuf, "jcxz", 4) &&
+	     (!stackFrame->tCX)) ||
+	    (!strncasecmp(ubuf, "jecxz", 5) &&
+	     (!stackFrame->tCX)) ||
+	    (!strncasecmp(ubuf, "jc", 2) &&
+	     (stackFrame->tSystemFlags & CF_FLAG)) ||
+	    (!strncasecmp(ubuf, "jle", 3) &&
+	     ((stackFrame->tSystemFlags & ZF_FLAG) ||
+	      ((stackFrame->tSystemFlags & ~SF_FLAG) !=
+	       (stackFrame->tSystemFlags & ~OF_FLAG)))) ||
+	    (!strncasecmp(ubuf, "jl", 2) &&
+	     ((stackFrame->tSystemFlags & ~SF_FLAG) !=
+	      (stackFrame->tSystemFlags & ~OF_FLAG))) ||
+	    (!strncasecmp(ubuf, "jmp", 3)) ||
+	    (!strncasecmp(ubuf, "jge", 3) &&
+	     ((stackFrame->tSystemFlags & ~SF_FLAG) ==
+	      (stackFrame->tSystemFlags & ~OF_FLAG))) ||
+	    (!strncasecmp(ubuf, "jg", 2) &&
+	     ((!(stackFrame->tSystemFlags & ZF_FLAG)) &&
+	      ((stackFrame->tSystemFlags & ~SF_FLAG) ==
+	       (stackFrame->tSystemFlags & ~OF_FLAG)))) ||
+	    (!strncasecmp(ubuf, "jnbe", 4) &&
+	     (!(stackFrame->tSystemFlags & CF_FLAG)) &&
+	     (!(stackFrame->tSystemFlags & ZF_FLAG))) ||
+	    (!strncasecmp(ubuf, "jno", 3) &&
+	     (!(stackFrame->tSystemFlags & OF_FLAG))) ||
+	    (!strncasecmp(ubuf, "jnc", 3) &&
+	     (!(stackFrame->tSystemFlags & CF_FLAG))) ||
+	    (!strncasecmp(ubuf, "jnz", 3) &&
+	     (!(stackFrame->tSystemFlags & ZF_FLAG))) ||
+	    (!strncasecmp(ubuf, "jns", 3) &&
+	     (!(stackFrame->tSystemFlags & SF_FLAG))) ||
+	    (!strncasecmp(ubuf, "jo", 2) &&
+	     (stackFrame->tSystemFlags & OF_FLAG)) ||
+	    (!strncasecmp(ubuf, "jpe", 3) &&
+	     (stackFrame->tSystemFlags & PF_FLAG)) ||
+	    (!strncasecmp(ubuf, "jpo", 3) &&
+	     (!(stackFrame->tSystemFlags & PF_FLAG))) ||
+	    (!strncasecmp(ubuf, "js", 2) &&
+	     (stackFrame->tSystemFlags & SF_FLAG)) ||
+	    (!strncasecmp(ubuf, "jz", 2) &&
+	     (stackFrame->tSystemFlags & ZF_FLAG)) ||
+	    (!strncasecmp(ubuf, "loopne", 6) &&
+	     (stackFrame->tCX) &&
+	     (!(stackFrame->tSystemFlags & ZF_FLAG))) ||
+	    (!strncasecmp(ubuf, "loope", 5) &&
+	     (stackFrame->tCX) &&
+	     (stackFrame->tSystemFlags & ZF_FLAG)) ||
+	    (!strncasecmp(ubuf, "loop", 4))) {
+		    jmp_active = 1;
+		    if (intel_syntax)
+			    (*info->fprintf_func)(info->stream, " (0x%p) %s", (void *)val,
+						  (val < (unsigned long)vaddr) ? "(up)" : "(down)");
+		    else
+			    (*info->fprintf_func)(info->stream, " %s",
+						  (val < (unsigned long)vaddr) ? "(up)" : "(down)");
+		    return 1;
+	    }
 	return 0;
 }
 
 static inline void output_jmp_address(StackFrame *stackFrame,
-		unsigned long val,
-		char *ubuf,
-		disassemble_info *info)
+				      unsigned long val,
+				      char *ubuf,
+				      disassemble_info *info)
 {
 	if (!strncasecmp(ubuf, "j", 1) || !strncasecmp(ubuf, "loop", 4)) {
 		if (evaluate_jump_condition(stackFrame, val, ubuf, info))
@@ -2150,17 +2150,17 @@ static inline void output_jmp_address(StackFrame *stackFrame,
 		jmp_active = 1;
 		if (intel_syntax)
 			(*info->fprintf_func)(info->stream, " (0x%p) %s", (void *)val,
-					(val < (unsigned long)vaddr) ? "(up)" : "(down)");
+					      (val < (unsigned long)vaddr) ? "(up)" : "(down)");
 		else
 			(*info->fprintf_func)(info->stream, " %s",
-					(val < (unsigned long)vaddr) ? "(up)" : "(down)");
+					      (val < (unsigned long)vaddr) ? "(up)" : "(down)");
 	}
 	return;
 }
 
 static inline void evaluate_expression_size(int sz, int sizeflag,
-		unsigned char *deref,
-		StackFrame *stackFrame)
+					    unsigned char *deref,
+					    StackFrame *stackFrame)
 {
 	unsigned char *cmd = deref;
 	unsigned long long value;
@@ -2173,61 +2173,61 @@ static inline void evaluate_expression_size(int sz, int sizeflag,
 	value = EvaluateDisassemblyExpression(stackFrame, &cmd, &valid, sz, &r);
 	if (valid) {
 		switch (sz) {
-			case 1:
-				sprintf(scratchbuf, "=0x%02X", (unsigned char)value);
-				break;
-			case 2:
-				sprintf(scratchbuf, "=0x%04X", (unsigned short)value);
-				break;
-			case 4:
-				sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
-				break;
-			case 6:
+		case 1:
+			sprintf(scratchbuf, "=0x%02X", (unsigned char)value);
+			break;
+		case 2:
+			sprintf(scratchbuf, "=0x%04X", (unsigned short)value);
+			break;
+		case 4:
+			sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
+			break;
+		case 6:
 #ifdef CONFIG_X86_64
-				/* FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32 */
-				if (r && !mdb_copy(work, r, 10))
-					sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
-							"%02X%02X%02X%02X",
-							work[0], work[1], work[2], work[3],
-							work[4], work[5], work[6], work[7],
-							work[8], work[9]);
+			/* FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32 */
+			if (r && !mdb_copy(work, r, 10))
+				sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+					"%02X%02X%02X%02X",
+					work[0], work[1], work[2], work[3],
+					work[4], work[5], work[6], work[7],
+					work[8], work[9]);
 #else
-				if (r && !mdb_copy(work, r, 6))
-					sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X",
-							work[0], work[1], work[2],
-							work[3], work[4], work[5]);
+			if (r && !mdb_copy(work, r, 6))
+				sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X",
+					work[0], work[1], work[2],
+					work[3], work[4], work[5]);
 #endif
-				else
-					sprintf(scratchbuf, "=?");
-				break;
-			case 8:
-				sprintf(scratchbuf, "=0x%llX", value);
-				break;
-			case 10:
-				if (r && !mdb_copy(work, r, 10))
-					sprintf(scratchbuf,
-							"=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-							work[0], work[1], work[2],
-							work[3], work[4], work[5],
-							work[6], work[7], work[8],
-							work[9]);
-				else
-					sprintf(scratchbuf, "=?");
-				break;
-			case 16:
-				if (r && !mdb_copy(work, r, 16))
-					sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
-							"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-							work[0], work[1], work[2], work[3],
-							work[4], work[5], work[6], work[7],
-							work[8], work[9], work[10], work[11],
-							work[12], work[13], work[14], work[15]);
-				else
-					sprintf(scratchbuf, "=?");
-				break;
-			default:
-				sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
-				break;
+			else
+				sprintf(scratchbuf, "=?");
+			break;
+		case 8:
+			sprintf(scratchbuf, "=0x%llX", value);
+			break;
+		case 10:
+			if (r && !mdb_copy(work, r, 10))
+				sprintf(scratchbuf,
+					"=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+					work[0], work[1], work[2],
+					work[3], work[4], work[5],
+					work[6], work[7], work[8],
+					work[9]);
+			else
+				sprintf(scratchbuf, "=?");
+			break;
+		case 16:
+			if (r && !mdb_copy(work, r, 16))
+				sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+					"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+					work[0], work[1], work[2], work[3],
+					work[4], work[5], work[6], work[7],
+					work[8], work[9], work[10], work[11],
+					work[12], work[13], work[14], work[15]);
+			else
+				sprintf(scratchbuf, "=?");
+			break;
+		default:
+			sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
+			break;
 		}
 		oappend(scratchbuf);
 	}
@@ -2235,8 +2235,8 @@ static inline void evaluate_expression_size(int sz, int sizeflag,
 }
 
 static inline void evaluate_expression(int bytemode, int sizeflag,
-		unsigned char *deref,
-		StackFrame *stackFrame)
+				       unsigned char *deref,
+				       StackFrame *stackFrame)
 {
 	unsigned char *cmd = deref;
 	unsigned long long value;
@@ -2249,141 +2249,141 @@ static inline void evaluate_expression(int bytemode, int sizeflag,
 
 	switch (bytemode) {
 		/* BYTE PTR */
-		case b_mode:
-			sz = 1;
-			break;
+	case b_mode:
+		sz = 1;
+		break;
 
-			/* WORD PTR */
-		case w_mode:
-		case dqw_mode:
-			sz = 2;
-			break;
+		/* WORD PTR */
+	case w_mode:
+	case dqw_mode:
+		sz = 2;
+		break;
 
-			/* QWORD PTR */
-		case branch_v_mode:
-			if (mode_64bit)
-				sz = 8;
-			/* DWORD PTR */
-			else if (sizeflag & DFLAG)
-				sz = 4;
-			/* WORD PTR */
-			else
-				sz = 2;
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-
-			/*case branch_v_mode:*/
-		case v_mode:
-		case dq_mode:
-			USED_REX(REX_MODE64);
-			if (rex & REX_MODE64)
-				sz = 8;
-			/* DWORD PTR */
-			else if ((sizeflag & DFLAG) || bytemode == dq_mode)
-				sz = 4;
-			/* WORD PTR */
-			else
-				sz = 2;
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-			/* DWORD PTR */
-		case d_mode:
-			sz = 4;
-			break;
-			/* QWORD PTR */
-		case q_mode:
+		/* QWORD PTR */
+	case branch_v_mode:
+		if (mode_64bit)
 			sz = 8;
-			break;
-		case m_mode:
-			/* QWORD PTR */
-			if (mode_64bit)
-				sz = 8;
-			/* DWORD PTR */
-			else
-				sz = 4;
-			break;
-		case f_mode:
-			/* FWORD PTR */
-			if (sizeflag & DFLAG) {
-				used_prefixes |= (prefixes & PREFIX_DATA);
-				sz = 6;
-			}
-			/* DWORD PTR */
-			else
-				sz = 4;
-			break;
-			/* TBYTE PTR */
-		case t_mode:
-			sz = 10;
-			break;
-			/* XMMWORD PTR */
-		case x_mode:
-			sz = 16;
-			break;
-			/* default is DWORD */
-		default:
+		/* DWORD PTR */
+		else if (sizeflag & DFLAG)
 			sz = 4;
-			break;
+		/* WORD PTR */
+		else
+			sz = 2;
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+
+		/*case branch_v_mode:*/
+	case v_mode:
+	case dq_mode:
+		USED_REX(REX_MODE64);
+		if (rex & REX_MODE64)
+			sz = 8;
+		/* DWORD PTR */
+		else if ((sizeflag & DFLAG) || bytemode == dq_mode)
+			sz = 4;
+		/* WORD PTR */
+		else
+			sz = 2;
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+		/* DWORD PTR */
+	case d_mode:
+		sz = 4;
+		break;
+		/* QWORD PTR */
+	case q_mode:
+		sz = 8;
+		break;
+	case m_mode:
+		/* QWORD PTR */
+		if (mode_64bit)
+			sz = 8;
+		/* DWORD PTR */
+		else
+			sz = 4;
+		break;
+	case f_mode:
+		/* FWORD PTR */
+		if (sizeflag & DFLAG) {
+			used_prefixes |= (prefixes & PREFIX_DATA);
+			sz = 6;
+		}
+		/* DWORD PTR */
+		else
+			sz = 4;
+		break;
+		/* TBYTE PTR */
+	case t_mode:
+		sz = 10;
+		break;
+		/* XMMWORD PTR */
+	case x_mode:
+		sz = 16;
+		break;
+		/* default is DWORD */
+	default:
+		sz = 4;
+		break;
 	}
 
 	value = EvaluateDisassemblyExpression(stackFrame, &cmd, &valid, sz, &r);
 	if (valid) {
 		switch (sz) {
-			case 1:
-				sprintf(scratchbuf, "=0x%02X", (unsigned char)value);
-				break;
-			case 2:
-				sprintf(scratchbuf, "=0x%04X", (unsigned short)value);
-				break;
-			case 4:
-				sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
-				break;
-			case 6:
+		case 1:
+			sprintf(scratchbuf, "=0x%02X", (unsigned char)value);
+			break;
+		case 2:
+			sprintf(scratchbuf, "=0x%04X", (unsigned short)value);
+			break;
+		case 4:
+			sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
+			break;
+		case 6:
 #ifdef CONFIG_X86_64
-				/* FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32 */
-				if (r && !mdb_copy(work, r, 10))
-					sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
-							"%02X%02X%02X%02X",
-							work[0], work[1], work[2], work[3],
-							work[4], work[5], work[6], work[7],
-							work[8], work[9]);
+			/* FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32 */
+			if (r && !mdb_copy(work, r, 10))
+				sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+					"%02X%02X%02X%02X",
+					work[0], work[1], work[2], work[3],
+					work[4], work[5], work[6], work[7],
+					work[8], work[9]);
 #else
-				if (r && !mdb_copy(work, r, 6))
-					sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X",
-							work[0], work[1], work[2],
-							work[3], work[4], work[5]);
+			if (r && !mdb_copy(work, r, 6))
+				sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X",
+					work[0], work[1], work[2],
+					work[3], work[4], work[5]);
 #endif
-				else
-					sprintf(scratchbuf, "=?");
-				break;
-			case 8:
-				sprintf(scratchbuf, "=0x%llX", value);
-				break;
-			case 10:
-				if (r && !mdb_copy(work, r, 10))
-					sprintf(scratchbuf,
-							"=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-							work[0], work[1], work[2],
-							work[3], work[4], work[5],
-							work[6], work[7], work[8],
-							work[9]);
-				else
-					sprintf(scratchbuf, "=?");
-				break;
-			case 16:
-				if (r && !mdb_copy(work, r, 16))
-					sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
-							"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-							work[0], work[1], work[2], work[3],
-							work[4], work[5], work[6], work[7],
-							work[8], work[9], work[10], work[11],
-							work[12], work[13], work[14], work[15]);
-				else
-					sprintf(scratchbuf, "=?");
-				break;
-			default:
-				sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
-				break;
+			else
+				sprintf(scratchbuf, "=?");
+			break;
+		case 8:
+			sprintf(scratchbuf, "=0x%llX", value);
+			break;
+		case 10:
+			if (r && !mdb_copy(work, r, 10))
+				sprintf(scratchbuf,
+					"=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+					work[0], work[1], work[2],
+					work[3], work[4], work[5],
+					work[6], work[7], work[8],
+					work[9]);
+			else
+				sprintf(scratchbuf, "=?");
+			break;
+		case 16:
+			if (r && !mdb_copy(work, r, 16))
+				sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+					"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+					work[0], work[1], work[2], work[3],
+					work[4], work[5], work[6], work[7],
+					work[8], work[9], work[10], work[11],
+					work[12], work[13], work[14], work[15]);
+			else
+				sprintf(scratchbuf, "=?");
+			break;
+		default:
+			sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
+			break;
 		}
 		oappend(scratchbuf);
 	}
@@ -2391,10 +2391,10 @@ static inline void evaluate_expression(int bytemode, int sizeflag,
 }
 
 static inline int evaluate_address_expression(int bytemode, int sizeflag,
-		unsigned long addr,
-		unsigned long mask,
-		StackFrame *stackFrame,
-		const char *sv)
+					      unsigned long addr,
+					      unsigned long mask,
+					      StackFrame *stackFrame,
+					      const char *sv)
 {
 	unsigned char *cmd;
 	unsigned char *sym_name;
@@ -2409,89 +2409,89 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
 
 	switch (bytemode) {
 		/* BYTE PTR */
-		case b_mode:
-			sz = 1;
-			break;
+	case b_mode:
+		sz = 1;
+		break;
 
-			/* WORD PTR */
-		case w_mode:
-		case dqw_mode:
-			sz = 2;
-			break;
+		/* WORD PTR */
+	case w_mode:
+	case dqw_mode:
+		sz = 2;
+		break;
 
-			/* QWORD PTR */
-		case branch_v_mode:
-			if (mode_64bit)
-				sz = 8;
-			/* DWORD PTR */
-			else if (sizeflag & DFLAG)
-				sz = 4;
-			/* WORD PTR */
-			else
-				sz = 2;
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-
-			/*case branch_v_mode:*/
-		case v_mode:
-		case dq_mode:
-			USED_REX(REX_MODE64);
-			if (rex & REX_MODE64)
-				sz = 8;
-			/* DWORD PTR */
-			else if ((sizeflag & DFLAG) || bytemode == dq_mode)
-				sz = 4;
-			/* WORD PTR */
-			else
-				sz = 2;
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-			/* DWORD PTR */
-		case d_mode:
-			sz = 4;
-			break;
-			/* QWORD PTR */
-		case q_mode:
+		/* QWORD PTR */
+	case branch_v_mode:
+		if (mode_64bit)
 			sz = 8;
-			break;
-		case m_mode:
-			/* QWORD PTR */
-			if (mode_64bit)
-				sz = 8;
-			/* DWORD PTR */
-			else
-				sz = 4;
-			break;
-		case f_mode:
-			/* FWORD PTR */
-			if (sizeflag & DFLAG) {
-				used_prefixes |= (prefixes & PREFIX_DATA);
-				sz = 6;
-			}
-			/* DWORD PTR */
-			else
-				sz = 4;
-			break;
-			/* TBYTE PTR */
-		case t_mode:
-			sz = 10;
-			break;
-			/* XMMWORD PTR */
-		case x_mode:
-			sz = 16;
-			break;
-			/* default is DWORD */
-		default:
+		/* DWORD PTR */
+		else if (sizeflag & DFLAG)
 			sz = 4;
-			break;
+		/* WORD PTR */
+		else
+			sz = 2;
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+
+		/*case branch_v_mode:*/
+	case v_mode:
+	case dq_mode:
+		USED_REX(REX_MODE64);
+		if (rex & REX_MODE64)
+			sz = 8;
+		/* DWORD PTR */
+		else if ((sizeflag & DFLAG) || bytemode == dq_mode)
+			sz = 4;
+		/* WORD PTR */
+		else
+			sz = 2;
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+		/* DWORD PTR */
+	case d_mode:
+		sz = 4;
+		break;
+		/* QWORD PTR */
+	case q_mode:
+		sz = 8;
+		break;
+	case m_mode:
+		/* QWORD PTR */
+		if (mode_64bit)
+			sz = 8;
+		/* DWORD PTR */
+		else
+			sz = 4;
+		break;
+	case f_mode:
+		/* FWORD PTR */
+		if (sizeflag & DFLAG) {
+			used_prefixes |= (prefixes & PREFIX_DATA);
+			sz = 6;
+		}
+		/* DWORD PTR */
+		else
+			sz = 4;
+		break;
+		/* TBYTE PTR */
+	case t_mode:
+		sz = 10;
+		break;
+		/* XMMWORD PTR */
+	case x_mode:
+		sz = 16;
+		break;
+		/* default is DWORD */
+	default:
+		sz = 4;
+		break;
 	}
 
 	if (mask)
 		addr = addr & mask;
 
 	sym_name = GetSymbolFromValueWithOffset(addr, &offset,
-			&symbuf[0],
-			MAX_SYMBOL_LEN);
+						&symbuf[0],
+						MAX_SYMBOL_LEN);
 	if (sym_name && sym_name[0] != ' ') {
 		cmd = obufp;
 		if (sv) {
@@ -2510,61 +2510,61 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
 		value = EvaluateDisassemblyExpression(stackFrame, &cmd, &valid, sz, &r);
 		if (valid) {
 			switch (sz) {
-				case 1:
-					sprintf(scratchbuf, "=0x%02X", (unsigned char)value);
-					break;
-				case 2:
-					sprintf(scratchbuf, "=0x%04X", (unsigned short)value);
-					break;
-				case 4:
-					sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
-					break;
-				case 6:
+			case 1:
+				sprintf(scratchbuf, "=0x%02X", (unsigned char)value);
+				break;
+			case 2:
+				sprintf(scratchbuf, "=0x%04X", (unsigned short)value);
+				break;
+			case 4:
+				sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
+				break;
+			case 6:
 #ifdef CONFIG_X86_64
-					/* FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32 */
-					if (r && !mdb_copy(work, r, 10))
-						sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
-								"%02X%02X%02X%02X",
-								work[0], work[1], work[2], work[3],
-								work[4], work[5], work[6], work[7],
-								work[8], work[9]);
+				/* FWORD Pointers are 10 bytes in x86-64, 6 bytes in ia32 */
+				if (r && !mdb_copy(work, r, 10))
+					sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+						"%02X%02X%02X%02X",
+						work[0], work[1], work[2], work[3],
+						work[4], work[5], work[6], work[7],
+						work[8], work[9]);
 #else
-					if (r && !mdb_copy(work, r, 6))
-						sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X",
-								work[0], work[1], work[2],
-								work[3], work[4], work[5]);
+				if (r && !mdb_copy(work, r, 6))
+					sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X",
+						work[0], work[1], work[2],
+						work[3], work[4], work[5]);
 #endif
-					else
-						sprintf(scratchbuf, "=?");
-					break;
-				case 8:
-					sprintf(scratchbuf, "=0x%llX", value);
-					break;
-				case 10:
-					if (r && !mdb_copy(work, r, 10))
-						sprintf(scratchbuf,
-								"=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-								work[0], work[1], work[2],
-								work[3], work[4], work[5],
-								work[6], work[7], work[8],
-								work[9]);
-					else
-						sprintf(scratchbuf, "=?");
-					break;
-				case 16:
-					if (r && !mdb_copy(work, r, 16))
-						sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
-								"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-								work[0], work[1], work[2], work[3],
-								work[4], work[5], work[6], work[7],
-								work[8], work[9], work[10], work[11],
-								work[12], work[13], work[14], work[15]);
-					else
-						sprintf(scratchbuf, "=?");
-					break;
-				default:
-					sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
-					break;
+				else
+					sprintf(scratchbuf, "=?");
+				break;
+			case 8:
+				sprintf(scratchbuf, "=0x%llX", value);
+				break;
+			case 10:
+				if (r && !mdb_copy(work, r, 10))
+					sprintf(scratchbuf,
+						"=0x%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+						work[0], work[1], work[2],
+						work[3], work[4], work[5],
+						work[6], work[7], work[8],
+						work[9]);
+				else
+					sprintf(scratchbuf, "=?");
+				break;
+			case 16:
+				if (r && !mdb_copy(work, r, 16))
+					sprintf(scratchbuf, "=0x%02X%02X%02X%02X%02X%02X"
+						"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+						work[0], work[1], work[2], work[3],
+						work[4], work[5], work[6], work[7],
+						work[8], work[9], work[10], work[11],
+						work[12], work[13], work[14], work[15]);
+				else
+					sprintf(scratchbuf, "=?");
+				break;
+			default:
+				sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
+				break;
 			}
 			oappend(scratchbuf);
 		}
@@ -2574,9 +2574,9 @@ static inline int evaluate_address_expression(int bytemode, int sizeflag,
 }
 #endif
 
-	static int
+static int
 print_insn(bfd_vma pc, disassemble_info *info,
-		StackFrame *stackFrame)
+	   StackFrame *stackFrame)
 {
 	const struct dis386 *dp;
 	int i;
@@ -2588,16 +2588,16 @@ print_insn(bfd_vma pc, disassemble_info *info,
 	struct dis_private priv;
 
 	mode_64bit = (info->mach == bfd_mach_x86_64_intel_syntax
-			|| info->mach == bfd_mach_x86_64);
+		      || info->mach == bfd_mach_x86_64);
 
 	if (intel_syntax == (char)-1)
 		intel_syntax = (info->mach == bfd_mach_i386_i386_intel_syntax
 				|| info->mach == bfd_mach_x86_64_intel_syntax);
 
 	if (info->mach == bfd_mach_i386_i386
-			|| info->mach == bfd_mach_x86_64
-			|| info->mach == bfd_mach_i386_i386_intel_syntax
-			|| info->mach == bfd_mach_x86_64_intel_syntax)
+	    || info->mach == bfd_mach_x86_64
+	    || info->mach == bfd_mach_i386_i386_intel_syntax
+	    || info->mach == bfd_mach_x86_64_intel_syntax)
 		priv.orig_sizeflag = AFLAG | DFLAG;
 	else if (info->mach == bfd_mach_i386_i8086)
 		priv.orig_sizeflag = 0;
@@ -2702,7 +2702,7 @@ print_insn(bfd_vma pc, disassemble_info *info,
 			else {
 				/* Just print the first byte as a .byte instruction.  */
 				(*info->fprintf_func) (info->stream, ".byte 0x%x",
-						(unsigned int)priv.the_buffer[0]);
+						       (unsigned int)priv.the_buffer[0]);
 			}
 
 			return 1;
@@ -2722,7 +2722,7 @@ print_insn(bfd_vma pc, disassemble_info *info,
 	two_source_ops = (*codep == 0x62) || (*codep == 0xc8);
 
 	if ((prefixes & PREFIX_FWAIT)
-			&& ((*codep < 0xd8) || (*codep > 0xdf))) {
+	    && ((*codep < 0xd8) || (*codep > 0xdf))) {
 		const char *name;
 
 		/* fwait not followed by floating point instruction.  Print the
@@ -2776,8 +2776,8 @@ print_insn(bfd_vma pc, disassemble_info *info,
 	if (!uses_SSE_prefix && (prefixes & PREFIX_DATA)) {
 		sizeflag ^= DFLAG;
 		if (dp->bytemode3 == cond_jump_mode
-				&& dp->bytemode1 == v_mode
-				&& !intel_syntax) {
+		    && dp->bytemode1 == v_mode
+		    && !intel_syntax) {
 			if (sizeflag & DFLAG)
 				oappend("data32 ");
 			else
@@ -2800,35 +2800,35 @@ print_insn(bfd_vma pc, disassemble_info *info,
 
 		if (!dp->name) {
 			switch (dp->bytemode1) {
-				case USE_GROUPS:
-					dp = &grps[dp->bytemode2][reg];
-					break;
+			case USE_GROUPS:
+				dp = &grps[dp->bytemode2][reg];
+				break;
 
-				case USE_PREFIX_USER_TABLE:
-					index = 0;
-					used_prefixes |= (prefixes & PREFIX_REPZ);
-					if (prefixes & PREFIX_REPZ)
-						index = 1;
+			case USE_PREFIX_USER_TABLE:
+				index = 0;
+				used_prefixes |= (prefixes & PREFIX_REPZ);
+				if (prefixes & PREFIX_REPZ)
+					index = 1;
+				else {
+					used_prefixes |= (prefixes & PREFIX_DATA);
+					if (prefixes & PREFIX_DATA)
+						index = 2;
 					else {
-						used_prefixes |= (prefixes & PREFIX_DATA);
-						if (prefixes & PREFIX_DATA)
-							index = 2;
-						else {
-							used_prefixes |= (prefixes & PREFIX_REPNZ);
-							if (prefixes & PREFIX_REPNZ)
-								index = 3;
-						}
+						used_prefixes |= (prefixes & PREFIX_REPNZ);
+						if (prefixes & PREFIX_REPNZ)
+							index = 3;
 					}
-					dp = &prefix_user_table[dp->bytemode2][index];
-					break;
+				}
+				dp = &prefix_user_table[dp->bytemode2][index];
+				break;
 
-				case X86_64_SPECIAL:
-					dp = &x86_64_table[dp->bytemode2][mode_64bit];
-					break;
+			case X86_64_SPECIAL:
+				dp = &x86_64_table[dp->bytemode2][mode_64bit];
+				break;
 
-				default:
-					oappend(INTERNAL_DISASSEMBLER_ERROR);
-					break;
+			default:
+				oappend(INTERNAL_DISASSEMBLER_ERROR);
+				break;
 			}
 		}
 
@@ -3262,7 +3262,7 @@ static char *fgrps[][8] = {
 	},
 };
 
-	static void
+static void
 dofloat (int sizeflag, StackFrame *stackFrame)
 {
 	const struct dis386 *dp;
@@ -3302,23 +3302,23 @@ dofloat (int sizeflag, StackFrame *stackFrame)
 	}
 }
 
-	static void
+static void
 OP_ST(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+      StackFrame *stackFrame)
 {
 	oappend("%st");
 }
 
-	static void
+static void
 OP_STi(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+       StackFrame *stackFrame)
 {
 	sprintf(scratchbuf, "%%st(%d)", rm);
 	oappend(scratchbuf + intel_syntax);
 }
 
 /* Capital letters in template are macros.  */
-	static int
+static int
 putop(const char *template, int sizeflag)
 {
 	const char *p;
@@ -3326,256 +3326,256 @@ putop(const char *template, int sizeflag)
 
 	for (p = template; *p; p++) {
 		switch (*p) {
-			default:
-				*obufp++ = *p;
-				break;
-			case '{':
-				alt = 0;
-				if (intel_syntax)
-					alt += 1;
-				if (mode_64bit)
-					alt += 2;
-				while (alt != 0) {
-					while (*++p != '|') {
-						if (*p == '}') {
-							/* Alternative not valid.	 */
-							strcpy(obuf, "(bad)");
-							obufp = obuf + 5;
-							return 1;
-						}
-						else if (*p == '\0')
-							abort();
+		default:
+			*obufp++ = *p;
+			break;
+		case '{':
+			alt = 0;
+			if (intel_syntax)
+				alt += 1;
+			if (mode_64bit)
+				alt += 2;
+			while (alt != 0) {
+				while (*++p != '|') {
+					if (*p == '}') {
+						/* Alternative not valid.	 */
+						strcpy(obuf, "(bad)");
+						obufp = obuf + 5;
+						return 1;
 					}
-					alt--;
-				}
-				/* Fall through.  */
-			case 'I':
-				alt = 1;
-				continue;
-			case '|':
-				while (*++p != '}') {
-					if (*p == '\0')
+					else if (*p == '\0')
 						abort();
 				}
+				alt--;
+			}
+			/* Fall through.  */
+		case 'I':
+			alt = 1;
+			continue;
+		case '|':
+			while (*++p != '}') {
+				if (*p == '\0')
+					abort();
+			}
+			break;
+		case '}':
+			break;
+		case 'A':
+			if (intel_syntax)
 				break;
-			case '}':
+			if (mod != 3 || (sizeflag & SUFFIX_ALWAYS))
+				*obufp++ = 'b';
+			break;
+		case 'B':
+			if (intel_syntax)
 				break;
-			case 'A':
-				if (intel_syntax)
-					break;
-				if (mod != 3 || (sizeflag & SUFFIX_ALWAYS))
-					*obufp++ = 'b';
+			if (sizeflag & SUFFIX_ALWAYS)
+				*obufp++ = 'b';
+			break;
+		case 'C':
+			if (intel_syntax && !alt)
 				break;
-			case 'B':
-				if (intel_syntax)
-					break;
-				if (sizeflag & SUFFIX_ALWAYS)
-					*obufp++ = 'b';
-				break;
-			case 'C':
-				if (intel_syntax && !alt)
-					break;
-				if ((prefixes & PREFIX_DATA) || (sizeflag & SUFFIX_ALWAYS)) {
-					if (sizeflag & DFLAG)
-						*obufp++ = intel_syntax ? 'd' : 'l';
-					else
-						*obufp++ = intel_syntax ? 'w' : 's';
-					used_prefixes |= (prefixes & PREFIX_DATA);
-				}
-				break;
-			case 'E':		/* For jcxz/jecxz */
-				if (mode_64bit) {
-					if (sizeflag & AFLAG)
-						*obufp++ = 'r';
-					else
-						*obufp++ = 'e';
-				}
+			if ((prefixes & PREFIX_DATA) || (sizeflag & SUFFIX_ALWAYS)) {
+				if (sizeflag & DFLAG)
+					*obufp++ = intel_syntax ? 'd' : 'l';
 				else
-					if (sizeflag & AFLAG)
-						*obufp++ = 'e';
+					*obufp++ = intel_syntax ? 'w' : 's';
+				used_prefixes |= (prefixes & PREFIX_DATA);
+			}
+			break;
+		case 'E':		/* For jcxz/jecxz */
+			if (mode_64bit) {
+				if (sizeflag & AFLAG)
+					*obufp++ = 'r';
+				else
+					*obufp++ = 'e';
+			}
+			else
+				if (sizeflag & AFLAG)
+					*obufp++ = 'e';
+			used_prefixes |= (prefixes & PREFIX_ADDR);
+			break;
+		case 'F':
+			if (intel_syntax)
+				break;
+			if ((prefixes & PREFIX_ADDR) || (sizeflag & SUFFIX_ALWAYS)) {
+				if (sizeflag & AFLAG)
+					*obufp++ = mode_64bit ? 'q' : 'l';
+				else
+					*obufp++ = mode_64bit ? 'l' : 'w';
 				used_prefixes |= (prefixes & PREFIX_ADDR);
+			}
+			break;
+		case 'H':
+			if (intel_syntax)
 				break;
-			case 'F':
-				if (intel_syntax)
-					break;
-				if ((prefixes & PREFIX_ADDR) || (sizeflag & SUFFIX_ALWAYS)) {
-					if (sizeflag & AFLAG)
-						*obufp++ = mode_64bit ? 'q' : 'l';
-					else
-						*obufp++ = mode_64bit ? 'l' : 'w';
-					used_prefixes |= (prefixes & PREFIX_ADDR);
-				}
-				break;
-			case 'H':
-				if (intel_syntax)
-					break;
-				if ((prefixes & (PREFIX_CS | PREFIX_DS)) == PREFIX_CS
-						|| (prefixes & (PREFIX_CS | PREFIX_DS)) == PREFIX_DS) {
-					used_prefixes |= prefixes & (PREFIX_CS | PREFIX_DS);
-					*obufp++ = ',';
-					*obufp++ = 'p';
-					if (prefixes & PREFIX_DS)
-						*obufp++ = 't';
-					else
-						*obufp++ = 'n';
-				}
-				break;
-			case 'J':
-				if (intel_syntax)
-					break;
-				*obufp++ = 'l';
-				break;
-			case 'L':
-				if (intel_syntax)
-					break;
-				if (sizeflag & SUFFIX_ALWAYS)
-					*obufp++ = 'l';
-				break;
-			case 'N':
-				if ((prefixes & PREFIX_FWAIT) == 0)
-					*obufp++ = 'n';
+			if ((prefixes & (PREFIX_CS | PREFIX_DS)) == PREFIX_CS
+			    || (prefixes & (PREFIX_CS | PREFIX_DS)) == PREFIX_DS) {
+				used_prefixes |= prefixes & (PREFIX_CS | PREFIX_DS);
+				*obufp++ = ',';
+				*obufp++ = 'p';
+				if (prefixes & PREFIX_DS)
+					*obufp++ = 't';
 				else
-					used_prefixes |= PREFIX_FWAIT;
+					*obufp++ = 'n';
+			}
+			break;
+		case 'J':
+			if (intel_syntax)
 				break;
-			case 'O':
+			*obufp++ = 'l';
+			break;
+		case 'L':
+			if (intel_syntax)
+				break;
+			if (sizeflag & SUFFIX_ALWAYS)
+				*obufp++ = 'l';
+			break;
+		case 'N':
+			if ((prefixes & PREFIX_FWAIT) == 0)
+				*obufp++ = 'n';
+			else
+				used_prefixes |= PREFIX_FWAIT;
+			break;
+		case 'O':
+			USED_REX(REX_MODE64);
+			if (rex & REX_MODE64)
+				*obufp++ = 'o';
+			else
+				*obufp++ = 'd';
+			break;
+		case 'T':
+			if (intel_syntax)
+				break;
+			if (mode_64bit) {
+				*obufp++ = 'q';
+				break;
+			}
+			/* Fall through.  */
+		case 'P':
+			if (intel_syntax)
+				break;
+			if ((prefixes & PREFIX_DATA)
+			    || (rex & REX_MODE64)
+			    || (sizeflag & SUFFIX_ALWAYS)) {
 				USED_REX(REX_MODE64);
 				if (rex & REX_MODE64)
-					*obufp++ = 'o';
-				else
-					*obufp++ = 'd';
-				break;
-			case 'T':
-				if (intel_syntax)
-					break;
-				if (mode_64bit) {
 					*obufp++ = 'q';
-					break;
-				}
-				/* Fall through.  */
-			case 'P':
-				if (intel_syntax)
-					break;
-				if ((prefixes & PREFIX_DATA)
-						|| (rex & REX_MODE64)
-						|| (sizeflag & SUFFIX_ALWAYS)) {
-					USED_REX(REX_MODE64);
-					if (rex & REX_MODE64)
-						*obufp++ = 'q';
-					else {
-						if (sizeflag & DFLAG)
-							*obufp++ = 'l';
-						else
-							*obufp++ = 'w';
-						used_prefixes |= (prefixes & PREFIX_DATA);
-					}
-				}
-				break;
-			case 'U':
-				if (intel_syntax)
-					break;
-				if (mode_64bit) {
-					*obufp++ = 'q';
-					break;
-				}
-				/* Fall through.  */
-			case 'Q':
-				if (intel_syntax && !alt)
-					break;
-				USED_REX(REX_MODE64);
-				if (mod != 3 || (sizeflag & SUFFIX_ALWAYS)) {
-					if (rex & REX_MODE64)
-						*obufp++ = 'q';
-					else {
-						if (sizeflag & DFLAG)
-							*obufp++ = intel_syntax ? 'd' : 'l';
-						else
-							*obufp++ = 'w';
-						used_prefixes |= (prefixes & PREFIX_DATA);
-					}
-				}
-				break;
-			case 'R':
-				USED_REX(REX_MODE64);
-				if (intel_syntax) {
-					if (rex & REX_MODE64) {
-						*obufp++ = 'q';
-						*obufp++ = 't';
-					}
-					else if (sizeflag & DFLAG) {
-						*obufp++ = 'd';
-						*obufp++ = 'q';
-					}
-					else {
-						*obufp++ = 'w';
-						*obufp++ = 'd';
-					}
-				}
 				else {
-					if (rex & REX_MODE64)
-						*obufp++ = 'q';
-					else if (sizeflag & DFLAG)
+					if (sizeflag & DFLAG)
 						*obufp++ = 'l';
 					else
 						*obufp++ = 'w';
-				}
-				if (!(rex & REX_MODE64))
 					used_prefixes |= (prefixes & PREFIX_DATA);
-				break;
-			case 'S':
-				if (intel_syntax)
-					break;
-				if (sizeflag & SUFFIX_ALWAYS) {
-					if (rex & REX_MODE64)
-						*obufp++ = 'q';
-					else {
-						if (sizeflag & DFLAG)
-							*obufp++ = 'l';
-						else
-							*obufp++ = 'w';
-						used_prefixes |= (prefixes & PREFIX_DATA);
-					}
 				}
+			}
+			break;
+		case 'U':
+			if (intel_syntax)
 				break;
-			case 'X':
-				if (prefixes & PREFIX_DATA)
-					*obufp++ = 'd';
-				else
-					*obufp++ = 's';
-				used_prefixes |= (prefixes & PREFIX_DATA);
+			if (mode_64bit) {
+				*obufp++ = 'q';
 				break;
-			case 'Y':
-				if (intel_syntax)
-					break;
-				if (rex & REX_MODE64) {
-					USED_REX(REX_MODE64);
+			}
+			/* Fall through.  */
+		case 'Q':
+			if (intel_syntax && !alt)
+				break;
+			USED_REX(REX_MODE64);
+			if (mod != 3 || (sizeflag & SUFFIX_ALWAYS)) {
+				if (rex & REX_MODE64)
 					*obufp++ = 'q';
-				}
-				break;
-				/* implicit operand size 'l' for i386 or 'q' for x86-64 */
-			case 'W':
-				/* operand size flag for cwtl, cbtw */
-				USED_REX(0);
-				if (rex)
-					*obufp++ = 'l';
-				else if (sizeflag & DFLAG)
-					*obufp++ = 'w';
-				else
-					*obufp++ = 'b';
-				if (intel_syntax) {
-					if (rex) {
-						*obufp++ = 'q';
-						*obufp++ = 'e';
-					}
-					if (sizeflag & DFLAG) {
-						*obufp++ = 'd';
-						*obufp++ = 'e';
-					}
+				else {
+					if (sizeflag & DFLAG)
+						*obufp++ = intel_syntax ? 'd' : 'l';
 					else
 						*obufp++ = 'w';
-				}
-				if (!rex)
 					used_prefixes |= (prefixes & PREFIX_DATA);
+				}
+			}
+			break;
+		case 'R':
+			USED_REX(REX_MODE64);
+			if (intel_syntax) {
+				if (rex & REX_MODE64) {
+					*obufp++ = 'q';
+					*obufp++ = 't';
+				}
+				else if (sizeflag & DFLAG) {
+					*obufp++ = 'd';
+					*obufp++ = 'q';
+				}
+				else {
+					*obufp++ = 'w';
+					*obufp++ = 'd';
+				}
+			}
+			else {
+				if (rex & REX_MODE64)
+					*obufp++ = 'q';
+				else if (sizeflag & DFLAG)
+					*obufp++ = 'l';
+				else
+					*obufp++ = 'w';
+			}
+			if (!(rex & REX_MODE64))
+				used_prefixes |= (prefixes & PREFIX_DATA);
+			break;
+		case 'S':
+			if (intel_syntax)
 				break;
+			if (sizeflag & SUFFIX_ALWAYS) {
+				if (rex & REX_MODE64)
+					*obufp++ = 'q';
+				else {
+					if (sizeflag & DFLAG)
+						*obufp++ = 'l';
+					else
+						*obufp++ = 'w';
+					used_prefixes |= (prefixes & PREFIX_DATA);
+				}
+			}
+			break;
+		case 'X':
+			if (prefixes & PREFIX_DATA)
+				*obufp++ = 'd';
+			else
+				*obufp++ = 's';
+			used_prefixes |= (prefixes & PREFIX_DATA);
+			break;
+		case 'Y':
+			if (intel_syntax)
+				break;
+			if (rex & REX_MODE64) {
+				USED_REX(REX_MODE64);
+				*obufp++ = 'q';
+			}
+			break;
+			/* implicit operand size 'l' for i386 or 'q' for x86-64 */
+		case 'W':
+			/* operand size flag for cwtl, cbtw */
+			USED_REX(0);
+			if (rex)
+				*obufp++ = 'l';
+			else if (sizeflag & DFLAG)
+				*obufp++ = 'w';
+			else
+				*obufp++ = 'b';
+			if (intel_syntax) {
+				if (rex) {
+					*obufp++ = 'q';
+					*obufp++ = 'e';
+				}
+				if (sizeflag & DFLAG) {
+					*obufp++ = 'd';
+					*obufp++ = 'e';
+				}
+				else
+					*obufp++ = 'w';
+			}
+			if (!rex)
+				used_prefixes |= (prefixes & PREFIX_DATA);
+			break;
 		}
 		alt = 0;
 	}
@@ -3583,14 +3583,14 @@ putop(const char *template, int sizeflag)
 	return 0;
 }
 
-	static void
+static void
 oappend(const char *s)
 {
 	strcpy(obufp, s);
 	obufp += strlen(s);
 }
 
-	static void
+static void
 append_seg(void)
 {
 	if (prefixes & PREFIX_CS) {
@@ -3619,7 +3619,7 @@ append_seg(void)
 	}
 }
 
-	static void
+static void
 OP_indirE(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	if (!intel_syntax)
@@ -3627,7 +3627,7 @@ OP_indirE(int bytemode, int sizeflag, StackFrame *stackFrame)
 	OP_E(bytemode, sizeflag, stackFrame);
 }
 
-	static void
+static void
 print_operand_value(char *buf, int hex, bfd_vma disp)
 {
 	if (mode_64bit) {
@@ -3678,7 +3678,7 @@ print_operand_value(char *buf, int hex, bfd_vma disp)
 	}
 }
 
-	static void
+static void
 OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	unsigned char *deref;
@@ -3697,56 +3697,56 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 
 	if (mod == 3) {
 		switch (bytemode) {
-			case b_mode:
-				USED_REX(0);
-				if (rex)
-					oappend(names8rex[rm + add]);
-				else
-					oappend(names8[rm + add]);
-				break;
-			case w_mode:
-				oappend(names16[rm + add]);
-				break;
-			case d_mode:
-				oappend(names32[rm + add]);
-				break;
-			case q_mode:
+		case b_mode:
+			USED_REX(0);
+			if (rex)
+				oappend(names8rex[rm + add]);
+			else
+				oappend(names8[rm + add]);
+			break;
+		case w_mode:
+			oappend(names16[rm + add]);
+			break;
+		case d_mode:
+			oappend(names32[rm + add]);
+			break;
+		case q_mode:
+			oappend(names64[rm + add]);
+			break;
+		case m_mode:
+			if (mode_64bit)
 				oappend(names64[rm + add]);
-				break;
-			case m_mode:
-				if (mode_64bit)
-					oappend(names64[rm + add]);
-				else
-					oappend(names32[rm + add]);
-				break;
-			case branch_v_mode:
-				if (mode_64bit)
-					oappend(names64[rm + add]);
-				else {
-					if ((sizeflag & DFLAG) || bytemode != branch_v_mode)
-						oappend(names32[rm + add]);
-					else
-						oappend(names16[rm + add]);
-					used_prefixes |= (prefixes & PREFIX_DATA);
-				}
-				break;
-			case v_mode:
-			case dq_mode:
-			case dqw_mode:
-				USED_REX(REX_MODE64);
-				if (rex & REX_MODE64)
-					oappend(names64[rm + add]);
-				else if ((sizeflag & DFLAG) || bytemode != v_mode)
+			else
+				oappend(names32[rm + add]);
+			break;
+		case branch_v_mode:
+			if (mode_64bit)
+				oappend(names64[rm + add]);
+			else {
+				if ((sizeflag & DFLAG) || bytemode != branch_v_mode)
 					oappend(names32[rm + add]);
 				else
 					oappend(names16[rm + add]);
 				used_prefixes |= (prefixes & PREFIX_DATA);
-				break;
-			case 0:
-				break;
-			default:
-				oappend(INTERNAL_DISASSEMBLER_ERROR);
-				break;
+			}
+			break;
+		case v_mode:
+		case dq_mode:
+		case dqw_mode:
+			USED_REX(REX_MODE64);
+			if (rex & REX_MODE64)
+				oappend(names64[rm + add]);
+			else if ((sizeflag & DFLAG) || bytemode != v_mode)
+				oappend(names32[rm + add]);
+			else
+				oappend(names16[rm + add]);
+			used_prefixes |= (prefixes & PREFIX_DATA);
+			break;
+		case 0:
+			break;
+		default:
+			oappend(INTERNAL_DISASSEMBLER_ERROR);
+			break;
 		}
 		return;
 	}
@@ -3781,23 +3781,23 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 		base += add;
 
 		switch (mod) {
-			case 0:
-				if ((base & 7) == 5) {
-					havebase = 0;
-					if (mode_64bit && !havesib)
-						riprel = 1;
-					disp = get32s();
-				}
-				break;
-			case 1:
-				FETCH_DATA(the_info, codep + 1);
-				disp = *codep++;
-				if ((disp & 0x80) != 0)
-					disp -= 0x100;
-				break;
-			case 2:
+		case 0:
+			if ((base & 7) == 5) {
+				havebase = 0;
+				if (mode_64bit && !havesib)
+					riprel = 1;
 				disp = get32s();
-				break;
+			}
+			break;
+		case 1:
+			FETCH_DATA(the_info, codep + 1);
+			disp = *codep++;
+			if ((disp & 0x80) != 0)
+				disp -= 0x100;
+			break;
+		case 2:
+			disp = get32s();
+			break;
 		}
 
 		if (!intel_syntax) {
@@ -3805,8 +3805,8 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 				if (riprel) {
 					set_op(disp, 1);
 					if (!evaluate_address_expression(bytemode, sizeflag,
-								start_pc + codep - start_codep + op_address[op_index[op_ad]],
-								0, stackFrame, NULL)) {
+									 start_pc + codep - start_codep + op_address[op_index[op_ad]],
+									 0, stackFrame, NULL)) {
 						print_operand_value(scratchbuf, 1, disp);
 						oappend(scratchbuf);
 						oappend("(%rip)");
@@ -3823,8 +3823,8 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 				if (riprel) {
 					set_op(disp, 1);
 					if (!evaluate_address_expression(bytemode, sizeflag,
-								start_pc + codep - start_codep + op_address[op_index[op_ad]],
-								0, stackFrame, NULL)) {
+									 start_pc + codep - start_codep + op_address[op_index[op_ad]],
+									 0, stackFrame, NULL)) {
 						oappend("[rip+");
 						print_operand_value(scratchbuf, 1, disp);
 						oappend(scratchbuf);
@@ -3837,62 +3837,62 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 		if (havebase || (havesib && (index != 4 || scale != 0))) {
 			if (intel_syntax) {
 				switch (bytemode) {
-					case b_mode:
-						oappend("BYTE PTR ");
-						break;
-					case w_mode:
-					case dqw_mode:
-						oappend("WORD PTR ");
-						break;
-					case branch_v_mode:
-						if (mode_64bit)
-							oappend("QWORD PTR ");
-						else if (sizeflag & DFLAG)
-							oappend("DWORD PTR ");
-						else
-							oappend("WORD PTR ");
-						used_prefixes |= (prefixes & PREFIX_DATA);
-						break;
-						/*case branch_v_mode:*/
-					case v_mode:
-					case dq_mode:
-						USED_REX(REX_MODE64);
-						if (rex & REX_MODE64)
-							oappend("QWORD PTR ");
-						else if ((sizeflag & DFLAG) || bytemode == dq_mode)
-							oappend("DWORD PTR ");
-						else
-							oappend("WORD PTR ");
-						used_prefixes |= (prefixes & PREFIX_DATA);
-						break;
-					case d_mode:
-						oappend("DWORD PTR ");
-						break;
-					case q_mode:
+				case b_mode:
+					oappend("BYTE PTR ");
+					break;
+				case w_mode:
+				case dqw_mode:
+					oappend("WORD PTR ");
+					break;
+				case branch_v_mode:
+					if (mode_64bit)
 						oappend("QWORD PTR ");
-						break;
-					case m_mode:
-						if (mode_64bit)
-							oappend("QWORD PTR ");
-						else
-							oappend("DWORD PTR ");
-						break;
-					case f_mode:
-						if (sizeflag & DFLAG) {
-							used_prefixes |= (prefixes & PREFIX_DATA);
-							oappend("FWORD PTR ");
-						}
-						else
-							oappend("DWORD PTR ");
-						break;
-					case t_mode:
-						oappend("TBYTE PTR ");
-						break;
-					case x_mode:
-						oappend("XMMWORD PTR ");
-						break;
-					default:
-						break;
+					else if (sizeflag & DFLAG)
+						oappend("DWORD PTR ");
+					else
+						oappend("WORD PTR ");
+					used_prefixes |= (prefixes & PREFIX_DATA);
+					break;
+					/*case branch_v_mode:*/
+				case v_mode:
+				case dq_mode:
+					USED_REX(REX_MODE64);
+					if (rex & REX_MODE64)
+						oappend("QWORD PTR ");
+					else if ((sizeflag & DFLAG) || bytemode == dq_mode)
+						oappend("DWORD PTR ");
+					else
+						oappend("WORD PTR ");
+					used_prefixes |= (prefixes & PREFIX_DATA);
+					break;
+				case d_mode:
+					oappend("DWORD PTR ");
+					break;
+				case q_mode:
+					oappend("QWORD PTR ");
+					break;
+				case m_mode:
+					if (mode_64bit)
+						oappend("QWORD PTR ");
+					else
+						oappend("DWORD PTR ");
+					break;
+				case f_mode:
+					if (sizeflag & DFLAG) {
+						used_prefixes |= (prefixes & PREFIX_DATA);
+						oappend("FWORD PTR ");
+					}
+					else
+						oappend("DWORD PTR ");
+					break;
+				case t_mode:
+					oappend("TBYTE PTR ");
+					break;
+				case x_mode:
+					oappend("XMMWORD PTR ");
+					break;
+				default:
+					break;
 				}
 			}
 
@@ -3902,7 +3902,7 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 			*obufp = '\0';
 			if (havebase) {
 				oappend(mode_64bit && (sizeflag & AFLAG)
-						? names64[base] : names32[base]);
+					? names64[base] : names32[base]);
 			}
 			if (havesib) {
 				if (index != 4) {
@@ -3914,7 +3914,7 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 					if (scale != 0)
 						*obufp++ = '(';
 					oappend(mode_64bit && (sizeflag & AFLAG)
-							? names64[index] : names32[index]);
+						? names64[index] : names32[index]);
 				}
 				if (scale != 0 || (!intel_syntax && index != 4)) {
 					*obufp++ = scale_char;
@@ -3955,23 +3955,23 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 				if (!riprel) {
 #ifdef MDB_ENHANCEMENTS
 					if (prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
-								| PREFIX_ES | PREFIX_FS | PREFIX_GS)) {
+							| PREFIX_ES | PREFIX_FS | PREFIX_GS)) {
 						if (!evaluate_address_expression(bytemode, sizeflag, disp, 0,
-									stackFrame, NULL)) {
+										 stackFrame, NULL)) {
 							print_operand_value(scratchbuf, 1, disp);
 							oappend(scratchbuf);
 						}
 					} else {
 						if (!evaluate_address_expression(bytemode, sizeflag, disp, 0,
-									stackFrame,
-									names_seg[ds_reg - es_reg])) {
+										 stackFrame,
+										 names_seg[ds_reg - es_reg])) {
 							print_operand_value(scratchbuf, 1, disp);
 							oappend(scratchbuf);
 						}
 					}
 #else
 					if (prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
-								| PREFIX_ES | PREFIX_FS | PREFIX_GS))
+							| PREFIX_ES | PREFIX_FS | PREFIX_GS))
 						;
 					else {
 						oappend(names_seg[ds_reg - es_reg]);
@@ -3987,24 +3987,24 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 	else
 	{ /* 16 bit address mode */
 		switch (mod) {
-			case 0:
-				if (rm == 6) {
-					disp = get16();
-					if ((disp & 0x8000) != 0)
-						disp -= 0x10000;
-				}
-				break;
-			case 1:
-				FETCH_DATA(the_info, codep + 1);
-				disp = *codep++;
-				if ((disp & 0x80) != 0)
-					disp -= 0x100;
-				break;
-			case 2:
+		case 0:
+			if (rm == 6) {
 				disp = get16();
 				if ((disp & 0x8000) != 0)
 					disp -= 0x10000;
-				break;
+			}
+			break;
+		case 1:
+			FETCH_DATA(the_info, codep + 1);
+			disp = *codep++;
+			if ((disp & 0x80) != 0)
+				disp -= 0x100;
+			break;
+		case 2:
+			disp = get16();
+			if ((disp & 0x8000) != 0)
+				disp -= 0x10000;
+			break;
 		}
 
 		if (!intel_syntax)
@@ -4045,23 +4045,23 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 		else if (intel_syntax) {
 #ifdef MDB_ENHANCEMENTS
 			if (prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
-						| PREFIX_ES | PREFIX_FS | PREFIX_GS)) {
+					| PREFIX_ES | PREFIX_FS | PREFIX_GS)) {
 				if (!evaluate_address_expression(bytemode, sizeflag, disp,
-							0xFFFF, stackFrame, NULL)) {
+								 0xFFFF, stackFrame, NULL)) {
 					print_operand_value(scratchbuf, 1, disp & 0xFFFF);
 					oappend(scratchbuf);
 				}
 			} else {
 				if (!evaluate_address_expression(bytemode, sizeflag, disp,
-							0xFFFF, stackFrame,
-							names_seg[ds_reg - es_reg])) {
+								 0xFFFF, stackFrame,
+								 names_seg[ds_reg - es_reg])) {
 					print_operand_value(scratchbuf, 1, disp & 0xFFFF);
 					oappend(scratchbuf);
 				}
 			}
 #else
 			if (prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
-						| PREFIX_ES | PREFIX_FS | PREFIX_GS))
+					| PREFIX_ES | PREFIX_FS | PREFIX_GS))
 				;
 			else {
 				oappend(names_seg[ds_reg - es_reg]);
@@ -4074,9 +4074,9 @@ OP_E(int bytemode, int sizeflag, StackFrame *stackFrame)
 	}
 }
 
-	static void
+static void
 OP_G(int bytemode, int sizeflag,
-		StackFrame *stackFrame)
+     StackFrame *stackFrame)
 {
 	int add = 0;
 
@@ -4084,47 +4084,47 @@ OP_G(int bytemode, int sizeflag,
 	if (rex & REX_EXTX)
 		add += 8;
 	switch (bytemode) {
-		case b_mode:
-			USED_REX(0);
-			if (rex)
-				oappend(names8rex[reg + add]);
-			else
-				oappend(names8[reg + add]);
-			break;
-		case w_mode:
-			oappend(names16[reg + add]);
-			break;
-		case d_mode:
-			oappend(names32[reg + add]);
-			break;
-		case q_mode:
+	case b_mode:
+		USED_REX(0);
+		if (rex)
+			oappend(names8rex[reg + add]);
+		else
+			oappend(names8[reg + add]);
+		break;
+	case w_mode:
+		oappend(names16[reg + add]);
+		break;
+	case d_mode:
+		oappend(names32[reg + add]);
+		break;
+	case q_mode:
+		oappend(names64[reg + add]);
+		break;
+	case v_mode:
+	case dq_mode:
+	case dqw_mode:
+		USED_REX(REX_MODE64);
+		if (rex & REX_MODE64)
 			oappend(names64[reg + add]);
-			break;
-		case v_mode:
-		case dq_mode:
-		case dqw_mode:
-			USED_REX(REX_MODE64);
-			if (rex & REX_MODE64)
-				oappend(names64[reg + add]);
-			else if ((sizeflag & DFLAG) || bytemode != v_mode)
-				oappend(names32[reg + add]);
-			else
-				oappend(names16[reg + add]);
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-		case m_mode:
-			if (mode_64bit)
-				oappend(names64[reg + add]);
-			else
-				oappend(names32[reg + add]);
-			break;
-		default:
-			oappend(INTERNAL_DISASSEMBLER_ERROR);
-			break;
+		else if ((sizeflag & DFLAG) || bytemode != v_mode)
+			oappend(names32[reg + add]);
+		else
+			oappend(names16[reg + add]);
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+	case m_mode:
+		if (mode_64bit)
+			oappend(names64[reg + add]);
+		else
+			oappend(names32[reg + add]);
+		break;
+	default:
+		oappend(INTERNAL_DISASSEMBLER_ERROR);
+		break;
 	}
 }
 
-	static bfd_vma
+static bfd_vma
 get64(void)
 {
 	bfd_vma x;
@@ -4149,7 +4149,7 @@ get64(void)
 	return x;
 }
 
-	static bfd_signed_vma
+static bfd_signed_vma
 get32(void)
 {
 	bfd_signed_vma x = 0;
@@ -4162,7 +4162,7 @@ get32(void)
 	return x;
 }
 
-	static bfd_signed_vma
+static bfd_signed_vma
 get32s(void)
 {
 	bfd_signed_vma x = 0;
@@ -4178,7 +4178,7 @@ get32s(void)
 	return x;
 }
 
-	static int
+static int
 get16(void)
 {
 	int x = 0;
@@ -4189,7 +4189,7 @@ get16(void)
 	return x;
 }
 
-	static void
+static void
 set_op(bfd_vma op, int riprel)
 {
 	op_index[op_ad] = op_ad;
@@ -4204,9 +4204,9 @@ set_op(bfd_vma op, int riprel)
 	}
 }
 
-	static void
+static void
 OP_REG(int code, int sizeflag,
-		StackFrame *stackFrame)
+       StackFrame *stackFrame)
 {
 	const char *s;
 	int add = 0;
@@ -4216,145 +4216,145 @@ OP_REG(int code, int sizeflag,
 		add = 8;
 
 	switch (code) {
-		case indir_dx_reg:
-			if (intel_syntax)
-				s = "[dx]";
-			else
-				s = "(%dx)";
+	case indir_dx_reg:
+		if (intel_syntax)
+			s = "[dx]";
+		else
+			s = "(%dx)";
+		break;
+	case ax_reg: case cx_reg: case dx_reg: case bx_reg:
+	case sp_reg: case bp_reg: case si_reg: case di_reg:
+		s = names16[code - ax_reg + add];
+		break;
+	case es_reg: case ss_reg: case cs_reg:
+	case ds_reg: case fs_reg: case gs_reg:
+		s = names_seg[code - es_reg + add];
+		break;
+	case al_reg: case ah_reg: case cl_reg: case ch_reg:
+	case dl_reg: case dh_reg: case bl_reg: case bh_reg:
+		USED_REX(0);
+		if (rex)
+			s = names8rex[code - al_reg + add];
+		else
+			s = names8[code - al_reg];
+		break;
+	case rAX_reg: case rCX_reg: case rDX_reg: case rBX_reg:
+	case rSP_reg: case rBP_reg: case rSI_reg: case rDI_reg:
+		if (mode_64bit) {
+			s = names64[code - rAX_reg + add];
 			break;
-		case ax_reg: case cx_reg: case dx_reg: case bx_reg:
-		case sp_reg: case bp_reg: case si_reg: case di_reg:
-			s = names16[code - ax_reg + add];
-			break;
-		case es_reg: case ss_reg: case cs_reg:
-		case ds_reg: case fs_reg: case gs_reg:
-			s = names_seg[code - es_reg + add];
-			break;
-		case al_reg: case ah_reg: case cl_reg: case ch_reg:
-		case dl_reg: case dh_reg: case bl_reg: case bh_reg:
-			USED_REX(0);
-			if (rex)
-				s = names8rex[code - al_reg + add];
-			else
-				s = names8[code - al_reg];
-			break;
-		case rAX_reg: case rCX_reg: case rDX_reg: case rBX_reg:
-		case rSP_reg: case rBP_reg: case rSI_reg: case rDI_reg:
-			if (mode_64bit) {
-				s = names64[code - rAX_reg + add];
-				break;
-			}
-			code += eAX_reg - rAX_reg;
-			/* Fall through.	*/
-		case eAX_reg: case eCX_reg: case eDX_reg: case eBX_reg:
-		case eSP_reg: case eBP_reg: case eSI_reg: case eDI_reg:
-			USED_REX(REX_MODE64);
-			if (rex & REX_MODE64)
-				s = names64[code - eAX_reg + add];
-			else if (sizeflag & DFLAG)
-				s = names32[code - eAX_reg + add];
-			else
-				s = names16[code - eAX_reg + add];
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-		default:
-			s = INTERNAL_DISASSEMBLER_ERROR;
-			break;
+		}
+		code += eAX_reg - rAX_reg;
+		/* Fall through.	*/
+	case eAX_reg: case eCX_reg: case eDX_reg: case eBX_reg:
+	case eSP_reg: case eBP_reg: case eSI_reg: case eDI_reg:
+		USED_REX(REX_MODE64);
+		if (rex & REX_MODE64)
+			s = names64[code - eAX_reg + add];
+		else if (sizeflag & DFLAG)
+			s = names32[code - eAX_reg + add];
+		else
+			s = names16[code - eAX_reg + add];
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+	default:
+		s = INTERNAL_DISASSEMBLER_ERROR;
+		break;
 	}
 	oappend(s);
 }
 
-	static void
+static void
 OP_IMREG(int code, int sizeflag,
-		StackFrame *stackFrame)
+	 StackFrame *stackFrame)
 {
 	const char *s;
 
 	switch (code) {
-		case indir_dx_reg:
-			if (intel_syntax)
-				s = "[dx]";
-			else
-				s = "(%dx)";
-			break;
-		case ax_reg: case cx_reg: case dx_reg: case bx_reg:
-		case sp_reg: case bp_reg: case si_reg: case di_reg:
-			s = names16[code - ax_reg];
-			break;
-		case es_reg: case ss_reg: case cs_reg:
-		case ds_reg: case fs_reg: case gs_reg:
-			s = names_seg[code - es_reg];
-			break;
-		case al_reg: case ah_reg: case cl_reg: case ch_reg:
-		case dl_reg: case dh_reg: case bl_reg: case bh_reg:
-			USED_REX(0);
-			if (rex)
-				s = names8rex[code - al_reg];
-			else
-				s = names8[code - al_reg];
-			break;
-		case eAX_reg: case eCX_reg: case eDX_reg: case eBX_reg:
-		case eSP_reg: case eBP_reg: case eSI_reg: case eDI_reg:
-			USED_REX(REX_MODE64);
-			if (rex & REX_MODE64)
-				s = names64[code - eAX_reg];
-			else if (sizeflag & DFLAG)
-				s = names32[code - eAX_reg];
-			else
-				s = names16[code - eAX_reg];
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-		default:
-			s = INTERNAL_DISASSEMBLER_ERROR;
-			break;
+	case indir_dx_reg:
+		if (intel_syntax)
+			s = "[dx]";
+		else
+			s = "(%dx)";
+		break;
+	case ax_reg: case cx_reg: case dx_reg: case bx_reg:
+	case sp_reg: case bp_reg: case si_reg: case di_reg:
+		s = names16[code - ax_reg];
+		break;
+	case es_reg: case ss_reg: case cs_reg:
+	case ds_reg: case fs_reg: case gs_reg:
+		s = names_seg[code - es_reg];
+		break;
+	case al_reg: case ah_reg: case cl_reg: case ch_reg:
+	case dl_reg: case dh_reg: case bl_reg: case bh_reg:
+		USED_REX(0);
+		if (rex)
+			s = names8rex[code - al_reg];
+		else
+			s = names8[code - al_reg];
+		break;
+	case eAX_reg: case eCX_reg: case eDX_reg: case eBX_reg:
+	case eSP_reg: case eBP_reg: case eSI_reg: case eDI_reg:
+		USED_REX(REX_MODE64);
+		if (rex & REX_MODE64)
+			s = names64[code - eAX_reg];
+		else if (sizeflag & DFLAG)
+			s = names32[code - eAX_reg];
+		else
+			s = names16[code - eAX_reg];
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+	default:
+		s = INTERNAL_DISASSEMBLER_ERROR;
+		break;
 	}
 	oappend(s);
 }
 
-	static void
+static void
 OP_I(int bytemode, int sizeflag,
-		StackFrame *stackFrame)
+     StackFrame *stackFrame)
 {
 	bfd_signed_vma op;
 	bfd_signed_vma mask = -1;
 
 	switch (bytemode) {
-		case b_mode:
-			FETCH_DATA(the_info, codep + 1);
-			op = *codep++;
-			mask = 0xff;
+	case b_mode:
+		FETCH_DATA(the_info, codep + 1);
+		op = *codep++;
+		mask = 0xff;
+		break;
+	case q_mode:
+		if (mode_64bit) {
+			op = get32s();
 			break;
-		case q_mode:
-			if (mode_64bit) {
-				op = get32s();
-				break;
-			}
-			/* Fall through.	*/
-		case v_mode:
-			USED_REX(REX_MODE64);
-			if (rex & REX_MODE64)
-				op = get32s();
-			else if (sizeflag & DFLAG) {
-				op = get32();
-				mask = 0xffffffff;
-			}
-			else {
-				op = get16();
-				mask = 0xfffff;
-			}
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-		case w_mode:
-			mask = 0xfffff;
+		}
+		/* Fall through.	*/
+	case v_mode:
+		USED_REX(REX_MODE64);
+		if (rex & REX_MODE64)
+			op = get32s();
+		else if (sizeflag & DFLAG) {
+			op = get32();
+			mask = 0xffffffff;
+		}
+		else {
 			op = get16();
-			break;
-		case const_1_mode:
-			if (intel_syntax)
-				oappend("1");
-			return;
-		default:
-			oappend(INTERNAL_DISASSEMBLER_ERROR);
-			return;
+			mask = 0xfffff;
+		}
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+	case w_mode:
+		mask = 0xfffff;
+		op = get16();
+		break;
+	case const_1_mode:
+		if (intel_syntax)
+			oappend("1");
+		return;
+	default:
+		oappend(INTERNAL_DISASSEMBLER_ERROR);
+		return;
 	}
 
 	op &= mask;
@@ -4364,9 +4364,9 @@ OP_I(int bytemode, int sizeflag,
 	scratchbuf[0] = '\0';
 }
 
-	static void
+static void
 OP_I64(int bytemode, int sizeflag,
-		StackFrame *stackFrame)
+       StackFrame *stackFrame)
 {
 	bfd_signed_vma op;
 	bfd_signed_vma mask = -1;
@@ -4377,32 +4377,32 @@ OP_I64(int bytemode, int sizeflag,
 	}
 
 	switch (bytemode) {
-		case b_mode:
-			FETCH_DATA(the_info, codep + 1);
-			op = *codep++;
-			mask = 0xff;
-			break;
-		case v_mode:
-			USED_REX(REX_MODE64);
-			if (rex & REX_MODE64)
-				op = get64();
-			else if (sizeflag & DFLAG) {
-				op = get32();
-				mask = 0xffffffff;
-			}
-			else {
-				op = get16();
-				mask = 0xfffff;
-			}
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-		case w_mode:
-			mask = 0xfffff;
+	case b_mode:
+		FETCH_DATA(the_info, codep + 1);
+		op = *codep++;
+		mask = 0xff;
+		break;
+	case v_mode:
+		USED_REX(REX_MODE64);
+		if (rex & REX_MODE64)
+			op = get64();
+		else if (sizeflag & DFLAG) {
+			op = get32();
+			mask = 0xffffffff;
+		}
+		else {
 			op = get16();
-			break;
-		default:
-			oappend(INTERNAL_DISASSEMBLER_ERROR);
-			return;
+			mask = 0xfffff;
+		}
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+	case w_mode:
+		mask = 0xfffff;
+		op = get16();
+		break;
+	default:
+		oappend(INTERNAL_DISASSEMBLER_ERROR);
+		return;
 	}
 
 	op &= mask;
@@ -4412,46 +4412,46 @@ OP_I64(int bytemode, int sizeflag,
 	scratchbuf[0] = '\0';
 }
 
-	static void
+static void
 OP_sI(int bytemode, int sizeflag,
-		StackFrame *stackFrame)
+      StackFrame *stackFrame)
 {
 	bfd_signed_vma op;
 	bfd_signed_vma mask = -1;
 
 	switch (bytemode) {
-		case b_mode:
-			FETCH_DATA(the_info, codep + 1);
-			op = *codep++;
-			if ((op & 0x80) != 0)
-				op -= 0x100;
+	case b_mode:
+		FETCH_DATA(the_info, codep + 1);
+		op = *codep++;
+		if ((op & 0x80) != 0)
+			op -= 0x100;
+		mask = 0xffffffff;
+		break;
+	case v_mode:
+		USED_REX(REX_MODE64);
+		if (rex & REX_MODE64)
+			op = get32s();
+		else if (sizeflag & DFLAG) {
+			op = get32s();
 			mask = 0xffffffff;
-			break;
-		case v_mode:
-			USED_REX(REX_MODE64);
-			if (rex & REX_MODE64)
-				op = get32s();
-			else if (sizeflag & DFLAG) {
-				op = get32s();
-				mask = 0xffffffff;
-			}
-			else {
-				mask = 0xffffffff;
-				op = get16();
-				if ((op & 0x8000) != 0)
-					op -= 0x10000;
-			}
-			used_prefixes |= (prefixes & PREFIX_DATA);
-			break;
-		case w_mode:
+		}
+		else {
+			mask = 0xffffffff;
 			op = get16();
-			mask = 0xffffffff;
 			if ((op & 0x8000) != 0)
 				op -= 0x10000;
-			break;
-		default:
-			oappend(INTERNAL_DISASSEMBLER_ERROR);
-			return;
+		}
+		used_prefixes |= (prefixes & PREFIX_DATA);
+		break;
+	case w_mode:
+		op = get16();
+		mask = 0xffffffff;
+		if ((op & 0x8000) != 0)
+			op -= 0x10000;
+		break;
+	default:
+		oappend(INTERNAL_DISASSEMBLER_ERROR);
+		return;
 	}
 
 	scratchbuf[0] = '$';
@@ -4459,34 +4459,34 @@ OP_sI(int bytemode, int sizeflag,
 	oappend(scratchbuf + intel_syntax);
 }
 
-	static void
+static void
 OP_J(int bytemode, int sizeflag,
-		StackFrame *stackFrame)
+     StackFrame *stackFrame)
 {
 	bfd_vma disp;
 	bfd_vma mask = -1;
 
 	switch (bytemode) {
-		case b_mode:
-			FETCH_DATA(the_info, codep + 1);
-			disp = *codep++;
-			if ((disp & 0x80) != 0)
-				disp -= 0x100;
-			break;
-		case v_mode:
-			if (sizeflag & DFLAG)
-				disp = get32s();
-			else {
-				disp = get16();
-				/* For some reason, a data16 prefix on a jump instruction
-				   means that the pc is masked to 16 bits after the
-				   displacement is added!  */
-				mask = 0xffff;
-			}
-			break;
-		default:
-			oappend(INTERNAL_DISASSEMBLER_ERROR);
-			return;
+	case b_mode:
+		FETCH_DATA(the_info, codep + 1);
+		disp = *codep++;
+		if ((disp & 0x80) != 0)
+			disp -= 0x100;
+		break;
+	case v_mode:
+		if (sizeflag & DFLAG)
+			disp = get32s();
+		else {
+			disp = get16();
+			/* For some reason, a data16 prefix on a jump instruction
+			   means that the pc is masked to 16 bits after the
+			   displacement is added!  */
+			mask = 0xffff;
+		}
+		break;
+	default:
+		oappend(INTERNAL_DISASSEMBLER_ERROR);
+		return;
 	}
 	disp = (start_pc + codep - start_codep + disp) & mask;
 	set_op(disp, 0);
@@ -4494,16 +4494,16 @@ OP_J(int bytemode, int sizeflag,
 	oappend(scratchbuf);
 }
 
-	static void
+static void
 OP_SEG(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+       StackFrame *stackFrame)
 {
 	oappend(names_seg[reg]);
 }
 
-	static void
+static void
 OP_DIR(int dummy ATTRIBUTE_UNUSED, int sizeflag,
-		StackFrame *stackFrame)
+       StackFrame *stackFrame)
 {
 	int seg, offset;
 
@@ -4523,9 +4523,9 @@ OP_DIR(int dummy ATTRIBUTE_UNUSED, int sizeflag,
 	oappend(scratchbuf);
 }
 
-	static void
+static void
 OP_OFF(int bytemode ATTRIBUTE_UNUSED, int sizeflag,
-		StackFrame *stackFrame)
+       StackFrame *stackFrame)
 {
 	bfd_vma off;
 
@@ -4539,23 +4539,23 @@ OP_OFF(int bytemode ATTRIBUTE_UNUSED, int sizeflag,
 	if (intel_syntax) {
 #ifdef MDB_ENHANCEMENTS
 		if (!(prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
-						| PREFIX_ES | PREFIX_FS | PREFIX_GS))) {
+				  | PREFIX_ES | PREFIX_FS | PREFIX_GS))) {
 			if (!evaluate_address_expression(bytemode, sizeflag, off,
-						0, stackFrame,
-						names_seg[ds_reg - es_reg])) {
+							 0, stackFrame,
+							 names_seg[ds_reg - es_reg])) {
 				print_operand_value(scratchbuf, 1, off);
 				oappend(scratchbuf);
 			}
 		} else {
 			if (!evaluate_address_expression(bytemode, sizeflag, off,
-						0, stackFrame, NULL)) {
+							 0, stackFrame, NULL)) {
 				print_operand_value(scratchbuf, 1, off);
 				oappend(scratchbuf);
 			}
 		}
 #else
 		if (!(prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
-						| PREFIX_ES | PREFIX_FS | PREFIX_GS))) {
+				  | PREFIX_ES | PREFIX_FS | PREFIX_GS))) {
 			oappend(names_seg[ds_reg - es_reg]);
 			oappend(":");
 		}
@@ -4568,9 +4568,9 @@ OP_OFF(int bytemode ATTRIBUTE_UNUSED, int sizeflag,
 	}
 }
 
-	static void
+static void
 OP_OFF64(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+	 StackFrame *stackFrame)
 {
 	bfd_vma off;
 
@@ -4586,23 +4586,23 @@ OP_OFF64(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 	if (intel_syntax) {
 #ifdef MDB_ENHANCEMENTS
 		if (!(prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
-						| PREFIX_ES | PREFIX_FS | PREFIX_GS))) {
+				  | PREFIX_ES | PREFIX_FS | PREFIX_GS))) {
 			if (!evaluate_address_expression(bytemode, sizeflag, off,
-						0, stackFrame,
-						names_seg[ds_reg - es_reg])) {
+							 0, stackFrame,
+							 names_seg[ds_reg - es_reg])) {
 				print_operand_value(scratchbuf, 1, off);
 				oappend(scratchbuf);
 			}
 		} else {
 			if (!evaluate_address_expression(bytemode, sizeflag, off,
-						0, stackFrame, NULL)) {
+							 0, stackFrame, NULL)) {
 				print_operand_value(scratchbuf, 1, off);
 				oappend(scratchbuf);
 			}
 		}
 #else
 		if (!(prefixes & (PREFIX_CS | PREFIX_SS | PREFIX_DS
-						| PREFIX_ES | PREFIX_FS | PREFIX_GS))) {
+				  | PREFIX_ES | PREFIX_FS | PREFIX_GS))) {
 			oappend(names_seg[ds_reg - es_reg]);
 			oappend(":");
 		}
@@ -4615,7 +4615,7 @@ OP_OFF64(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 	}
 }
 
-	static void
+static void
 ptr_reg(int code, int sizeflag, StackFrame *stackFrame)
 {
 	const char *s;
@@ -4663,7 +4663,7 @@ ptr_reg(int code, int sizeflag, StackFrame *stackFrame)
 #endif
 }
 
-	static void
+static void
 OP_ESreg(int code, int sizeflag, StackFrame *stackFrame)
 {
 	if (intel_syntax) {
@@ -4685,7 +4685,7 @@ OP_ESreg(int code, int sizeflag, StackFrame *stackFrame)
 	ptr_reg(code, sizeflag, stackFrame);
 }
 
-	static void
+static void
 OP_DSreg(int code, int sizeflag, StackFrame *stackFrame)
 {
 	if (intel_syntax) {
@@ -4704,20 +4704,20 @@ OP_DSreg(int code, int sizeflag, StackFrame *stackFrame)
 	}
 
 	if ((prefixes
-				& (PREFIX_CS
-					| PREFIX_DS
-					| PREFIX_SS
-					| PREFIX_ES
-					| PREFIX_FS
-					| PREFIX_GS)) == 0)
+	     & (PREFIX_CS
+		| PREFIX_DS
+		| PREFIX_SS
+		| PREFIX_ES
+		| PREFIX_FS
+		| PREFIX_GS)) == 0)
 		prefixes |= PREFIX_DS;
 	append_seg();
 	ptr_reg(code, sizeflag, stackFrame);
 }
 
-	static void
+static void
 OP_C(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+     StackFrame *stackFrame)
 {
 	int add = 0;
 
@@ -4733,9 +4733,9 @@ OP_C(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 	oappend(scratchbuf + intel_syntax);
 }
 
-	static void
+static void
 OP_D(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+     StackFrame *stackFrame)
 {
 	int add = 0;
 
@@ -4749,15 +4749,15 @@ OP_D(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 	oappend(scratchbuf);
 }
 
-	static void
+static void
 OP_T(int dummy ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+     StackFrame *stackFrame)
 {
 	sprintf(scratchbuf, "%%tr%d", reg);
 	oappend(scratchbuf + intel_syntax);
 }
 
-	static void
+static void
 OP_Rd(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod == 3)
@@ -4766,9 +4766,9 @@ OP_Rd(int bytemode, int sizeflag, StackFrame *stackFrame)
 		BadOp();
 }
 
-	static void
+static void
 OP_MMX(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+       StackFrame *stackFrame)
 {
 	used_prefixes |= (prefixes & PREFIX_DATA);
 	if (prefixes & PREFIX_DATA) {
@@ -4784,9 +4784,9 @@ OP_MMX(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 	oappend(scratchbuf + intel_syntax);
 }
 
-	static void
+static void
 OP_XMM(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+       StackFrame *stackFrame)
 {
 	int add = 0;
 
@@ -4797,7 +4797,7 @@ OP_XMM(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 	oappend(scratchbuf + intel_syntax);
 }
 
-	static void
+static void
 OP_EM(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod != 3) {
@@ -4826,7 +4826,7 @@ OP_EM(int bytemode, int sizeflag, StackFrame *stackFrame)
 	oappend(scratchbuf + intel_syntax);
 }
 
-	static void
+static void
 OP_EX(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	int add = 0;
@@ -4834,11 +4834,11 @@ OP_EX(int bytemode, int sizeflag, StackFrame *stackFrame)
 	if (mod != 3) {
 		if (intel_syntax && bytemode == v_mode) {
 			switch (prefixes & (PREFIX_DATA | PREFIX_REPZ | PREFIX_REPNZ)) {
-				case 0:	       bytemode = x_mode; break;
-				case PREFIX_REPZ:  bytemode = d_mode; used_prefixes |= PREFIX_REPZ;	 break;
-				case PREFIX_DATA:  bytemode = x_mode; used_prefixes |= PREFIX_DATA;	 break;
-				case PREFIX_REPNZ: bytemode = q_mode; used_prefixes |= PREFIX_REPNZ; break;
-				default:	       bytemode = 0; break;
+			case 0:	       bytemode = x_mode; break;
+			case PREFIX_REPZ:  bytemode = d_mode; used_prefixes |= PREFIX_REPZ;	 break;
+			case PREFIX_DATA:  bytemode = x_mode; used_prefixes |= PREFIX_DATA;	 break;
+			case PREFIX_REPNZ: bytemode = q_mode; used_prefixes |= PREFIX_REPNZ; break;
+			default:	       bytemode = 0; break;
 			}
 		}
 		OP_E(bytemode, sizeflag, stackFrame);
@@ -4855,7 +4855,7 @@ OP_EX(int bytemode, int sizeflag, StackFrame *stackFrame)
 	oappend(scratchbuf + intel_syntax);
 }
 
-	static void
+static void
 OP_MS(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod == 3)
@@ -4864,7 +4864,7 @@ OP_MS(int bytemode, int sizeflag, StackFrame *stackFrame)
 		BadOp();
 }
 
-	static void
+static void
 OP_XS(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod == 3)
@@ -4873,7 +4873,7 @@ OP_XS(int bytemode, int sizeflag, StackFrame *stackFrame)
 		BadOp();
 }
 
-	static void
+static void
 OP_M(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod == 3)
@@ -4882,7 +4882,7 @@ OP_M(int bytemode, int sizeflag, StackFrame *stackFrame)
 		OP_E(bytemode, sizeflag, stackFrame);
 }
 
-	static void
+static void
 OP_0f07(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod != 3 || rm != 0)
@@ -4891,7 +4891,7 @@ OP_0f07(int bytemode, int sizeflag, StackFrame *stackFrame)
 		OP_E(bytemode, sizeflag, stackFrame);
 }
 
-	static void
+static void
 OP_0fae(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod == 3) {
@@ -4913,9 +4913,9 @@ OP_0fae(int bytemode, int sizeflag, StackFrame *stackFrame)
 	OP_E(bytemode, sizeflag, stackFrame);
 }
 
-	static void
+static void
 NOP_Fixup(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+	  StackFrame *stackFrame)
 {
 	/* NOP with REPZ prefix is called PAUSE.  */
 	if (prefixes == PREFIX_REPZ)
@@ -4989,9 +4989,9 @@ static const char *const Suffix3DNow[] = {
 	/* FC */	NULL,		NULL,		NULL,		NULL,
 };
 
-	static void
+static void
 OP_3DNowSuffix(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+	       StackFrame *stackFrame)
 {
 	const char *mnemonic;
 
@@ -5025,9 +5025,9 @@ static const char *simd_cmp_op[] = {
 	"ord"
 };
 
-	static void
+static void
 OP_SIMD_Suffix(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+	       StackFrame *stackFrame)
 {
 	unsigned int cmp_type;
 
@@ -5051,7 +5051,7 @@ OP_SIMD_Suffix(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 			}
 		}
 		sprintf(scratchbuf, "cmp%s%c%c",
-				simd_cmp_op[cmp_type], suffix1, suffix2);
+			simd_cmp_op[cmp_type], suffix1, suffix2);
 		used_prefixes |= (prefixes & PREFIX_REPZ);
 		oappend(scratchbuf);
 	}
@@ -5063,9 +5063,9 @@ OP_SIMD_Suffix(int bytemode ATTRIBUTE_UNUSED, int sizeflag ATTRIBUTE_UNUSED,
 	}
 }
 
-	static void
+static void
 SIMD_Fixup(int extrachar, int sizeflag ATTRIBUTE_UNUSED,
-		StackFrame *stackFrame)
+	   StackFrame *stackFrame)
 {
 	/* Change movlps/movhps to movhlps/movlhps for 2 register operand
 	   forms of these instructions.  */
@@ -5079,7 +5079,7 @@ SIMD_Fixup(int extrachar, int sizeflag ATTRIBUTE_UNUSED,
 	}
 }
 
-	static void
+static void
 PNI_Fixup(int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod == 3 && reg == 1 && rm <= 1) {
@@ -5122,7 +5122,7 @@ PNI_Fixup(int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
 		OP_M(0, sizeflag, stackFrame);
 }
 
-	static void
+static void
 SVME_Fixup(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	const char *alt;
@@ -5130,33 +5130,33 @@ SVME_Fixup(int bytemode, int sizeflag, StackFrame *stackFrame)
 	unsigned char *deref;
 
 	switch (*codep) {
-		case 0xd8:
-			alt = "vmrun";
-			break;
-		case 0xd9:
-			alt = "vmmcall";
-			break;
-		case 0xda:
-			alt = "vmload";
-			break;
-		case 0xdb:
-			alt = "vmsave";
-			break;
-		case 0xdc:
-			alt = "stgi";
-			break;
-		case 0xdd:
-			alt = "clgi";
-			break;
-		case 0xde:
-			alt = "skinit";
-			break;
-		case 0xdf:
-			alt = "invlpga";
-			break;
-		default:
-			OP_M(bytemode, sizeflag, stackFrame);
-			return;
+	case 0xd8:
+		alt = "vmrun";
+		break;
+	case 0xd9:
+		alt = "vmmcall";
+		break;
+	case 0xda:
+		alt = "vmload";
+		break;
+	case 0xdb:
+		alt = "vmsave";
+		break;
+	case 0xdc:
+		alt = "stgi";
+		break;
+	case 0xdd:
+		alt = "clgi";
+		break;
+	case 0xde:
+		alt = "skinit";
+		break;
+	case 0xdf:
+		alt = "invlpga";
+		break;
+	default:
+		OP_M(bytemode, sizeflag, stackFrame);
+		return;
 	}
 	/* Override "lidt".  */
 	p = obuf + strlen(obuf) - 4;
@@ -5170,55 +5170,55 @@ SVME_Fixup(int bytemode, int sizeflag, StackFrame *stackFrame)
 	}
 	used_prefixes |= PREFIX_ADDR;
 	switch (*codep++) {
-		case 0xdf:
-			strcpy(op2out, names32[1]);
-			two_source_ops = 1;
-			/* Fall through.  */
-		case 0xd8:
-		case 0xda:
-		case 0xdb:
-			/* begin dereference */
-			deref = obufp;
-			*obufp++ = open_char;
-			if (mode_64bit || (sizeflag & AFLAG))
-				alt = names32[0];
-			else
-				alt = names16[0];
-			strcpy(obufp, alt);
-			obufp += strlen(alt);
-			/* end dereference */
-			*obufp++ = close_char;
-			*obufp = '\0';
+	case 0xdf:
+		strcpy(op2out, names32[1]);
+		two_source_ops = 1;
+		/* Fall through.  */
+	case 0xd8:
+	case 0xda:
+	case 0xdb:
+		/* begin dereference */
+		deref = obufp;
+		*obufp++ = open_char;
+		if (mode_64bit || (sizeflag & AFLAG))
+			alt = names32[0];
+		else
+			alt = names16[0];
+		strcpy(obufp, alt);
+		obufp += strlen(alt);
+		/* end dereference */
+		*obufp++ = close_char;
+		*obufp = '\0';
 #ifdef MDB_ENHANCEMENTS
-			if (intel_syntax)
-				evaluate_expression(bytemode, sizeflag, deref, stackFrame);
+		if (intel_syntax)
+			evaluate_expression(bytemode, sizeflag, deref, stackFrame);
 #endif
-			break;
+		break;
 	}
 }
 
-	static void
+static void
 INVLPG_Fixup(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	const char *alt;
 
 	switch (*codep) {
-		case 0xf8:
-			alt = "swapgs";
-			break;
-		case 0xf9:
-			alt = "rdtscp";
-			break;
-		default:
-			OP_M(bytemode, sizeflag, stackFrame);
-			return;
+	case 0xf8:
+		alt = "swapgs";
+		break;
+	case 0xf9:
+		alt = "rdtscp";
+		break;
+	default:
+		OP_M(bytemode, sizeflag, stackFrame);
+		return;
 	}
 	/* Override "invlpg".  */
 	strcpy(obuf + strlen(obuf) - 6, alt);
 	codep++;
 }
 
-	static void
+static void
 BadOp(void)
 {
 	/* Throw away prefixes and 1st. opcode byte.  */
@@ -5226,7 +5226,7 @@ BadOp(void)
 	oappend("(bad)");
 }
 
-	static void
+static void
 SEG_Fixup(int extrachar, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod == 3) {
@@ -5272,7 +5272,7 @@ SEG_Fixup(int extrachar, int sizeflag, StackFrame *stackFrame)
 	OP_E(extrachar, sizeflag, stackFrame);
 }
 
-	static void
+static void
 VMX_Fixup(int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
 {
 	if (mod == 3 && reg == 0 && rm >= 1 && rm <= 4) {
@@ -5284,18 +5284,18 @@ VMX_Fixup(int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
 			--p;
 
 		switch (rm) {
-			case 1:
-				strcpy(p, "vmcall");
-				break;
-			case 2:
-				strcpy(p, "vmlaunch");
-				break;
-			case 3:
-				strcpy(p, "vmresume");
-				break;
-			case 4:
-				strcpy(p, "vmxoff");
-				break;
+		case 1:
+			strcpy(p, "vmcall");
+			break;
+		case 2:
+			strcpy(p, "vmlaunch");
+			break;
+		case 3:
+			strcpy(p, "vmresume");
+			break;
+		case 4:
+			strcpy(p, "vmxoff");
+			break;
 		}
 
 		codep++;
@@ -5304,7 +5304,7 @@ VMX_Fixup(int extrachar ATTRIBUTE_UNUSED, int sizeflag, StackFrame *stackFrame)
 		OP_E(0, sizeflag, stackFrame);
 }
 
-	static void
+static void
 OP_VMX(int bytemode, int sizeflag, StackFrame *stackFrame)
 {
 	used_prefixes |= (prefixes & (PREFIX_DATA | PREFIX_REPZ));
@@ -5323,19 +5323,19 @@ static int mdb_dis_getsym(bfd_vma addr, disassemble_info *dip)
 }
 
 static void mdb_printaddress(unsigned long addr, disassemble_info *dip,
-		int flag, int type)
+			     int flag, int type)
 {
 	int spaces = 5;
 	unsigned char *sym_name;
 	unsigned long offset;
 
 	sym_name = GetSymbolFromValueWithOffset(addr, &offset,
-			&symbuf[0],
-			MAX_SYMBOL_LEN);
+						&symbuf[0],
+						MAX_SYMBOL_LEN);
 	if (sym_name && sym_name[0] != ' ') {
 		if (type)
 			dip->fprintf_func(dip->stream, "0x%0*lx %s",
-					(int)(2 * sizeof(addr)), addr, sym_name);
+					  (int)(2 * sizeof(addr)), addr, sym_name);
 		else
 			dip->fprintf_func(dip->stream, "%s", sym_name);
 		if ((offset) == 0)
@@ -5374,7 +5374,7 @@ int mdb_fprintf(char *out, const char *fmt, ...)
 }
 
 int mdb_id_printinsn_intel(unsigned long pc, disassemble_info *dip,
-		StackFrame *stackFrame)
+			   StackFrame *stackFrame)
 {
 	register int err;
 	char *final = &finalbuf[0];
@@ -5382,7 +5382,7 @@ int mdb_id_printinsn_intel(unsigned long pc, disassemble_info *dip,
 
 	/* print the address info based on architecture */
 	if ((dip->mach == bfd_mach_i386_i386) ||
-			(dip->mach == bfd_mach_x86_64)) {
+	    (dip->mach == bfd_mach_x86_64)) {
 		mdb_fprintf(final, "0x%p ", (void *)pc);
 	} else
 		if (dip->mach == bfd_mach_i386_i8086) {
@@ -5390,7 +5390,7 @@ int mdb_id_printinsn_intel(unsigned long pc, disassemble_info *dip,
 			offset = ((unsigned long)pc & 0x0000000F);
 
 			mdb_fprintf(final, "%04X:%04X ",
-					(unsigned)segment, (unsigned)offset);
+				    (unsigned)segment, (unsigned)offset);
 		}
 
 	/* perform disassembly */
@@ -5417,7 +5417,7 @@ int mdb_id_printinsn_intel(unsigned long pc, disassemble_info *dip,
 }
 
 int mdb_id_printinsn_att(unsigned long pc, disassemble_info *dip,
-		StackFrame *stackFrame)
+			 StackFrame *stackFrame)
 {
 	mdb_printaddress(pc, dip, 1, 1);
 	return print_insn_i386_att(pc, dip, stackFrame);
@@ -5448,7 +5448,7 @@ unsigned short read_memory(void *addr, void *buf, unsigned length)
 }
 
 static int mdb_dis_getmem(bfd_vma addr, bfd_byte *buf, unsigned int length,
-		disassemble_info *dip)
+			  disassemble_info *dip)
 {
 	register unsigned long i;
 	register unsigned char *s = buf;
@@ -5464,7 +5464,7 @@ static int mdb_dis_getmem(bfd_vma addr, bfd_byte *buf, unsigned int length,
 }
 
 static int mdb_intel_getmem(bfd_vma addr, bfd_byte *buf, unsigned int length,
-		disassemble_info *dip)
+			    disassemble_info *dip)
 {
 	register unsigned long i;
 	register unsigned char *s = buf, *fbyte = (char *)&fbytebuf[0];
@@ -5563,8 +5563,8 @@ int mdb_id_init(disassemble_info *dip, unsigned long type)
 }
 
 unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
-		unsigned long use, unsigned long *ret,
-		unsigned long type)
+			 unsigned long use, unsigned long *ret,
+			 unsigned long type)
 {
 	jmp_active = 0;
 	trap_disable = 0;
@@ -5576,25 +5576,25 @@ unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
 
 	mdb_id_init(&mdb_di, type);
 	switch (use) {
-		case 2:
-			mdb_di.mach = bfd_mach_x86_64;
-			break;
+	case 2:
+		mdb_di.mach = bfd_mach_x86_64;
+		break;
 
-		case 1:
-			mdb_di.mach = bfd_mach_i386_i386;
-			break;
+	case 1:
+		mdb_di.mach = bfd_mach_i386_i386;
+		break;
 
-		case 0:
-			mdb_di.mach = bfd_mach_i386_i8086;
-			break;
+	case 0:
+		mdb_di.mach = bfd_mach_i386_i8086;
+		break;
 
-		default:
+	default:
 #ifdef CONFIG_X86_64
-			mdb_di.mach = bfd_mach_x86_64;
+		mdb_di.mach = bfd_mach_x86_64;
 #else
-			mdb_di.mach = bfd_mach_i386_i386;
+		mdb_di.mach = bfd_mach_i386_i386;
 #endif
-			break;
+		break;
 	}
 
 	vaddr = (void *)ip;
@@ -5604,9 +5604,9 @@ unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
 		(void)mdb_id_printinsn_intel(ip, &mdb_di, stackFrame);
 
 	if (!strncasecmp(&disbuf[0], "call", 4) ||
-			!strncasecmp(&disbuf[0], "rep", 3)  ||
-			!strncasecmp(&disbuf[0], "int", 3)  ||
-			!strncasecmp(&disbuf[0], "loop", 4)) {
+	    !strncasecmp(&disbuf[0], "rep", 3)  ||
+	    !strncasecmp(&disbuf[0], "int", 3)  ||
+	    !strncasecmp(&disbuf[0], "loop", 4)) {
 		needs_proceed = 1;
 		jmp_active = 1;
 	}
@@ -5615,14 +5615,14 @@ unsigned long unassemble(StackFrame *stackFrame, unsigned long ip,
 		jmp_active = 1;
 
 	if (!strncasecmp(&disbuf[0], "iret", 4) ||
-			!strncasecmp(&disbuf[0], "sysexit", 7) ||
-			!strncasecmp(&disbuf[0], "syscall", 7) ||
-			!strncasecmp(&disbuf[0], "sysret", 6))
+	    !strncasecmp(&disbuf[0], "sysexit", 7) ||
+	    !strncasecmp(&disbuf[0], "syscall", 7) ||
+	    !strncasecmp(&disbuf[0], "sysret", 6))
 		jmp_active = 1;
 
 	if (strstr(&disbuf[0], "sysexit") ||
-			strstr(&disbuf[0], "syscall") ||
-			strstr(&disbuf[0], "sysret"))
+	    strstr(&disbuf[0], "syscall") ||
+	    strstr(&disbuf[0], "sysret"))
 		trap_disable = 1;
 
 	if (ret)

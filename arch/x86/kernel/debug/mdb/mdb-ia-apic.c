@@ -80,9 +80,9 @@ extern int nr_ioapics;
 unsigned long apic_directed_nmi(unsigned long cpu)
 {
 	apic->send_IPI_mask(cpumask_of(cpu),
-			APIC_DM_NMI | APIC_INT_LEVELTRIG | APIC_INT_ASSERT);
+			    APIC_DM_NMI | APIC_INT_LEVELTRIG | APIC_INT_ASSERT);
 	apic->send_IPI_mask(cpumask_of(cpu),
-			APIC_DM_NMI | APIC_INT_LEVELTRIG);
+			    APIC_DM_NMI | APIC_INT_LEVELTRIG);
 	return 0;
 }
 
@@ -192,8 +192,8 @@ unsigned long displayAPICHelp(unsigned char *commandLine, DEBUGGER_PARSER *parse
 /* APIC */
 
 unsigned long displayAPICInfo(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+			      StackFrame *stackFrame, unsigned long Exception,
+			      DEBUGGER_PARSER *parser)
 {
 	register unsigned long value;
 	unsigned long valid;
@@ -223,8 +223,8 @@ unsigned long displayIOAPICHelp(unsigned char *commandLine, DEBUGGER_PARSER *par
 /* IOAPIC */
 
 unsigned long displayIOAPICInfo(unsigned char *cmd,
-		StackFrame *stackFrame, unsigned long Exception,
-		DEBUGGER_PARSER *parser)
+				StackFrame *stackFrame, unsigned long Exception,
+				DEBUGGER_PARSER *parser)
 {
 	register unsigned long value;
 	unsigned long valid;

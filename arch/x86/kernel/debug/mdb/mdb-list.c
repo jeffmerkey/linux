@@ -135,7 +135,7 @@ unsigned long AccelHelpRoutine(unsigned long key)
 		while (accel) {
 			if (accel->accelFlags && accel->key && !accel->supervisorCommand)
 				DBGPrint("%08X         - %s\n",
-						(unsigned)accel->key,  accel->shortHelp);
+					 (unsigned)accel->key,  accel->shortHelp);
 			accel = accel->accelNext;
 		}
 	}
@@ -308,7 +308,7 @@ DEBUGGER_PARSER *debugParserHead;
 DEBUGGER_PARSER *debugParserTail;
 
 unsigned long DebuggerParserRoutine(unsigned char *command,  unsigned char *commandLine,
-		StackFrame *stackFrame,  unsigned long Exception)
+				    StackFrame *stackFrame,  unsigned long Exception)
 {
 	register DEBUGGER_PARSER *debugParser;
 	register unsigned long retCode,  valid = 0,  length;
@@ -335,10 +335,10 @@ unsigned long DebuggerParserRoutine(unsigned char *command,  unsigned char *comm
 	debugParser = debugParserHead;
 	while (debugParser) {
 		if (debugParser->parserFlags && debugParser->DebugCommandParser &&
-				(debugParser->debugCommandNameLength == length) &&
-				(!strcmp(debugParser->debugCommandName,  command))) {
+		    (debugParser->debugCommandNameLength == length) &&
+		    (!strcmp(debugParser->debugCommandName,  command))) {
 			retCode = (debugParser->DebugCommandParser)(commandLine,  stackFrame,
-					Exception,  debugParser);
+								    Exception,  debugParser);
 			if (retCode)
 				return retCode;
 		}
@@ -372,11 +372,11 @@ unsigned long DebuggerParserHelpRoutine(unsigned char *command,  unsigned char *
 		debugParser = debugParserHead;
 		while (debugParser) {
 			if (debugParser->parserFlags &&
-					(debugParser->debugCommandNameLength == length) &&
-					!strcmp(debugParser->debugCommandName,  command)) {
+			    (debugParser->debugCommandNameLength == length) &&
+			    !strcmp(debugParser->debugCommandName,  command)) {
 				if (debugParser->DebugCommandParserHelp) {
 					DBGPrint("Help for Command %s\n",
-							debugParser->debugCommandName);
+						 debugParser->debugCommandName);
 					(debugParser->DebugCommandParserHelp)(commandLine,  debugParser);
 					return 1;
 				}
@@ -405,10 +405,10 @@ unsigned long DebuggerParserHelpRoutine(unsigned char *command,  unsigned char *
 				unsigned char debugTemp[256];
 
 				if (debugParser->parserFlags && debugParser->debugCommandName &&
-						!debugParser->supervisorCommand && debugParser->category == i) {
+				    !debugParser->supervisorCommand && debugParser->category == i) {
 					strncpy2lower(debugTemp,  debugParser->debugCommandName,  256);
 					if (DBGPrint("  %-10s    - %s\n",  debugTemp,
-								debugParser->shortHelp)) return 0;
+						     debugParser->shortHelp)) return 0;
 				}
 				debugParser = debugParser->debugNext;
 			}
@@ -464,9 +464,9 @@ unsigned long AddDebuggerCommandParser(DEBUGGER_PARSER *parser)
 	debugParser = debugParserHead;
 	while (debugParser) {
 		if (debugParser == parser ||
-				(parser->debugCommandNameLength ==
-				 debugParser->debugCommandNameLength &&
-				 (!strcasecmp(parser->debugCommandName,  debugParser->debugCommandName))))
+		    (parser->debugCommandNameLength ==
+		     debugParser->debugCommandNameLength &&
+		     (!strcasecmp(parser->debugCommandName,  debugParser->debugCommandName))))
 			return 1;
 		debugParser = debugParser->debugNext;
 	}

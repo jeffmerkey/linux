@@ -228,7 +228,7 @@ extern "C" {
 	extern bfd_boolean generic_symbol_is_valid
 		(asymbol *, struct disassemble_info *);
 	void init_disassemble_info (struct disassemble_info *info, void *stream,
-			fprintf_ftype fprintf_func);
+				    fprintf_ftype fprintf_func);
 
 #define INIT_DISASSEMBLE_INFO(INFO, STREAM, FPRINTF_FUNC) \
 	init_disassemble_info (&(INFO), (STREAM), (fprintf_ftype)(FPRINTF_FUNC))
