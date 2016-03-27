@@ -32,11 +32,11 @@ static char x86_stack_ids[][8] = {
 };
 
 #if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
-unsigned long *in_exception_stack(unsigned cpu, unsigned long stack,
-				  unsigned *usedp, char **idp)
+unsigned long *in_exception_stack(unsigned int cpu, unsigned long stack,
+				  unsigned int *usedp, char **idp)
 #else
-static unsigned long *in_exception_stack(unsigned cpu, unsigned long stack,
-					 unsigned *usedp, char **idp)
+static unsigned long *in_exception_stack(unsigned int cpu, unsigned long stack,
+					 unsigned int *usedp, char **idp)
 #endif
 
 {
