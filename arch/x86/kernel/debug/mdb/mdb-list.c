@@ -122,18 +122,18 @@ unsigned long accel_help_routine(unsigned long key)
 			if (accel->flags && accel->key == key) {
 				if (accel->accel_help) {
 					dbg_pr("Accelerator %08X\n",
-					       (unsigned)accel->key);
+					       accel->key);
 					accel->accel_help(key, accel);
 					return 1;
 				}
 				dbg_pr("Accelerator %08X\n",
-				       (unsigned)accel->key);
+				       accel->key);
 				return 1;
 			}
 			accel = accel->next;
 		}
 		dbg_pr("Help for Accelerator[%08X] not found\n",
-		       (unsigned)key);
+		       key);
 		return 1;
 	}
 
@@ -142,7 +142,7 @@ unsigned long accel_help_routine(unsigned long key)
 		if (accel->flags && accel->key &&
 		    !accel->super)
 			dbg_pr("%08X         - %s\n",
-			       (unsigned)accel->key,
+			       accel->key,
 			       accel->help);
 		accel = accel->next;
 	}

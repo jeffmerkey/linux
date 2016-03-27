@@ -5111,7 +5111,7 @@ int mdb_id_printinsn_intel(unsigned long pc, struct disassemble_info *dip,
 			offset = ((unsigned long)pc & 0x0000000F);
 
 			mdb_fprintf(final, "%04X:%04X ",
-				    (unsigned)segment, (unsigned)offset);
+				    segment, offset);
 		}
 
 	/* perform disassembly */
@@ -5154,7 +5154,7 @@ static void mdb_dis_printaddr(mdb_vma addr, struct disassemble_info *dip)
 	mdb_printaddress(addr, dip, 0, 1);
 }
 
-unsigned short read_memory(void *addr, void *buf, unsigned length)
+unsigned short read_memory(void *addr, void *buf, unsigned int length)
 {
 	register unsigned long i;
 	register unsigned char *s = buf;

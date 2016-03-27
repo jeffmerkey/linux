@@ -411,12 +411,12 @@ unsigned long back_trace_stack(unsigned char *cmd, dbg_regs *dbgframe,
 	address = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbg_pr("Stack backtrace for address 0x%p\n",
-		       (unsigned *)address);
+		       (unsigned int *)address);
 		bt_stack(NULL, NULL, (unsigned long *)address);
 		return 1;
 	}
 	dbg_pr("Stack backtrace for address 0x%p\n",
-	       (unsigned *)get_stack_address(dbgframe));
+	       (unsigned int *)get_stack_address(dbgframe));
 	bt_stack(NULL, NULL,
 		 (unsigned long *)get_stack_address(dbgframe));
 	return 1;
@@ -453,7 +453,7 @@ void display_ascii_table(void)
 		switch (i) {
 		case 0:
 			if (dbg_pr(ASC_NULL,
-				   (int)i, (unsigned)i,
+				   (int)i, i,
 				   (int)val.b.eight, (int)val.b.seven,
 				   (int)val.b.six,
 				   (int)val.b.five,  (int)val.b.four,
@@ -464,7 +464,7 @@ void display_ascii_table(void)
 
 		case 8:
 			if (dbg_pr(ASC_BKSP,
-				   (int)i, (unsigned)i,
+				   (int)i, i,
 				   (int)val.b.eight, (int)val.b.seven,
 				   (int)val.b.six,
 				   (int)val.b.five,  (int)val.b.four,
@@ -475,7 +475,7 @@ void display_ascii_table(void)
 
 		case 9:
 			if (dbg_pr(ASC_TAB,
-				   (int)i, (unsigned)i,
+				   (int)i, i,
 				   (int)val.b.eight, (int)val.b.seven,
 				   (int)val.b.six,
 				   (int)val.b.five,  (int)val.b.four,
@@ -486,7 +486,7 @@ void display_ascii_table(void)
 
 		case 10:
 			if (dbg_pr(ASC_CR,
-				   (int)i, (unsigned)i,
+				   (int)i, i,
 				   (int)val.b.eight, (int)val.b.seven,
 				   (int)val.b.six,
 				   (int)val.b.five,  (int)val.b.four,
@@ -497,7 +497,7 @@ void display_ascii_table(void)
 
 		case 13:
 			if (dbg_pr(ASC_LF,
-				   (int)i, (unsigned)i,
+				   (int)i, i,
 				   (int)val.b.eight, (int)val.b.seven,
 				   (int)val.b.six,
 				   (int)val.b.five,  (int)val.b.four,
@@ -508,7 +508,7 @@ void display_ascii_table(void)
 
 		case 32:
 			if (dbg_pr(ASC_SP,
-				   (int)i, (unsigned)i,
+				   (int)i, i,
 				   (int)val.b.eight, (int)val.b.seven,
 				   (int)val.b.six,
 				   (int)val.b.five,  (int)val.b.four,
@@ -519,7 +519,7 @@ void display_ascii_table(void)
 
 		default:
 			if (dbg_pr(ASC_BASE,
-				   (int)i, (unsigned)i,
+				   (int)i, i,
 				   (int)val.b.eight, (int)val.b.seven,
 				   (int)val.b.six,
 				   (int)val.b.five,  (int)val.b.four,
@@ -821,8 +821,8 @@ unsigned long search_results(unsigned char *p, unsigned long count)
 		dbg_pr("%p ", p);
 		for (total = 0, i = 0; i < 16; i++, total++)
 			dbg_pr("%02X",
-			       (unsigned)mdb_getword((unsigned long)&p[i],
-						     1));
+			       mdb_getword((unsigned long)&p[i],
+					   1));
 		dbg_pr("  ");
 		for (i = 0; i < total; i++) {
 			ch = mdb_getword((unsigned long)&p[i], 1);
@@ -868,10 +868,10 @@ unsigned char *dump(unsigned char *p, unsigned long count,
 		dbg_pr("%p ", p);
 		for (total = 0, i = 0; i < 16; i++, total++) {
 			dbg_pr("%02X", physical
-			       ? (unsigned)mdb_phys_getword((unsigned long)
-							    &p[i], 1)
-			       : (unsigned)mdb_getword((unsigned long)
-						       &p[i], 1));
+			       ? mdb_phys_getword((unsigned long)
+						  &p[i], 1)
+			       : mdb_getword((unsigned long)
+					     &p[i], 1));
 		}
 		dbg_pr("  ");
 		for (i = 0; i < total; i++) {
@@ -922,8 +922,8 @@ unsigned long dump_word_search(unsigned char *p, unsigned long count)
 		}
 		dbg_pr("%p ", p);
 		for (i = 0; i < (16 / 2); i++)
-			dbg_pr(" %04X", (unsigned)mdb_getword((unsigned long)
-							      &wp[i], 2));
+			dbg_pr(" %04X", mdb_getword((unsigned long)
+						    &wp[i], 2));
 		dbg_pr("  ");
 		for (i = 0; i < 16; i++) {
 			ch = mdb_getword((unsigned long)&p[i], 1);
@@ -972,10 +972,10 @@ unsigned char *dump_word(unsigned char *p, unsigned long count,
 		dbg_pr("%p ", p);
 		for (i = 0; i < (16 / 2); i++) {
 			dbg_pr(" %04X", physical
-			       ? (unsigned)mdb_phys_getword((unsigned long)
-							    &wp[i], 2)
-			       : (unsigned)mdb_getword((unsigned long)
-						       &wp[i], 2));
+			       ? mdb_phys_getword((unsigned long)
+						  &wp[i], 2)
+			       : mdb_getword((unsigned long)
+					     &wp[i], 2));
 		}
 		dbg_pr("  ");
 		for (i = 0; i < 16; i++) {
@@ -1028,8 +1028,8 @@ unsigned long dump_double_search(unsigned char *p, unsigned long count)
 		}
 		dbg_pr("%p ", p);
 		for (i = 0; i < (16 / 4); i++)
-			dbg_pr(" %08X", (unsigned)mdb_getword((unsigned long)
-							      &lp[i], 4));
+			dbg_pr(" %08X", mdb_getword((unsigned long)
+						    &lp[i], 4));
 		dbg_pr("  ");
 		for (i = 0; i < 16; i++) {
 			ch = mdb_getword((unsigned long)&p[i], 1);
@@ -1132,10 +1132,10 @@ unsigned char *dump_double(unsigned char *p, unsigned long count,
 		dbg_pr("%p ", p);
 		for (i = 0; i < (16 / 4); i++) {
 			dbg_pr(" %08X", physical
-			       ? (unsigned)mdb_phys_getword((unsigned long)
-							    &lp[i], 4)
-			       : (unsigned)mdb_getword((unsigned long)
-						       &lp[i], 4));
+			       ? mdb_phys_getword((unsigned long)
+						  &lp[i], 4)
+			       : mdb_getword((unsigned long)
+					     &lp[i], 4));
 		}
 		dbg_pr("  ");
 		for (i = 0; i < 16; i++) {
@@ -1166,16 +1166,16 @@ unsigned char *dump_linked_list(unsigned char *p, unsigned long count,
 
 	lp = (unsigned long *)p;
 
-	dbg_pr("Linked List ->[%p + %X] = %08X\n", lp, (unsigned)offset,
-	       (unsigned)mdb_getword((unsigned long)
-				     ((unsigned long)lp +
-				      (unsigned long)offset), 4));
+	dbg_pr("Linked List ->[%p + %X] = %08X\n", lp, offset,
+	       mdb_getword((unsigned long)
+			   ((unsigned long)lp +
+			    (unsigned long)offset), 4));
 
 	for (r = 0; r < count; r++) {
 		dbg_pr("%p ", p);
 		for (i = 0; i < 16; i++)
-			dbg_pr("%02X", (unsigned)mdb_getword((unsigned long)
-							     &p[i], 1));
+			dbg_pr("%02X", mdb_getword((unsigned long)
+						   &p[i], 1));
 		dbg_pr("  ");
 		for (i = 0; i < 16; i++) {
 			ch = mdb_getword((unsigned long)&p[i], 1);
@@ -1208,7 +1208,7 @@ unsigned char *dump_quad_stack(dbg_regs *dbgframe, unsigned char *p,
 	       (unsigned long)get_stack_segment(dbgframe), p);
 
 	for (r = 0; r < count; r++) {
-		dbg_pr("%04X:", (unsigned)get_stack_segment(dbgframe));
+		dbg_pr("%04X:", get_stack_segment(dbgframe));
 		dbg_pr("%p ", p);
 		for (i = 0; i < (16 / 8); i++)
 			dbg_pr(" %016llX",
@@ -1244,11 +1244,11 @@ unsigned char *dump_double_stack(dbg_regs *dbgframe, unsigned char *p,
 	       (unsigned long)get_stack_segment(dbgframe), p);
 
 	for (r = 0; r < count; r++) {
-		dbg_pr("%04X:", (unsigned)get_stack_segment(dbgframe));
+		dbg_pr("%04X:", get_stack_segment(dbgframe));
 		dbg_pr("%p ", p);
 		for (i = 0; i < (16 / 4); i++)
-			dbg_pr(" %08X", (unsigned)mdb_getword((unsigned long)
-							      &lp[i], 4));
+			dbg_pr(" %08X", mdb_getword((unsigned long)
+						    &lp[i], 4));
 		dbg_pr("  ");
 		for (i = 0; i < 16; i++) {
 			ch = mdb_getword((unsigned long)&p[i], 1);
@@ -1311,8 +1311,8 @@ unsigned long dump_backtrace(unsigned char *p, unsigned long count)
 				return 1;
 
 			if (dbg_pr("%08X ",
-				   (unsigned)mdb_getword((unsigned long)lp,
-							 4)))
+				   mdb_getword((unsigned long)lp,
+					       4)))
 				return 1;
 
 			if (closest_symbol(mdb_getword((unsigned long)lp,
@@ -1337,7 +1337,7 @@ unsigned char *dump_local_stack(dbg_regs *dbgframe, unsigned char *p,
 
 	lp = (u64 *)p;
 
-	dbg_pr("Stack = %04X:%p\n", (unsigned)get_stack_segment(dbgframe), p);
+	dbg_pr("Stack = %04X:%p\n", get_stack_segment(dbgframe), p);
 
 	for (r = 0; r < count; r++) {
 		dbg_pr("%p ", p);
@@ -1362,12 +1362,12 @@ unsigned char *dump_local_stack(dbg_regs *dbgframe, unsigned char *p,
 
 	lp = (unsigned long *)p;
 
-	dbg_pr("Stack = %04X:%p\n", (unsigned)get_stack_segment(dbgframe),
+	dbg_pr("Stack = %04X:%p\n", get_stack_segment(dbgframe),
 	       p);
 
 	for (r = 0; r < count; r++) {
 		dbg_pr("%p ", p);
-		dbg_pr("%08X ", (unsigned)mdb_getword((unsigned long)lp, 4));
+		dbg_pr("%08X ", mdb_getword((unsigned long)lp, 4));
 		if (closest_symbol(mdb_getword((unsigned long)lp, 4)))
 			dbg_pr("\n");
 
@@ -1732,7 +1732,8 @@ unsigned long search_memory(unsigned char *cmd,
 		if (valid) {
 			register unsigned long temp;
 
-			dbg_pr("start address =[%p]\n", (unsigned *)address);
+			dbg_pr("start address =[%p]\n",
+			       (unsigned int *)address);
 			dbg_pr("enter ending address for search:  ");
 
 			in_keyboard(&change_buffer[0], 0, 16);
@@ -1742,15 +1743,15 @@ unsigned long search_memory(unsigned char *cmd,
 				ending_address = temp;
 
 			dbg_pr("\nsearching memory from 0x%p to 0x%p\n",
-			       (unsigned *)address,
-			       (unsigned *)ending_address);
+			       (unsigned int *)address,
+			       (unsigned int *)ending_address);
 			while (address < ending_address) {
 				read_memory((void *)address, copy_buffer,
 					    count);
 				if (!memcmp(search_buffer, copy_buffer,
 					    count)) {
 					if (dbg_pr("match at address[%p]\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					if (search_results((unsigned char *)
 							   address, 4))
@@ -1761,7 +1762,7 @@ unsigned long search_memory(unsigned char *cmd,
 				address++;
 				if (!(address % 0x100000)) {
 					if (dbg_pr("searching 0x%p...\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					key = mdb_getkey();
 					if (((char)key == 'Q') ||
@@ -1844,7 +1845,8 @@ unsigned long search_memory_b(unsigned char *cmd,
 		if (valid) {
 			register unsigned long temp;
 
-			dbg_pr("start address =[%p]\n", (unsigned *)address);
+			dbg_pr("start address =[%p]\n",
+			       (unsigned int *)address);
 
 			dbg_pr("enter ending address for search:  ");
 			in_keyboard(&change_buffer[0], 0, 16);
@@ -1854,15 +1856,15 @@ unsigned long search_memory_b(unsigned char *cmd,
 				ending_address = temp;
 
 			dbg_pr("\nsearching memory from 0x%p to 0x%p\n",
-			       (unsigned *)address,
-			       (unsigned *)ending_address);
+			       (unsigned int *)address,
+			       (unsigned int *)ending_address);
 			while (address < ending_address) {
 				read_memory((void *)address, copy_buffer,
 					    count);
 				if (!memcmp(search_buffer, copy_buffer,
 					    count)) {
 					if (dbg_pr("match at address[%p]\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					if (search_results((unsigned char *)
 							   address, 4))
@@ -1873,7 +1875,7 @@ unsigned long search_memory_b(unsigned char *cmd,
 				address++;
 				if (!(address % 0x100000)) {
 					if (dbg_pr("searching 0x%p ...\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					key = mdb_getkey();
 					if (((char)key == 'Q') ||
@@ -1958,7 +1960,8 @@ unsigned long search_memory_w(unsigned char *cmd,
 		if (valid) {
 			register unsigned long temp;
 
-			dbg_pr("start address =[%p]\n", (unsigned *)address);
+			dbg_pr("start address =[%p]\n",
+			       (unsigned int *)address);
 
 			dbg_pr("enter ending address for search:  ");
 			in_keyboard(&change_buffer[0], 0, 16);
@@ -1968,15 +1971,15 @@ unsigned long search_memory_w(unsigned char *cmd,
 				ending_address = temp;
 
 			dbg_pr("searching memory from 0x%p to 0x%p\n",
-			       (unsigned *)address,
-			       (unsigned *)ending_address);
+			       (unsigned int *)address,
+			       (unsigned int *)ending_address);
 			while (address < ending_address) {
 				read_memory((void *)address, copy_buffer,
 					    count * sizeof(unsigned short));
 				if (!memcmp(search_buffer, copy_buffer,
 					    count * sizeof(unsigned short))) {
 					if (dbg_pr("match at address[%p]\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					if (dump_word_search((unsigned char *)
 							     address, 4))
@@ -1987,7 +1990,7 @@ unsigned long search_memory_w(unsigned char *cmd,
 				address++;
 				if (!(address % 0x100000)) {
 					if (dbg_pr("searching 0x%p ...\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					key = mdb_getkey();
 					if (((char)key == 'Q') ||
@@ -2058,7 +2061,7 @@ unsigned long search_memory_d(unsigned char *cmd,
 			value = eval_expr(0, &pB, &valid);
 			if (valid)
 				*changeD = value;
-			dbg_pr("%08X ", (unsigned)*changeD);
+			dbg_pr("%08X ", *changeD);
 
 			changeD++;
 			if (count++ > maxlen)
@@ -2076,7 +2079,8 @@ unsigned long search_memory_d(unsigned char *cmd,
 		if (valid) {
 			register unsigned long temp;
 
-			dbg_pr("start address =[%p]\n", (unsigned *)address);
+			dbg_pr("start address =[%p]\n",
+			       (unsigned int *)address);
 
 			dbg_pr("enter ending address for search:  ");
 			in_keyboard(&change_buffer[0], 0, 16);
@@ -2086,15 +2090,15 @@ unsigned long search_memory_d(unsigned char *cmd,
 				ending_address = temp;
 
 			dbg_pr("searching memory from 0x%p to 0x%p\n",
-			       (unsigned *)address,
-			       (unsigned *)ending_address);
+			       (unsigned int *)address,
+			       (unsigned int *)ending_address);
 			while (address < ending_address) {
 				read_memory((void *)address, copy_buffer,
 					    count * sizeof(unsigned long));
 				if (!memcmp(search_buffer, copy_buffer,
 					    count * sizeof(unsigned long))) {
 					if (dbg_pr("match at address[%p]\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					if (dump_double_search((unsigned char *)
 							       address, 4))
@@ -2105,7 +2109,7 @@ unsigned long search_memory_d(unsigned char *cmd,
 				address++;
 				if (!(address % 0x100000)) {
 					if (dbg_pr("searching 0x%p ...\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					key = mdb_getkey();
 					if (((char)key == 'Q') ||
@@ -2184,7 +2188,7 @@ unsigned long search_memory_q(unsigned char *cmd,
 			value = eval_expr(0, &pB, &valid);
 			if (valid)
 				*changeQ = value;
-			dbg_pr("%016X ", (unsigned)*changeQ);
+			dbg_pr("%016X ", *changeQ);
 
 			changeQ++;
 			if (count++ > maxlen)
@@ -2202,7 +2206,8 @@ unsigned long search_memory_q(unsigned char *cmd,
 		if (valid) {
 			register unsigned long temp;
 
-			dbg_pr("start address =[%p]\n", (unsigned *)address);
+			dbg_pr("start address =[%p]\n",
+			       (unsigned int *)address);
 
 			dbg_pr("enter ending address for search:  ");
 			in_keyboard(&change_buffer[0], 0, 16);
@@ -2212,8 +2217,8 @@ unsigned long search_memory_q(unsigned char *cmd,
 				ending_address = temp;
 
 			dbg_pr("searching memory from 0x%p to 0x%p\n",
-			       (unsigned *)address,
-			       (unsigned *)ending_address);
+			       (unsigned int *)address,
+			       (unsigned int *)ending_address);
 			while (address < ending_address) {
 				read_memory((void *)address, copy_buffer,
 					    count * sizeof(unsigned long long));
@@ -2221,7 +2226,7 @@ unsigned long search_memory_q(unsigned char *cmd,
 					    count *
 					    sizeof(unsigned long long))) {
 					if (dbg_pr("match at address[%p]\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					if (dump_quad((unsigned char *)address,
 						      4, 0))
@@ -2232,7 +2237,7 @@ unsigned long search_memory_q(unsigned char *cmd,
 				address++;
 				if (!(address % 0x100000)) {
 					if (dbg_pr("searching 0x%p ...\n",
-						   (unsigned *)address))
+						   (unsigned int *)address))
 						return 1;
 					key = mdb_getkey();
 					if (((char)key == 'Q') ||
@@ -2291,7 +2296,7 @@ unsigned long change_word_value(unsigned char *cmd,
 			for (r = 0; r < 4; r++) {
 				old_w = (unsigned short)
 					mdb_getword((unsigned long)changeW, 2);
-				dbg_pr("(%04X)=", (unsigned)old_w);
+				dbg_pr("(%04X)=", old_w);
 
 				in_keyboard(&change_buffer[0], 0, 6);
 
@@ -2311,7 +2316,6 @@ unsigned long change_word_value(unsigned char *cmd,
 					mdb_putword((unsigned long)changeW,
 						    value, 2);
 				dbg_pr("%04X ",
-				       (unsigned)
 				       mdb_getword((unsigned long)changeW,
 						   2));
 				changeW++;
@@ -2351,7 +2355,7 @@ unsigned long change_quad_value(unsigned char *cmd,
 			dbg_pr("[%p] ", changeD);
 			for (r = 0; r < 2; r++) {
 				old_d = mdb_getqword(changeD, 8);
-				dbg_pr("(%016llX)=", (unsigned)old_d);
+				dbg_pr("(%016llX)=", old_d);
 
 				in_keyboard(&change_buffer[0], 0,
 					    16);
@@ -2422,7 +2426,7 @@ unsigned long change_double_value(unsigned char *cmd,
 			for (r = 0; r < 2; r++) {
 				old_d = (unsigned long)
 					mdb_getword((unsigned long)changeD, 4);
-				dbg_pr("(%08X)=", (unsigned)old_d);
+				dbg_pr("(%08X)=", old_d);
 
 				in_keyboard(&change_buffer[0], 0, 8);
 
@@ -2446,7 +2450,7 @@ unsigned long change_double_value(unsigned char *cmd,
 				if (valid)
 					mdb_putword((unsigned long)changeD,
 						    value, 4);
-				dbg_pr("%08X ", (unsigned)
+				dbg_pr("%08X ",
 				       mdb_getword((unsigned long)changeD,
 						   4));
 				changeD++;
@@ -2487,7 +2491,7 @@ unsigned long change_byte_value(unsigned char *cmd,
 			for (r = 0; r < 8; r++) {
 				oldB = (unsigned char)
 					mdb_getword((unsigned long)changeB, 1);
-				dbg_pr("(%02X)=", (unsigned)oldB);
+				dbg_pr("(%02X)=", oldB);
 
 				in_keyboard(&change_buffer[0], 0, 4);
 

@@ -1919,11 +1919,11 @@ void display_npx_registers(dbg_regs *dbgframe)
 	tos = (npx->status >> 11) & 7;
 
 	dbg_pr("Control: 0x%04X  Status: 0x%04X  ",
-	       (unsigned)npx->control & 0xFFFF,
-	       (unsigned)npx->status & 0xFFFF);
+	       (unsigned int)npx->control & 0xFFFF,
+	       (unsigned int)npx->status & 0xFFFF);
 
 	dbg_pr("Tag: 0x%04X  TOS: %i CPU: %i\n",
-	       (unsigned)npx->tag & 0xFFFF,
+	       (unsigned int)npx->tag & 0xFFFF,
 	       (int)tos, (int)get_processor_id());
 
 	for (i = 0; i < 8; i++) {
@@ -1936,11 +1936,11 @@ void display_npx_registers(dbg_regs *dbgframe)
 			dbg_pr("+");
 
 		dbg_pr(" %04X %04X %04X %04X e %04X    ",
-		       (unsigned)npx->reg[i].sig3,
-		       (unsigned)npx->reg[i].sig2,
-		       (unsigned)npx->reg[i].sig1,
-		       (unsigned)npx->reg[i].sig0,
-		       (unsigned)npx->reg[i].exponent);
+		       (unsigned int)npx->reg[i].sig3,
+		       (unsigned int)npx->reg[i].sig2,
+		       (unsigned int)npx->reg[i].sig1,
+		       (unsigned int)npx->reg[i].sig0,
+		       (unsigned int)npx->reg[i].exponent);
 
 		tag = (npx->tag >> (((i + tos) % 8) * 2)) & 3;
 		switch (tag) {
@@ -2043,7 +2043,7 @@ unsigned long change_origeax_register(unsigned char *cmd,
 	value = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbgframe->t_res[1] = value;
-		dbg_pr("ORIGEAX changed to 0x%lX\n", (unsigned)value);
+		dbg_pr("ORIGEAX changed to 0x%lX\n", value);
 	} else {
 		dbg_pr("invalid change register command or address\n");
 	}
@@ -2075,19 +2075,19 @@ unsigned long change_eax_register(unsigned char *cmd,
 		case 0:
 			dbgframe->t_ax &= ~0xFFFFFFFF;
 			dbgframe->t_ax |= value & 0xFFFFFFFF;
-			dbg_pr("EAX changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("EAX changed to 0x%lX\n", value);
 			break;
 
 		case 1:
 			dbgframe->t_ax &= ~0xFFFF;
 			dbgframe->t_ax |= value & 0xFFFF;
-			dbg_pr("AX changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("AX changed to 0x%lX\n", value);
 			break;
 
 		case 2:
 			dbgframe->t_ax &= ~0xFF;
 			dbgframe->t_ax |= value & 0xFF;
-			dbg_pr("AL changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("AL changed to 0x%lX\n", value);
 			break;
 
 		default:
@@ -2132,19 +2132,19 @@ unsigned long change_ebx_register(unsigned char *cmd,
 		case 0:
 			dbgframe->t_bx &= ~0xFFFFFFFF;
 			dbgframe->t_bx |= value & 0xFFFFFFFF;
-			dbg_pr("EBX changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("EBX changed to 0x%lX\n", value);
 			break;
 
 		case 1:
 			dbgframe->t_bx &= ~0xFFFF;
 			dbgframe->t_bx |= value & 0xFFFF;
-			dbg_pr("BX changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("BX changed to 0x%lX\n", value);
 			break;
 
 		case 2:
 			dbgframe->t_bx &= ~0xFF;
 			dbgframe->t_bx |= value & 0xFF;
-			dbg_pr("BL changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("BL changed to 0x%lX\n", value);
 			break;
 
 		default:
@@ -2189,19 +2189,19 @@ unsigned long change_ecx_register(unsigned char *cmd,
 		case 0:
 			dbgframe->t_cx &= ~0xFFFFFFFF;
 			dbgframe->t_cx |= value & 0xFFFFFFFF;
-			dbg_pr("ECX changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("ECX changed to 0x%lX\n", value);
 			break;
 
 		case 1:
 			dbgframe->t_cx &= ~0xFFFF;
 			dbgframe->t_cx |= value & 0xFFFF;
-			dbg_pr("CX changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("CX changed to 0x%lX\n", value);
 			break;
 
 		case 2:
 			dbgframe->t_cx &= ~0xFF;
 			dbgframe->t_cx |= value & 0xFF;
-			dbg_pr("CL changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("CL changed to 0x%lX\n", value);
 			break;
 
 		default:
@@ -2246,19 +2246,19 @@ unsigned long change_edx_register(unsigned char *cmd,
 		case 0:
 			dbgframe->t_dx &= ~0xFFFFFFFF;
 			dbgframe->t_dx |= value & 0xFFFFFFFF;
-			dbg_pr("EDX changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("EDX changed to 0x%lX\n", value);
 			break;
 
 		case 1:
 			dbgframe->t_dx &= ~0xFFFF;
 			dbgframe->t_dx |= value & 0xFFFF;
-			dbg_pr("DX changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("DX changed to 0x%lX\n", value);
 			break;
 
 		case 2:
 			dbgframe->t_dx &= ~0xFF;
 			dbgframe->t_dx |= value & 0xFF;
-			dbg_pr("DL changed to 0x%lX\n", (unsigned)value);
+			dbg_pr("DL changed to 0x%lX\n", value);
 			break;
 
 		default:
@@ -2294,7 +2294,7 @@ unsigned long change_esi_register(unsigned char *cmd,
 	value = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbgframe->t_si = value;
-		dbg_pr("ESI changed to 0x%lX\n", (unsigned)value);
+		dbg_pr("ESI changed to 0x%lX\n", value);
 	} else {
 		dbg_pr("invalid change register command or address\n");
 	}
@@ -2324,7 +2324,7 @@ unsigned long change_edi_register(unsigned char *cmd,
 	value = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbgframe->t_di = value;
-		dbg_pr("EDI changed to 0x%lX\n", (unsigned)value);
+		dbg_pr("EDI changed to 0x%lX\n", value);
 	} else {
 		dbg_pr("invalid change register command or address\n");
 	}
@@ -2354,7 +2354,7 @@ unsigned long change_ebp_register(unsigned char *cmd,
 	value = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbgframe->t_bp = value;
-		dbg_pr("EBP changed to 0x%lX\n", (unsigned)value);
+		dbg_pr("EBP changed to 0x%lX\n", value);
 	} else {
 		dbg_pr("invalid change register command or address\n");
 	}
@@ -2384,7 +2384,7 @@ unsigned long change_esp_register(unsigned char *cmd,
 	value = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbgframe->t_sp = value;
-		dbg_pr("ESP changed to 0x%lX\n", (unsigned)value);
+		dbg_pr("ESP changed to 0x%lX\n", value);
 	} else {
 		dbg_pr("invalid change register command or address\n");
 	}
@@ -2414,7 +2414,7 @@ unsigned long change_eip_register(unsigned char *cmd,
 	value = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbgframe->t_ip = value;
-		dbg_pr("EIP changed to 0x%lX\n", (unsigned)value);
+		dbg_pr("EIP changed to 0x%lX\n", value);
 	} else {
 		dbg_pr("invalid change register command or address\n");
 	}
@@ -2992,7 +2992,7 @@ unsigned long change_cs_register(unsigned char *cmd,
 		old_w = dbgframe->t_cs;
 		dbgframe->t_cs = (unsigned short)value;
 		dbg_pr("CS: =[%04X] changed to CS: =[%04X]\n",
-		       (unsigned)old_w, (unsigned)value);
+		       old_w, value);
 	} else {
 		dbg_pr("invalid change segment register command\n");
 	}
@@ -3026,7 +3026,7 @@ unsigned long change_ds_register(unsigned char *cmd,
 		old_w = dbgframe->t_ds;
 		dbgframe->t_ds = (unsigned short)value;
 		dbg_pr("DS: =[%04X] changed to DS: =[%04X]\n",
-		       (unsigned)old_w, (unsigned)value);
+		       old_w, value);
 	} else {
 		dbg_pr("invalid change segment register command\n");
 	}
@@ -3059,7 +3059,7 @@ unsigned long change_es_register(unsigned char *cmd,
 		old_w = dbgframe->t_es;
 		dbgframe->t_es = (unsigned short)value;
 		dbg_pr("ES: =[%04X] changed to ES: =[%04X]\n",
-		       (unsigned)old_w, (unsigned)value);
+		       old_w, value);
 	} else {
 		dbg_pr("invalid change segment register command\n");
 	}
@@ -3093,7 +3093,7 @@ unsigned long change_fs_register(unsigned char *cmd,
 		old_w = dbgframe->t_fs;
 		dbgframe->t_fs = (unsigned short)value;
 		dbg_pr("FS: =[%04X] changed to FS: =[%04X]\n",
-		       (unsigned)old_w, (unsigned)value);
+		       old_w, value);
 	} else {
 		dbg_pr("invalid change segment register command\n");
 	}
@@ -3126,7 +3126,7 @@ unsigned long change_gs_register(unsigned char *cmd,
 		old_w = dbgframe->t_gs;
 		dbgframe->t_gs = (unsigned short)value;
 		dbg_pr("GS: =[%04X] changed to GS: =[%04X]\n",
-		       (unsigned)old_w, (unsigned)value);
+		       old_w, value);
 	} else {
 		dbg_pr("invalid change segment register command\n");
 	}
@@ -3159,7 +3159,7 @@ unsigned long change_ss_register(unsigned char *cmd,
 		old_w = dbgframe->t_ss;
 		dbgframe->t_ss = (unsigned short)value;
 		dbg_pr("SS: =[%04X] changed to SS: =[%04X]\n",
-		       (unsigned)old_w, (unsigned)value);
+		       old_w, value);
 	} else {
 		dbg_pr("invalid change segment register command\n");
 	}
@@ -3192,7 +3192,7 @@ unsigned long change_rf_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= RF_FLAG) :
 			(dbgframe->t_flags &= ~RF_FLAG);
 		dbg_pr("EFlag RF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3225,7 +3225,7 @@ unsigned long change_tf_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= TF_FLAG) :
 			(dbgframe->t_flags &= ~TF_FLAG);
 		dbg_pr("EFlag TF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3258,7 +3258,7 @@ unsigned long change_zf_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= ZF_FLAG) :
 			(dbgframe->t_flags &= ~ZF_FLAG);
 		dbg_pr("EFlag ZF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3291,7 +3291,7 @@ unsigned long change_sf_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= SF_FLAG) :
 			(dbgframe->t_flags &= ~SF_FLAG);
 		dbg_pr("EFlag SF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3324,7 +3324,7 @@ unsigned long change_pf_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= PF_FLAG) :
 			(dbgframe->t_flags &= ~PF_FLAG);
 		dbg_pr("EFlag PF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3357,7 +3357,7 @@ unsigned long change_cf_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= CF_FLAG) :
 			(dbgframe->t_flags &= ~CF_FLAG);
 		dbg_pr("EFlag CF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3390,7 +3390,7 @@ unsigned long change_of_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= OF_FLAG) :
 			(dbgframe->t_flags &= ~OF_FLAG);
 		dbg_pr("EFlag OF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3423,7 +3423,7 @@ unsigned long change_if_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= IF_FLAG) :
 			(dbgframe->t_flags &= ~IF_FLAG);
 		dbg_pr("EFlag IF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3456,7 +3456,7 @@ unsigned long change_id_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= ID_FLAGS) :
 			(dbgframe->t_flags &= ~ID_FLAGS);
 		dbg_pr("EFlag ID[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3489,7 +3489,7 @@ unsigned long change_df_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= DF_FLAG) :
 			(dbgframe->t_flags &= ~DF_FLAG);
 		dbg_pr("EFlag DF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3522,7 +3522,7 @@ unsigned long change_nt_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= NT_FLAG) :
 			(dbgframe->t_flags &= ~NT_FLAG);
 		dbg_pr("EFlag NT[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3555,7 +3555,7 @@ unsigned long change_vm_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= VM_FLAG) :
 			(dbgframe->t_flags &= ~VM_FLAG);
 		dbg_pr("EFlag VM[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3588,7 +3588,7 @@ unsigned long change_vif_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= VIF_FLAG) :
 			(dbgframe->t_flags &= ~VIF_FLAG);
 		dbg_pr("EFlag VIF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3621,7 +3621,7 @@ unsigned long change_vip_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= VIP_FLAG) :
 			(dbgframe->t_flags &= ~VIP_FLAG);
 		dbg_pr("EFlag VIP[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3654,7 +3654,7 @@ unsigned long change_af_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= AF_FLAG) :
 			(dbgframe->t_flags &= ~AF_FLAG);
 		dbg_pr("EFlag AF[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3687,7 +3687,7 @@ unsigned long change_ac_flag(unsigned char *cmd,
 		(value) ? (dbgframe->t_flags |= AC_FLAG) :
 			(dbgframe->t_flags &= ~AC_FLAG);
 		dbg_pr("EFlag AC[%lX] changed to (%d)\n",
-		       (unsigned)old_d, (int)value);
+		       old_d, (int)value);
 	} else {
 		dbg_pr("invalid change flags command\n");
 	}
@@ -3823,7 +3823,7 @@ unsigned long input_word_port(unsigned char *cmd,
 	address = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbg_pr("inportw (%04X) = %04X\n",
-		       (unsigned)address, (unsigned)inw(address));
+		       address, inw(address));
 	} else {
 		dbg_pr("bad port command\n");
 	}
@@ -3847,7 +3847,7 @@ unsigned long input_double_port(unsigned char *cmd,
 	address = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbg_pr("inportd (%04X) = %lX\n",
-		       (unsigned)address, (unsigned)inl(address));
+		       address, inl(address));
 	} else {
 		dbg_pr("bad port command\n");
 	}
@@ -3871,7 +3871,7 @@ unsigned long input_byte_port(unsigned char *cmd,
 	address = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbg_pr("inportb (%04X) = %02X\n",
-		       (unsigned)address, (unsigned)inb(address));
+		       address, inb(address));
 	} else {
 		dbg_pr("bad port command\n");
 	}
@@ -3895,7 +3895,7 @@ unsigned long input_port(unsigned char *cmd,
 	address = eval_expr(dbgframe, &cmd, &valid);
 	if (valid) {
 		dbg_pr("inportb (%04X) = %02X\n",
-		       (unsigned)address, (unsigned)inb(address));
+		       address, inb(address));
 	} else {
 		dbg_pr("bad port command\n");
 	}
@@ -3921,7 +3921,7 @@ unsigned long output_word_port(unsigned char *cmd,
 		value = eval_expr(dbgframe, &cmd, &valid);
 		if (valid) {
 			dbg_pr("outportw (%04X) = %04X\n",
-			       (unsigned)port, (unsigned)value);
+			       port, value);
 			outw(port, value);
 			return 1;
 		}
@@ -3950,7 +3950,7 @@ unsigned long output_double_port(unsigned char *cmd,
 		value = eval_expr(dbgframe, &cmd, &valid);
 		if (valid) {
 			dbg_pr("outportd (%04X) = %lX\n",
-			       (unsigned)port, (unsigned)value);
+			       port, value);
 			outl(port, value);
 			return 1;
 		}
@@ -3979,7 +3979,7 @@ unsigned long output_byte_port(unsigned char *cmd,
 		value = eval_expr(dbgframe, &cmd, &valid);
 		if (valid) {
 			dbg_pr("outportb (%04X) = %02X\n",
-			       (unsigned)port, (unsigned)value);
+			       port, value);
 			outb(port, value);
 			return 1;
 		}
@@ -4008,7 +4008,7 @@ unsigned long output_port(unsigned char *cmd,
 		value = eval_expr(dbgframe, &cmd, &valid);
 		if (valid) {
 			dbg_pr("outportb (%04X) = %02X\n",
-			       (unsigned)port, (unsigned)value);
+			       port, value);
 			outb(port, value);
 			return 1;
 		}
@@ -4098,7 +4098,7 @@ unsigned long breakpoint_clear(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i 0x%p (%s %s) %s|%s cleared\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4108,7 +4108,7 @@ unsigned long breakpoint_clear(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i 0x%p (%s %s) %s cleared\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4215,7 +4215,7 @@ unsigned long breakpoint_word1(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4225,7 +4225,7 @@ unsigned long breakpoint_word1(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4287,7 +4287,7 @@ unsigned long breakpoint_word2(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4297,7 +4297,7 @@ unsigned long breakpoint_word2(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4361,7 +4361,7 @@ unsigned long breakpoint_word4(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4371,7 +4371,7 @@ unsigned long breakpoint_word4(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4436,7 +4436,7 @@ unsigned long breakpoint_word8(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4446,7 +4446,7 @@ unsigned long breakpoint_word8(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4511,7 +4511,7 @@ unsigned long breakpoint_word(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4521,7 +4521,7 @@ unsigned long breakpoint_word(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4585,7 +4585,7 @@ unsigned long breakpoint_read1(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4595,7 +4595,7 @@ unsigned long breakpoint_read1(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4658,7 +4658,7 @@ unsigned long breakpoint_read2(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4668,7 +4668,7 @@ unsigned long breakpoint_read2(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4732,7 +4732,7 @@ unsigned long breakpoint_read4(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4742,7 +4742,7 @@ unsigned long breakpoint_read4(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4807,7 +4807,7 @@ unsigned long breakpoint_read8(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4817,7 +4817,7 @@ unsigned long breakpoint_read8(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4882,7 +4882,7 @@ unsigned long breakpoint_read(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4892,7 +4892,7 @@ unsigned long breakpoint_read(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -4956,7 +4956,7 @@ unsigned long breakpoint_io1(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -4966,7 +4966,7 @@ unsigned long breakpoint_io1(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -5030,7 +5030,7 @@ unsigned long breakpoint_io2(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -5040,7 +5040,7 @@ unsigned long breakpoint_io2(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -5104,7 +5104,7 @@ unsigned long breakpoint_io4(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -5114,7 +5114,7 @@ unsigned long breakpoint_io4(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -5178,7 +5178,7 @@ unsigned long breakpoint_io(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -5188,7 +5188,7 @@ unsigned long breakpoint_io(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -5218,7 +5218,7 @@ void display_breakpoint(int i)
 	if (module_name)
 		dbg_pr("Break %i is at 0x%p (%s %s) %s|%s\n",
 		       (int)i,
-		       (unsigned *)break_points[i],
+		       (unsigned int *)break_points[i],
 		       break_description[(break_type[i] & 3)],
 		       break_length_description[(break_length[i] & 3)],
 		       ((char *)(module_name) ? (char *)(module_name)
@@ -5228,7 +5228,7 @@ void display_breakpoint(int i)
 	else
 		dbg_pr("Break %i is at 0x%p (%s %s) %s\n",
 		       (int)i,
-		       (unsigned *)break_points[i],
+		       (unsigned int *)break_points[i],
 		       break_description[(break_type[i] & 3)],
 		       break_length_description[(break_length[i] & 3)],
 		       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -5297,7 +5297,7 @@ unsigned long breakpoint_execute(unsigned char *cmd,
 		if (module_name)
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s|%s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(module_name) ? (char *)(module_name)
@@ -5307,7 +5307,7 @@ unsigned long breakpoint_execute(unsigned char *cmd,
 		else
 			dbg_pr("breakpoint %i set to 0x%p (%s %s) %s\n",
 			       (int)i,
-			       (unsigned *)break_points[i],
+			       (unsigned int *)break_points[i],
 			       break_description[(break_type[i] & 3)],
 			       break_length_description[(break_length[i] & 3)],
 			       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -5337,7 +5337,7 @@ void display_temp_break(int i)
 	if (module_name)
 		dbg_pr("Break %i is at 0x%p (%s %s) %s|%s[%s]\n",
 		       (int)i,
-		       (unsigned *)break_points[i],
+		       (unsigned int *)break_points[i],
 		       break_description[(break_type[i] & 3)],
 		       break_length_description[(break_length[i] & 3)],
 		       ((char *)(module_name) ? (char *)(module_name)
@@ -5349,7 +5349,7 @@ void display_temp_break(int i)
 	else
 		dbg_pr("Break %i is at 0x%p (%s %s) %s[%s]\n",
 		       (int)i,
-		       (unsigned *)break_points[i],
+		       (unsigned int *)break_points[i],
 		       break_description[(break_type[i] & 3)],
 		       break_length_description[(break_length[i] & 3)],
 		       ((char *)(symbol_name) ? (char *)(symbol_name)
@@ -5417,11 +5417,11 @@ void display_mtrr_registers(void)
 			read_msr(MTRR_MASK_VALUES[i], &mask1, &mask2);
 			dbg_pr("MTRR_BASE_%i  %lX:%lX   ",
 			       (int)i,
-			       (unsigned)base1, (unsigned)base2);
+			       base1, base2);
 
 			dbg_pr("MTRR_MASK_%i  %lX:%lX\n",
 			       (int)i,
-			       (unsigned)mask1, (unsigned)mask2);
+			       mask1, mask2);
 		}
 	} else {
 		dbg_pr("memory type range registers not supported\n");
@@ -5451,14 +5451,14 @@ void display_gdt(unsigned char *GDT_ADDRESS)
 	gdt_pointer = mdb_getword((unsigned long)&GDTR[2], 8);
 
 	dbg_pr("GDTR: %04X:%llX  Processor: %i\n",
-	       (unsigned)gdt_index, (unsigned long long)gdt_pointer,
+	       gdt_index, (unsigned long long)gdt_pointer,
 	       (int)get_processor_id());
 
 	count = 0;
 	gdt_index = (gdt_index + 7) / 8;
 	p = (unsigned char *)gdt_pointer;
 	for (i = 0; i < gdt_index; i++) {
-		if (dbg_pr("%04X(%04i):", (unsigned)count, (int)i))
+		if (dbg_pr("%04X(%04i):", count, (int)i))
 			return;
 		for (r = 0; r < 16; r++)
 			lg.data[r] =
@@ -5493,14 +5493,14 @@ void display_gdt(unsigned char *GDT_ADDRESS)
 	gdt_pointer = mdb_getword((unsigned long)&GDTR[2], 4);
 
 	dbg_pr("GDTR: %04X:%lX  Processor: %i\n",
-	       (unsigned)gdt_index, (unsigned)gdt_pointer,
+	       gdt_index, gdt_pointer,
 	       (int)get_processor_id());
 
 	count = 0;
 	gdt_index = (gdt_index + 7) / 8;
 	p = (unsigned char *)gdt_pointer;
 	for (i = 0; i < gdt_index; i++) {
-		if (dbg_pr("%lX (%04i):", (unsigned)count, (int)i))
+		if (dbg_pr("%lX (%04i):", count, (int)i))
 			return;
 		for (r = 0; r < 8; r++) {
 			lg.data[r] =
@@ -5561,7 +5561,7 @@ void display_idt(unsigned char *IDT_ADDRESS)
 	idt_pointer = mdb_getword((unsigned long)&IDTR[2], 8);
 
 	dbg_pr("IDTR: %04X:%llX  Processor: %i\n",
-	       (unsigned)idt_index, (unsigned long long)idt_pointer,
+	       idt_index, (unsigned long long)idt_pointer,
 	       (int)get_processor_id());
 
 	count = 0;
@@ -5571,7 +5571,7 @@ void display_idt(unsigned char *IDT_ADDRESS)
 		unsigned char *symbol_name, *module_name;
 		unsigned long idt_address, temp;
 
-		if (dbg_pr("%04X(%04i):", (unsigned)count, (int)i))
+		if (dbg_pr("%04X(%04i):", count, (int)i))
 			return;
 		for (r = 0; r < 16; r++)
 			id.data[r] = mdb_getword((unsigned long)&p[r], 1);
@@ -5628,7 +5628,7 @@ void display_idt(unsigned char *IDT_ADDRESS)
 	idt_pointer = mdb_getword((unsigned long)&IDTR[2], 4);
 
 	dbg_pr("IDTR: %04X:%lX  Processor: %i\n",
-	       (unsigned)idt_index, (unsigned)idt_pointer,
+	       idt_index, idt_pointer,
 	       (int)get_processor_id());
 
 	count = 0;
@@ -5638,7 +5638,7 @@ void display_idt(unsigned char *IDT_ADDRESS)
 		unsigned char *symbol_name, *module_name;
 		unsigned long idt_address;
 
-		if (dbg_pr("%lX (%04i):", (unsigned)count, (int)i))
+		if (dbg_pr("%lX (%04i):", count, (int)i))
 			return;
 		for (r = 0; r < 8; r++) {
 			id.data[r] = mdb_getword((unsigned long)&p[r], 1);
@@ -5714,13 +5714,13 @@ void display_tss(dbg_regs *dbgframe)
 	dbg_pr("R15: %016lX\n", dbgframe->r15);
 
 	dbg_pr("CS: %04X  DS: %04X  ES: %04X  FS: %04X  GS: %04X ",
-	       (unsigned)dbgframe->t_cs, (unsigned)dbgframe->t_ds,
-	       (unsigned)dbgframe->t_es, (unsigned)dbgframe->t_fs,
-	       (unsigned)dbgframe->t_gs);
+	       dbgframe->t_cs, dbgframe->t_ds,
+	       dbgframe->t_es, dbgframe->t_fs,
+	       dbgframe->t_gs);
 
 	dbg_pr("SS: %04X  LDT: %04X\n",
-	       (unsigned)dbgframe->t_ss,
-	       (unsigned)dbgframe->t_ldt);
+	       dbgframe->t_ss,
+	       dbgframe->t_ldt);
 
 	dbg_pr("RIP: %016lX  FLAGS: %016lX ",
 	       dbgframe->t_ip, dbgframe->t_flags);
@@ -5739,8 +5739,8 @@ void display_tss(dbg_regs *dbgframe)
 	dbg_pr(")\n");
 
 	dbg_pr("CR3: %016lX  IOMAP: %016lX  BLINK: %016lX\n",
-	       (unsigned)dbgframe->t_cr3, (unsigned)dbgframe->t_io_map,
-	       (unsigned)dbgframe->t_res[0]);
+	       dbgframe->t_cr3, dbgframe->t_io_map,
+	       dbgframe->t_res[0]);
 
 #else
 	unsigned long i, f = 0;
@@ -5748,25 +5748,25 @@ void display_tss(dbg_regs *dbgframe)
 	dbg_pr("Task State Segment at 0x%p\n", dbgframe);
 
 	dbg_pr("EAX: %08X  EBX: %08X  ECX: %08X  EDX: %08X\n",
-	       (unsigned)dbgframe->t_ax, (unsigned)dbgframe->t_bx,
-	       (unsigned)dbgframe->t_cx, (unsigned)dbgframe->t_dx);
+	       dbgframe->t_ax, dbgframe->t_bx,
+	       dbgframe->t_cx, dbgframe->t_dx);
 
 	dbg_pr("ESI: %08X  EDI: %08X  ESP: %08X  EBP: %08X\n",
-	       (unsigned)dbgframe->t_si, (unsigned)dbgframe->t_di,
-	       (unsigned)dbgframe->t_sp, (unsigned)dbgframe->t_bp);
+	       dbgframe->t_si, dbgframe->t_di,
+	       dbgframe->t_sp, dbgframe->t_bp);
 
 	dbg_pr("CS: %04X  DS: %04X  ES: %04X  FS: %04X  GS: %04X  ",
-	       (unsigned)dbgframe->t_cs, (unsigned)dbgframe->t_ds,
-	       (unsigned)dbgframe->t_es, (unsigned)dbgframe->t_fs,
-	       (unsigned)dbgframe->t_gs);
+	       dbgframe->t_cs, dbgframe->t_ds,
+	       dbgframe->t_es, dbgframe->t_fs,
+	       dbgframe->t_gs);
 
 	dbg_pr("SS: %04X  LDT: %04X\n",
-	       (unsigned)dbgframe->t_ss,
-	       (unsigned)dbgframe->t_ldt);
+	       dbgframe->t_ss,
+	       dbgframe->t_ldt);
 
 	dbg_pr("EIP: %08X  FLAGS: %08X ",
-	       (unsigned)dbgframe->t_ip,
-	       (unsigned)dbgframe->t_flags);
+	       dbgframe->t_ip,
+	       dbgframe->t_flags);
 
 	dbg_pr(" (");
 	for (i = 0; i < 22; i++) {
@@ -5782,8 +5782,8 @@ void display_tss(dbg_regs *dbgframe)
 	dbg_pr(")\n");
 
 	dbg_pr("CR3: %08X  IOMAP: %08X  BLINK: %08X\n",
-	       (unsigned)dbgframe->t_cr3, (unsigned)dbgframe->t_io_map,
-	       (unsigned)dbgframe->t_res[0]);
+	       dbgframe->t_cr3, dbgframe->t_io_map,
+	       dbgframe->t_res[0]);
 
 #endif
 }
@@ -5834,20 +5834,20 @@ void display_general_registers(dbg_regs *dbgframe)
 #else
 	unsigned long i, f = 0;
 
-	dbg_pr("EAX: %08X ", (unsigned)dbgframe->t_ax);
-	dbg_pr("EBX: %08X ", (unsigned)dbgframe->t_bx);
-	dbg_pr("ECX: %08X ", (unsigned)dbgframe->t_cx);
-	dbg_pr("EDX: %08X\n", (unsigned)dbgframe->t_dx);
-	dbg_pr("ESI: %08X ", (unsigned)dbgframe->t_si);
-	dbg_pr("EDI: %08X ", (unsigned)dbgframe->t_di);
-	dbg_pr("ESP: %08X ", (unsigned)dbgframe->t_sp);
-	dbg_pr("EBP: %08X\n", (unsigned)dbgframe->t_bp);
+	dbg_pr("EAX: %08X ", dbgframe->t_ax);
+	dbg_pr("EBX: %08X ", dbgframe->t_bx);
+	dbg_pr("ECX: %08X ", dbgframe->t_cx);
+	dbg_pr("EDX: %08X\n", dbgframe->t_dx);
+	dbg_pr("ESI: %08X ", dbgframe->t_si);
+	dbg_pr("EDI: %08X ", dbgframe->t_di);
+	dbg_pr("ESP: %08X ", dbgframe->t_sp);
+	dbg_pr("EBP: %08X\n", dbgframe->t_bp);
 
 	if (segment_toggle)
 		display_segment_registers(dbgframe);
 
-	dbg_pr("EIP: %08X ", (unsigned)dbgframe->t_ip);
-	dbg_pr("EFLAGS: %08X ", (unsigned)dbgframe->t_flags);
+	dbg_pr("EIP: %08X ", dbgframe->t_ip);
+	dbg_pr("EFLAGS: %08X ", dbgframe->t_flags);
 
 	dbg_pr(" (");
 	for (i = 0; i < 22; i++) {
@@ -5867,19 +5867,19 @@ void display_general_registers(dbg_regs *dbgframe)
 void display_segment_registers(dbg_regs *dbgframe)
 {
 #ifdef CONFIG_X86_64
-	dbg_pr("CS: %04X ", (unsigned)dbgframe->t_cs);
-	dbg_pr("DS: %04X ", (unsigned)dbgframe->t_ds);
-	dbg_pr("ES: %04X ", (unsigned)dbgframe->t_es);
-	dbg_pr("FS: %04X ", (unsigned)dbgframe->t_fs);
-	dbg_pr("GS: %04X ", (unsigned)dbgframe->t_gs);
-	dbg_pr("SS: %04X\n", (unsigned)dbgframe->t_ss);
+	dbg_pr("CS: %04X ", dbgframe->t_cs);
+	dbg_pr("DS: %04X ", dbgframe->t_ds);
+	dbg_pr("ES: %04X ", dbgframe->t_es);
+	dbg_pr("FS: %04X ", dbgframe->t_fs);
+	dbg_pr("GS: %04X ", dbgframe->t_gs);
+	dbg_pr("SS: %04X\n", dbgframe->t_ss);
 #else
-	dbg_pr("CS: %04X ", (unsigned)dbgframe->t_cs);
-	dbg_pr("DS: %04X ", (unsigned)dbgframe->t_ds);
-	dbg_pr("ES: %04X ", (unsigned)dbgframe->t_es);
-	dbg_pr("FS: %04X ", (unsigned)dbgframe->t_fs);
-	dbg_pr("GS: %04X ", (unsigned)dbgframe->t_gs);
-	dbg_pr("SS: %04X\n", (unsigned)dbgframe->t_ss);
+	dbg_pr("CS: %04X ", dbgframe->t_cs);
+	dbg_pr("DS: %04X ", dbgframe->t_ds);
+	dbg_pr("ES: %04X ", dbgframe->t_es);
+	dbg_pr("FS: %04X ", dbgframe->t_fs);
+	dbg_pr("GS: %04X ", dbgframe->t_gs);
+	dbg_pr("SS: %04X\n", dbgframe->t_ss);
 #endif
 }
 
@@ -5907,35 +5907,35 @@ void display_control_registers(unsigned long processor,
 	read_idtr((unsigned long *)&IDTR[0]);
 
 	dbg_pr("GDTR: %04X:%llX IDTR: %04X:%llX\n",
-	       (unsigned)*(unsigned short *)&GDTR[0],
+	       *(unsigned short *)&GDTR[0],
 	       *(unsigned long long *)&GDTR[2],
-	       (unsigned)*(unsigned short *)&IDTR[0],
+	       *(unsigned short *)&IDTR[0],
 	       *(unsigned long long *)&IDTR[2]);
 	dbg_pr("LDTR: %04X  TR: %04X\n",
-	       (unsigned)read_ldtr(),
-	       (unsigned)read_tr());
+	       read_ldtr(),
+	       read_tr());
 #else
-	dbg_pr("CR0: %08X ", (unsigned)dbg_read_cr0());
-	dbg_pr("CR2: %08X ", (unsigned)dbg_read_cr2());
-	dbg_pr("CR3: %08X ", (unsigned)dbg_read_cr3());
-	dbg_pr("CR4: %08X\n", (unsigned)dbg_read_cr4());
-	dbg_pr("DR0: %08X ", (unsigned)dbg_read_dr0());
-	dbg_pr("DR1: %08X ", (unsigned)dbg_read_dr1());
-	dbg_pr("DR2: %08X ", (unsigned)dbg_read_dr2());
-	dbg_pr("DR3: %08X\n", (unsigned)dbg_read_dr3());
-	dbg_pr("DR6: %08X ", (unsigned)dbg_read_dr6());
-	dbg_pr("DR7: %08X ", (unsigned)dbg_read_dr7());
-	dbg_pr("VR6: %08X ", (unsigned)per_cpu(current_dr6,
-					       processor));
-	dbg_pr("VR7: %08X\n", (unsigned)current_dr7);
+	dbg_pr("CR0: %08X ", dbg_read_cr0());
+	dbg_pr("CR2: %08X ", dbg_read_cr2());
+	dbg_pr("CR3: %08X ", dbg_read_cr3());
+	dbg_pr("CR4: %08X\n", dbg_read_cr4());
+	dbg_pr("DR0: %08X ", dbg_read_dr0());
+	dbg_pr("DR1: %08X ", dbg_read_dr1());
+	dbg_pr("DR2: %08X ", dbg_read_dr2());
+	dbg_pr("DR3: %08X\n", dbg_read_dr3());
+	dbg_pr("DR6: %08X ", dbg_read_dr6());
+	dbg_pr("DR7: %08X ", dbg_read_dr7());
+	dbg_pr("VR6: %08X ", per_cpu(current_dr6,
+				     processor));
+	dbg_pr("VR7: %08X\n", current_dr7);
 
 	dbg_pr("GDTR: %04X:%08X IDTR: %04X:%08X  LDTR: %04X  TR: %04X\n",
-	       (unsigned)*(unsigned short *)&GDTR[0],
-	       (unsigned)*(unsigned long *)&GDTR[2],
-	       (unsigned)*(unsigned short *)&IDTR[0],
-	       (unsigned)*(unsigned long *)&IDTR[2],
-	       (unsigned)read_ldtr(),
-	       (unsigned)read_tr());
+	       *(unsigned short *)&GDTR[0],
+	       *(unsigned long *)&GDTR[2],
+	       *(unsigned short *)&IDTR[0],
+	       *(unsigned long *)&IDTR[2],
+	       read_ldtr(),
+	       read_tr());
 #endif
 }
 
@@ -6656,8 +6656,8 @@ void load_debug_registers(void)
 #else
 
 static struct hw_breakpoint {
-	unsigned		cpu_enabled;
-	unsigned		enabled;
+	unsigned int		cpu_enabled;
+	unsigned int		enabled;
 	unsigned long		addr;
 	int			len;
 	int			type;

@@ -33,8 +33,8 @@ extern unsigned char modbuf[MAX_SYMBOL_LEN];
 extern unsigned char workbuf[MAX_SYMBOL_LEN];
 extern unsigned char delim_table[256];
 
-unsigned long *in_exception_stack(unsigned cpu, unsigned long stack,
-				  unsigned *usedp, char **idp);
+unsigned long *in_exception_stack(unsigned int cpu, unsigned long stack,
+				  unsigned int *usedp, char **idp);
 unsigned long *get_irq_stack_end(const unsigned int cpu);
 void *is_hardirq_stack(unsigned long *stack, int cpu);
 void *is_softirq_stack(unsigned long *stack, int cpu);

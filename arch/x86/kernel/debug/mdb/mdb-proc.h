@@ -172,7 +172,7 @@ unsigned long in_keyboard(unsigned char *buffer,
 unsigned long get_ip(dbg_regs *);
 unsigned long get_stack_address(dbg_regs *);
 unsigned long get_stack_segment(dbg_regs *);
-unsigned short read_memory(void *, void *, unsigned);
+unsigned short read_memory(void *, void *, unsigned int);
 unsigned long ssb_update(dbg_regs *dbgframe, unsigned long processor);
 void mdb_breakpoint(void);
 

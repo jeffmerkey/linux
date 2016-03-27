@@ -150,9 +150,9 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	      unsigned long *stack)
 {
 	unsigned long bp = 0;
-	const unsigned cpu = get_cpu();
+	const unsigned int cpu = get_cpu();
 	unsigned long *irq_stack_end = get_irq_stack_end(cpu);
-	unsigned used = 0;
+	unsigned int used = 0;
 	struct thread_info *tinfo;
 
 	if (!task)
@@ -281,7 +281,7 @@ static int print_trace(char *name)
 void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	      unsigned long *stack)
 {
-	const unsigned cpu = get_cpu();
+	const unsigned int cpu = get_cpu();
 	unsigned long bp = 0;
 	u32 *prev_esp;
 
