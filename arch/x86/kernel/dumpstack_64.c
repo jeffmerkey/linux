@@ -159,7 +159,7 @@ analyze_stack(int cpu, struct task_struct *task, unsigned long *stack,
  */
 
 #if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
-unsigned long *get_irq_stack_end(const unsigned cpu)
+unsigned long *get_irq_stack_end(const unsigned int cpu)
 {
 	return (unsigned long *)per_cpu(irq_stack_ptr, cpu);
 }
