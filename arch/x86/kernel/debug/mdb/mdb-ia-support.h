@@ -31,7 +31,7 @@
 #define ATTR_UNUSED
 #endif
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 #define BFD64
 #define mdb_sprintf_vma(s, x) sprintf(s, "%016lx", x)
 #else

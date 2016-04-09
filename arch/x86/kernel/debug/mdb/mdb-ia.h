@@ -38,7 +38,7 @@ struct _RLOCK {
 
 #define rlock_t struct _RLOCK
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 struct _dbg_regs {
 	unsigned long t_res[7];
 	unsigned long t_cr3;
@@ -133,7 +133,7 @@ static inline void _sti(void)
 	__asm__ __volatile__("sti" : : : "memory");
 }
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 static inline unsigned long get_flags(void)
 {
 	unsigned long flags;

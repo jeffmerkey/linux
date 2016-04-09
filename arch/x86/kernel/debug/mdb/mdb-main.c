@@ -54,7 +54,7 @@
 #include <linux/clocksource.h>
 #include <linux/nmi.h>
 
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 #include <asm/apic.h>
 #include <asm/ipi.h>
 #include <linux/cpumask.h>
@@ -115,12 +115,12 @@ void mdb_watchdogs(void)
 	touch_softlockup_watchdog_sync();
 	clocksource_touch_watchdog();
 
-#if defined(CONFIG_TREE_RCU)
+#if IS_ENABLED(CONFIG_TREE_RCU)
 	rcu_cpu_stall_reset();
 #endif
 
 	touch_nmi_watchdog();
-#ifdef CONFIG_HARDLOCKUP_DETECTOR
+#if IS_ENABLED(CONFIG_HARDLOCKUP_DETECTOR)
 	touch_hardlockup_watchdog();
 #endif
 }
@@ -580,7 +580,7 @@ static struct notifier_block mdb_notifier = {
 	.priority = 0x7FFFFFFF,
 };
 
-#ifdef CONFIG_MAGIC_SYSRQ
+#if IS_ENABLED(CONFIG_MAGIC_SYSRQ)
 static void sysrq_mdb(int key)
 {
 	mdb_breakpoint();
@@ -721,11 +721,11 @@ static int __init mdb_init_module(void)
 		return ret;
 	}
 
-#ifdef CONFIG_MDB_DIRECT_MODE
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 	disable_hw_bp_interface = 1;
 #endif
 
-#ifdef CONFIG_MAGIC_SYSRQ
+#if IS_ENABLED(CONFIG_MAGIC_SYSRQ)
 	register_sysrq_key('g', &sysrq_op);
 #endif
 
@@ -764,11 +764,11 @@ static void __exit mdb_exit_module(void)
 	del_timer(&debug_timer);
 	debug_timer.data = 0;
 
-#ifdef CONFIG_MAGIC_SYSRQ
+#if IS_ENABLED(CONFIG_MAGIC_SYSRQ)
 	unregister_sysrq_key('g', &sysrq_op);
 #endif
 
-#ifdef CONFIG_MDB_DIRECT_MODE
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 	disable_hw_bp_interface = 0;
 #endif
 

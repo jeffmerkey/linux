@@ -89,11 +89,11 @@ extern int nextline;
 extern unsigned char *category_strings[13];
 extern unsigned long reason_toggle;
 extern struct timer_list debug_timer;
-#ifdef CONFIG_MDB_DIRECT_MODE
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 extern int disable_hw_bp_interface;
 #endif
 
-#if defined(CONFIG_SMP) && !defined(CONFIG_X86_ELAN)
+#if IS_ENABLED(CONFIG_SMP) && !IS_ENABLED(CONFIG_X86_ELAN)
 unsigned int native_io_apic_read(unsigned int apic, unsigned int reg);
 extern int nr_ioapics;
 #endif

@@ -63,7 +63,7 @@
 #include "mdb-os.h"
 #include "mdb-keyboard.h"
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 #define PROCESSOR_WIDTH     64
 #else
 #define PROCESSOR_WIDTH     32
@@ -356,7 +356,7 @@ struct dbgframe_symbols dbgframe_symbols[] = {
 
 	{ "EIP", 3, IP_TOKEN },
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	{ "RAX", 3, RAX_TOKEN },
 	{ "RBX", 3, RBX_TOKEN },
 	{ "RCX", 3, RCX_TOKEN },
@@ -490,7 +490,7 @@ static unsigned long token_args(dbg_regs *dbgframe,
 	case SP_TOKEN:
 		return dbgframe->t_sp & 0xFFFF;
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	case RAX_TOKEN:
 		return dbgframe->t_ax;
 	case RBX_TOKEN:
@@ -932,7 +932,7 @@ static inline unsigned char *parse_tokens(dbg_regs *dbgframe,
 
 void display_expr_help(void)
 {
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	dbg_pr("Arithmetic Operators\n");
 	dbg_pr("\n");
 	dbg_pr("+   add\n");
@@ -1197,7 +1197,7 @@ static inline u64 deref(unsigned long type,
 
 	switch (type) {
 	case ARCH_PTR:
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 		pq = (u64 *)value;
 		return (u64)mdb_segment_getqword(sv, (u64 *)pq, 8);
 #else

@@ -62,7 +62,7 @@
 #include <asm/ptrace.h>
 #include <asm/debugreg.h>
 
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 #include <asm/apic.h>
 #include <asm/ipi.h>
 #include <linux/cpumask.h>
@@ -292,7 +292,7 @@ dbg_parser version_dp = {
 	0, 0, display_debugger_version, display_debugger_version_help, 0,
 	".V", 0, 0, "display version info", 0, 10 };
 
-#if defined(CONFIG_MODULES)
+#if IS_ENABLED(CONFIG_MODULES)
 dbg_parser lsmod_pe_1 = {
 	0, 0, list_modules, list_modules_help, 0, ".M", 0, 0,
 	"list loaded modules", 0, 10 };
@@ -582,7 +582,7 @@ dbg_parser EIP_dp = {
 	0, 0, change_eip_register, display_eip_help, 0, "EIP", 0, -1,
 	"", 0, -1 };
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 dbg_parser RAX_dp = {
 	0, 0, change_rax_register, display_rax_help, 0, "RAX", 0, -1,
 	"", 0, -1 };
@@ -661,7 +661,7 @@ dbg_parser CS_dp = {
 	0, 0, change_cs_register, display_cs_help, 0, "XCS", 0, -1,
 	"", 0, -1 };
 
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 dbg_parser DS_dp = {
 	0, 0, change_ds_register, display_ds_help, 0, "XDS", 0, -1,
 	"", 0, -1 };
@@ -751,7 +751,7 @@ dbg_parser MTRR_dp = {
 	0, 0, show_mtrr_registers, display_mtrr_help, 0, "MTRR", 0, 0,
 	"display memory type range registers", 0, 8 };
 
-#if defined(CONFIG_SMP) && !defined(CONFIG_X86_ELAN)
+#if IS_ENABLED(CONFIG_SMP) && !IS_ENABLED(CONFIG_X86_ELAN)
 dbg_parser APIC__dp = {
 	0, 0, display_apic_info, display_apic_help, 0, "APIC", 0, 0,
 	"display local apic registers", 0, 7 };
@@ -833,7 +833,7 @@ dbg_parser BW4_dp = {
 	0, 0, breakpoint_word4, breakpoint_command_help, 0, "BW4", 0, -1,
 	"", 0, 3 };
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 dbg_parser BW8_dp = {
 	0, 0, breakpoint_word8, breakpoint_command_help, 0, "BW8", 0, -1,
 	"", 0, 3 };
@@ -855,7 +855,7 @@ dbg_parser BR4_dp = {
 	0, 0, breakpoint_read4, breakpoint_command_help, 0, "BR4", 0, -1,
 	"", 0, 3 };
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 dbg_parser BR8_dp = {
 	0, 0, breakpoint_read8, breakpoint_command_help, 0, "BR8", 0, -1,
 	"", 0, 3 };
@@ -1016,7 +1016,7 @@ void initialize_debugger(void)
 	add_debug_parser(&kprocess_2);
 	add_debug_parser(&all_symbols_dp);
 	add_debug_parser(&symbols_dp);
-#if defined(CONFIG_MODULES)
+#if IS_ENABLED(CONFIG_MODULES)
 	add_debug_parser(&lsmod_pe_1);
 	add_debug_parser(&lsmod_pe_2);
 	add_debug_parser(&rmmod_dp);
@@ -1067,7 +1067,7 @@ void initialize_debugger(void)
 	add_debug_parser(&X_dp);
 	add_debug_parser(&break_processor_dp);
 	add_debug_parser(&list_processors_dp);
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	add_debug_parser(&RAX_dp);
 	add_debug_parser(&ORIGRAX_dp);
 	add_debug_parser(&RBX_dp);
@@ -1106,7 +1106,7 @@ void initialize_debugger(void)
 	add_debug_parser(&ESP_dp);
 	add_debug_parser(&EIP_dp);
 	add_debug_parser(&CS_dp);
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	add_debug_parser(&DS_dp);
 	add_debug_parser(&ES_dp);
 #endif
@@ -1130,7 +1130,7 @@ void initialize_debugger(void)
 	add_debug_parser(&AF_dp);
 	add_debug_parser(&AC_dp);
 	add_debug_parser(&MTRR_dp);
-#if defined(CONFIG_SMP) && !defined(CONFIG_X86_ELAN)
+#if IS_ENABLED(CONFIG_SMP) && !IS_ENABLED(CONFIG_X86_ELAN)
 	add_debug_parser(&APIC__dp);
 	add_debug_parser(&IOAPIC__dp);
 	add_debug_parser(&PERCPU__dp);
@@ -1152,14 +1152,14 @@ void initialize_debugger(void)
 	add_debug_parser(&BW1_dp);
 	add_debug_parser(&BW2_dp);
 	add_debug_parser(&BW4_dp);
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	add_debug_parser(&BW8_dp);
 #endif
 	add_debug_parser(&BW_dp);
 	add_debug_parser(&BR1_dp);
 	add_debug_parser(&BR2_dp);
 	add_debug_parser(&BR4_dp);
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	add_debug_parser(&BR8_dp);
 #endif
 	add_debug_parser(&BR_dp);
@@ -1628,7 +1628,7 @@ unsigned long break_processor(unsigned char *cmd,
 	return 1;
 }
 
-#if defined(CONFIG_SMP) && !defined(CONFIG_X86_ELAN)
+#if IS_ENABLED(CONFIG_SMP) && !IS_ENABLED(CONFIG_X86_ELAN)
 /* NMI */
 
 unsigned long nmi_processor(unsigned char *cmd,
@@ -1871,7 +1871,7 @@ unsigned long general_registers(unsigned char *cmd,
 	return 1;
 }
 
-#ifdef RENDER_NPX_VALUES
+#if defined(RENDER_NPX_VALUES)
 double ldexp(double v, int e)
 {
 	double two = 2.0;
@@ -1905,7 +1905,7 @@ void display_npx_registers(dbg_regs *dbgframe)
 	register int i;
 	int tag;
 	int tos;
-#ifdef RENDER_NPX_VALUES
+#if defined(RENDER_NPX_VALUES)
 	double d;
 #endif
 
@@ -1946,7 +1946,7 @@ void display_npx_registers(dbg_regs *dbgframe)
 		switch (tag) {
 		case 0:
 			dbg_pr("Valid");
-#ifdef RENDER_NPX_VALUES
+#if defined(RENDER_NPX_VALUES)
 			if (((int)npx->reg[i].exponent - 16382 < 1000) &&
 			    ((int)npx->reg[i].exponent - 16382 > -1000)) {
 				d = npx->reg[i].sig3 / 65536.0 +
@@ -2421,7 +2421,7 @@ unsigned long change_eip_register(unsigned char *cmd,
 	return 1;
 }
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 /*  */
 /* X86_64 Registers */
 /*  */
@@ -3005,7 +3005,7 @@ unsigned long display_ds_help(unsigned char *command_line,
 	return 1;
 }
 
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 /* DS */
 
 unsigned long change_ds_register(unsigned char *cmd,
@@ -4025,7 +4025,7 @@ unsigned long breakpoint_command_help(unsigned char *command_line,
 	dbg_pr("b   <address>            - set execute breakpoint\n");
 	dbg_pr("bc[#] (1-4)              - clear breakpoint\n");
 	dbg_pr("bca                      - clear all breakpoints\n");
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	dbg_pr("br[#] <address>          - set read/write breakpoint ");
 	dbg_pr("#=1,2,4,8 byte (br1,br2,br4,br8)\n");
 	dbg_pr("bw[#] <address>          - set write only breakpoint ");
@@ -4389,7 +4389,7 @@ unsigned long breakpoint_word4(unsigned char *cmd,
 
 /* BW8 */
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 unsigned long breakpoint_word8(unsigned char *cmd,
 			       dbg_regs *dbgframe, unsigned long exception,
 			       dbg_parser *parser)
@@ -4760,7 +4760,7 @@ unsigned long breakpoint_read4(unsigned char *cmd,
 
 /* BR8 */
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 unsigned long breakpoint_read8(unsigned char *cmd,
 			       dbg_regs *dbgframe, unsigned long exception,
 			       dbg_parser *parser)
@@ -5437,7 +5437,7 @@ void display_gdt(unsigned char *GDT_ADDRESS)
 	unsigned char *p;
 	unsigned char GDTR[16];
 	GDT *gdt;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	TSS *tss;
 #endif
 	union {
@@ -5445,7 +5445,7 @@ void display_gdt(unsigned char *GDT_ADDRESS)
 		unsigned char data[16];
 	} lg;
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	read_gdtr((unsigned long *)&GDTR[0]);
 	gdt_index = mdb_getword((unsigned long)&GDTR[0], 2);
 	gdt_pointer = mdb_getword((unsigned long)&GDTR[2], 8);
@@ -5547,7 +5547,7 @@ void display_idt(unsigned char *IDT_ADDRESS)
 	unsigned char *p;
 	unsigned char IDTR[16];
 	IDT *idt;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	TSS_GATE *tss_gate;
 #endif
 	union {
@@ -5555,7 +5555,7 @@ void display_idt(unsigned char *IDT_ADDRESS)
 		unsigned char data[16];
 	} id;
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	read_idtr((unsigned long *)&IDTR[0]);
 	idt_index = mdb_getword((unsigned long)&IDTR[0], 2);
 	idt_pointer = mdb_getword((unsigned long)&IDTR[2], 8);
@@ -5691,7 +5691,7 @@ void display_idt(unsigned char *IDT_ADDRESS)
 
 void display_tss(dbg_regs *dbgframe)
 {
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	unsigned long i, f = 0;
 
 	dbg_pr("Task State Segment at 0x%p\n", dbgframe);
@@ -5790,7 +5790,7 @@ void display_tss(dbg_regs *dbgframe)
 
 void display_general_registers(dbg_regs *dbgframe)
 {
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	unsigned long i, f = 0;
 
 	dbg_pr("RAX: %016lX ", dbgframe->t_ax);
@@ -5866,7 +5866,7 @@ void display_general_registers(dbg_regs *dbgframe)
 
 void display_segment_registers(dbg_regs *dbgframe)
 {
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	dbg_pr("CS: %04X ", dbgframe->t_cs);
 	dbg_pr("DS: %04X ", dbgframe->t_ds);
 	dbg_pr("ES: %04X ", dbgframe->t_es);
@@ -5888,7 +5888,7 @@ void display_control_registers(unsigned long processor,
 {
 	unsigned char GDTR[16], IDTR[16];
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	dbg_pr("CR0: %016lX ", dbg_read_cr0());
 	dbg_pr("CR2: %016lX ", dbg_read_cr2());
 	dbg_pr("CR3: %016lX\n", dbg_read_cr3());
@@ -6052,7 +6052,7 @@ void read_dbg_regs(void *frame, dbg_regs *sf, unsigned long processor)
 	sf->t_di = regs->di;
 	sf->t_bp = regs->bp;
 
-#ifdef CONFIG_X86_32
+#if IS_ENABLED(CONFIG_X86_32)
 	sf->t_flags = regs->flags;
 	sf->t_cs = regs->cs;
 	sf->t_ds = regs->ds;
@@ -6092,7 +6092,7 @@ void read_task_frame(dbg_regs *sf, struct task_struct *p)
 	memset((void *)sf, 0, sizeof(dbg_regs));
 
 	sf->t_bp = *(unsigned long *)p->thread.sp;
-#ifdef CONFIG_X86_32
+#if IS_ENABLED(CONFIG_X86_32)
 	sf->t_ds = __KERNEL_DS;
 	sf->t_es = __KERNEL_DS;
 	sf->t_cs = __KERNEL_CS;
@@ -6124,7 +6124,7 @@ void write_dbg_regs(void *frame, dbg_regs *sf,
 	regs->di = sf->t_di;
 	regs->bp = sf->t_bp;
 
-#ifdef CONFIG_X86_32
+#if IS_ENABLED(CONFIG_X86_32)
 	regs->flags = sf->t_flags;
 	regs->cs = sf->t_cs;
 	regs->ds = sf->t_ds;
@@ -6161,7 +6161,7 @@ unsigned long is_processor_held(unsigned long cpu)
 
 unsigned long debug_lock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 {
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 	if (!spin_trylock_irqsave((spinlock_t *)lock, rlock->flags[p])) {
 		if (rlock->processor == p) {
 			rlock->count++;
@@ -6194,7 +6194,7 @@ unsigned long debug_lock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 
 void debug_unlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 {
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 	if (rlock->count) {
 		rlock->count--;
 	} else {
@@ -6206,7 +6206,7 @@ void debug_unlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 
 unsigned long debug_rlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 {
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 	if (!spin_trylock_irqsave((spinlock_t *)lock, rlock->flags[p])) {
 		if (rlock->processor == p) {
 			rlock->count++;
@@ -6231,7 +6231,7 @@ unsigned long debug_rlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 
 void debug_unrlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 {
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 	if (rlock->count) {
 		rlock->count--;
 	} else {
@@ -6243,7 +6243,7 @@ void debug_unrlock(spinlock_t *lock, rlock_t *rlock, unsigned long p)
 
 unsigned long stop_processors_excl_self(unsigned long self)
 {
-#if defined(CONFIG_SMP) && !defined(CONFIG_X86_ELAN)
+#if IS_ENABLED(CONFIG_SMP) && !IS_ENABLED(CONFIG_X86_ELAN)
 	register unsigned long failed;
 	register int i;
 
@@ -6289,7 +6289,7 @@ unsigned long stop_processors_excl_self(unsigned long self)
 
 unsigned long free_processors_excl_self(unsigned long self)
 {
-#if defined(CONFIG_SMP) && !defined(CONFIG_X86_ELAN)
+#if IS_ENABLED(CONFIG_SMP) && !IS_ENABLED(CONFIG_X86_ELAN)
 	register int i;
 
 	for (i = 0; i < MAX_PROCESSORS; i++) {
@@ -6309,7 +6309,7 @@ unsigned long free_processors_excl_self(unsigned long self)
 
 unsigned long wait_restart_excl_self(unsigned long self)
 {
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 	register unsigned long failed;
 	register int i;
 
@@ -6381,11 +6381,11 @@ unsigned long enter_debugger(unsigned long exception,
 		 */
 		if (!atomic_read(&per_cpu(trace_processors, processor)))
 			stop_processors_excl_self(processor);
-#if defined(CONFIG_VT)
+#if IS_ENABLED(CONFIG_VT)
 		con_debug_enter(vc_cons[fg_console].d);
 #endif
 		debugger_command_entry(processor, exception, dbgframe);
-#if defined(CONFIG_VT)
+#if IS_ENABLED(CONFIG_VT)
 		con_debug_leave();
 #endif
 
@@ -6461,7 +6461,7 @@ unsigned long debugger_entry(unsigned long exception,
 	atomic_inc(&per_cpu(debugger_processors, processor));
 	per_cpu(processor_state, processor) = PROCESSOR_DEBUG;
 
-#if defined(CONFIG_MDB_DIRECT_MODE)
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 	dbg_write_dr7(0);  /* disable breakpoints while debugger is running */
 	per_cpu(current_dr6, processor) = __this_cpu_read(curr_dr6);
 #else
@@ -6527,7 +6527,7 @@ unsigned long debugger_entry(unsigned long exception,
 	return ret_code;
 }
 
-#if defined(CONFIG_MDB_DIRECT_MODE)
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 
 void clear_debugger_registers(void)
 {
@@ -6830,7 +6830,7 @@ unsigned long get_bp_len(unsigned long len)
 	case FOUR_BYTE_FIELD:
 		return X86_BREAKPOINT_LEN_4;
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	case EIGHT_BYTE_FIELD:
 		return X86_BREAKPOINT_LEN_8;
 #endif

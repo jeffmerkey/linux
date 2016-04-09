@@ -431,7 +431,7 @@ unsigned long dump_per_cpu(unsigned char *cmd,
 			   unsigned long exception,
 			   dbg_parser *parser);
 
-#if defined(CONFIG_MODULES)
+#if IS_ENABLED(CONFIG_MODULES)
 unsigned long list_modules_help(unsigned char *command_line,
 				dbg_parser *parser);
 unsigned long list_modules(unsigned char *cmd,

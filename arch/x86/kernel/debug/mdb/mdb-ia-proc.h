@@ -110,7 +110,7 @@
 #define   VIP_FLAG     0x00100000
 #define   ID_FLAGS     0x00200000
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 
 struct GATE64 {
 	u16 offset_low;
@@ -623,7 +623,7 @@ unsigned long breakpoint_word4(unsigned char *cmd,
 			       dbg_regs *dbgframe,
 			       unsigned long exception,
 			       dbg_parser *parser);
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 unsigned long breakpoint_word8(unsigned char *cmd,
 			       dbg_regs *dbgframe,
 			       unsigned long exception,
@@ -645,7 +645,7 @@ unsigned long breakpoint_read4(unsigned char *cmd,
 			       dbg_regs *dbgframe,
 			       unsigned long exception,
 			       dbg_parser *parser);
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 unsigned long breakpoint_read8(unsigned char *cmd,
 			       dbg_regs *dbgframe,
 			       unsigned long exception,
@@ -681,7 +681,7 @@ unsigned long breakpoint_show_temp(unsigned char *cmd,
 				   dbg_parser *parser);
 void mdb_breakpoint(void);
 
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 unsigned long display_apic_help(unsigned char *command_line,
 				dbg_parser *parser);
 unsigned long display_apic_info(unsigned char *cmd,
@@ -698,7 +698,7 @@ unsigned long nmi_processor(unsigned char *cmd,
 			    dbg_parser *parser);
 #endif
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 unsigned long display_rax_help(unsigned char *command_line,
 			       dbg_parser *parser);
 unsigned long change_rax_register(unsigned char *cmd,

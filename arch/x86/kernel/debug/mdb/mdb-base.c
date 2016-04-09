@@ -261,10 +261,10 @@ unsigned long dump_per_cpu(unsigned char *cmd, dbg_regs *dbgframe,
 	unsigned long address, addr, err;
 	unsigned long cpu, val, valid, p, len = 0;
 
-#ifdef	__per_cpu_offset
+#if defined(__per_cpu_offset)
 #define MDB_PCU(cpu) __per_cpu_offset(cpu)
 #else
-#ifdef	CONFIG_SMP
+#if IS_ENABLED(CONFIG_SMP)
 #define MDB_PCU(cpu) __per_cpu_offset[cpu]
 #else
 #define MDB_PCU(cpu) 0
@@ -297,7 +297,7 @@ unsigned long dump_per_cpu(unsigned char *cmd, dbg_regs *dbgframe,
 			break;
 
 		default:
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 			len = 8;
 #else
 			len = 4;
@@ -317,7 +317,7 @@ unsigned long dump_per_cpu(unsigned char *cmd, dbg_regs *dbgframe,
 				return 1;
 		}
 	} else {
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 		len = 8;
 #else
 		len = 4;
@@ -534,7 +534,7 @@ void display_ascii_table(void)
 	}
 }
 
-#if defined(CONFIG_MODULES)
+#if IS_ENABLED(CONFIG_MODULES)
 
 /* LSMOD, .M */
 
@@ -720,7 +720,7 @@ unsigned long display_kprocess(unsigned char *cmd,
 				search_frame = &task_frame;
 				read_task_frame(search_frame, p);
 				display_tss(search_frame);
-#ifdef CONFIG_X86_32
+#if IS_ENABLED(CONFIG_X86_32)
 				disassemble(search_frame, search_frame->t_ip, 1,
 					    -1, 0);
 #endif
@@ -1267,7 +1267,7 @@ unsigned char *dump_double_stack(dbg_regs *dbgframe, unsigned char *p,
 	return p;
 }
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 unsigned long dump_backtrace(unsigned char *p, unsigned long count)
 {
 	register int r;
@@ -1328,7 +1328,7 @@ unsigned long dump_backtrace(unsigned char *p, unsigned long count)
 }
 #endif
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 unsigned char *dump_local_stack(dbg_regs *dbgframe, unsigned char *p,
 				unsigned long count)
 {
@@ -2614,7 +2614,7 @@ unsigned long debugger_walk_stack(unsigned char *cmd,
 				  dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -2628,7 +2628,7 @@ unsigned long debugger_walk_stack(unsigned char *cmd,
 					     last_display);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -2673,7 +2673,7 @@ unsigned long debugger_dump_linked_list(unsigned char *cmd,
 					dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -2688,7 +2688,7 @@ unsigned long debugger_dump_linked_list(unsigned char *cmd,
 		return 1;
 	}
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_link = (unsigned char *)eval_numeric_expr(dbgframe,
 						       &cmd,
 						       &valid);
@@ -2716,7 +2716,7 @@ unsigned long debugger_dump_stack(unsigned char *cmd,
 				  dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -2729,7 +2729,7 @@ unsigned long debugger_dump_stack(unsigned char *cmd,
 					     last_dump, last_display);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -2754,7 +2754,7 @@ unsigned long debugger_dump_double_stack(unsigned char *cmd,
 					 dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -2769,7 +2769,7 @@ unsigned long debugger_dump_double_stack(unsigned char *cmd,
 					      last_display);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -2795,7 +2795,7 @@ unsigned long debugger_dump_quad_stack(unsigned char *cmd,
 				       dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -2810,7 +2810,7 @@ unsigned long debugger_dump_quad_stack(unsigned char *cmd,
 					    last_display);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -2836,7 +2836,7 @@ unsigned long debugger_dump_quad(unsigned char *cmd,
 				 dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -2849,7 +2849,7 @@ unsigned long debugger_dump_quad(unsigned char *cmd,
 				      last_display, 0);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -2874,7 +2874,7 @@ unsigned long debugger_dump_double(unsigned char *cmd,
 				   dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -2887,7 +2887,7 @@ unsigned long debugger_dump_double(unsigned char *cmd,
 					last_display, 0);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -2912,7 +2912,7 @@ unsigned long debugger_dump_word(unsigned char *cmd,
 				 dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -2925,7 +2925,7 @@ unsigned long debugger_dump_word(unsigned char *cmd,
 				      last_display, 0);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -2950,7 +2950,7 @@ unsigned long debugger_dump_byte(unsigned char *cmd,
 				 dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -2963,7 +2963,7 @@ unsigned long debugger_dump_byte(unsigned char *cmd,
 				 last_display, 0);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -2988,7 +2988,7 @@ unsigned long debugger_dump_quad_phys(unsigned char *cmd,
 				      dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -3001,7 +3001,7 @@ unsigned long debugger_dump_quad_phys(unsigned char *cmd,
 				      last_display, 1);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -3026,7 +3026,7 @@ unsigned long debugger_dump_double_phys(unsigned char *cmd,
 					dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -3039,7 +3039,7 @@ unsigned long debugger_dump_double_phys(unsigned char *cmd,
 					last_display, 1);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -3064,7 +3064,7 @@ unsigned long debugger_dump_word_phys(unsigned char *cmd,
 				      dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -3077,7 +3077,7 @@ unsigned long debugger_dump_word_phys(unsigned char *cmd,
 				      last_display, 1);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else
@@ -3102,7 +3102,7 @@ unsigned long debugger_dump_byte_phys(unsigned char *cmd,
 				      dbg_parser *parser)
 {
 	unsigned long valid;
-#ifndef CONFIG_X86_64
+#if !IS_ENABLED(CONFIG_X86_64)
 	unsigned long address;
 #endif
 
@@ -3115,7 +3115,7 @@ unsigned long debugger_dump_byte_phys(unsigned char *cmd,
 				 last_display, 1);
 		return 1;
 	}
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	last_dump = (unsigned char *)eval_expr(dbgframe, &cmd,
 					       &valid);
 #else

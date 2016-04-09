@@ -41,7 +41,7 @@ void *is_softirq_stack(unsigned long *stack, int cpu);
 unsigned long debug_rlock(spinlock_t *lock, rlock_t *rlock,
 			  unsigned long p);
 void debug_unrlock(spinlock_t *lock, rlock_t *rlock, unsigned long p);
-#if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
+#if IS_ENABLED(CONFIG_VT_CONSOLE) && IS_ENABLED(CONFIG_MDB_CONSOLE_REDIRECTION)
 int vt_kmsg_redirect(int console);
 #endif
 void mdb_watchdogs(void);

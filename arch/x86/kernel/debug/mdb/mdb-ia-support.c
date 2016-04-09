@@ -51,7 +51,7 @@
 #include <linux/sysrq.h>
 #include <linux/input.h>
 
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 #include <asm/apic.h>
 #include <asm/ipi.h>
 #include <linux/cpumask.h>
@@ -1966,7 +1966,7 @@ static inline void bfd_eval_size(int sz, int sizeflag,
 			sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
 			break;
 		case 6:
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 			/* FWORD ptrs are 10 bytes x86-64, 6 bytes ia32 */
 			if (r && !mdb_copy(work, r, 10))
 				sprintf(scratchbuf, BFMT10,
@@ -2119,7 +2119,7 @@ static inline void bfd_eval_expr(int bytemode, int sizeflag,
 			sprintf(scratchbuf, "=0x%lX", (unsigned long)value);
 			break;
 		case 6:
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 			/* FWORD ptrs 10 bytes x86-64, 6 bytes ia32 */
 			if (r && !mdb_copy(work, r, 10))
 				sprintf(scratchbuf, BFMT10,
@@ -2301,7 +2301,7 @@ static inline int bfd_eval_addr(int bytemode, int sizeflag,
 					(unsigned long)value);
 				break;
 			case 6:
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 				/*FWORD ptrs 10 bytes x86-64, 6 bytes ia32*/
 				if (r && !mdb_copy(work, r, 10))
 					sprintf(scratchbuf, BFMT10,
@@ -3882,7 +3882,7 @@ static void OP_G(int bytemode, int sizeflag, dbg_regs *dbgframe)
 static mdb_vma get64(void)
 {
 	mdb_vma x;
-#ifdef BFD64
+#if defined(BFD64)
 	unsigned int a;
 	unsigned int b;
 
@@ -5258,10 +5258,10 @@ int mdb_id_init(struct disassemble_info *dip, unsigned long type)
 	}
 
 	dip->symbol_at_address_func = mdb_dis_getsym;
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 	dip->mach		    = mach_x86_64;
 #endif
-#ifdef CONFIG_X86_32
+#if IS_ENABLED(CONFIG_X86_32)
 	dip->mach		    = mach_i386_i386;
 #endif
 
@@ -5295,7 +5295,7 @@ unsigned long unassemble(dbg_regs *dbgframe, unsigned long ip,
 		break;
 
 	default:
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 		mdb_di.mach = mach_x86_64;
 #else
 		mdb_di.mach = mach_i386_i386;

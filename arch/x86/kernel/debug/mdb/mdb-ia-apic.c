@@ -53,7 +53,7 @@
 #include <linux/io.h>
 #include <linux/clocksource.h>
 
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 #include <asm/apic.h>
 #include <asm/ipi.h>
 #include <linux/cpumask.h>
@@ -72,7 +72,7 @@
 #include "mdb-os.h"
 #include "mdb-keyboard.h"
 
-#if defined(CONFIG_SMP) && !defined(CONFIG_X86_ELAN)
+#if IS_ENABLED(CONFIG_SMP) && !IS_ENABLED(CONFIG_X86_ELAN)
 
 void dump_ioapic(unsigned long num)
 {

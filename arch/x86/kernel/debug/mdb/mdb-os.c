@@ -73,7 +73,7 @@ unsigned char symbuf[MAX_SYMBOL_LEN];
 unsigned char modbuf[MAX_SYMBOL_LEN];
 unsigned char workbuf[MAX_SYMBOL_LEN];
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 
 static inline int in_irq_stack(unsigned long *stack, unsigned long *irq_stack,
 			       unsigned long *irq_stack_end)
@@ -86,7 +86,7 @@ static inline unsigned long fixup_bp_irq_link(unsigned long bp,
 					      unsigned long *irq_stack,
 					      unsigned long *irq_stack_end)
 {
-#ifdef CONFIG_FRAME_POINTER
+#if IS_ENABLED(CONFIG_FRAME_POINTER)
 	struct stack_frame *frame = (struct stack_frame *)bp;
 	unsigned long next;
 
@@ -166,7 +166,7 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 			stack = (unsigned long *)task->thread.sp;
 	}
 
-#ifdef CONFIG_FRAME_POINTER
+#if IS_ENABLED(CONFIG_FRAME_POINTER)
 	if (!bp) {
 		if (task == current)
 			get_bp(bp);
@@ -351,7 +351,7 @@ int mdb_printf(char *fmt, ...)
 
 	debug_rlock(&mdb_lock, &mdb_mutex, get_processor_id());
 
-#if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
+#if IS_ENABLED(CONFIG_VT_CONSOLE) && IS_ENABLED(CONFIG_MDB_CONSOLE_REDIRECTION)
 	consolestate = vt_kmsg_redirect(-1);
 	if (consolestate)
 		consolestate = vt_kmsg_redirect(0);
@@ -415,7 +415,7 @@ int mdb_printf(char *fmt, ...)
 		if ((mdb_keystroke[0] == 'q') || (mdb_keystroke[0] == 'Q')) {
 			nextline = 0;
 
-#if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
+#if IS_ENABLED(CONFIG_VT_CONSOLE) && IS_ENABLED(CONFIG_MDB_CONSOLE_REDIRECTION)
 			if (consolestate)
 				vt_kmsg_redirect(consolestate);
 #endif
@@ -426,7 +426,7 @@ int mdb_printf(char *fmt, ...)
 		}
 	}
 
-#if defined(CONFIG_VT_CONSOLE) && defined(CONFIG_MDB_CONSOLE_REDIRECTION)
+#if IS_ENABLED(CONFIG_VT_CONSOLE) && IS_ENABLED(CONFIG_MDB_CONSOLE_REDIRECTION)
 	if (consolestate)
 		vt_kmsg_redirect(consolestate);
 #endif
@@ -1089,7 +1089,7 @@ unsigned char *get_symbol_value_offset_module(unsigned long value,
 
 unsigned long get_processor_id(void)
 {
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 	return raw_smp_processor_id();
 #else
 	return 0;
@@ -1098,7 +1098,7 @@ unsigned long get_processor_id(void)
 
 unsigned long get_physical_processor(void)
 {
-#if defined(CONFIG_SMP)
+#if IS_ENABLED(CONFIG_SMP)
 	return raw_smp_processor_id();
 #else
 	return 0;
@@ -1165,7 +1165,7 @@ unsigned long read_gs(void)
 	return contents;
 }
 
-#ifdef CONFIG_X86_64
+#if IS_ENABLED(CONFIG_X86_64)
 unsigned long dbg_read_dr(unsigned long regnum)
 {
 	unsigned long contents = 0;
