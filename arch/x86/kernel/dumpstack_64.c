@@ -31,7 +31,7 @@ static char x86_stack_ids[][8] = {
 #endif
 };
 
-#if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
+#if IS_ENABLED(CONFIG_MDB)
 unsigned long *in_exception_stack(unsigned int cpu, unsigned long stack,
 				  unsigned int *usedp, char **idp)
 #else
@@ -102,7 +102,7 @@ static unsigned long *in_exception_stack(unsigned int cpu, unsigned long stack,
 	return NULL;
 }
 
-#if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
+#if IS_ENABLED(CONFIG_MDB)
 EXPORT_SYMBOL(in_exception_stack);
 #endif
 
@@ -158,7 +158,7 @@ analyze_stack(int cpu, struct task_struct *task, unsigned long *stack,
  * severe exception (double fault, nmi, stack fault, debug, mce) hardware stack
  */
 
-#if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
+#if IS_ENABLED(CONFIG_MDB)
 unsigned long *get_irq_stack_end(const unsigned int cpu)
 {
 	return (unsigned long *)per_cpu(irq_stack_ptr, cpu);

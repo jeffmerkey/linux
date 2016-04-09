@@ -3818,11 +3818,11 @@ static unsigned long mod_find_symname(struct module *mod, const char *name)
 	return 0;
 }
 
-#if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
+#if IS_ENABLED(CONFIG_MDB)
 int mdb_modules(char *str, int (*print)(char *s, ...))
 {
 	struct module *mod;
-#ifdef CONFIG_MODULE_UNLOAD
+#if IS_ENABLED(CONFIG_MODULE_UNLOAD)
 	struct module_use *use;
 #endif
 	if (!print)
@@ -3834,7 +3834,7 @@ int mdb_modules(char *str, int (*print)(char *s, ...))
 
 		print(" 0x%08p ", mod->core_layout.base);
 		print("%s", mod->name);
-#ifdef CONFIG_MODULE_UNLOAD
+#if IS_ENABLED(CONFIG_MODULE_UNLOAD)
 		print(" %lu %02u ",
 		      mod->init_layout.size + mod->core_layout.size,
 		      module_refcount(mod));
@@ -3843,7 +3843,7 @@ int mdb_modules(char *str, int (*print)(char *s, ...))
 		      mod->core_layout.size);
 #endif
 
-#ifdef CONFIG_MODULE_UNLOAD
+#if IS_ENABLED(CONFIG_MODULE_UNLOAD)
 		list_for_each_entry(use, &mod->source_list, source_list)
 			print("%s,", use->source->name);
 		if (mod->init && !mod->exit)

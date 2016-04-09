@@ -558,7 +558,7 @@ static const struct seq_operations kallsyms_op = {
 	.show = s_show
 };
 
-#if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
+#if IS_ENABLED(CONFIG_MDB)
 struct kallsym_iter mdb_iter;
 int mdb_kallsyms(char *str, int (*print)(char *s, ...))
 {

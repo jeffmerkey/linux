@@ -53,7 +53,7 @@ static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
  */
 static DEFINE_PER_CPU(struct perf_event *, bp_per_reg[HBP_NUM]);
 
-#if defined(CONFIG_MDB_DIRECT_MODE)
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 int disable_hw_bp_interface;
 EXPORT_SYMBOL_GPL(disable_hw_bp_interface);
 #endif
@@ -108,7 +108,7 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
 	unsigned long *dr7;
 	int i;
 
-#if defined(CONFIG_MDB_DIRECT_MODE)
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 	if (disable_hw_bp_interface)
 		return -EBUSY;
 #endif
@@ -154,7 +154,7 @@ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
 	unsigned long *dr7;
 	int i;
 
-#if defined(CONFIG_MDB_DIRECT_MODE)
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 	if (disable_hw_bp_interface)
 		return;
 #endif
@@ -428,7 +428,7 @@ void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
 
 void hw_breakpoint_restore(void)
 {
-#if defined(CONFIG_MDB_DIRECT_MODE)
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 	if (disable_hw_bp_interface)
 		return;
 #endif
@@ -474,7 +474,7 @@ static int hw_breakpoint_handler(struct die_args *args)
 	unsigned long dr7, dr6;
 	unsigned long *dr6_p;
 
-#if defined(CONFIG_MDB_DIRECT_MODE)
+#if IS_ENABLED(CONFIG_MDB_DIRECT_MODE)
 	if (disable_hw_bp_interface)
 		return NOTIFY_DONE;
 #endif

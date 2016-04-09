@@ -2531,7 +2531,7 @@ int vt_kmsg_redirect(int new)
 		return kmsg_con;
 }
 
-#if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
+#if IS_ENABLED(CONFIG_MDB)
 EXPORT_SYMBOL(vt_kmsg_redirect);
 #endif
 

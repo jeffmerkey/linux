@@ -366,7 +366,7 @@ static void watchdog_overflow_callback(struct perf_event *event,
 			show_regs(regs);
 		else
 			dump_stack();
-#ifdef CONFIG_DEBUG_LOCKUPS
+#if IS_ENABLED(CONFIG_DEBUG_LOCKUPS)
 		BREAK();
 #endif
 		/*
@@ -488,7 +488,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
 			show_regs(regs);
 		else
 			dump_stack();
-#ifdef CONFIG_DEBUG_LOCKUPS
+#if IS_ENABLED(CONFIG_DEBUG_LOCKUPS)
 		BREAK();
 #endif
 		if (softlockup_all_cpu_backtrace) {

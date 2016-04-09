@@ -177,7 +177,7 @@ void vcs_make_sysfs(int index);
 void vcs_remove_sysfs(int index);
 
 /* Some debug stub to catch some of the obvious races in the VT code */
-#if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
+#if IS_ENABLED(CONFIG_MDB)
 #define WARN_CONSOLE_UNLOCKED()
 #else
 #if 1

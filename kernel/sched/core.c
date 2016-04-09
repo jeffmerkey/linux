@@ -999,7 +999,7 @@ static int effective_prio(struct task_struct *p)
  * Return: 1 if the task is currently executing. 0 otherwise.
  */
 
-#if defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
+#if IS_ENABLED(CONFIG_MDB)
 int task_curr(const struct task_struct *p)
 {
 	return cpu_curr(task_cpu(p)) == p;
@@ -7757,8 +7757,8 @@ void normalize_rt_tasks(void)
 
 #endif /* CONFIG_MAGIC_SYSRQ */
 
-#if defined(CONFIG_IA64) || defined(CONFIG_KGDB_KDB) || \
-	defined(CONFIG_MDB) || defined(CONFIG_MDB_MODULE)
+#if IS_ENABLED(CONFIG_IA64) || IS_ENABLED(CONFIG_KGDB_KDB) || \
+	IS_ENABLED(CONFIG_MDB)
 /*
  * These functions are only useful for the IA64 MCA handling, or kdb.
  *
