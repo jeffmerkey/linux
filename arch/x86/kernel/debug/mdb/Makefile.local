@@ -102,5 +102,3 @@ depmod:
 ifndef DIST_DESTDIR
 	-/sbin/depmod -a $(KVERS) -b $(DESTDIR)
 endif
-
-
