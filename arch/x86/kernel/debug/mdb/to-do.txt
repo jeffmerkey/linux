@@ -1,0 +1,112 @@
+
+diff --git a/Documentation/sysrq.txt b/Documentation/sysrq.txt
+index 3a3b30a..112f28d 100644
+--- a/Documentation/sysrq.txt
++++ b/Documentation/sysrq.txt
+@@ -78,7 +78,7 @@ On all -  write a character to /proc/sysrq-trigger.  e.g.:
+ 'f'	- Will call the oom killer to kill a memory hog process, but do not
+ 	  panic if nothing can be killed.
+ 
+-'g'	- Used by kgdb (kernel debugger)
++'g'	- Used by kgdb, kdb and mdb (kernel debuggers)
+ 
+ 'h'     - Will display help (actually any other key than those listed
+           here will display help. but 'h' is easy to remember :-)
+
+
+line 642 mdb-base.c
+
+static inline int mdb_process_cpu(const struct task_struct *p)
+{
+===>	unsigned int cpu = 0;   //task_thread_info(p)->cpu;
+
+	if (cpu > num_possible_cpus())
+		cpu = 0;
+	return cpu;
+}
+
+line 169 mdb-os.c
+
+#if IS_ENABLED(CONFIG_FRAME_POINTER)
+	if (!bp) {
+		if (task == current)
+===>			get_bp(bp);
+		else
+			bp = *(unsigned long *)task->thread.sp;
+	}
+#endif
+
+
+--- arch/x86/kernel/dumpstack_32.c
++++ arch/x86/kernel/dumpstack_32.c
+@@ -24,19 +24,21 @@
+ }
+ 
+ 
+-static void *is_hardirq_stack(unsigned long *stack, int cpu)
++void *is_hardirq_stack(unsigned long *stack, int cpu)
+ {
+ 	void *irq = per_cpu(hardirq_stack, cpu);
+ 
+ 	return is_irq_stack(stack, irq);
+ }
++EXPORT_SYMBOL_GPL(is_hardirq_stack);
+ 
+-static void *is_softirq_stack(unsigned long *stack, int cpu)
++void *is_softirq_stack(unsigned long *stack, int cpu)
+ {
+ 	void *irq = per_cpu(softirq_stack, cpu);
+ 
+ 	return is_irq_stack(stack, irq);
+ }
++EXPORT_SYMBOL_GPL(is_softirq_stack);
+ 
+ void dump_trace(struct task_struct *task, struct pt_regs *regs,
+ 		unsigned long *stack, unsigned long bp,
+
+
+--- arch/x86/kernel/dumpstack_64.c
++++ arch/x86/kernel/dumpstack_64.c
+@@ -31,8 +31,14 @@
+ #endif
+ };
+ 
+-static unsigned long *in_exception_stack(unsigned cpu, unsigned long stack,
+-					 unsigned *usedp, char **idp)
++#if IS_ENABLED(CONFIG_MDB)
++unsigned long *in_exception_stack(unsigned int cpu, unsigned long stack,
++				  unsigned int *usedp, char **idp)
++#else
++static unsigned long *in_exception_stack(unsigned int cpu, unsigned long stack,
++					 unsigned int *usedp, char **idp)
++#endif
++
+ {
+ 	unsigned k;
+ 
+@@ -96,6 +102,10 @@
+ 	return NULL;
+ }
+ 
++#if IS_ENABLED(CONFIG_MDB)
++EXPORT_SYMBOL(in_exception_stack);
++#endif
++
+ static inline int
+ in_irq_stack(unsigned long *stack, unsigned long *irq_stack,
+ 	     unsigned long *irq_stack_end)
+@@ -148,6 +158,14 @@
+  * severe exception (double fault, nmi, stack fault, debug, mce) hardware stack
+  */
+ 
++#if IS_ENABLED(CONFIG_MDB)
++unsigned long *get_irq_stack_end(const unsigned int cpu)
++{
++	return (unsigned long *)per_cpu(irq_stack_ptr, cpu);
++}
++EXPORT_SYMBOL(get_irq_stack_end);
++#endif
++
+ void dump_trace(struct task_struct *task, struct pt_regs *regs,
+ 		unsigned long *stack, unsigned long bp,
+ 		const struct stacktrace_ops *ops, void *data)
