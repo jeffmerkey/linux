@@ -78,6 +78,14 @@ do {								\
 
 #define __WARN_FLAGS(flags)	_BUG_FLAGS(ASM_UD0, BUGFLAG_WARNING|(flags))
 
+#define HAVE_ARCH_BREAK
+#define breakcheck()
+#define BREAK()							\
+do {								\
+	asm volatile("int3");					\
+	breakcheck();						\
+} while (0)
+
 #include <asm-generic/bug.h>
 
 #endif /* _ASM_X86_BUG_H */
