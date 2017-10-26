@@ -153,8 +153,10 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	const unsigned int cpu = get_cpu();
 //	unsigned long *irq_stack_end = get_irq_stack_end(cpu);
 	unsigned long *irq_stack_end = NULL;
-	unsigned int used = 0;
+//	unsigned int used = 0;
 	struct thread_info *tinfo;
+
+	if (cpu) {};
 
 	if (!task)
 		task = current;
