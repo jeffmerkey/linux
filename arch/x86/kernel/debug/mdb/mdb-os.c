@@ -151,7 +151,8 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 {
 	unsigned long bp = 0;
 	const unsigned int cpu = get_cpu();
-	unsigned long *irq_stack_end = get_irq_stack_end(cpu);
+//	unsigned long *irq_stack_end = get_irq_stack_end(cpu);
+	unsigned long *irq_stack_end = NULL;
 	unsigned int used = 0;
 	struct thread_info *tinfo;
 
@@ -178,10 +179,10 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	tinfo = task_thread_info(task);
 	for (;;) {
 		char *id;
-		unsigned long *estack_end;
+		unsigned long *estack_end = NULL;
 
-		estack_end = in_exception_stack(cpu, (unsigned long)stack,
-						&used, &id);
+//		estack_end = in_exception_stack(cpu, (unsigned long)stack,
+//						&used, &id);
 
 		if (estack_end) {
 			if (dbg_pr("%s", id))
