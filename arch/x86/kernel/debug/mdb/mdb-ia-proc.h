@@ -205,7 +205,7 @@ struct LDT32 {
 #endif
 
 void initialize_debugger_registers(void);
-unsigned long add_accel_routine(accel_key *);
+unsigned long add_accel_routine(accel_key *key);
 void clear_debugger_registers(void);
 void display_expr_help(void);
 void eval_command_expr(dbg_regs *dbgframe,
@@ -223,18 +223,18 @@ unsigned long dbg_read_dr2(void);
 unsigned long dbg_read_dr3(void);
 unsigned long dbg_read_dr6(void);
 unsigned long dbg_read_dr7(void);
-void dbg_write_dr0(unsigned long);
-void dbg_write_dr1(unsigned long);
-void dbg_write_dr2(unsigned long);
-void dbg_write_dr3(unsigned long);
-void dbg_write_dr6(unsigned long);
-void dbg_write_dr7(unsigned long);
+void dbg_write_dr0(unsigned long v);
+void dbg_write_dr1(unsigned long v);
+void dbg_write_dr2(unsigned long v);
+void dbg_write_dr3(unsigned long v);
+void dbg_write_dr6(unsigned long v);
+void dbg_write_dr7(unsigned long v);
 unsigned long dbg_read_cr0(void);
 unsigned long dbg_read_cr2(void);
 unsigned long dbg_read_cr3(void);
 unsigned long dbg_read_cr4(void);
-void read_gdtr(unsigned long *);
-void read_idtr(unsigned long *);
+void read_gdtr(unsigned long *gdtptr);
+void read_idtr(unsigned long *idtptr);
 unsigned long read_ldtr(void);
 unsigned long read_tr(void);
 

@@ -27,7 +27,7 @@ extern unsigned char *last_link;
 void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	      unsigned long *stack);
 void machine_emergency_restart(void);
-void dump_os_symbol_table_match(unsigned char *);
+void dump_os_symbol_table_match(unsigned char *match);
 void clear_screen(void);
 int mdb_getkey(void);
 

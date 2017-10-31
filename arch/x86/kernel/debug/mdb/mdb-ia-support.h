@@ -69,8 +69,8 @@ struct disassemble_info {
 
 extern unsigned long full_deref_toggle;
 
-int print_insn_i386(mdb_vma, struct disassemble_info *, dbg_regs *);
-int print_insn_i386_att(mdb_vma, struct disassemble_info *, dbg_regs *);
-int print_insn_i386_intel(mdb_vma, struct disassemble_info *, dbg_regs *);
+int print_insn_i386(mdb_vma v, struct disassemble_info *i, dbg_regs *r);
+int print_insn_i386_att(mdb_vma v, struct disassemble_info *i, dbg_regs *r);
+int print_insn_i386_intel(mdb_vma v, struct disassemble_info *i, dbg_regs *r);
 
 #endif

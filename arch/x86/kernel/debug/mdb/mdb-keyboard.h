@@ -56,10 +56,9 @@
 #define KBD_CCMD_WRITE_AUX_OBUF	0xD3    /* Write to output buffer as if
 					 * initiated by the auxiliary device
 					 */
-#define KBD_CCMD_WRITE_MOUSE	0xD4	/* Write the following byte to the mouse
-*/
+#define KBD_CCMD_WRITE_MOUSE	0xD4	/* Write following byte -> mouse */
 
-/*	Keyboard Commands */
+/* Keyboard Commands */
 
 #define KBD_CMD_SET_LEDS	0xED	/* Set keyboard leds */
 #define KBD_CMD_SET_RATE	0xF3	/* Set typematic rate */

@@ -102,11 +102,11 @@ void initialize_debugger(void);
 void clear_debugger_state(void);
 void show_debugger_accelerators(void);
 void touch_hardlockup_watchdog(void);
-void read_dbg_regs(void *, dbg_regs *, unsigned long);
-void write_dbg_regs(void *, dbg_regs *, unsigned long);
-unsigned long is_accelerator(unsigned long);
+void read_dbg_regs(void *p, dbg_regs *r, unsigned long v);
+void write_dbg_regs(void *p, dbg_regs *r, unsigned long v);
+unsigned long is_accelerator(unsigned long v);
 unsigned long accel_routine(unsigned long key, void *p);
-void display_registers(dbg_regs *, unsigned long);
+void display_registers(dbg_regs *r, unsigned long v);
 
 unsigned long disassemble(dbg_regs *dbgframe, unsigned long p,
 			  unsigned long count, unsigned long use,
@@ -163,16 +163,16 @@ unsigned long unassemble(dbg_regs *dbgframe, unsigned long ip,
 			 unsigned long use, unsigned long *ret,
 			 unsigned long type);
 void display_ascii_table(void);
-unsigned char *upcase_string(unsigned char *);
+unsigned char *upcase_string(unsigned char *s);
 unsigned long validate_address(unsigned long addr);
 unsigned long in_keyboard(unsigned char *buffer,
 			  unsigned long start,
 			  unsigned long length);
 
-unsigned long get_ip(dbg_regs *);
-unsigned long get_stack_address(dbg_regs *);
-unsigned long get_stack_segment(dbg_regs *);
-unsigned short read_memory(void *, void *, unsigned int);
+unsigned long get_ip(dbg_regs *r);
+unsigned long get_stack_address(dbg_regs *r);
+unsigned long get_stack_segment(dbg_regs *r);
+unsigned short read_memory(void *s, void *d, unsigned int len);
 unsigned long ssb_update(dbg_regs *dbgframe, unsigned long processor);
 void mdb_breakpoint(void);
 

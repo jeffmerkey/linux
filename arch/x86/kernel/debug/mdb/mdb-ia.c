@@ -6091,7 +6091,7 @@ void read_task_frame(dbg_regs *sf, struct task_struct *p)
 {
 	memset((void *)sf, 0, sizeof(dbg_regs));
 
-	sf->t_bp = *(unsigned long *)p->thread.sp;
+	sf->t_bp = ((struct inactive_task_frame *)p->thread.sp)->bp;
 #if IS_ENABLED(CONFIG_X86_32)
 	sf->t_ds = __KERNEL_DS;
 	sf->t_es = __KERNEL_DS;
@@ -6099,7 +6099,7 @@ void read_task_frame(dbg_regs *sf, struct task_struct *p)
 	sf->t_ss = __KERNEL_DS;
 	sf->t_fs = 0xFFFF;
 	sf->t_gs = 0xFFFF;
-	sf->t_ip = p->thread.ip;
+	sf->t_ip = 0;
 	sf->t_flags = 0;
 #else
 	sf->t_cs = __KERNEL_CS;

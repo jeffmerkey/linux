@@ -172,7 +172,7 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 //		if (task == current)
 //			get_bp(bp);
 //		else
-			bp = *(unsigned long *)task->thread.sp;
+		bp = *(unsigned long *)task->thread.sp;
 	}
 #endif
 
@@ -297,8 +297,8 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 			stack = (unsigned long *)task->thread.sp;
 	}
 
-	if (!bp)
-		bp = stack_frame(task, regs);
+//	if (!bp)
+//		bp = stack_frame(task, regs);
 
 	for (;;) {
 		struct thread_info *context;
