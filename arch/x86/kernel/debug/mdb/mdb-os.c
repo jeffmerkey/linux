@@ -75,10 +75,233 @@ unsigned char workbuf[MAX_SYMBOL_LEN];
 
 #if IS_ENABLED(CONFIG_X86_64)
 
-static inline int in_irq_stack(unsigned long *stack, unsigned long *irq_stack,
-			       unsigned long *irq_stack_end)
+#include <asm/stacktrace.h>
+
+static char *exception_stack_names[N_EXCEPTION_STACKS] = {
+		[ DOUBLEFAULT_STACK-1	]	= "#DF",
+		[ NMI_STACK-1		]	= "NMI",
+		[ DEBUG_STACK-1		]	= "#DB",
+		[ MCE_STACK-1		]	= "#MC",
+};
+
+static unsigned long exception_stack_sizes[N_EXCEPTION_STACKS] = {
+	[0 ... N_EXCEPTION_STACKS - 1]		= EXCEPTION_STKSZ,
+	[DEBUG_STACK - 1]			= DEBUG_STKSZ
+};
+
+void stack_type_str(enum stack_type type, const char **begin, const char **end)
 {
-	return stack >= irq_stack && stack < irq_stack_end;
+	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
+
+	switch (type) {
+	case STACK_TYPE_IRQ:
+		*begin = "IRQ";
+		*end   = "EOI";
+		break;
+	case STACK_TYPE_EXCEPTION ... STACK_TYPE_EXCEPTION_LAST:
+		*begin = exception_stack_names[type - STACK_TYPE_EXCEPTION];
+		*end   = "EOE";
+		break;
+	default:
+		*begin = NULL;
+		*end   = NULL;
+	}
+}
+
+static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+{
+	unsigned long *begin, *end;
+	struct pt_regs *regs;
+	unsigned k;
+
+	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
+
+	for (k = 0; k < N_EXCEPTION_STACKS; k++) {
+		end   = (unsigned long *)raw_cpu_ptr(&orig_ist)->ist[k];
+		begin = end - (exception_stack_sizes[k] / sizeof(long));
+		regs  = (struct pt_regs *)end - 1;
+
+		if (stack < begin || stack >= end)
+			continue;
+
+		info->type	= STACK_TYPE_EXCEPTION + k;
+		info->begin	= begin;
+		info->end	= end;
+		info->next_sp	= (unsigned long *)regs->sp;
+
+		return true;
+	}
+
+	return false;
+}
+
+static bool in_irq_stack(unsigned long *stack, struct stack_info *info)
+{
+	unsigned long *end   = (unsigned long *)this_cpu_read(irq_stack_ptr);
+	unsigned long *begin = end - (IRQ_STACK_SIZE / sizeof(long));
+
+	/*
+	 * This is a software stack, so 'end' can be a valid stack pointer.
+	 * It just means the stack is empty.
+	 */
+	if (stack < begin || stack > end)
+		return false;
+
+	info->type	= STACK_TYPE_IRQ;
+	info->begin	= begin;
+	info->end	= end;
+
+	/*
+	 * The next stack pointer is the first thing pushed by the entry code
+	 * after switching to the irq stack.
+	 */
+	info->next_sp = (unsigned long *)*(end - 1);
+
+	return true;
+}
+
+int get_stack_info(unsigned long *stack, struct task_struct *task,
+		   struct stack_info *info, unsigned long *visit_mask)
+{
+	if (!stack)
+		goto unknown;
+
+	task = task ? : current;
+
+	if (in_task_stack(stack, task, info))
+		goto recursion_check;
+
+	if (task != current)
+		goto unknown;
+
+	if (in_exception_stack(stack, info))
+		goto recursion_check;
+
+	if (in_irq_stack(stack, info))
+		goto recursion_check;
+
+	goto unknown;
+
+recursion_check:
+	/*
+	 * Make sure we don't iterate through any given stack more than once.
+	 * If it comes up a second time then there's something wrong going on:
+	 * just break out and report an unknown stack type.
+	 */
+	if (visit_mask) {
+		if (*visit_mask & (1UL << info->type))
+			goto unknown;
+		*visit_mask |= 1UL << info->type;
+	}
+
+	return 0;
+
+unknown:
+	info->type = STACK_TYPE_UNKNOWN;
+	return -EINVAL;
+}
+
+void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
+			unsigned long *sp, char *log_lvl)
+{
+	unsigned long *irq_stack_end;
+	unsigned long *irq_stack;
+	unsigned long *stack;
+	int i;
+
+	if (!try_get_task_stack(task))
+		return;
+
+	irq_stack_end = (unsigned long *)this_cpu_read(irq_stack_ptr);
+	irq_stack     = irq_stack_end - (IRQ_STACK_SIZE / sizeof(long));
+
+	sp = sp ? : get_stack_pointer(task, regs);
+
+	stack = sp;
+	for (i = 0; i < kstack_depth_to_print; i++) {
+		unsigned long word;
+
+		if (stack >= irq_stack && stack <= irq_stack_end) {
+			if (stack == irq_stack_end) {
+				stack = (unsigned long *) (irq_stack_end[-1]);
+				pr_cont(" <EOI> ");
+			}
+		} else {
+		if (kstack_end(stack))
+			break;
+		}
+
+		if (probe_kernel_address(stack, word))
+			break;
+
+		if ((i % STACKSLOTS_PER_LINE) == 0) {
+			if (i != 0)
+				pr_cont("\n");
+			printk("%s %016lx", log_lvl, word);
+		} else
+			pr_cont(" %016lx", word);
+
+		stack++;
+		touch_nmi_watchdog();
+	}
+
+	pr_cont("\n");
+	show_trace_log_lvl(task, regs, sp, log_lvl);
+
+	put_task_stack(task);
+}
+
+void show_regs(struct pt_regs *regs)
+{
+	int i;
+
+	show_regs_print_info(KERN_DEFAULT);
+	__show_regs(regs, 1);
+
+	/*
+	 * When in-kernel, we also print out the stack and code at the
+	 * time of the fault..
+	 */
+	if (!user_mode(regs)) {
+		unsigned int code_prologue = code_bytes * 43 / 64;
+		unsigned int code_len = code_bytes;
+		unsigned char c;
+		u8 *ip;
+
+		printk(KERN_DEFAULT "Stack:\n");
+		show_stack_log_lvl(current, regs, NULL, KERN_DEFAULT);
+
+		printk(KERN_DEFAULT "Code: ");
+
+		ip = (u8 *)regs->ip - code_prologue;
+		if (ip < (u8 *)PAGE_OFFSET || probe_kernel_address(ip, c)) {
+			/* try starting at IP */
+			ip = (u8 *)regs->ip;
+			code_len = code_len - code_prologue + 1;
+		}
+		for (i = 0; i < code_len; i++, ip++) {
+			if (ip < (u8 *)PAGE_OFFSET ||
+					probe_kernel_address(ip, c)) {
+				pr_cont(" Bad RIP value.");
+				break;
+			}
+			if (ip == (u8 *)regs->ip)
+				pr_cont("<%02x> ", c);
+			else
+				pr_cont("%02x ", c);
+		}
+	}
+	pr_cont("\n");
+}
+
+int is_valid_bugaddr(unsigned long ip)
+{
+	unsigned short ud2;
+
+	if (__copy_from_user(&ud2, (const void __user *) ip, sizeof(ud2)))
+		return 0;
+
+	return ud2 == 0x0b0f;
 }
 
 static inline unsigned long fixup_bp_irq_link(unsigned long bp,
@@ -225,6 +448,203 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 
 #else
 
+#include <linux/kdebug.h>
+
+#include <asm/stacktrace.h>
+
+void stack_type_str(enum stack_type type, const char **begin, const char **end)
+{
+	switch (type) {
+	case STACK_TYPE_IRQ:
+	case STACK_TYPE_SOFTIRQ:
+		*begin = "IRQ";
+		*end   = "EOI";
+		break;
+	default:
+		*begin = NULL;
+		*end   = NULL;
+	}
+}
+
+static bool in_hardirq_stack(unsigned long *stack, struct stack_info *info)
+{
+	unsigned long *begin = (unsigned long *)this_cpu_read(hardirq_stack);
+	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
+
+	/*
+	 * This is a software stack, so 'end' can be a valid stack pointer.
+	 * It just means the stack is empty.
+	 */
+	if (stack < begin || stack > end)
+		return false;
+
+	info->type	= STACK_TYPE_IRQ;
+	info->begin	= begin;
+	info->end	= end;
+
+	/*
+	 * See irq_32.c -- the next stack pointer is stored at the beginning of
+	 * the stack.
+	 */
+	info->next_sp	= (unsigned long *)*begin;
+
+	return true;
+}
+
+static bool in_softirq_stack(unsigned long *stack, struct stack_info *info)
+{
+	unsigned long *begin = (unsigned long *)this_cpu_read(softirq_stack);
+	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
+
+	/*
+	 * This is a software stack, so 'end' can be a valid stack pointer.
+	 * It just means the stack is empty.
+	 */
+	if (stack < begin || stack > end)
+		return false;
+
+	info->type	= STACK_TYPE_SOFTIRQ;
+	info->begin	= begin;
+	info->end	= end;
+
+	/*
+	 * The next stack pointer is stored at the beginning of the stack.
+	 * See irq_32.c.
+	 */
+	info->next_sp	= (unsigned long *)*begin;
+
+	return true;
+}
+
+int get_stack_info(unsigned long *stack, struct task_struct *task,
+		   struct stack_info *info, unsigned long *visit_mask)
+{
+	if (!stack)
+		goto unknown;
+
+	task = task ? : current;
+
+	if (in_task_stack(stack, task, info))
+		goto recursion_check;
+
+	if (task != current)
+		goto unknown;
+
+	if (in_hardirq_stack(stack, info))
+		goto recursion_check;
+
+	if (in_softirq_stack(stack, info))
+		goto recursion_check;
+
+	goto unknown;
+
+recursion_check:
+	/*
+	 * Make sure we don't iterate through any given stack more than once.
+	 * If it comes up a second time then there's something wrong going on:
+	 * just break out and report an unknown stack type.
+	 */
+	if (visit_mask) {
+		if (*visit_mask & (1UL << info->type))
+			goto unknown;
+		*visit_mask |= 1UL << info->type;
+	}
+
+	return 0;
+
+unknown:
+	info->type = STACK_TYPE_UNKNOWN;
+	return -EINVAL;
+}
+
+void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
+			unsigned long *sp, char *log_lvl)
+{
+	unsigned long *stack;
+	int i;
+
+	if (!try_get_task_stack(task))
+		return;
+
+	sp = sp ? : get_stack_pointer(task, regs);
+
+	stack = sp;
+	for (i = 0; i < kstack_depth_to_print; i++) {
+		if (kstack_end(stack))
+			break;
+		if ((i % STACKSLOTS_PER_LINE) == 0) {
+			if (i != 0)
+				pr_cont("\n");
+			printk("%s %08lx", log_lvl, *stack++);
+		} else
+			pr_cont(" %08lx", *stack++);
+		touch_nmi_watchdog();
+	}
+	pr_cont("\n");
+	show_trace_log_lvl(task, regs, sp, log_lvl);
+
+	put_task_stack(task);
+}
+
+
+void show_regs(struct pt_regs *regs)
+{
+	int i;
+
+	show_regs_print_info(KERN_EMERG);
+	__show_regs(regs, !user_mode(regs));
+
+	/*
+	 * When in-kernel, we also print out the stack and code at the
+	 * time of the fault..
+	 */
+	if (!user_mode(regs)) {
+		unsigned int code_prologue = code_bytes * 43 / 64;
+		unsigned int code_len = code_bytes;
+		unsigned char c;
+		u8 *ip;
+
+		pr_emerg("Stack:\n");
+		show_stack_log_lvl(current, regs, NULL, KERN_EMERG);
+
+		pr_emerg("Code:");
+
+		ip = (u8 *)regs->ip - code_prologue;
+		if (ip < (u8 *)PAGE_OFFSET || probe_kernel_address(ip, c)) {
+			/* try starting at IP */
+			ip = (u8 *)regs->ip;
+			code_len = code_len - code_prologue + 1;
+		}
+		for (i = 0; i < code_len; i++, ip++) {
+			if (ip < (u8 *)PAGE_OFFSET ||
+					probe_kernel_address(ip, c)) {
+				pr_cont("  Bad EIP value.");
+				break;
+			}
+			if (ip == (u8 *)regs->ip)
+				pr_cont(" <%02x>", c);
+			else
+				pr_cont(" %02x", c);
+		}
+	}
+	pr_cont("\n");
+}
+
+int is_valid_bugaddr(unsigned long ip)
+{
+	unsigned short ud2;
+
+	if (ip < PAGE_OFFSET)
+		return 0;
+	if (probe_kernel_address((unsigned short *)ip, ud2))
+		return 0;
+
+	return ud2 == 0x0b0f;
+}
+
+
+
+
 static inline int valid_stack_ptr(struct thread_info *tinfo,
 				  void *p, unsigned int size, void *end)
 {
@@ -286,6 +706,8 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	unsigned long bp = 0;
 	u32 *prev_esp;
 
+	if (cpu == cpu) {};
+
 	if (!task)
 		task = current;
 
@@ -302,12 +724,12 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 
 	for (;;) {
 		struct thread_info *context;
-		void *end_stack;
+		void *end_stack = NULL;
 
-		end_stack = is_hardirq_stack(stack, cpu);
-		if (!end_stack)
-			end_stack = is_softirq_stack(stack, cpu);
-
+//		end_stack = is_hardirq_stack(stack, cpu);
+//		if (!end_stack)
+//			end_stack = is_softirq_stack(stack, cpu);
+//
 		context = task_thread_info(task);
 
 		bp = print_context(context, stack, bp, end_stack);
@@ -331,6 +753,334 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 }
 
 #endif
+
+#include <linux/kallsyms.h>
+#include <linux/kprobes.h>
+#include <linux/uaccess.h>
+#include <linux/utsname.h>
+#include <linux/hardirq.h>
+#include <linux/kdebug.h>
+#include <linux/module.h>
+#include <linux/ptrace.h>
+#include <linux/ftrace.h>
+#include <linux/kexec.h>
+#include <linux/bug.h>
+#include <linux/nmi.h>
+#include <linux/sysfs.h>
+
+#include <asm/stacktrace.h>
+#include <asm/unwind.h>
+
+int panic_on_unrecovered_nmi;
+int panic_on_io_nmi;
+unsigned int code_bytes = 64;
+int kstack_depth_to_print = 3 * STACKSLOTS_PER_LINE;
+static int die_counter;
+
+bool in_task_stack(unsigned long *stack, struct task_struct *task,
+		   struct stack_info *info)
+{
+	unsigned long *begin = task_stack_page(task);
+	unsigned long *end   = task_stack_page(task) + THREAD_SIZE;
+
+	if (stack < begin || stack >= end)
+		return false;
+
+	info->type	= STACK_TYPE_TASK;
+	info->begin	= begin;
+	info->end	= end;
+	info->next_sp	= NULL;
+
+	return true;
+}
+
+static void printk_stack_address(unsigned long address, int reliable,
+				 char *log_lvl)
+{
+	touch_nmi_watchdog();
+	printk("%s [<%p>] %s%pB\n",
+		log_lvl, (void *)address, reliable ? "" : "? ",
+		(void *)address);
+}
+
+void printk_address(unsigned long address)
+{
+	pr_cont(" [<%p>] %pS\n", (void *)address, (void *)address);
+}
+
+void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+			unsigned long *stack, char *log_lvl)
+{
+	struct unwind_state state;
+	struct stack_info stack_info = {0};
+	unsigned long visit_mask = 0;
+	int graph_idx = 0;
+
+	printk("%sCall Trace:\n", log_lvl);
+
+	unwind_start(&state, task, regs, stack);
+
+	/*
+	 * Iterate through the stacks, starting with the current stack pointer.
+	 * Each stack has a pointer to the next one.
+	 *
+	 * x86-64 can have several stacks:
+	 * - task stack
+	 * - interrupt stack
+	 * - HW exception stacks (double fault, nmi, debug, mce)
+	 *
+	 * x86-32 can have up to three stacks:
+	 * - task stack
+	 * - softirq stack
+	 * - hardirq stack
+	 */
+	for (; stack; stack = stack_info.next_sp) {
+		const char *str_begin, *str_end;
+
+		/*
+		 * If we overflowed the task stack into a guard page, jump back
+		 * to the bottom of the usable stack.
+		 */
+		if (task_stack_page(task) - (void *)stack < PAGE_SIZE)
+			stack = task_stack_page(task);
+
+		if (get_stack_info(stack, task, &stack_info, &visit_mask))
+			break;
+
+		stack_type_str(stack_info.type, &str_begin, &str_end);
+		if (str_begin)
+			printk("%s <%s> ", log_lvl, str_begin);
+
+		/*
+		 * Scan the stack, printing any text addresses we find.  At the
+		 * same time, follow proper stack frames with the unwinder.
+		 *
+		 * Addresses found during the scan which are not reported by
+		 * the unwinder are considered to be additional clues which are
+		 * sometimes useful for debugging and are prefixed with '?'.
+		 * This also serves as a failsafe option in case the unwinder
+		 * goes off in the weeds.
+		 */
+		for (; stack < stack_info.end; stack++) {
+			unsigned long real_addr;
+			int reliable = 0;
+			unsigned long addr = READ_ONCE_NOCHECK(*stack);
+			unsigned long *ret_addr_p =
+				unwind_get_return_address_ptr(&state);
+
+			if (!__kernel_text_address(addr))
+				continue;
+
+			if (stack == ret_addr_p)
+				reliable = 1;
+
+			/*
+			 * When function graph tracing is enabled for a
+			 * function, its return address on the stack is
+			 * replaced with the address of an ftrace handler
+			 * (return_to_handler).  In that case, before printing
+			 * the "real" address, we want to print the handler
+			 * address as an "unreliable" hint that function graph
+			 * tracing was involved.
+			 */
+			real_addr = ftrace_graph_ret_addr(task, &graph_idx,
+							  addr, stack);
+			if (real_addr != addr)
+				printk_stack_address(addr, 0, log_lvl);
+			printk_stack_address(real_addr, reliable, log_lvl);
+
+			if (!reliable)
+				continue;
+
+			/*
+			 * Get the next frame from the unwinder.  No need to
+			 * check for an error: if anything goes wrong, the rest
+			 * of the addresses will just be printed as unreliable.
+			 */
+			unwind_next_frame(&state);
+		}
+
+		if (str_end)
+			printk("%s <%s> ", log_lvl, str_end);
+	}
+}
+
+void show_stack(struct task_struct *task, unsigned long *sp)
+{
+	task = task ? : current;
+
+	/*
+	 * Stack frames below this one aren't interesting.  Don't show them
+	 * if we're printing for %current.
+	 */
+	if (!sp && task == current)
+		sp = get_stack_pointer(current, NULL);
+
+	show_stack_log_lvl(task, NULL, sp, "");
+}
+
+void show_stack_regs(struct pt_regs *regs)
+{
+	show_stack_log_lvl(current, regs, NULL, "");
+}
+
+static arch_spinlock_t die_lock = __ARCH_SPIN_LOCK_UNLOCKED;
+static int die_owner = -1;
+static unsigned int die_nest_count;
+
+unsigned long oops_begin(void)
+{
+	int cpu;
+	unsigned long flags;
+
+	oops_enter();
+
+	/* racy, but better than risking deadlock. */
+	raw_local_irq_save(flags);
+	cpu = smp_processor_id();
+	if (!arch_spin_trylock(&die_lock)) {
+		if (cpu == die_owner)
+			/* nested oops. should stop eventually */;
+		else
+			arch_spin_lock(&die_lock);
+	}
+	die_nest_count++;
+	die_owner = cpu;
+	console_verbose();
+	bust_spinlocks(1);
+	return flags;
+}
+EXPORT_SYMBOL_GPL(oops_begin);
+NOKPROBE_SYMBOL(oops_begin);
+
+void __noreturn rewind_stack_do_exit(int signr);
+
+void oops_end(unsigned long flags, struct pt_regs *regs, int signr)
+{
+	if (regs && kexec_should_crash(current))
+		crash_kexec(regs);
+
+	bust_spinlocks(0);
+	die_owner = -1;
+	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
+	die_nest_count--;
+	if (!die_nest_count)
+		/* Nest count reaches zero, release the lock. */
+		arch_spin_unlock(&die_lock);
+	raw_local_irq_restore(flags);
+	oops_exit();
+
+	if (!signr)
+		return;
+	if (in_interrupt())
+		panic("Fatal exception in interrupt");
+	if (panic_on_oops)
+		panic("Fatal exception");
+
+	/*
+	 * We're not going to return, but we might be on an IST stack or
+	 * have very little stack space left.  Rewind the stack and kill
+	 * the task.
+	 */
+	rewind_stack_do_exit(signr);
+}
+NOKPROBE_SYMBOL(oops_end);
+
+int __die(const char *str, struct pt_regs *regs, long err)
+{
+#ifdef CONFIG_X86_32
+	unsigned short ss;
+	unsigned long sp;
+#endif
+	printk(KERN_DEFAULT
+	       "%s: %04lx [#%d]%s%s%s%s\n", str, err & 0xffff, ++die_counter,
+	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT"         : "",
+	       IS_ENABLED(CONFIG_SMP)     ? " SMP"             : "",
+	       debug_pagealloc_enabled()  ? " DEBUG_PAGEALLOC" : "",
+	       IS_ENABLED(CONFIG_KASAN)   ? " KASAN"           : "");
+
+	if (notify_die(DIE_OOPS, str, regs, err,
+			current->thread.trap_nr, SIGSEGV) == NOTIFY_STOP)
+		return 1;
+
+	print_modules();
+	show_regs(regs);
+#ifdef CONFIG_X86_32
+	if (user_mode(regs)) {
+		sp = regs->sp;
+		ss = regs->ss & 0xffff;
+	} else {
+		sp = kernel_stack_pointer(regs);
+		savesegment(ss, ss);
+	}
+	printk(KERN_EMERG "EIP: [<%08lx>] ", regs->ip);
+	print_symbol("%s", regs->ip);
+	printk(" SS:ESP %04x:%08lx\n", ss, sp);
+#else
+	/* Executive summary in case the oops scrolled away */
+	printk(KERN_ALERT "RIP ");
+	printk_address(regs->ip);
+	printk(" RSP <%016lx>\n", regs->sp);
+#endif
+	return 0;
+}
+NOKPROBE_SYMBOL(__die);
+
+/*
+ * This is gone through when something in the kernel has done something bad
+ * and is about to be terminated:
+ */
+void die(const char *str, struct pt_regs *regs, long err)
+{
+	unsigned long flags = oops_begin();
+	int sig = SIGSEGV;
+
+	if (!user_mode(regs))
+		report_bug(regs->ip, regs);
+
+	if (__die(str, regs, err))
+		sig = 0;
+	oops_end(flags, regs, sig);
+}
+/*
+static int __init kstack_setup(char *s)
+{
+	ssize_t ret;
+	unsigned long val;
+
+	if (!s)
+		return -EINVAL;
+
+	ret = kstrtoul(s, 0, &val);
+	if (ret)
+		return ret;
+	kstack_depth_to_print = val;
+	return 0;
+}
+early_param("kstack", kstack_setup);
+
+static int __init code_bytes_setup(char *s)
+{
+	ssize_t ret;
+	unsigned long val;
+
+	if (!s)
+		return -EINVAL;
+
+	ret = kstrtoul(s, 0, &val);
+	if (ret)
+		return ret;
+
+	code_bytes = val;
+	if (code_bytes > 8192)
+		code_bytes = 8192;
+
+	return 1;
+}
+__setup("code_bytes=", code_bytes_setup);
+*/
+
+/* keyboard and serial interface functions */
 
 unsigned char *mdbprompt =   "more (q to quit)>";
 int linecount = 23;

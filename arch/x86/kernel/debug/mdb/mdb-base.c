@@ -639,7 +639,7 @@ unsigned long display_sections(unsigned char *cmd,
 
 static inline int mdb_process_cpu(const struct task_struct *p)
 {
-	unsigned int cpu = 0;   //task_thread_info(p)->cpu;
+	unsigned int cpu = task_cpu(p);
 
 	if (cpu > num_possible_cpus())
 		cpu = 0;
