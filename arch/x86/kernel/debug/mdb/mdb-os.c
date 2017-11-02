@@ -242,7 +242,7 @@ void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			dbg_pr(" %016lx", word);
 
 		stack++;
-		touch_nmi_watchdog();
+		mdb_watchdogs();
 	}
 
 	dbg_pr("\n");
@@ -679,6 +679,7 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 #include <linux/nmi.h>
 #include <linux/sysfs.h>
 
+#include <asm/processor.h>
 #include <asm/stacktrace.h>
 #include <asm/unwind.h>
 

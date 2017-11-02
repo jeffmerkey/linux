@@ -49,7 +49,9 @@ static inline void print_stack_overflow(void) { }
 #endif
 
 DEFINE_PER_CPU(struct irq_stack *, hardirq_stack);
+EXPORT_PER_CPU_SYMBOL(hardirq_stack);
 DEFINE_PER_CPU(struct irq_stack *, softirq_stack);
+EXPORT_PER_CPU_SYMBOL(softirq_stack);
 
 static void call_on_stack(void *func, void *stack)
 {
