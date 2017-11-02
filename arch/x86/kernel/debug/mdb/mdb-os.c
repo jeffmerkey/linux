@@ -80,10 +80,10 @@ unsigned char workbuf[MAX_SYMBOL_LEN];
 #if IS_ENABLED(CONFIG_X86_64)
 
 static char *exception_stack_names[N_EXCEPTION_STACKS] = {
-		[ DOUBLEFAULT_STACK-1	]	= "#DF",
-		[ NMI_STACK-1		]	= "NMI",
-		[ DEBUG_STACK-1		]	= "#DB",
-		[ MCE_STACK-1		]	= "#MC",
+	[DOUBLEFAULT_STACK - 1] = "#DF",
+	[NMI_STACK - 1] = "NMI",
+	[DEBUG_STACK - 1] = "#DB",
+	[MCE_STACK - 1] = "#MC",
 };
 
 static unsigned long exception_stack_sizes[N_EXCEPTION_STACKS] = {
@@ -114,7 +114,7 @@ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
 {
 	unsigned long *begin, *end;
 	struct pt_regs *regs;
-	unsigned k;
+	unsigned int k;
 
 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
 
@@ -225,12 +225,12 @@ void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 
 		if (stack >= irq_stack && stack <= irq_stack_end) {
 			if (stack == irq_stack_end) {
-				stack = (unsigned long *) (irq_stack_end[-1]);
+				stack = (unsigned long *)(irq_stack_end[-1]);
 				pr_cont(" <EOI> ");
 			}
 		} else {
-		if (kstack_end(stack))
-			break;
+			if (kstack_end(stack))
+				break;
 		}
 
 		if (probe_kernel_address(stack, word))
@@ -240,9 +240,9 @@ void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			if (i != 0)
 				dbg_pr("\n");
 			dbg_pr("%s %016lx", log_lvl, word);
-		} else
+		} else {
 			dbg_pr(" %016lx", word);
-
+		}
 		stack++;
 		mdb_watchdogs();
 	}
@@ -257,7 +257,7 @@ int is_valid_bugaddr(unsigned long ip)
 {
 	unsigned short ud2;
 
-	if (__copy_from_user(&ud2, (const void __user *) ip, sizeof(ud2)))
+	if (__copy_from_user(&ud2, (const void __user *)ip, sizeof(ud2)))
 		return 0;
 
 	return ud2 == 0x0b0f;
@@ -389,8 +389,9 @@ void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			if (i != 0)
 				pr_cont("\n");
 			dbg_pr("%s %08lx", log_lvl, *stack++);
-		} else
+		} else {
 			dbg_pr(" %08lx", *stack++);
+		}
 		mdb_watchdogs();
 	}
 	dbg_pr("\n");
@@ -398,7 +399,6 @@ void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 
 	put_task_stack(task);
 }
-
 
 int is_valid_bugaddr(unsigned long ip)
 {
@@ -438,9 +438,8 @@ static void printk_stack_address(unsigned long address, int reliable,
 				 char *log_lvl)
 {
 	mdb_watchdogs();
-	dbg_pr("%s [<%p>] %s%pB\n",
-		log_lvl, (void *)address, reliable ? "" : "? ",
-		(void *)address);
+	dbg_pr("%s [<%p>] %s%pB\n", log_lvl, (void *)address,
+	       reliable ? "" : "? ", (void *)address);
 }
 
 void printk_address(unsigned long address)
@@ -548,14 +547,12 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 void show_stack(struct task_struct *task, unsigned long *sp)
 {
 	task = task ? : current;
-
 	/*
 	 * Stack frames below this one aren't interesting.  Don't show them
 	 * if we're printing for %current.
 	 */
 	if (!sp && task == current)
 		sp = get_stack_pointer(current, NULL);
-
 	show_stack_log_lvl(task, NULL, sp, "");
 }
 
@@ -569,14 +566,13 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 {
 	const unsigned int cpu = get_cpu();
 
-	if (cpu == cpu) {};
+	if (cpu == cpu)
+		;
 	show_stack(task, stack);
 	put_cpu();
 }
 
-
 /* keyboard and serial interface functions */
-
 unsigned char *mdbprompt =   "more (q to quit)>";
 int linecount = 23;
 int nextline;
