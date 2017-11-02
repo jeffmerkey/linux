@@ -54,6 +54,10 @@
 #include <asm/stacktrace.h>
 #include <linux/io.h>
 #include <linux/delay.h>
+#include <linux/kdebug.h>
+
+#include <asm/stacktrace.h>
+#include <asm/unwind.h>
 
 #define __KERNEL_SYSCALLS__
 #include <linux/unistd.h>
@@ -74,8 +78,6 @@ unsigned char modbuf[MAX_SYMBOL_LEN];
 unsigned char workbuf[MAX_SYMBOL_LEN];
 
 #if IS_ENABLED(CONFIG_X86_64)
-
-#include <asm/stacktrace.h>
 
 static char *exception_stack_names[N_EXCEPTION_STACKS] = {
 		[ DOUBLEFAULT_STACK-1	]	= "#DF",
@@ -261,33 +263,7 @@ int is_valid_bugaddr(unsigned long ip)
 	return ud2 == 0x0b0f;
 }
 
-void bt_stack(struct task_struct *task, struct pt_regs *regs,
-	      unsigned long *stack)
-{
-	unsigned long bp = 0;
-	const unsigned int cpu = get_cpu();
-	unsigned long *irq_stack_end = NULL;
-	unsigned int used = 0;
-	struct thread_info *tinfo;
-
-	if (!task)
-		task = current;
-
-	if (!stack) {
-		unsigned long dummy;
-
-		stack = &dummy;
-		if (task && task != current)
-			stack = (unsigned long *)task->thread.sp;
-	}
-	put_cpu();
-}
-
 #else
-
-#include <linux/kdebug.h>
-
-#include <asm/stacktrace.h>
 
 void stack_type_str(enum stack_type type, const char **begin, const char **end)
 {
@@ -436,45 +412,7 @@ int is_valid_bugaddr(unsigned long ip)
 	return ud2 == 0x0b0f;
 }
 
-void bt_stack(struct task_struct *task, struct pt_regs *regs,
-	      unsigned long *stack)
-{
-	const unsigned int cpu = get_cpu();
-
-	if (cpu == cpu) {};
-
-	if (!task)
-		task = current;
-
-	if (!stack) {
-		unsigned long dummy;
-
-		stack = &dummy;
-		if (task != current)
-			stack = (unsigned long *)task->thread.sp;
-	}
-	put_cpu();
-}
-
 #endif
-
-#include <linux/kallsyms.h>
-#include <linux/kprobes.h>
-#include <linux/uaccess.h>
-#include <linux/utsname.h>
-#include <linux/hardirq.h>
-#include <linux/kdebug.h>
-#include <linux/module.h>
-#include <linux/ptrace.h>
-#include <linux/ftrace.h>
-#include <linux/kexec.h>
-#include <linux/bug.h>
-#include <linux/nmi.h>
-#include <linux/sysfs.h>
-
-#include <asm/processor.h>
-#include <asm/stacktrace.h>
-#include <asm/unwind.h>
 
 unsigned int code_bytes = 64;
 int kstack_depth_to_print = 3 * STACKSLOTS_PER_LINE;
@@ -624,6 +562,16 @@ void show_stack(struct task_struct *task, unsigned long *sp)
 void show_stack_regs(struct pt_regs *regs)
 {
 	show_stack_log_lvl(current, regs, NULL, "");
+}
+
+void bt_stack(struct task_struct *task, struct pt_regs *regs,
+	      unsigned long *stack)
+{
+	const unsigned int cpu = get_cpu();
+
+	if (cpu == cpu) {};
+	show_stack(task, stack);
+	put_cpu();
 }
 
 
