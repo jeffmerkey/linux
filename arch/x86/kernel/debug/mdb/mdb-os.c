@@ -236,62 +236,19 @@ void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 
 		if ((i % STACKSLOTS_PER_LINE) == 0) {
 			if (i != 0)
-				pr_cont("\n");
-			printk("%s %016lx", log_lvl, word);
+				dbg_pr("\n");
+			dbg_pr("%s %016lx", log_lvl, word);
 		} else
-			pr_cont(" %016lx", word);
+			dbg_pr(" %016lx", word);
 
 		stack++;
 		touch_nmi_watchdog();
 	}
 
-	pr_cont("\n");
+	dbg_pr("\n");
 	show_trace_log_lvl(task, regs, sp, log_lvl);
 
 	put_task_stack(task);
-}
-
-void show_regs(struct pt_regs *regs)
-{
-	int i;
-
-	show_regs_print_info(KERN_DEFAULT);
-	__show_regs(regs, 1);
-
-	/*
-	 * When in-kernel, we also print out the stack and code at the
-	 * time of the fault..
-	 */
-	if (!user_mode(regs)) {
-		unsigned int code_prologue = code_bytes * 43 / 64;
-		unsigned int code_len = code_bytes;
-		unsigned char c;
-		u8 *ip;
-
-		printk(KERN_DEFAULT "Stack:\n");
-		show_stack_log_lvl(current, regs, NULL, KERN_DEFAULT);
-
-		printk(KERN_DEFAULT "Code: ");
-
-		ip = (u8 *)regs->ip - code_prologue;
-		if (ip < (u8 *)PAGE_OFFSET || probe_kernel_address(ip, c)) {
-			/* try starting at IP */
-			ip = (u8 *)regs->ip;
-			code_len = code_len - code_prologue + 1;
-		}
-		for (i = 0; i < code_len; i++, ip++) {
-			if (ip < (u8 *)PAGE_OFFSET ||
-					probe_kernel_address(ip, c)) {
-				pr_cont(" Bad RIP value.");
-				break;
-			}
-			if (ip == (u8 *)regs->ip)
-				pr_cont("<%02x> ", c);
-			else
-				pr_cont("%02x ", c);
-		}
-	}
-	pr_cont("\n");
 }
 
 int is_valid_bugaddr(unsigned long ip)
@@ -575,60 +532,17 @@ void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		if ((i % STACKSLOTS_PER_LINE) == 0) {
 			if (i != 0)
 				pr_cont("\n");
-			printk("%s %08lx", log_lvl, *stack++);
+			dbg_pr("%s %08lx", log_lvl, *stack++);
 		} else
-			pr_cont(" %08lx", *stack++);
-		touch_nmi_watchdog();
+			dbg_pr(" %08lx", *stack++);
+		mdb_watchdogs();
 	}
-	pr_cont("\n");
+	dbg_pr("\n");
 	show_trace_log_lvl(task, regs, sp, log_lvl);
 
 	put_task_stack(task);
 }
 
-
-void show_regs(struct pt_regs *regs)
-{
-	int i;
-
-	show_regs_print_info(KERN_EMERG);
-	__show_regs(regs, !user_mode(regs));
-
-	/*
-	 * When in-kernel, we also print out the stack and code at the
-	 * time of the fault..
-	 */
-	if (!user_mode(regs)) {
-		unsigned int code_prologue = code_bytes * 43 / 64;
-		unsigned int code_len = code_bytes;
-		unsigned char c;
-		u8 *ip;
-
-		pr_emerg("Stack:\n");
-		show_stack_log_lvl(current, regs, NULL, KERN_EMERG);
-
-		pr_emerg("Code:");
-
-		ip = (u8 *)regs->ip - code_prologue;
-		if (ip < (u8 *)PAGE_OFFSET || probe_kernel_address(ip, c)) {
-			/* try starting at IP */
-			ip = (u8 *)regs->ip;
-			code_len = code_len - code_prologue + 1;
-		}
-		for (i = 0; i < code_len; i++, ip++) {
-			if (ip < (u8 *)PAGE_OFFSET ||
-					probe_kernel_address(ip, c)) {
-				pr_cont("  Bad EIP value.");
-				break;
-			}
-			if (ip == (u8 *)regs->ip)
-				pr_cont(" <%02x>", c);
-			else
-				pr_cont(" %02x", c);
-		}
-	}
-	pr_cont("\n");
-}
 
 int is_valid_bugaddr(unsigned long ip)
 {
@@ -641,9 +555,6 @@ int is_valid_bugaddr(unsigned long ip)
 
 	return ud2 == 0x0b0f;
 }
-
-
-
 
 static inline int valid_stack_ptr(struct thread_info *tinfo,
 				  void *p, unsigned int size, void *end)
@@ -771,11 +682,8 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 #include <asm/stacktrace.h>
 #include <asm/unwind.h>
 
-int panic_on_unrecovered_nmi;
-int panic_on_io_nmi;
 unsigned int code_bytes = 64;
 int kstack_depth_to_print = 3 * STACKSLOTS_PER_LINE;
-static int die_counter;
 
 bool in_task_stack(unsigned long *stack, struct task_struct *task,
 		   struct stack_info *info)
@@ -797,15 +705,15 @@ bool in_task_stack(unsigned long *stack, struct task_struct *task,
 static void printk_stack_address(unsigned long address, int reliable,
 				 char *log_lvl)
 {
-	touch_nmi_watchdog();
-	printk("%s [<%p>] %s%pB\n",
+	mdb_watchdogs();
+	dbg_pr("%s [<%p>] %s%pB\n",
 		log_lvl, (void *)address, reliable ? "" : "? ",
 		(void *)address);
 }
 
 void printk_address(unsigned long address)
 {
-	pr_cont(" [<%p>] %pS\n", (void *)address, (void *)address);
+	dbg_pr(" [<%p>] %pS\n", (void *)address, (void *)address);
 }
 
 void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
@@ -816,7 +724,7 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 	unsigned long visit_mask = 0;
 	int graph_idx = 0;
 
-	printk("%sCall Trace:\n", log_lvl);
+	dbg_pr("%sCall Trace:\n", log_lvl);
 
 	unwind_start(&state, task, regs, stack);
 
@@ -849,7 +757,7 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 
 		stack_type_str(stack_info.type, &str_begin, &str_end);
 		if (str_begin)
-			printk("%s <%s> ", log_lvl, str_begin);
+			dbg_pr("%s <%s> ", log_lvl, str_begin);
 
 		/*
 		 * Scan the stack, printing any text addresses we find.  At the
@@ -901,7 +809,7 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		}
 
 		if (str_end)
-			printk("%s <%s> ", log_lvl, str_end);
+			dbg_pr("%s <%s> ", log_lvl, str_end);
 	}
 }
 
@@ -924,161 +832,6 @@ void show_stack_regs(struct pt_regs *regs)
 	show_stack_log_lvl(current, regs, NULL, "");
 }
 
-static arch_spinlock_t die_lock = __ARCH_SPIN_LOCK_UNLOCKED;
-static int die_owner = -1;
-static unsigned int die_nest_count;
-
-unsigned long oops_begin(void)
-{
-	int cpu;
-	unsigned long flags;
-
-	oops_enter();
-
-	/* racy, but better than risking deadlock. */
-	raw_local_irq_save(flags);
-	cpu = smp_processor_id();
-	if (!arch_spin_trylock(&die_lock)) {
-		if (cpu == die_owner)
-			/* nested oops. should stop eventually */;
-		else
-			arch_spin_lock(&die_lock);
-	}
-	die_nest_count++;
-	die_owner = cpu;
-	console_verbose();
-	bust_spinlocks(1);
-	return flags;
-}
-EXPORT_SYMBOL_GPL(oops_begin);
-NOKPROBE_SYMBOL(oops_begin);
-
-void __noreturn rewind_stack_do_exit(int signr);
-
-void oops_end(unsigned long flags, struct pt_regs *regs, int signr)
-{
-	if (regs && kexec_should_crash(current))
-		crash_kexec(regs);
-
-	bust_spinlocks(0);
-	die_owner = -1;
-	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
-	die_nest_count--;
-	if (!die_nest_count)
-		/* Nest count reaches zero, release the lock. */
-		arch_spin_unlock(&die_lock);
-	raw_local_irq_restore(flags);
-	oops_exit();
-
-	if (!signr)
-		return;
-	if (in_interrupt())
-		panic("Fatal exception in interrupt");
-	if (panic_on_oops)
-		panic("Fatal exception");
-
-	/*
-	 * We're not going to return, but we might be on an IST stack or
-	 * have very little stack space left.  Rewind the stack and kill
-	 * the task.
-	 */
-	rewind_stack_do_exit(signr);
-}
-NOKPROBE_SYMBOL(oops_end);
-
-int __die(const char *str, struct pt_regs *regs, long err)
-{
-#ifdef CONFIG_X86_32
-	unsigned short ss;
-	unsigned long sp;
-#endif
-	printk(KERN_DEFAULT
-	       "%s: %04lx [#%d]%s%s%s%s\n", str, err & 0xffff, ++die_counter,
-	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT"         : "",
-	       IS_ENABLED(CONFIG_SMP)     ? " SMP"             : "",
-	       debug_pagealloc_enabled()  ? " DEBUG_PAGEALLOC" : "",
-	       IS_ENABLED(CONFIG_KASAN)   ? " KASAN"           : "");
-
-	if (notify_die(DIE_OOPS, str, regs, err,
-			current->thread.trap_nr, SIGSEGV) == NOTIFY_STOP)
-		return 1;
-
-	print_modules();
-	show_regs(regs);
-#ifdef CONFIG_X86_32
-	if (user_mode(regs)) {
-		sp = regs->sp;
-		ss = regs->ss & 0xffff;
-	} else {
-		sp = kernel_stack_pointer(regs);
-		savesegment(ss, ss);
-	}
-	printk(KERN_EMERG "EIP: [<%08lx>] ", regs->ip);
-	print_symbol("%s", regs->ip);
-	printk(" SS:ESP %04x:%08lx\n", ss, sp);
-#else
-	/* Executive summary in case the oops scrolled away */
-	printk(KERN_ALERT "RIP ");
-	printk_address(regs->ip);
-	printk(" RSP <%016lx>\n", regs->sp);
-#endif
-	return 0;
-}
-NOKPROBE_SYMBOL(__die);
-
-/*
- * This is gone through when something in the kernel has done something bad
- * and is about to be terminated:
- */
-void die(const char *str, struct pt_regs *regs, long err)
-{
-	unsigned long flags = oops_begin();
-	int sig = SIGSEGV;
-
-	if (!user_mode(regs))
-		report_bug(regs->ip, regs);
-
-	if (__die(str, regs, err))
-		sig = 0;
-	oops_end(flags, regs, sig);
-}
-/*
-static int __init kstack_setup(char *s)
-{
-	ssize_t ret;
-	unsigned long val;
-
-	if (!s)
-		return -EINVAL;
-
-	ret = kstrtoul(s, 0, &val);
-	if (ret)
-		return ret;
-	kstack_depth_to_print = val;
-	return 0;
-}
-early_param("kstack", kstack_setup);
-
-static int __init code_bytes_setup(char *s)
-{
-	ssize_t ret;
-	unsigned long val;
-
-	if (!s)
-		return -EINVAL;
-
-	ret = kstrtoul(s, 0, &val);
-	if (ret)
-		return ret;
-
-	code_bytes = val;
-	if (code_bytes > 8192)
-		code_bytes = 8192;
-
-	return 1;
-}
-__setup("code_bytes=", code_bytes_setup);
-*/
 
 /* keyboard and serial interface functions */
 
