@@ -261,77 +261,11 @@ int is_valid_bugaddr(unsigned long ip)
 	return ud2 == 0x0b0f;
 }
 
-static inline unsigned long fixup_bp_irq_link(unsigned long bp,
-					      unsigned long *stack,
-					      unsigned long *irq_stack,
-					      unsigned long *irq_stack_end)
-{
-#if IS_ENABLED(CONFIG_FRAME_POINTER)
-	struct stack_frame *frame = (struct stack_frame *)bp;
-	unsigned long next;
-
-	if (!in_irq_stack(stack, irq_stack, irq_stack_end)) {
-		if (!probe_kernel_address(&frame->next_frame, next))
-			return next;
-		dbg_pr("MDB: bad frame pointer = %p in chain\n",
-		       &frame->next_frame);
-	}
-#endif
-	return bp;
-}
-
-void dbg_pr_address(unsigned long address, int reliable)
-{
-	dbg_pr("[<%p>] %s%pS\n", (void *)address,
-	       reliable ? "" : "? ", (void *)address);
-}
-
-static inline int valid_stack_ptr(struct thread_info *tinfo,
-				  void *p, unsigned int size, void *end)
-{
-	void *t = tinfo;
-
-	if (end) {
-		if (p < end && p >= (end - THREAD_SIZE))
-			return 1;
-		else
-			return 0;
-	}
-	return p > t && p < t + THREAD_SIZE - size;
-}
-
-static inline unsigned long
-print_context(struct thread_info *tinfo, unsigned long *stack,
-	      unsigned long bp, unsigned long *end)
-{
-	struct stack_frame *frame = (struct stack_frame *)bp;
-
-	while (valid_stack_ptr(tinfo, stack, sizeof(*stack), end)) {
-		unsigned long addr;
-
-		addr = *stack;
-		if (__kernel_text_address(addr)) {
-			if ((unsigned long)stack == bp + sizeof(long)) {
-				mdb_watchdogs();
-				dbg_pr_address(addr, 1);
-				frame = frame->next_frame;
-				bp = (unsigned long)frame;
-			} else {
-				mdb_watchdogs();
-				dbg_pr_address(addr, bp == 0);
-			}
-		}
-		stack++;
-	}
-	return bp;
-}
-
 void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	      unsigned long *stack)
 {
 	unsigned long bp = 0;
 	const unsigned int cpu = get_cpu();
-//	unsigned long *irq_stack_end = get_irq_stack_end(cpu);
 	unsigned long *irq_stack_end = NULL;
 	unsigned int used = 0;
 	struct thread_info *tinfo;
@@ -346,60 +280,6 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 		if (task && task != current)
 			stack = (unsigned long *)task->thread.sp;
 	}
-
-#if IS_ENABLED(CONFIG_FRAME_POINTER)
-	if (!bp) {
-//		if (task == current)
-//			get_bp(bp);
-//		else
-		bp = *(unsigned long *)task->thread.sp;
-	}
-#endif
-
-	tinfo = task_thread_info(task);
-	for (;;) {
-		char *id;
-		unsigned long *estack_end = NULL;
-
-//		estack_end = in_exception_stack(cpu, (unsigned long)stack,
-//						&used, &id);
-
-		if (estack_end) {
-			if (dbg_pr("%s", id))
-				break;
-
-			bp = print_context(tinfo, stack, bp, estack_end);
-			dbg_pr("%s", "<EOE>");
-
-			stack = (unsigned long *)estack_end[-2];
-			continue;
-		}
-
-		if (irq_stack_end) {
-			unsigned long *irq_stack;
-
-			irq_stack = irq_stack_end -
-				(IRQ_STACK_SIZE - 64) / sizeof(*irq_stack);
-
-			if (in_irq_stack(stack, irq_stack, irq_stack_end)) {
-				if (dbg_pr("%s", "IRQ"))
-					break;
-
-				bp = print_context(tinfo, stack, bp,
-						   irq_stack_end);
-
-				stack = (unsigned long *)(irq_stack_end[-1]);
-				bp = fixup_bp_irq_link(bp, stack, irq_stack,
-						       irq_stack_end);
-				irq_stack_end = NULL;
-				dbg_pr("%s", "EOI");
-				continue;
-			}
-		}
-		break;
-	}
-
-	bp = print_context(tinfo, stack, bp, NULL);
 	put_cpu();
 }
 
@@ -556,66 +436,10 @@ int is_valid_bugaddr(unsigned long ip)
 	return ud2 == 0x0b0f;
 }
 
-static inline int valid_stack_ptr(struct thread_info *tinfo,
-				  void *p, unsigned int size, void *end)
-{
-	void *t = tinfo;
-
-	if (end) {
-		if (p < end && p >= (end - THREAD_SIZE))
-			return 1;
-		else
-			return 0;
-	}
-	return p > t && p < t + THREAD_SIZE - size;
-}
-
-static void print_stack_address(unsigned long address, int reliable)
-{
-	dbg_pr("[<%p>] %s%pB\n",
-	       (void *)address, reliable ? "" : "? ",
-	       (void *)address);
-}
-
-unsigned long
-print_context(struct thread_info *tinfo,
-	      unsigned long *stack, unsigned long bp,
-	      unsigned long *end)
-{
-	struct stack_frame *frame = (struct stack_frame *)bp;
-
-	while (valid_stack_ptr(tinfo, stack, sizeof(*stack), end)) {
-		unsigned long addr;
-
-		addr = *stack;
-		if (__kernel_text_address(addr)) {
-			if ((unsigned long)stack == bp + sizeof(long)) {
-				mdb_watchdogs();
-				print_stack_address(addr, 1);
-				frame = frame->next_frame;
-				bp = (unsigned long)frame;
-			} else {
-				mdb_watchdogs();
-				print_stack_address(addr, 0);
-			}
-		}
-		stack++;
-	}
-	return bp;
-}
-
-static int print_trace(char *name)
-{
-	dbg_pr("<%s> ", name);
-	return 0;
-}
-
 void bt_stack(struct task_struct *task, struct pt_regs *regs,
 	      unsigned long *stack)
 {
 	const unsigned int cpu = get_cpu();
-	unsigned long bp = 0;
-	u32 *prev_esp;
 
 	if (cpu == cpu) {};
 
@@ -628,37 +452,6 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 		stack = &dummy;
 		if (task != current)
 			stack = (unsigned long *)task->thread.sp;
-	}
-
-//	if (!bp)
-//		bp = stack_frame(task, regs);
-
-	for (;;) {
-		struct thread_info *context;
-		void *end_stack = NULL;
-
-//		end_stack = is_hardirq_stack(stack, cpu);
-//		if (!end_stack)
-//			end_stack = is_softirq_stack(stack, cpu);
-//
-		context = task_thread_info(task);
-
-		bp = print_context(context, stack, bp, end_stack);
-
-		/* Stop if not on irq stack */
-		if (!end_stack)
-			break;
-
-		/* The previous esp is saved on the bottom of the stack */
-		prev_esp = (u32 *)(end_stack - THREAD_SIZE);
-		stack = (unsigned long *)*prev_esp;
-		if (!stack)
-			break;
-
-		if (print_trace("IRQ") < 0)
-			break;
-
-		mdb_watchdogs();
 	}
 	put_cpu();
 }
