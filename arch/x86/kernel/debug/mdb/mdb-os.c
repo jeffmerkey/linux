@@ -86,8 +86,8 @@ static char *exception_stack_names[N_EXCEPTION_STACKS] = {
 };
 
 static unsigned long exception_stack_sizes[N_EXCEPTION_STACKS] = {
-	[0 ... N_EXCEPTION_STACKS - 1]		= EXCEPTION_STKSZ,
-	[DEBUG_STACK - 1]			= DEBUG_STKSZ
+	[0 ... N_EXCEPTION_STACKS - 1] = EXCEPTION_STKSZ,
+	[DEBUG_STACK - 1] = DEBUG_STKSZ
 };
 
 void dbg_stack_type_str(enum stack_type type, const char **begin,
