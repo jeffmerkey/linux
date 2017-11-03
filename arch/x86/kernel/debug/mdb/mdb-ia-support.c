@@ -197,9 +197,10 @@ static int used_prefixes;
 /* Make sure that bytes from INFO->PRIVATE_DATA->BUFFER (inclusive)
  * to ADDR (exclusive) are valid.  Returns 1 for success.
  */
-static inline void FETCH_DATA(struct disassemble_info *info, mdb_byte *addr)
+static inline int FETCH_DATA(struct disassemble_info *info, mdb_byte *addr)
 {
-	((addr) <= ((struct dis_private *)(info->private_data))->max_fetched
+	return ((addr) <= ((struct dis_private *)
+			   (info->private_data))->max_fetched
 	 ? 1 : fetch_data((info), (addr)));
 }
 
