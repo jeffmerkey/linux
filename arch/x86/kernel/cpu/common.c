@@ -1314,6 +1314,7 @@ EXPORT_PER_CPU_SYMBOL(current_task);
 
 DEFINE_PER_CPU(char *, irq_stack_ptr) =
 	init_per_cpu_var(irq_stack_union.irq_stack) + IRQ_STACK_SIZE;
+EXPORT_PER_CPU_SYMBOL(irq_stack_ptr);
 
 DEFINE_PER_CPU(unsigned int, irq_count) __visible = -1;
 
@@ -1369,6 +1370,7 @@ void syscall_init(void)
  * debugging, no special alignment required.
  */
 DEFINE_PER_CPU(struct orig_ist, orig_ist);
+EXPORT_PER_CPU_SYMBOL(orig_ist);
 
 static DEFINE_PER_CPU(unsigned long, debug_stack_addr);
 DEFINE_PER_CPU(int, debug_stack_usage);

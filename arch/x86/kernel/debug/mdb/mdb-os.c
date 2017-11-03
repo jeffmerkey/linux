@@ -227,7 +227,8 @@ void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		if (stack >= irq_stack && stack <= irq_stack_end) {
 			if (stack == irq_stack_end) {
 				stack = (unsigned long *)(irq_stack_end[-1]);
-				pr_cont(" <EOI> ");
+				if (dbg_pr(" <EOI> "))
+					break;
 			}
 		} else {
 			if (kstack_end(stack))
@@ -238,11 +239,15 @@ void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			break;
 
 		if ((i % STACKSLOTS_PER_LINE) == 0) {
-			if (i != 0)
-				dbg_pr("\n");
-			dbg_pr("%s %016lx", log_lvl, word);
+			if (i != 0) {
+				if (dbg_pr("\n"))
+					break;
+			}
+			if (dbg_pr("%s %016lx", log_lvl, word))
+				break;
 		} else {
-			dbg_pr(" %016lx", word);
+			if (dbg_pr(" %016lx", word))
+				break;
 		}
 		stack++;
 		mdb_watchdogs();
@@ -388,11 +393,15 @@ void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		if (kstack_end(stack))
 			break;
 		if ((i % STACKSLOTS_PER_LINE) == 0) {
-			if (i != 0)
-				pr_cont("\n");
-			dbg_pr("%s %08lx", log_lvl, *stack++);
+			if (i != 0) {
+				if (dbg_pr("\n"))
+					break;
+			}
+			if (dbg_pr("%s %08lx", log_lvl, *stack++))
+				break;
 		} else {
-			dbg_pr(" %08lx", *stack++);
+			if (dbg_pr(" %08lx", *stack++))
+				break;
 		}
 		mdb_watchdogs();
 	}
@@ -436,17 +445,17 @@ bool dbg_in_task_stack(unsigned long *stack, struct task_struct *task,
 	return true;
 }
 
-static void dbg_print_stack_address(unsigned long address, int reliable,
+static int dbg_print_stack_address(unsigned long address, int reliable,
 				    char *log_lvl)
 {
 	mdb_watchdogs();
-	dbg_pr("%s [<%p>] %s%pB\n", log_lvl, (void *)address,
-	       reliable ? "" : "? ", (void *)address);
+	return (dbg_pr("%s [<%p>] %s%pB\n", log_lvl, (void *)address,
+	       reliable ? "" : "? ", (void *)address));
 }
 
-void dbg_print_address(unsigned long address)
+int dbg_print_address(unsigned long address)
 {
-	dbg_pr(" [<%p>] %pS\n", (void *)address, (void *)address);
+	return (dbg_pr(" [<%p>] %pS\n", (void *)address, (void *)address));
 }
 
 void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
@@ -457,7 +466,8 @@ void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 	unsigned long visit_mask = 0;
 	int graph_idx = 0;
 
-	dbg_pr("%sCall Trace:\n", log_lvl);
+	if (dbg_pr("%sCall Trace:\n", log_lvl))
+		return;
 
 	unwind_start(&state, task, regs, stack);
 
@@ -489,8 +499,10 @@ void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			break;
 
 		dbg_stack_type_str(stack_info.type, &str_begin, &str_end);
-		if (str_begin)
-			dbg_pr("%s <%s> ", log_lvl, str_begin);
+		if (str_begin) {
+			if (dbg_pr("%s <%s> ", log_lvl, str_begin))
+				return;
+		}
 
 		/*
 		 * Scan the stack, printing any text addresses we find.  At the
@@ -526,9 +538,13 @@ void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			 */
 			real_addr = ftrace_graph_ret_addr(task, &graph_idx,
 							  addr, stack);
-			if (real_addr != addr)
-				dbg_print_stack_address(addr, 0, log_lvl);
-			dbg_print_stack_address(real_addr, reliable, log_lvl);
+			if (real_addr != addr) {
+				if (dbg_print_stack_address(addr, 0, log_lvl))
+					break;
+			}
+
+			if (dbg_print_stack_address(real_addr, reliable, log_lvl))
+				break;
 
 			if (!reliable)
 				continue;
@@ -541,8 +557,10 @@ void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			unwind_next_frame(&state);
 		}
 
-		if (str_end)
-			dbg_pr("%s <%s> ", log_lvl, str_end);
+		if (str_end) {
+			if (dbg_pr("%s <%s> ", log_lvl, str_end))
+				break;
+		}
 	}
 }
 

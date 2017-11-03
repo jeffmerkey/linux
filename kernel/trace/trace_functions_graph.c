@@ -340,6 +340,7 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
 	return task->ret_stack[task_idx].ret;
 }
 #endif /* HAVE_FUNCTION_GRAPH_RET_ADDR_PTR */
+EXPORT_SYMBOL_GPL(ftrace_graph_ret_addr);
 
 int __trace_graph_entry(struct trace_array *tr,
 				struct ftrace_graph_ent *trace,
