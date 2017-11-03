@@ -219,13 +219,6 @@ static int get_softlockup_thresh(void)
 {
 	return watchdog_thresh * 2;
 }
-EXPORT_SYMBOL(touch_softlockup_watchdog_sync);
-
-void touch_hardlockup_watchdog(void)
-{
-	__this_cpu_write(hrtimer_interrupts_saved, 0);
-}
-EXPORT_SYMBOL_GPL(touch_hardlockup_watchdog);
 
 /*
  * Returns seconds, approximately.  We don't need nanosecond
@@ -423,9 +416,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
 			show_regs(regs);
 		else
 			dump_stack();
-#if IS_ENABLED(CONFIG_DEBUG_LOCKUPS)
-		BREAK();
-#endif
+
 		if (softlockup_all_cpu_backtrace) {
 			/* Avoid generating two back traces for current
 			 * given that one is already made above
