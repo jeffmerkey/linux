@@ -78,7 +78,6 @@ unsigned char modbuf[MAX_SYMBOL_LEN];
 unsigned char workbuf[MAX_SYMBOL_LEN];
 
 #if IS_ENABLED(CONFIG_X86_64)
-
 static char *exception_stack_names[N_EXCEPTION_STACKS] = {
 	[DOUBLEFAULT_STACK - 1] = "#DF",
 	[NMI_STACK - 1] = "NMI",
@@ -91,7 +90,8 @@ static unsigned long exception_stack_sizes[N_EXCEPTION_STACKS] = {
 	[DEBUG_STACK - 1]			= DEBUG_STKSZ
 };
 
-void stack_type_str(enum stack_type type, const char **begin, const char **end)
+void dbg_stack_type_str(enum stack_type type, const char **begin,
+			const char **end)
 {
 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
 
@@ -110,7 +110,8 @@ void stack_type_str(enum stack_type type, const char **begin, const char **end)
 	}
 }
 
-static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+static bool dbg_in_exception_stack(unsigned long *stack,
+				   struct stack_info *info)
 {
 	unsigned long *begin, *end;
 	struct pt_regs *regs;
@@ -137,7 +138,7 @@ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
 	return false;
 }
 
-static bool in_irq_stack(unsigned long *stack, struct stack_info *info)
+static bool dbg_in_irq_stack(unsigned long *stack, struct stack_info *info)
 {
 	unsigned long *end   = (unsigned long *)this_cpu_read(irq_stack_ptr);
 	unsigned long *begin = end - (IRQ_STACK_SIZE / sizeof(long));
@@ -162,24 +163,24 @@ static bool in_irq_stack(unsigned long *stack, struct stack_info *info)
 	return true;
 }
 
-int get_stack_info(unsigned long *stack, struct task_struct *task,
-		   struct stack_info *info, unsigned long *visit_mask)
+int dbg_get_stack_info(unsigned long *stack, struct task_struct *task,
+		       struct stack_info *info, unsigned long *visit_mask)
 {
 	if (!stack)
 		goto unknown;
 
 	task = task ? : current;
 
-	if (in_task_stack(stack, task, info))
+	if (dbg_in_task_stack(stack, task, info))
 		goto recursion_check;
 
 	if (task != current)
 		goto unknown;
 
-	if (in_exception_stack(stack, info))
+	if (dbg_in_exception_stack(stack, info))
 		goto recursion_check;
 
-	if (in_irq_stack(stack, info))
+	if (dbg_in_irq_stack(stack, info))
 		goto recursion_check;
 
 	goto unknown;
@@ -203,8 +204,8 @@ unknown:
 	return -EINVAL;
 }
 
-void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
-			unsigned long *sp, char *log_lvl)
+void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
+			    unsigned long *sp, char *log_lvl)
 {
 	unsigned long *irq_stack_end;
 	unsigned long *irq_stack;
@@ -248,12 +249,12 @@ void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 	}
 
 	dbg_pr("\n");
-	show_trace_log_lvl(task, regs, sp, log_lvl);
+	dbg_show_trace_log_lvl(task, regs, sp, log_lvl);
 
 	put_task_stack(task);
 }
 
-int is_valid_bugaddr(unsigned long ip)
+int dbg_is_valid_bugaddr(unsigned long ip)
 {
 	unsigned short ud2;
 
@@ -265,7 +266,8 @@ int is_valid_bugaddr(unsigned long ip)
 
 #else
 
-void stack_type_str(enum stack_type type, const char **begin, const char **end)
+void dbg_stack_type_str(enum stack_type type, const char **begin,
+			const char **end)
 {
 	switch (type) {
 	case STACK_TYPE_IRQ:
@@ -279,7 +281,7 @@ void stack_type_str(enum stack_type type, const char **begin, const char **end)
 	}
 }
 
-static bool in_hardirq_stack(unsigned long *stack, struct stack_info *info)
+static bool dbg_in_hardirq_stack(unsigned long *stack, struct stack_info *info)
 {
 	unsigned long *begin = (unsigned long *)this_cpu_read(hardirq_stack);
 	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
@@ -304,7 +306,7 @@ static bool in_hardirq_stack(unsigned long *stack, struct stack_info *info)
 	return true;
 }
 
-static bool in_softirq_stack(unsigned long *stack, struct stack_info *info)
+static bool dbg_in_softirq_stack(unsigned long *stack, struct stack_info *info)
 {
 	unsigned long *begin = (unsigned long *)this_cpu_read(softirq_stack);
 	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
@@ -329,24 +331,24 @@ static bool in_softirq_stack(unsigned long *stack, struct stack_info *info)
 	return true;
 }
 
-int get_stack_info(unsigned long *stack, struct task_struct *task,
-		   struct stack_info *info, unsigned long *visit_mask)
+int dbg_get_stack_info(unsigned long *stack, struct task_struct *task,
+		       struct stack_info *info, unsigned long *visit_mask)
 {
 	if (!stack)
 		goto unknown;
 
 	task = task ? : current;
 
-	if (in_task_stack(stack, task, info))
+	if (dbg_in_task_stack(stack, task, info))
 		goto recursion_check;
 
 	if (task != current)
 		goto unknown;
 
-	if (in_hardirq_stack(stack, info))
+	if (dbg_in_hardirq_stack(stack, info))
 		goto recursion_check;
 
-	if (in_softirq_stack(stack, info))
+	if (dbg_in_softirq_stack(stack, info))
 		goto recursion_check;
 
 	goto unknown;
@@ -370,8 +372,8 @@ unknown:
 	return -EINVAL;
 }
 
-void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
-			unsigned long *sp, char *log_lvl)
+void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
+			    unsigned long *sp, char *log_lvl)
 {
 	unsigned long *stack;
 	int i;
@@ -395,12 +397,12 @@ void show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		mdb_watchdogs();
 	}
 	dbg_pr("\n");
-	show_trace_log_lvl(task, regs, sp, log_lvl);
+	dbg_show_trace_log_lvl(task, regs, sp, log_lvl);
 
 	put_task_stack(task);
 }
 
-int is_valid_bugaddr(unsigned long ip)
+int dbg_is_valid_bugaddr(unsigned long ip)
 {
 	unsigned short ud2;
 
@@ -417,8 +419,8 @@ int is_valid_bugaddr(unsigned long ip)
 unsigned int code_bytes = 64;
 int kstack_depth_to_print = 3 * STACKSLOTS_PER_LINE;
 
-bool in_task_stack(unsigned long *stack, struct task_struct *task,
-		   struct stack_info *info)
+bool dbg_in_task_stack(unsigned long *stack, struct task_struct *task,
+		       struct stack_info *info)
 {
 	unsigned long *begin = task_stack_page(task);
 	unsigned long *end   = task_stack_page(task) + THREAD_SIZE;
@@ -434,21 +436,21 @@ bool in_task_stack(unsigned long *stack, struct task_struct *task,
 	return true;
 }
 
-static void printk_stack_address(unsigned long address, int reliable,
-				 char *log_lvl)
+static void dbg_print_stack_address(unsigned long address, int reliable,
+				    char *log_lvl)
 {
 	mdb_watchdogs();
 	dbg_pr("%s [<%p>] %s%pB\n", log_lvl, (void *)address,
 	       reliable ? "" : "? ", (void *)address);
 }
 
-void printk_address(unsigned long address)
+void dbg_print_address(unsigned long address)
 {
 	dbg_pr(" [<%p>] %pS\n", (void *)address, (void *)address);
 }
 
-void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
-			unsigned long *stack, char *log_lvl)
+void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+			    unsigned long *stack, char *log_lvl)
 {
 	struct unwind_state state;
 	struct stack_info stack_info = {0};
@@ -483,10 +485,10 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		if (task_stack_page(task) - (void *)stack < PAGE_SIZE)
 			stack = task_stack_page(task);
 
-		if (get_stack_info(stack, task, &stack_info, &visit_mask))
+		if (dbg_get_stack_info(stack, task, &stack_info, &visit_mask))
 			break;
 
-		stack_type_str(stack_info.type, &str_begin, &str_end);
+		dbg_stack_type_str(stack_info.type, &str_begin, &str_end);
 		if (str_begin)
 			dbg_pr("%s <%s> ", log_lvl, str_begin);
 
@@ -525,8 +527,8 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			real_addr = ftrace_graph_ret_addr(task, &graph_idx,
 							  addr, stack);
 			if (real_addr != addr)
-				printk_stack_address(addr, 0, log_lvl);
-			printk_stack_address(real_addr, reliable, log_lvl);
+				dbg_print_stack_address(addr, 0, log_lvl);
+			dbg_print_stack_address(real_addr, reliable, log_lvl);
 
 			if (!reliable)
 				continue;
@@ -544,7 +546,7 @@ void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 	}
 }
 
-void show_stack(struct task_struct *task, unsigned long *sp)
+void dbg_show_stack(struct task_struct *task, unsigned long *sp)
 {
 	task = task ? : current;
 	/*
@@ -553,12 +555,12 @@ void show_stack(struct task_struct *task, unsigned long *sp)
 	 */
 	if (!sp && task == current)
 		sp = get_stack_pointer(current, NULL);
-	show_stack_log_lvl(task, NULL, sp, "");
+	dbg_show_stack_log_lvl(task, NULL, sp, "");
 }
 
-void show_stack_regs(struct pt_regs *regs)
+void dbg_show_stack_regs(struct pt_regs *regs)
 {
-	show_stack_log_lvl(current, regs, NULL, "");
+	dbg_show_stack_log_lvl(current, regs, NULL, "");
 }
 
 void bt_stack(struct task_struct *task, struct pt_regs *regs,
@@ -568,7 +570,7 @@ void bt_stack(struct task_struct *task, struct pt_regs *regs,
 
 	if (cpu == cpu)
 		;
-	show_stack(task, stack);
+	dbg_show_stack(task, stack);
 	put_cpu();
 }
 

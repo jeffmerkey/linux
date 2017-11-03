@@ -33,11 +33,41 @@ extern unsigned char modbuf[MAX_SYMBOL_LEN];
 extern unsigned char workbuf[MAX_SYMBOL_LEN];
 extern unsigned char delim_table[256];
 
-unsigned long *in_exception_stack(unsigned int cpu, unsigned long stack,
-				  unsigned int *usedp, char **idp);
-unsigned long *get_irq_stack_end(const unsigned int cpu);
-void *is_hardirq_stack(unsigned long *stack, int cpu);
-void *is_softirq_stack(unsigned long *stack, int cpu);
+#if IS_ENABLED(CONFIG_X86_64)
+void dbg_stack_type_str(enum stack_type type, const char **begin,
+			const char **end);
+static bool dbg_in_exception_stack(unsigned long *stack,
+				   struct stack_info *info);
+static bool dbg_in_irq_stack(unsigned long *stack, struct stack_info *info);
+int dbg_get_stack_info(unsigned long *stack, struct task_struct *task,
+		       struct stack_info *info, unsigned long *visit_mask);
+void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
+			    unsigned long *sp, char *log_lvl);
+int dbg_is_valid_bugaddr(unsigned long ip);
+#else
+void dbg_stack_type_str(enum stack_type type, const char **begin,
+			const char **end);
+static bool dbg_in_hardirq_stack(unsigned long *stack, struct stack_info *info);
+static bool dbg_in_softirq_stack(unsigned long *stack, struct stack_info *info);
+int dbg_get_stack_info(unsigned long *stack, struct task_struct *task,
+		       struct stack_info *info, unsigned long *visit_mask);
+void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
+			    unsigned long *sp, char *log_lvl);
+int dbg_is_valid_bugaddr(unsigned long ip);
+#endif
+
+bool dbg_in_task_stack(unsigned long *stack, struct task_struct *task,
+		       struct stack_info *info);
+static void dbg_print_stack_address(unsigned long address, int reliable,
+				    char *log_lvl);
+void dbg_print_address(unsigned long address);
+void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+			    unsigned long *stack, char *log_lvl);
+void dbg_show_stack(struct task_struct *task, unsigned long *sp);
+void dbg_show_stack_regs(struct pt_regs *regs);
+void bt_stack(struct task_struct *task, struct pt_regs *regs,
+	      unsigned long *stack);
+
 unsigned long debug_rlock(spinlock_t *lock, rlock_t *rlock,
 			  unsigned long p);
 void debug_unrlock(spinlock_t *lock, rlock_t *rlock, unsigned long p);
