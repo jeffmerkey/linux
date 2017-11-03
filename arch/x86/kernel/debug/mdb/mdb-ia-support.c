@@ -161,17 +161,18 @@ static int rex_used;
 #define REX_EXTX	4
 #define REX_EXTY	2
 #define REX_EXTZ	1
+
 /* Mark parts used in the REX prefix.  When we are testing for
  * empty prefix (for 8bit register REX extension), just mask it
  * out.	 Otherwise test for REX bit is excuse for existence of
  * REX only in case value is nonzero.
  */
-#define USED_REX(value)					\
-{							\
-	if (value)						\
-	rex_used |= (rex & value) ? (value) | 0x40 : 0;	\
-	else						\
-	rex_used |= 0x40;					\
+static inline void USED_REX(int value)
+{
+	if (value)
+		rex_used |= (rex & value) ? (value) | 0x40 : 0;
+	else
+		rex_used |= 0x40;
 }
 
 /* Flags for prefixes which we somehow handled when printing
@@ -196,9 +197,11 @@ static int used_prefixes;
 /* Make sure that bytes from INFO->PRIVATE_DATA->BUFFER (inclusive)
  * to ADDR (exclusive) are valid.  Returns 1 for success.
  */
-#define FETCH_DATA(info, addr) \
-	((addr) <= ((struct dis_private *)(info->private_data))->max_fetched \
-	 ? 1 : fetch_data((info), (addr)))
+static inline void FETCH_DATA(struct disassemble_info *info, mdb_byte *addr)
+{
+	((addr) <= ((struct dis_private *)(info->private_data))->max_fetched
+	 ? 1 : fetch_data((info), (addr)));
+}
 
 struct disassemble_info mdb_di;
 char disbuf[512];
