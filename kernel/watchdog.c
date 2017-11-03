@@ -209,13 +209,6 @@ void touch_softlockup_watchdog_sync(void)
 	__this_cpu_write(softlockup_touch_sync, true);
 	__this_cpu_write(watchdog_touch_ts, 0);
 }
-EXPORT_SYMBOL(touch_softlockup_watchdog_sync);
-
-void touch_hardlockup_watchdog(void)
-{
-	__this_cpu_write(hrtimer_interrupts_saved, 0);
-}
-EXPORT_SYMBOL_GPL(touch_hardlockup_watchdog);
 
 /* watchdog detector functions */
 bool is_hardlockup(void)
@@ -352,9 +345,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
 			show_regs(regs);
 		else
 			dump_stack();
-#if IS_ENABLED(CONFIG_DEBUG_LOCKUPS)
-		BREAK();
-#endif
+
 		if (softlockup_all_cpu_backtrace) {
 			/* Avoid generating two back traces for current
 			 * given that one is already made above
