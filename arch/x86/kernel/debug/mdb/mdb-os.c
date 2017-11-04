@@ -205,7 +205,7 @@ unknown:
 }
 
 int dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
-			    unsigned long *sp, char *log_lvl)
+			   unsigned long *sp, char *log_lvl)
 {
 	register int ret = 0;
 	unsigned long *irq_stack_end;
@@ -228,7 +228,8 @@ int dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		if (stack >= irq_stack && stack <= irq_stack_end) {
 			if (stack == irq_stack_end) {
 				stack = (unsigned long *)(irq_stack_end[-1]);
-				if (dbg_pr(" <EOI> "))
+				ret = dbg_pr(" <EOI> ");
+				if (ret)
 					break;
 			}
 		} else {
@@ -241,13 +242,16 @@ int dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 
 		if ((i % STACKSLOTS_PER_LINE) == 0) {
 			if (i != 0) {
-				if (dbg_pr("\n"))
+				ret = dbg_pr("\n");
+				if (ret)
 					break;
 			}
-			if (dbg_pr("%s %016lx", log_lvl, word))
+			ret = dbg_pr("%s %016lx", log_lvl, word);
+			if (ret)
 				break;
 		} else {
-			if (dbg_pr(" %016lx", word))
+			ret = dbg_pr(" %016lx", word);
+			if (ret)
 				break;
 		}
 		stack++;
@@ -380,7 +384,7 @@ unknown:
 }
 
 int dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
-			    unsigned long *sp, char *log_lvl)
+			   unsigned long *sp, char *log_lvl)
 {
 	register int ret = 0;
 	unsigned long *stack;
@@ -397,13 +401,16 @@ int dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			break;
 		if ((i % STACKSLOTS_PER_LINE) == 0) {
 			if (i != 0) {
-				if (dbg_pr("\n"))
+				ret = dbg_pr("\n");
+				if (ret)
 					break;
 			}
-			if (dbg_pr("%s %08lx", log_lvl, *stack++))
+			ret = dbg_pr("%s %08lx", log_lvl, *stack++);
+			if (ret)
 				break;
 		} else {
-			if (dbg_pr(" %08lx", *stack++))
+			ret = dbg_pr(" %08lx", *stack++);
+			if (ret)
 				break;
 		}
 		mdb_watchdogs();
@@ -450,20 +457,26 @@ bool dbg_in_task_stack(unsigned long *stack, struct task_struct *task,
 }
 
 static int dbg_print_stack_address(unsigned long address, int reliable,
-				    char *log_lvl)
+				   char *log_lvl)
 {
+	register int ret;
+
 	mdb_watchdogs();
-	return (dbg_pr("%s [<%p>] %s%pB\n", log_lvl, (void *)address,
-	       reliable ? "" : "? ", (void *)address));
+	ret = dbg_pr("%s [<%p>] %s%pB\n", log_lvl, (void *)address,
+		     reliable ? "" : "? ", (void *)address);
+	return ret;
 }
 
 int dbg_print_address(unsigned long address)
 {
-	return (dbg_pr(" [<%p>] %pS\n", (void *)address, (void *)address));
+	register int ret;
+
+	ret = dbg_pr(" [<%p>] %pS\n", (void *)address, (void *)address);
+	return ret;
 }
 
 int dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
-			    unsigned long *stack, char *log_lvl)
+			   unsigned long *stack, char *log_lvl)
 {
 	register int ret = 0;
 	struct unwind_state state;
@@ -471,7 +484,8 @@ int dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 	unsigned long visit_mask = 0;
 	int graph_idx = 0;
 
-	if (dbg_pr("%sCall Trace:\n", log_lvl))
+	ret = dbg_pr("%sCall Trace:\n", log_lvl);
+	if (ret)
 		return 1;
 
 	unwind_start(&state, task, regs, stack);
@@ -505,7 +519,8 @@ int dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 
 		dbg_stack_type_str(stack_info.type, &str_begin, &str_end);
 		if (str_begin) {
-			if ((ret = dbg_pr("%s <%s> ", log_lvl, str_begin)))
+			ret = dbg_pr("%s <%s> ", log_lvl, str_begin);
+			if (ret)
 				break;
 		}
 
@@ -544,13 +559,14 @@ int dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			real_addr = ftrace_graph_ret_addr(task, &graph_idx,
 							  addr, stack);
 			if (real_addr != addr) {
-				if ((ret = dbg_print_stack_address(addr, 0,
-								  log_lvl)))
+				ret = dbg_print_stack_address(addr, 0, log_lvl);
+				if (ret)
 					break;
 			}
 
-			if ((ret = dbg_print_stack_address(real_addr, reliable,
-						    log_lvl)))
+			ret = dbg_print_stack_address(real_addr, reliable,
+						      log_lvl);
+			if (ret)
 				break;
 
 			if (!reliable)
@@ -565,7 +581,8 @@ int dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		}
 
 		if (str_end) {
-			if ((ret = dbg_pr("%s <%s> ", log_lvl, str_end)))
+			ret = dbg_pr("%s <%s> ", log_lvl, str_end);
+			if (ret)
 				break;
 		}
 	}
@@ -594,7 +611,7 @@ void dbg_show_stack_regs(struct pt_regs *regs)
 }
 
 int bt_stack(struct task_struct *task, struct pt_regs *regs,
-	      unsigned long *stack)
+	     unsigned long *stack)
 {
 	register int ret = 0;
 	const unsigned int cpu = get_cpu();
