@@ -35,9 +35,9 @@ extern unsigned char modbuf[MAX_SYMBOL_LEN];
 extern unsigned char workbuf[MAX_SYMBOL_LEN];
 extern unsigned char delim_table[256];
 
-void dbg_show_trace_log_lvl(struct task_struct *task,
-			    struct pt_regs *regs,
-			    unsigned long *stack, char *log_lvl);
+int dbg_show_trace_log_lvl(struct task_struct *task,
+			   struct pt_regs *regs,
+			   unsigned long *stack, char *log_lvl);
 bool dbg_in_task_stack(unsigned long *stack, struct task_struct *task,
 		       struct stack_info *info);
 unsigned long debug_rlock(spinlock_t *lock, rlock_t *rlock,

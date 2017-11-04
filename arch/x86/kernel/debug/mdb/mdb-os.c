@@ -204,16 +204,17 @@ unknown:
 	return -EINVAL;
 }
 
-void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
+int dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			    unsigned long *sp, char *log_lvl)
 {
+	register int ret = 0;
 	unsigned long *irq_stack_end;
 	unsigned long *irq_stack;
 	unsigned long *stack;
 	int i;
 
 	if (!try_get_task_stack(task))
-		return;
+		return 0;
 
 	irq_stack_end = (unsigned long *)this_cpu_read(irq_stack_ptr);
 	irq_stack     = irq_stack_end - (IRQ_STACK_SIZE / sizeof(long));
@@ -254,9 +255,10 @@ void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 	}
 
 	dbg_pr("\n");
-	dbg_show_trace_log_lvl(task, regs, sp, log_lvl);
-
+	ret = dbg_show_trace_log_lvl(task, regs, sp, log_lvl);
 	put_task_stack(task);
+
+	return ret;
 }
 
 int dbg_is_valid_bugaddr(unsigned long ip)
@@ -377,9 +379,10 @@ unknown:
 	return -EINVAL;
 }
 
-void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
+int dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			    unsigned long *sp, char *log_lvl)
 {
+	register int ret = 0;
 	unsigned long *stack;
 	int i;
 
@@ -406,9 +409,10 @@ void dbg_show_stack_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		mdb_watchdogs();
 	}
 	dbg_pr("\n");
-	dbg_show_trace_log_lvl(task, regs, sp, log_lvl);
-
+	ret = dbg_show_trace_log_lvl(task, regs, sp, log_lvl);
 	put_task_stack(task);
+
+	return ret;
 }
 
 int dbg_is_valid_bugaddr(unsigned long ip)
@@ -458,16 +462,17 @@ int dbg_print_address(unsigned long address)
 	return (dbg_pr(" [<%p>] %pS\n", (void *)address, (void *)address));
 }
 
-void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+int dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			    unsigned long *stack, char *log_lvl)
 {
+	register int ret = 0;
 	struct unwind_state state;
 	struct stack_info stack_info = {0};
 	unsigned long visit_mask = 0;
 	int graph_idx = 0;
 
 	if (dbg_pr("%sCall Trace:\n", log_lvl))
-		return;
+		return 1;
 
 	unwind_start(&state, task, regs, stack);
 
@@ -500,8 +505,8 @@ void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 
 		dbg_stack_type_str(stack_info.type, &str_begin, &str_end);
 		if (str_begin) {
-			if (dbg_pr("%s <%s> ", log_lvl, str_begin))
-				return;
+			if ((ret = dbg_pr("%s <%s> ", log_lvl, str_begin)))
+				break;
 		}
 
 		/*
@@ -539,11 +544,13 @@ void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 			real_addr = ftrace_graph_ret_addr(task, &graph_idx,
 							  addr, stack);
 			if (real_addr != addr) {
-				if (dbg_print_stack_address(addr, 0, log_lvl))
+				if ((ret = dbg_print_stack_address(addr, 0,
+								  log_lvl)))
 					break;
 			}
 
-			if (dbg_print_stack_address(real_addr, reliable, log_lvl))
+			if ((ret = dbg_print_stack_address(real_addr, reliable,
+						    log_lvl)))
 				break;
 
 			if (!reliable)
@@ -558,14 +565,17 @@ void dbg_show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
 		}
 
 		if (str_end) {
-			if (dbg_pr("%s <%s> ", log_lvl, str_end))
+			if ((ret = dbg_pr("%s <%s> ", log_lvl, str_end)))
 				break;
 		}
 	}
+	return ret;
 }
 
-void dbg_show_stack(struct task_struct *task, unsigned long *sp)
+int dbg_show_stack(struct task_struct *task, unsigned long *sp)
 {
+	register int ret = 0;
+
 	task = task ? : current;
 	/*
 	 * Stack frames below this one aren't interesting.  Don't show them
@@ -573,7 +583,9 @@ void dbg_show_stack(struct task_struct *task, unsigned long *sp)
 	 */
 	if (!sp && task == current)
 		sp = get_stack_pointer(current, NULL);
-	dbg_show_stack_log_lvl(task, NULL, sp, "");
+	ret = dbg_show_stack_log_lvl(task, NULL, sp, "");
+
+	return ret;
 }
 
 void dbg_show_stack_regs(struct pt_regs *regs)
@@ -581,15 +593,18 @@ void dbg_show_stack_regs(struct pt_regs *regs)
 	dbg_show_stack_log_lvl(current, regs, NULL, "");
 }
 
-void bt_stack(struct task_struct *task, struct pt_regs *regs,
+int bt_stack(struct task_struct *task, struct pt_regs *regs,
 	      unsigned long *stack)
 {
+	register int ret = 0;
 	const unsigned int cpu = get_cpu();
 
 	if (cpu == cpu)
 		;
-	dbg_show_stack(task, stack);
+	ret = dbg_show_stack(task, stack);
 	put_cpu();
+
+	return ret;
 }
 
 /* keyboard and serial interface functions */

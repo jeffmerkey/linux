@@ -361,7 +361,8 @@ unsigned long back_trace_all_pid(unsigned char *cmd, dbg_regs *dbgframe,
 		if (p) {
 			if (dbg_pr("Stack backtrace for pid %d\n", p->pid))
 				return 1;
-			bt_stack(p, NULL, NULL);
+			if (bt_stack(p, NULL, NULL))
+				return 1;
 		}
 	} while_each_thread(g, p);
 	return 1;
