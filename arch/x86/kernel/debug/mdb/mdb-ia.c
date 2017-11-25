@@ -6362,7 +6362,7 @@ unsigned long enter_debugger(unsigned long exception,
 			     dbg_regs *dbgframe,
 			     unsigned long processor)
 {
-	if (debug_rlock(&debuglock, &debug_mutex, processor)) {
+	if (debug_lock(&debuglock, &debug_mutex, processor)) {
 		if (!breakpoint_active(exception, dbgframe, processor)) {
 			debug_unlock(&debuglock, &debug_mutex, processor);
 
