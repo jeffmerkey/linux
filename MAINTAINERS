@@ -3502,7 +3502,7 @@ F:	drivers/net/hamradio/baycom*
 
 BCACHE (BLOCK LAYER CACHE)
 M:	Coly Li <colyli@suse.de>
-M:	Kent Overstreet <kent.overstreet@gmail.com>
+M:	Kent Overstreet <kent.overstreet@linux.dev>
 L:	linux-bcache@vger.kernel.org
 S:	Maintained
 W:	http://bcache.evilpiepirate.org
@@ -17412,7 +17412,7 @@ F:	tools/testing/selftests/proc/
 PROC SYSCTL
 M:	Luis Chamberlain <mcgrof@kernel.org>
 M:	Kees Cook <keescook@chromium.org>
-M:	Iurii Zaikin <yzaikin@google.com>
+M:	Joel Granados <j.granados@samsung.com>
 L:	linux-kernel@vger.kernel.org
 L:	linux-fsdevel@vger.kernel.org
 S:	Maintained
@@ -22283,7 +22283,7 @@ F:	drivers/usb/common/ulpi.c
 F:	include/linux/ulpi/
 
 UNICODE SUBSYSTEM
-M:	Gabriel Krisman Bertazi <krisman@collabora.com>
+M:	Gabriel Krisman Bertazi <krisman@kernel.org>
 L:	linux-fsdevel@vger.kernel.org
 S:	Supported
 F:	fs/unicode/
