@@ -115,6 +115,8 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/task.h>
 
+#include <kunit/visibility.h>
+
 /*
  * Minimum number of threads to boot the kernel
  */
@@ -1328,6 +1330,7 @@ struct mm_struct *mm_alloc(void)
 	memset(mm, 0, sizeof(*mm));
 	return mm_init(mm, current, current_user_ns());
 }
+EXPORT_SYMBOL_IF_KUNIT(mm_alloc);
 
 static inline void __mmput(struct mm_struct *mm)
 {
@@ -2921,8 +2924,6 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
 }
 #endif
 
-#ifdef __ARCH_WANT_SYS_CLONE3
-
 noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
 					      struct clone_args __user *uargs,
 					      size_t usize)
@@ -3066,6 +3067,11 @@ SYSCALL_DEFINE2(clone3, struct clone_args __user *, uargs, size_t, size)
 	struct kernel_clone_args kargs;
 	pid_t set_tid[MAX_PID_NS_LEVEL];
 
+#ifdef __ARCH_BROKEN_SYS_CLONE3
+#warning clone3() entry point is missing, please fix
+	return -ENOSYS;
+#endif
+
 	kargs.set_tid = set_tid;
 
 	err = copy_clone_args_from_user(&kargs, uargs, size);
@@ -3077,7 +3083,6 @@ SYSCALL_DEFINE2(clone3, struct clone_args __user *, uargs, size_t, size)
 
 	return kernel_clone(&kargs);
 }
-#endif
 
 void walk_process_tree(struct task_struct *top, proc_visitor visitor, void *data)
 {
