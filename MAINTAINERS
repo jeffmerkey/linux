@@ -3607,6 +3607,7 @@ F:	drivers/phy/qualcomm/phy-ath79-usb.c
 
 ATHEROS ATH GENERIC UTILITIES
 M:	Kalle Valo <kvalo@kernel.org>
+M:	Jeff Johnson <jjohnson@kernel.org>
 L:	linux-wireless@vger.kernel.org
 S:	Supported
 F:	drivers/net/wireless/ath/*
@@ -20906,6 +20907,8 @@ F:	kernel/sched/
 SCHEDULER - SCHED_EXT
 R:	Tejun Heo <tj@kernel.org>
 R:	David Vernet <void@manifault.com>
+R:	Andrea Righi <arighi@nvidia.com>
+R:	Changwoo Min <changwoo@igalia.com>
 L:	linux-kernel@vger.kernel.org
 S:	Maintained
 W:	https://github.com/sched-ext/scx
