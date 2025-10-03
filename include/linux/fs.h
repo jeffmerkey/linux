@@ -1434,6 +1434,8 @@ struct sb_writers {
 	struct percpu_rw_semaphore	rw_sem[SB_FREEZE_LEVELS];
 };
 
+struct mount;
+
 struct super_block {
 	struct list_head	s_list;		/* Keep this first */
 	dev_t			s_dev;		/* search index; _not_ kdev_t */
@@ -1468,7 +1470,7 @@ struct super_block {
 	__u16 s_encoding_flags;
 #endif
 	struct hlist_bl_head	s_roots;	/* alternate root dentries for NFS */
-	struct list_head	s_mounts;	/* list of mounts; _not_ for fs use */
+	struct mount		*s_mounts;	/* list of mounts; _not_ for fs use */
 	struct block_device	*s_bdev;	/* can go away once we use an accessor for @s_bdev_file */
 	struct file		*s_bdev_file;
 	struct backing_dev_info *s_bdi;
@@ -3714,7 +3716,8 @@ int generic_ci_d_compare(const struct dentry *dentry, unsigned int len,
  *   happens when a directory is casefolded and the filesystem is strict
  *   about its encoding.
  */
-static inline bool generic_ci_validate_strict_name(struct inode *dir, struct qstr *name)
+static inline bool generic_ci_validate_strict_name(struct inode *dir,
+						   const struct qstr *name)
 {
 	if (!IS_CASEFOLDED(dir) || !sb_has_strict_encoding(dir->i_sb))
 		return true;
@@ -3729,7 +3732,8 @@ static inline bool generic_ci_validate_strict_name(struct inode *dir, struct qst
 	return !utf8_validate(dir->i_sb->s_encoding, name);
 }
 #else
-static inline bool generic_ci_validate_strict_name(struct inode *dir, struct qstr *name)
+static inline bool generic_ci_validate_strict_name(struct inode *dir,
+						   const struct qstr *name)
 {
 	return true;
 }
