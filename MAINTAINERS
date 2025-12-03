@@ -9188,6 +9188,9 @@ S:	Maintained
 F:	kernel/power/energy_model.c
 F:	include/linux/energy_model.h
 F:	Documentation/power/energy-model.rst
+F:	Documentation/netlink/specs/em.yaml
+F:	include/uapi/linux/energy_model.h
+F:	kernel/power/em_netlink*.*
 
 EPAPR HYPERVISOR BYTE CHANNEL DEVICE DRIVER
 M:	Laurentiu Tudor <laurentiu.tudor@nxp.com>
@@ -17469,6 +17472,16 @@ L:	dri-devel@lists.freedesktop.org
 S:	Maintained
 F:	Documentation/devicetree/bindings/leds/backlight/mps,mp3309c.yaml
 F:	drivers/video/backlight/mp3309c.c
+
+MPAM DRIVER
+M:	James Morse <james.morse@arm.com>
+M:	Ben Horgan <ben.horgan@arm.com>
+R:	Reinette Chatre <reinette.chatre@intel.com>
+R:	Fenghua Yu <fenghuay@nvidia.com>
+S:	Maintained
+F:	drivers/resctrl/mpam_*
+F:	drivers/resctrl/test_mpam_*
+F:	include/linux/arm_mpam.h
 
 MPS MP2869 DRIVER
 M:	Wensheng Wang <wenswang@yeah.net>
