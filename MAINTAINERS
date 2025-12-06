@@ -4432,6 +4432,7 @@ F:	arch/*/lib/bitops.c
 F:	include/asm-generic/bitops
 F:	include/asm-generic/bitops.h
 F:	include/linux/bitops.h
+F:	lib/hweight.c
 F:	lib/test_bitops.c
 F:	tools/*/bitops*
 
@@ -13653,6 +13654,7 @@ R:	Dai Ngo <Dai.Ngo@oracle.com>
 R:	Tom Talpey <tom@talpey.com>
 L:	linux-nfs@vger.kernel.org
 S:	Supported
+P:	Documentation/filesystems/nfs/nfsd-maintainer-entry-profile.rst
 B:	https://bugzilla.kernel.org
 T:	git git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
 F:	Documentation/filesystems/nfs/
@@ -13671,6 +13673,10 @@ F:	include/uapi/linux/nfsd/
 F:	include/uapi/linux/sunrpc/
 F:	net/sunrpc/
 F:	tools/net/sunrpc/
+
+KERNEL NFSD BLOCK and SCSI LAYOUT DRIVER
+R:	Christoph Hellwig <hch@lst.de>
+F:	fs/nfsd/blocklayout*
 
 KERNEL PACMAN PACKAGING (in addition to generic KERNEL BUILD)
 M:	Thomas Weißschuh <linux@weissschuh.net>
@@ -17522,6 +17528,7 @@ M:	Luis Chamberlain <mcgrof@kernel.org>
 M:	Petr Pavlu <petr.pavlu@suse.com>
 M:	Daniel Gomez <da.gomez@kernel.org>
 R:	Sami Tolvanen <samitolvanen@google.com>
+R:	Aaron Tomlin <atomlin@atomlin.com>
 L:	linux-modules@vger.kernel.org
 L:	linux-kernel@vger.kernel.org
 S:	Maintained
@@ -17531,6 +17538,8 @@ F:	include/linux/module*.h
 F:	kernel/module/
 F:	lib/test_kmod.c
 F:	lib/tests/module/
+F:	rust/kernel/module_param.rs
+F:	rust/macros/module.rs
 F:	scripts/module*
 F:	tools/testing/selftests/kmod/
 F:	tools/testing/selftests/module/
@@ -20089,6 +20098,7 @@ Q:	https://patchwork.kernel.org/project/linux-pci/list/
 B:	https://bugzilla.kernel.org
 C:	irc://irc.oftc.net/linux-pci
 T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+F:	Documentation/ABI/testing/sysfs-devices-pci-host-bridge
 F:	Documentation/PCI/
 F:	Documentation/devicetree/bindings/pci/
 F:	arch/x86/kernel/early-quirks.c
@@ -26388,14 +26398,16 @@ M:	David Lechner <dlechner@baylibre.com>
 S:	Maintained
 F:	Documentation/devicetree/bindings/trigger-source/*
 
-TRUSTED SECURITY MODULE (TSM) INFRASTRUCTURE
+TRUSTED EXECUTION ENVIRONMENT SECURITY MANAGER (TSM)
 M:	Dan Williams <dan.j.williams@intel.com>
 L:	linux-coco@lists.linux.dev
 S:	Maintained
 F:	Documentation/ABI/testing/configfs-tsm-report
 F:	Documentation/driver-api/coco/
+F:	Documentation/driver-api/pci/tsm.rst
+F:	drivers/pci/tsm.c
 F:	drivers/virt/coco/guest/
-F:	include/linux/tsm*.h
+F:	include/linux/*tsm*.h
 F:	samples/tsm-mr/
 
 TRUSTED SERVICES TEE DRIVER
