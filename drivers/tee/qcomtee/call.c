@@ -563,8 +563,7 @@ static int qcomtee_supp_send(struct tee_context *ctx, u32 errno, u32 num_params,
 
 static int qcomtee_open(struct tee_context *ctx)
 {
-	struct qcomtee_context_data *ctxdata __free(kfree) = kzalloc_obj(*ctxdata,
-									 GFP_KERNEL);
+	struct qcomtee_context_data *ctxdata __free(kfree) = kzalloc_obj(*ctxdata);
 	if (!ctxdata)
 		return -ENOMEM;
 
@@ -707,7 +706,7 @@ static int qcomtee_probe(struct platform_device *pdev)
 	struct qcomtee *qcomtee;
 	int err;
 
-	qcomtee = kzalloc_obj(*qcomtee, GFP_KERNEL);
+	qcomtee = kzalloc_obj(*qcomtee);
 	if (!qcomtee)
 		return -ENOMEM;
 

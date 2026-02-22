@@ -132,8 +132,7 @@ drm_atomic_state_init(struct drm_device *dev, struct drm_atomic_state *state)
 	 */
 	state->allow_modeset = true;
 
-	state->crtcs = kzalloc_objs(*state->crtcs, dev->mode_config.num_crtc,
-				    GFP_KERNEL);
+	state->crtcs = kzalloc_objs(*state->crtcs, dev->mode_config.num_crtc);
 	if (!state->crtcs)
 		goto fail;
 	state->planes = kzalloc_objs(*state->planes,
@@ -177,7 +176,7 @@ drm_atomic_state_alloc(struct drm_device *dev)
 	if (!config->funcs->atomic_state_alloc) {
 		struct drm_atomic_state *state;
 
-		state = kzalloc_obj(*state, GFP_KERNEL);
+		state = kzalloc_obj(*state);
 		if (!state)
 			return NULL;
 		if (drm_atomic_state_init(dev, state) < 0) {

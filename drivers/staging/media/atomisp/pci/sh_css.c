@@ -1880,7 +1880,7 @@ create_pipe(enum ia_css_pipe_mode mode,
 		return -EINVAL;
 	}
 
-	me = kmalloc_obj(*me, GFP_KERNEL);
+	me = kmalloc_obj(*me);
 	if (!me)
 		return -ENOMEM;
 
@@ -6252,8 +6252,7 @@ load_yuvpp_binaries(struct ia_css_pipe *pipe)
 
 		mycs->num_vf_pp = 1;
 	}
-	mycs->vf_pp_binary = kzalloc_objs(struct ia_css_binary, mycs->num_vf_pp,
-					  GFP_KERNEL);
+	mycs->vf_pp_binary = kzalloc_objs(struct ia_css_binary, mycs->num_vf_pp);
 	if (!mycs->vf_pp_binary) {
 		err = -ENOMEM;
 		goto ERR;
@@ -7910,7 +7909,7 @@ ia_css_stream_create(const struct ia_css_stream_config *stream_config,
 	}
 
 	/* allocate the stream instance */
-	curr_stream = kzalloc_obj(struct ia_css_stream, GFP_KERNEL);
+	curr_stream = kzalloc_obj(struct ia_css_stream);
 	if (!curr_stream) {
 		err = -ENOMEM;
 		IA_CSS_LEAVE_ERR(err);
@@ -7921,8 +7920,7 @@ ia_css_stream_create(const struct ia_css_stream_config *stream_config,
 
 	/* allocate pipes */
 	curr_stream->num_pipes = num_pipes;
-	curr_stream->pipes = kzalloc_objs(struct ia_css_pipe *, num_pipes,
-					  GFP_KERNEL);
+	curr_stream->pipes = kzalloc_objs(struct ia_css_pipe *, num_pipes);
 	if (!curr_stream->pipes) {
 		curr_stream->num_pipes = 0;
 		kfree(curr_stream);

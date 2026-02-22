@@ -3161,7 +3161,7 @@ _base_request_irq(struct MPT3SAS_ADAPTER *ioc, u8 index)
 	struct adapter_reply_queue *reply_q;
 	int r, qid;
 
-	reply_q =  kzalloc_obj(struct adapter_reply_queue, GFP_KERNEL);
+	reply_q =  kzalloc_obj(struct adapter_reply_queue);
 	if (!reply_q) {
 		ioc_err(ioc, "unable to allocate memory %zu!\n",
 			sizeof(struct adapter_reply_queue));
@@ -6218,8 +6218,7 @@ base_alloc_rdpq_dma_pool(struct MPT3SAS_ADAPTER *ioc, int sz)
 		sizeof(Mpi2DefaultReplyDescriptor_t);
 	int count = ioc->rdpq_array_enable ? ioc->reply_queue_count : 1;
 
-	ioc->reply_post = kzalloc_objs(struct reply_post_struct, count,
-				       GFP_KERNEL);
+	ioc->reply_post = kzalloc_objs(struct reply_post_struct, count);
 	if (!ioc->reply_post)
 		return -ENOMEM;
 	/*

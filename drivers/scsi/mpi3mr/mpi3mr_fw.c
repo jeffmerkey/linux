@@ -1288,7 +1288,7 @@ static void mpi3mr_fault_uevent_emit(struct mpi3mr_ioc *mrioc)
 	struct kobj_uevent_env *env;
 	int ret;
 
-	env = kzalloc_obj(*env, GFP_KERNEL);
+	env = kzalloc_obj(*env);
 	if (!env)
 		return;
 
@@ -2464,8 +2464,7 @@ static int mpi3mr_create_op_queues(struct mpi3mr_ioc *mrioc)
 	    num_queues);
 
 	if (!mrioc->req_qinfo) {
-		mrioc->req_qinfo = kzalloc_objs(struct op_req_qinfo, num_queues,
-						GFP_KERNEL);
+		mrioc->req_qinfo = kzalloc_objs(struct op_req_qinfo, num_queues);
 		if (!mrioc->req_qinfo) {
 			retval = -1;
 			goto out_failed;

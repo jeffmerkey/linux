@@ -1008,7 +1008,7 @@ static int qdev_crtc_init(struct drm_device *dev, int crtc_id)
 	struct qxl_device *qdev = to_qxl(dev);
 	int r;
 
-	qxl_crtc = kzalloc_obj(struct qxl_crtc, GFP_KERNEL);
+	qxl_crtc = kzalloc_obj(struct qxl_crtc);
 	if (!qxl_crtc)
 		return -ENOMEM;
 
@@ -1159,7 +1159,7 @@ static int qdev_output_init(struct drm_device *dev, int num_output)
 	struct drm_encoder *encoder;
 	int ret;
 
-	qxl_output = kzalloc_obj(struct qxl_output, GFP_KERNEL);
+	qxl_output = kzalloc_obj(struct qxl_output);
 	if (!qxl_output)
 		return -ENOMEM;
 
@@ -1241,8 +1241,7 @@ int qxl_create_monitors_object(struct qxl_device *qdev)
 		qxl_bo_physical_address(qdev, qdev->monitors_config_bo, 0);
 
 	memset(qdev->monitors_config, 0, monitors_config_size);
-	qdev->dumb_heads = kzalloc_objs(qdev->dumb_heads[0], qxl_num_crtc,
-					GFP_KERNEL);
+	qdev->dumb_heads = kzalloc_objs(qdev->dumb_heads[0], qxl_num_crtc);
 	if (!qdev->dumb_heads) {
 		qxl_destroy_monitors_object(qdev);
 		return -ENOMEM;

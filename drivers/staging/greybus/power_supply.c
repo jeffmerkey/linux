@@ -545,8 +545,7 @@ static int gb_power_supply_prop_descriptors_get(struct gb_power_supply *gbpsy)
 		}
 	}
 
-	gbpsy->props = kzalloc_objs(*gbpsy->props, gbpsy->properties_count,
-				    GFP_KERNEL);
+	gbpsy->props = kzalloc_objs(*gbpsy->props, gbpsy->properties_count);
 	if (!gbpsy->props) {
 		ret = -ENOMEM;
 		goto out_put_operation;
@@ -1063,7 +1062,7 @@ static int gb_power_supply_probe(struct gb_bundle *bundle,
 	if (cport_desc->protocol_id != GREYBUS_PROTOCOL_POWER_SUPPLY)
 		return -ENODEV;
 
-	supplies = kzalloc_obj(*supplies, GFP_KERNEL);
+	supplies = kzalloc_obj(*supplies);
 	if (!supplies)
 		return -ENOMEM;
 

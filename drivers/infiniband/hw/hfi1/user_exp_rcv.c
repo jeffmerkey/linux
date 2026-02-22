@@ -52,8 +52,7 @@ int hfi1_user_exp_rcv_init(struct hfi1_filedata *fd,
 {
 	int ret = 0;
 
-	fd->entry_to_rb = kzalloc_objs(*fd->entry_to_rb, uctxt->expected_count,
-				       GFP_KERNEL);
+	fd->entry_to_rb = kzalloc_objs(*fd->entry_to_rb, uctxt->expected_count);
 	if (!fd->entry_to_rb)
 		return -ENOMEM;
 
@@ -169,7 +168,7 @@ static int pin_rcv_pages(struct hfi1_filedata *fd, struct tid_user_buf *tidbuf)
 	}
 
 	/* Allocate the array of struct page pointers needed for pinning */
-	pages = kzalloc_objs(*pages, npages, GFP_KERNEL);
+	pages = kzalloc_objs(*pages, npages);
 	if (!pages)
 		return -ENOMEM;
 
@@ -735,7 +734,7 @@ static int set_rcvarray_entry(struct hfi1_filedata *fd,
 	 * Allocate the node first so we can handle a potential
 	 * failure before we've programmed anything.
 	 */
-	node = kzalloc_flex(*node, pages, npages, GFP_KERNEL);
+	node = kzalloc_flex(*node, pages, npages);
 	if (!node)
 		return -ENOMEM;
 

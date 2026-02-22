@@ -99,7 +99,7 @@ int mlx4_en_alloc_tx_queue_per_tc(struct net_device *dev, u8 tc)
 	int port_up = 0;
 	int err = 0;
 
-	tmp = kzalloc_obj(*tmp, GFP_KERNEL);
+	tmp = kzalloc_obj(*tmp);
 	if (!tmp)
 		return -ENOMEM;
 
@@ -1209,7 +1209,7 @@ static void mlx4_en_do_uc_filter(struct mlx4_en_priv *priv,
 		}
 
 		if (!found) {
-			entry = kmalloc_obj(*entry, GFP_KERNEL);
+			entry = kmalloc_obj(*entry);
 			if (!entry) {
 				en_err(priv, "Failed adding MAC %pM on port:%d (out of memory)\n",
 				       ha->addr, priv->port);
@@ -1317,7 +1317,7 @@ static int mlx4_en_set_rss_steer_rules(struct mlx4_en_priv *priv)
 	if (err)
 		goto tunnel_err;
 
-	entry = kmalloc_obj(*entry, GFP_KERNEL);
+	entry = kmalloc_obj(*entry);
 	if (!entry) {
 		err = -ENOMEM;
 		goto alloc_err;
@@ -2245,8 +2245,7 @@ static int mlx4_en_copy_priv(struct mlx4_en_priv *dst,
 		if (!dst->tx_ring[t])
 			goto err_free_tx;
 
-		dst->tx_cq[t] = kzalloc_objs(struct mlx4_en_cq *, MAX_TX_RINGS,
-					     GFP_KERNEL);
+		dst->tx_cq[t] = kzalloc_objs(struct mlx4_en_cq *, MAX_TX_RINGS);
 		if (!dst->tx_cq[t]) {
 			kfree(dst->tx_ring[t]);
 			goto err_free_tx;
@@ -2752,7 +2751,7 @@ static int mlx4_xdp_set(struct net_device *dev, struct bpf_prog *prog)
 	if (!mlx4_en_check_xdp_mtu(dev, dev->mtu))
 		return -EOPNOTSUPP;
 
-	tmp = kzalloc_obj(*tmp, GFP_KERNEL);
+	tmp = kzalloc_obj(*tmp);
 	if (!tmp)
 		return -ENOMEM;
 
@@ -3221,8 +3220,7 @@ int mlx4_en_init_netdev(struct mlx4_en_dev *mdev, int port,
 			err = -ENOMEM;
 			goto out;
 		}
-		priv->tx_cq[t] = kzalloc_objs(struct mlx4_en_cq *, MAX_TX_RINGS,
-					      GFP_KERNEL);
+		priv->tx_cq[t] = kzalloc_objs(struct mlx4_en_cq *, MAX_TX_RINGS);
 		if (!priv->tx_cq[t]) {
 			err = -ENOMEM;
 			goto out;
@@ -3521,7 +3519,7 @@ int mlx4_en_reset_config(struct net_device *dev,
 		return -EINVAL;
 	}
 
-	tmp = kzalloc_obj(*tmp, GFP_KERNEL);
+	tmp = kzalloc_obj(*tmp);
 	if (!tmp)
 		return -ENOMEM;
 

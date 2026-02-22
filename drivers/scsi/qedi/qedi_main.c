@@ -276,7 +276,7 @@ static int qedi_alloc_uio_rings(struct qedi_ctx *qedi)
 		}
 	}
 
-	udev = kzalloc_obj(*udev, GFP_KERNEL);
+	udev = kzalloc_obj(*udev);
 	if (!udev)
 		goto err_udev;
 
@@ -956,7 +956,7 @@ static int qedi_find_boot_info(struct qedi_ctx *qedi,
 	pri_ctrl_flags = !!(block->target[0].ctrl_flags &
 					NVM_ISCSI_CFG_TARGET_ENABLED);
 	if (pri_ctrl_flags) {
-		pri_tgt = kzalloc_obj(*pri_tgt, GFP_KERNEL);
+		pri_tgt = kzalloc_obj(*pri_tgt);
 		if (!pri_tgt)
 			return -1;
 		qedi_get_boot_tgt_info(block, pri_tgt, 0);
@@ -965,7 +965,7 @@ static int qedi_find_boot_info(struct qedi_ctx *qedi,
 	sec_ctrl_flags = !!(block->target[1].ctrl_flags &
 					NVM_ISCSI_CFG_TARGET_ENABLED);
 	if (sec_ctrl_flags) {
-		sec_tgt = kzalloc_obj(*sec_tgt, GFP_KERNEL);
+		sec_tgt = kzalloc_obj(*sec_tgt);
 		if (!sec_tgt) {
 			ret = -1;
 			goto free_tgt;
@@ -1066,7 +1066,7 @@ static void qedi_get_protocol_tlv_data(void *dev, void *data)
 	struct qedi_ctx *qedi = dev;
 	int rval = 0;
 
-	fw_iscsi_stats = kmalloc_obj(*fw_iscsi_stats, GFP_KERNEL);
+	fw_iscsi_stats = kmalloc_obj(*fw_iscsi_stats);
 	if (!fw_iscsi_stats) {
 		QEDI_ERR(&qedi->dbg_ctx,
 			 "Could not allocate memory for fw_iscsi_stats.\n");
@@ -1668,8 +1668,7 @@ static int qedi_alloc_global_queues(struct qedi_ctx *qedi)
 	 */
 	for (i = 0; i < qedi->num_queues; i++) {
 		qedi->global_queues[i] =
-					kzalloc_obj(*qedi->global_queues[0],
-						    GFP_KERNEL);
+					kzalloc_obj(*qedi->global_queues[0]);
 		if (!qedi->global_queues[i]) {
 			QEDI_ERR(&qedi->dbg_ctx,
 				 "Unable to allocation global queue %d.\n", i);

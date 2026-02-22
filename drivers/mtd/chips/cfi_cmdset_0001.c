@@ -501,7 +501,7 @@ struct mtd_info *cfi_cmdset_0001(struct map_info *map, int primary)
 	struct mtd_info *mtd;
 	int i;
 
-	mtd = kzalloc_obj(*mtd, GFP_KERNEL);
+	mtd = kzalloc_obj(*mtd);
 	if (!mtd)
 		return NULL;
 	mtd->priv = map;
@@ -776,11 +776,10 @@ static int cfi_intelext_partition_fixup(struct mtd_info *mtd,
 		}
 
 		numvirtchips = cfi->numchips * numparts;
-		newcfi = kmalloc_flex(*newcfi, chips, numvirtchips, GFP_KERNEL);
+		newcfi = kmalloc_flex(*newcfi, chips, numvirtchips);
 		if (!newcfi)
 			return -ENOMEM;
-		shared = kmalloc_objs(struct flchip_shared, cfi->numchips,
-				      GFP_KERNEL);
+		shared = kmalloc_objs(struct flchip_shared, cfi->numchips);
 		if (!shared) {
 			kfree(newcfi);
 			return -ENOMEM;

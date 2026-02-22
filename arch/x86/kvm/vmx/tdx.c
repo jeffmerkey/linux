@@ -2218,8 +2218,7 @@ static int tdx_get_capabilities(struct kvm_tdx_cmd *cmd)
 	if (nr_user_entries < td_conf->num_cpuid_config)
 		return -E2BIG;
 
-	caps = kzalloc_flex(*caps, cpuid.entries, td_conf->num_cpuid_config,
-			    GFP_KERNEL);
+	caps = kzalloc_flex(*caps, cpuid.entries, td_conf->num_cpuid_config);
 	if (!caps)
 		return -ENOMEM;
 
@@ -2743,7 +2742,7 @@ static int tdx_td_init(struct kvm *kvm, struct kvm_tdx_cmd *cmd)
 		goto out;
 	}
 
-	td_params = kzalloc_obj(struct td_params, GFP_KERNEL);
+	td_params = kzalloc_obj(struct td_params);
 	if (!td_params) {
 		ret = -ENOMEM;
 		goto out;

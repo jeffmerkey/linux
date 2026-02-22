@@ -755,8 +755,7 @@ kfree_scale_thread(void *arg)
 		}
 
 		for (i = 0; i < kfree_alloc_num; i++) {
-			alloc_ptr = kzalloc_objs(struct kfree_obj, kfree_mult,
-						 GFP_KERNEL);
+			alloc_ptr = kzalloc_objs(struct kfree_obj, kfree_mult);
 			if (!alloc_ptr)
 				return -ENOMEM;
 
@@ -1130,7 +1129,7 @@ rcu_scale_init(void)
 			goto unwind;
 		schedule_timeout_uninterruptible(1);
 	}
-	reader_tasks = kzalloc_objs(reader_tasks[0], nrealreaders, GFP_KERNEL);
+	reader_tasks = kzalloc_objs(reader_tasks[0], nrealreaders);
 	if (reader_tasks == NULL) {
 		SCALEOUT_ERRSTRING("out of memory");
 		firsterr = -ENOMEM;
@@ -1144,11 +1143,10 @@ rcu_scale_init(void)
 	}
 	while (atomic_read(&n_rcu_scale_reader_started) < nrealreaders)
 		schedule_timeout_uninterruptible(1);
-	writer_tasks = kzalloc_objs(writer_tasks[0], nrealwriters, GFP_KERNEL);
+	writer_tasks = kzalloc_objs(writer_tasks[0], nrealwriters);
 	writer_durations = kcalloc(nrealwriters, sizeof(*writer_durations), GFP_KERNEL);
-	writer_n_durations = kzalloc_objs(*writer_n_durations, nrealwriters,
-					  GFP_KERNEL);
-	writer_done = kzalloc_objs(writer_done[0], nrealwriters, GFP_KERNEL);
+	writer_n_durations = kzalloc_objs(*writer_n_durations, nrealwriters);
+	writer_done = kzalloc_objs(writer_done[0], nrealwriters);
 	if (gp_async) {
 		if (gp_async_max <= 0) {
 			pr_warn("%s: gp_async_max = %d must be greater than zero.\n",

@@ -753,7 +753,7 @@ udp_tunnel_nic_alloc(const struct udp_tunnel_nic_info *info,
 	struct udp_tunnel_nic *utn;
 	unsigned int i;
 
-	utn = kzalloc_flex(*utn, entries, n_tables, GFP_KERNEL);
+	utn = kzalloc_flex(*utn, entries, n_tables);
 	if (!utn)
 		return NULL;
 	utn->n_tables = n_tables;
@@ -821,7 +821,7 @@ static int udp_tunnel_nic_register(struct net_device *dev)
 
 	/* Create UDP tunnel state structures */
 	if (info->shared) {
-		node = kzalloc_obj(*node, GFP_KERNEL);
+		node = kzalloc_obj(*node);
 		if (!node)
 			return -ENOMEM;
 
