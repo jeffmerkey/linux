@@ -12279,10 +12279,10 @@ F:	arch/powerpc/crypto/aes_cbc.c
 F:	arch/powerpc/crypto/aes_ctr.c
 F:	arch/powerpc/crypto/aes_xts.c
 F:	arch/powerpc/crypto/aesp8-ppc.*
-F:	arch/powerpc/crypto/ghash.c
-F:	arch/powerpc/crypto/ghashp8-ppc.pl
 F:	arch/powerpc/crypto/ppc-xlate.pl
 F:	arch/powerpc/crypto/vmx.c
+F:	lib/crypto/powerpc/gf128hash.h
+F:	lib/crypto/powerpc/ghashp8-ppc.pl
 
 IBM ServeRAID RAID DRIVER
 S:	Orphan
@@ -24401,6 +24401,20 @@ T:	git https://github.com/cschaufler/smack-next.git
 F:	Documentation/admin-guide/LSM/Smack.rst
 F:	security/smack/
 
+SMBDIRECT (RDMA Stream Transport with Read/Write-Offload, MS-SMBD)
+M:	Steve French <smfrench@gmail.com>
+M:	Steve French <sfrench@samba.org>
+M:	Namjae Jeon <linkinjeon@kernel.org>
+M:	Namjae Jeon <linkinjeon@samba.org>
+R:	Stefan Metzmacher <metze@samba.org>
+R:	Tom Talpey <tom@talpey.com>
+L:	linux-cifs@vger.kernel.org
+L:	samba-technical@lists.samba.org (moderated for non-subscribers)
+S:	Maintained
+F:	fs/smb/client/smbdirect.*
+F:	fs/smb/common/smbdirect/
+F:	fs/smb/server/transport_rdma.*
+
 SMC91x ETHERNET DRIVER
 M:	Nicolas Pitre <nico@fluxnic.net>
 S:	Odd Fixes
@@ -27015,7 +27029,7 @@ F:	Documentation/filesystems/ubifs.rst
 F:	fs/ubifs/
 
 UBLK USERSPACE BLOCK DRIVER
-M:	Ming Lei <ming.lei@redhat.com>
+M:	Ming Lei <tom.leiming@gmail.com>
 L:	linux-block@vger.kernel.org
 S:	Maintained
 F:	Documentation/block/ublk.rst
