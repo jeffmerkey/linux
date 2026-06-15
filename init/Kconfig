@@ -1016,6 +1016,17 @@ config NUMA_BALANCING
 
 	  This system will be inactive on UMA systems.
 
+config SCHED_CACHE
+	bool "Cache aware load balance"
+	default y
+	depends on SMP
+	help
+	  When enabled, the scheduler will attempt to aggregate tasks from
+	  the same process onto a single Last Level Cache (LLC) domain when
+	  possible. This improves cache locality by keeping tasks that share
+	  resources within the same cache domain, reducing cache misses and
+	  lowering data access latency.
+
 config NUMA_BALANCING_DEFAULT_ENABLED
 	bool "Automatically enable NUMA aware memory/task placement"
 	default y
@@ -1839,6 +1850,12 @@ config FUTEX_MPOL
 	depends on FUTEX && NUMA
 	default y
 
+config HAVE_FUTEX_ROBUST_UNLOCK
+	bool
+
+config FUTEX_ROBUST_UNLOCK
+	def_bool FUTEX && HAVE_GENERIC_VDSO && GENERIC_IRQ_ENTRY && RSEQ && HAVE_FUTEX_ROBUST_UNLOCK
+
 config EPOLL
 	bool "Enable eventpoll support" if EXPERT
 	default y
@@ -2195,7 +2212,8 @@ config RUST
 	depends on !DEBUG_INFO_BTF || (PAHOLE_HAS_LANG_EXCLUDE && !LTO)
 	depends on !CFI || HAVE_CFI_ICALL_NORMALIZE_INTEGERS_RUSTC
 	select CFI_ICALL_NORMALIZE_INTEGERS if CFI
-	depends on !KASAN_SW_TAGS
+	depends on !KASAN || CC_IS_CLANG
+	depends on !KASAN_SW_TAGS || RUSTC_VERSION >= 109600
 	help
 	  Enables Rust support in the kernel.
 
@@ -2208,6 +2226,8 @@ config RUST
 	  See Documentation/rust/ for more information.
 
 	  If unsure, say N.
+
+source "rust/kernel/Kconfig.test"
 
 config RUSTC_VERSION_TEXT
 	string

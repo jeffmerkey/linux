@@ -1228,8 +1228,9 @@ Kernel parameters
 			deferred probe to give up waiting on dependencies to
 			probe. Only specific dependencies (subsystems or
 			drivers) that have opted in will be ignored. A timeout
-			of 0 will timeout at the end of initcalls. If the time
-			out hasn't expired, it'll be restarted by each
+			of 0 will timeout at the end of initcalls; a negative
+			value is treated as an infinite timeout value. If the
+			timeout hasn't expired, it'll be restarted by each
 			successful driver registration. This option will also
 			dump out devices still on the deferred probe list after
 			retrying.
@@ -1650,10 +1651,6 @@ Kernel parameters
 			but can only be used if the backing tty is available
 			very early in the boot process. For early debugging
 			via a serial port see kgdboc_earlycon instead.
-
-	elanfreq=	[X86-32]
-			See comment before function elanfreq_setup() in
-			arch/x86/kernel/cpu/cpufreq/elanfreq.c.
 
 	elfcorehdr=[size[KMG]@]offset[KMG] [PPC,SH,X86,S390,EARLY]
 			Specifies physical address of start of kernel core
@@ -4419,10 +4416,6 @@ Kernel parameters
 			These settings can be accessed at runtime via
 			the nmi_watchdog and hardlockup_panic sysctls.
 
-	no387		[BUGS=X86-32] Tells the kernel to use the 387 maths
-			emulation library even if a 387 maths coprocessor
-			is present.
-
 	no4lvl		[RISCV,EARLY] Disable 4-level and 5-level paging modes.
 			Forces kernel to use 3-level paging instead.
 
@@ -5844,13 +5837,13 @@ Kernel parameters
 			use a call_rcu[_hurry]() path. Please note, this is for a
 			normal grace period.
 
-			How to enable it:
+			How to disable it:
 
-			echo 1 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
-			or pass a boot parameter "rcutree.rcu_normal_wake_from_gp=1"
+			echo 0 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
+			or pass a boot parameter "rcutree.rcu_normal_wake_from_gp=0"
 
-			Default is 1 if num_possible_cpus() <= 16 and it is not explicitly
-			disabled by the boot parameter passing 0.
+			Default is 1 if it is not explicitly disabled by the boot parameter
+			passing 0.
 
 	rcuscale.gp_async= [KNL]
 			Measure performance of asynchronous
@@ -7217,6 +7210,18 @@ Kernel parameters
 
 			Not specifying this option is equivalent to
 			spec_store_bypass_disable=auto.
+
+	split_llc=
+			[X86,EARLY] Split the LLC N-ways
+
+			When set, the LLC is split this many ways by matching
+			'core_id % n'. This is setup before SMP bringup and
+			used during SMP bringup before it knows the full
+			topology. If your core count doesn't nicely divide by
+			the number given, you get to keep the pieces.
+
+			This is mostly a debug feature to emulate multiple LLCs
+			on hardware that only have a single LLC.
 
 	split_lock_detect=
 			[X86] Enable split lock detection or bus lock detection
