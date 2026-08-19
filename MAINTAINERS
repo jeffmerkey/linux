@@ -3904,6 +3904,7 @@ F:	drivers/platform/arm64/
 ARM64 PORT (AARCH64 ARCHITECTURE)
 M:	Catalin Marinas <catalin.marinas@arm.com>
 M:	Will Deacon <will@kernel.org>
+R:	Mark Rutland <mark.rutland@arm.com>
 L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 S:	Maintained
 T:	git git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
@@ -13939,6 +13940,7 @@ F:	scripts/Makefile.kasan
 KCONFIG
 M:	Nathan Chancellor <nathan@kernel.org>
 M:	Nicolas Schier <nsc@kernel.org>
+R:	Julian Braha <julianbraha@gmail.com>
 L:	linux-kbuild@vger.kernel.org
 S:	Odd Fixes
 Q:	https://patchwork.kernel.org/project/linux-kbuild/list/
@@ -18178,7 +18180,7 @@ F:	include/linux/module*.h
 F:	kernel/module/
 F:	lib/test_kmod.c
 F:	lib/tests/module/
-F:	rust/kernel/module_param.rs
+F:	rust/kernel/module*.rs
 F:	rust/macros/module.rs
 F:	scripts/module*
 F:	tools/testing/selftests/kmod/
@@ -25083,7 +25085,7 @@ M:	James Morse <james.morse@arm.com>
 L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 S:	Maintained
 F:	Documentation/devicetree/bindings/arm/firmware/sdei.txt
-F:	drivers/firmware/arm_sdei.c
+F:	drivers/firmware/arm_sdei*
 F:	include/linux/arm_sdei.h
 F:	include/uapi/linux/arm_sdei.h
 
