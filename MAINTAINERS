@@ -2076,8 +2076,7 @@ S:	Supported
 F:	arch/arm64/boot/dts/apm/
 
 APPLIED MICRO (APM) X-GENE SOC EDAC
-M:	Khuong Dinh <khuong@os.amperecomputing.com>
-S:	Supported
+S:	Orphan
 F:	Documentation/devicetree/bindings/edac/apm,xgene-edac.yaml
 F:	drivers/edac/xgene_edac.c
 
@@ -3949,10 +3948,16 @@ R:	Mark Rutland <mark.rutland@arm.com>
 L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 S:	Maintained
 T:	git git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+F:	Documentation/ABI/testing/sysfs-firmware-cca
 F:	Documentation/arch/arm64/
 F:	arch/arm64/
+F:	drivers/firmware/arm_rmm/
 F:	drivers/virt/coco/arm-cca-guest/
 F:	drivers/virt/coco/pkvm-guest/
+F:	include/linux/arm-rmi-cmds.h
+F:	include/linux/arm-rsi-cmds.h
+F:	include/linux/arm-smccc-rmi.h
+F:	include/linux/arm-smccc-rsi.h
 F:	tools/testing/selftests/arm64/
 X:	arch/arm64/boot/dts/
 X:	arch/arm64/configs/defconfig
@@ -9444,6 +9449,11 @@ L:	linux-edac@vger.kernel.org
 S:	Orphan
 F:	drivers/edac/i3000_edac.c
 
+EDAC-I3200
+L:	linux-edac@vger.kernel.org
+S:	Orphan
+F:	drivers/edac/i3200_edac.c
+
 EDAC-I5000
 L:	linux-edac@vger.kernel.org
 S:	Maintained
@@ -9468,9 +9478,8 @@ S:	Maintained
 F:	drivers/edac/i7core_edac.c
 
 EDAC-I82975X
-M:	"Arvind R." <arvino55@gmail.com>
 L:	linux-edac@vger.kernel.org
-S:	Maintained
+S:	Orphan
 F:	drivers/edac/i82975x_edac.c
 
 EDAC-IE31200
@@ -9481,10 +9490,16 @@ F:	drivers/edac/ie31200_edac.c
 
 EDAC-IGEN6
 M:	Tony Luck <tony.luck@intel.com>
-R:	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+R:	Qiuxu Zhuo <qzhuo@nvidia.com>
 L:	linux-edac@vger.kernel.org
 S:	Maintained
 F:	drivers/edac/igen6_edac.c
+
+EDAC-INTEL-BFF-RESET
+M:	Tony Luck <tony.luck@intel.com>
+L:	linux-edac@vger.kernel.org
+S:	Maintained
+F:	drivers/edac/intel-bff.c
 
 EDAC-MPC85XX
 L:	linux-edac@vger.kernel.org
@@ -9520,7 +9535,7 @@ F:	drivers/edac/qcom_edac.c
 
 EDAC-SBRIDGE
 M:	Tony Luck <tony.luck@intel.com>
-R:	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+R:	Qiuxu Zhuo <qzhuo@nvidia.com>
 L:	linux-edac@vger.kernel.org
 S:	Maintained
 F:	drivers/edac/sb_edac.c
@@ -9536,6 +9551,11 @@ M:	Tero Kristo <kristo@kernel.org>
 L:	linux-edac@vger.kernel.org
 S:	Odd Fixes
 F:	drivers/edac/ti_edac.c
+
+EDAC-X38
+L:	linux-edac@vger.kernel.org
+S:	Orphan
+F:	drivers/edac/x38_edac.c
 
 EDIROL UA-101/UA-1000 DRIVER
 M:	Clemens Ladisch <clemens@ladisch.de>
@@ -18446,7 +18466,9 @@ M:	James Morse <james.morse@arm.com>
 M:	Ben Horgan <ben.horgan@arm.com>
 R:	Reinette Chatre <reinette.chatre@intel.com>
 R:	Fenghua Yu <fenghuay@nvidia.com>
+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 S:	Maintained
+F:	Documentation/arch/arm64/mpam.rst
 F:	drivers/resctrl/mpam_*
 F:	drivers/resctrl/test_mpam_*
 F:	include/linux/arm_mpam.h
@@ -24756,7 +24778,9 @@ M:	Sudeep Holla <sudeep.holla@kernel.org>
 L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 S:	Maintained
 F:	drivers/firmware/smccc/
+F:	include/linux/arm-smccc-bus.h
 F:	include/linux/arm-smccc.h
+F:	include/linux/device-id/arm_smccc.h
 
 SECURITY CONTACT
 M:	Security Officers <security@kernel.org>
@@ -26232,6 +26256,15 @@ F:	rust/helpers/jump_label.c
 F:	rust/kernel/generated_arch_static_branch_asm.rs.S
 F:	rust/kernel/jump_label.rs
 
+STEAL GOVERNOR DRIVER
+M:	Shrikanth Hegde <sshegde@linux.ibm.com>
+R:	Yury Norov <yury.norov@gmail.com>
+L:	linux-kernel@vger.kernel.org
+S:	Maintained
+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
+F:	Documentation/driver-api/steal-governor.rst
+F:	drivers/virt/steal_governor.c
+
 STI AUDIO (ASoC) DRIVERS
 M:	Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
 L:	linux-sound@vger.kernel.org
@@ -26819,11 +26852,6 @@ L:	tech-board-discuss@lists.linux.dev
 S:	Maintained
 F:	Documentation/process/contribution-maturity-model.rst
 F:	Documentation/process/researcher-guidelines.rst
-
-TECHNOLOGIC SYSTEMS TS-5500 PLATFORM SUPPORT
-M:	"Savoir-faire Linux Inc." <kernel@savoirfairelinux.com>
-S:	Maintained
-F:	arch/x86/platform/ts5500/
 
 TECHNOTREND USB IR RECEIVER
 M:	Sean Young <sean@mess.org>
