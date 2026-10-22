@@ -1333,6 +1333,7 @@ AMD SENSOR FUSION HUB DRIVER
 M:	Basavaraj Natikar <basavaraj.natikar@amd.com>
 L:	linux-input@vger.kernel.org
 S:	Maintained
+F:	Documentation/ABI/testing/sysfs-driver-amd-sfh
 F:	Documentation/hid/amd-sfh*
 F:	drivers/hid/amd-sfh-hid/
 F:	drivers/input/misc/amd_sfh_tabletmode.c
@@ -3283,6 +3284,7 @@ F:	Documentation/devicetree/bindings/arm/ux500.yaml
 F:	Documentation/devicetree/bindings/arm/ux500/
 F:	Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
 F:	Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml
+F:	Documentation/devicetree/bindings/power/stericsson,ux500-pm-domains.yaml
 F:	arch/arm/boot/dts/st/ste-*
 F:	arch/arm/mach-nomadik/
 F:	arch/arm/mach-ux500/
@@ -3442,6 +3444,7 @@ F:	include/linux/soc/qcom/
 ARM/QUALCOMM SUPPORT
 M:	Bjorn Andersson <andersson@kernel.org>
 M:	Konrad Dybcio <konradybcio@kernel.org>
+R:	Abel Vesa <abelvesa@kernel.org>
 L:	linux-arm-msm@vger.kernel.org
 S:	Maintained
 C:	irc://irc.oftc.net/linux-msm
@@ -3636,7 +3639,6 @@ F:	arch/arm/boot/dts/intel/socfpga/
 F:	arch/arm/configs/socfpga_defconfig
 F:	arch/arm/mach-socfpga/
 F:	arch/arm64/boot/dts/altera/
-F:	arch/arm64/boot/dts/intel/
 
 ARM/SOCFPGA CLOCK FRAMEWORK SUPPORT
 M:	Dinh Nguyen <dinguyen@kernel.org>
@@ -3799,6 +3801,7 @@ M:	Vignesh Raghavendra <vigneshr@ti.com>
 M:	Tero Kristo <kristo@kernel.org>
 L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 S:	Supported
+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
 F:	Documentation/devicetree/bindings/arm/ti/k3.yaml
 F:	Documentation/devicetree/bindings/hwinfo/ti,k3-socinfo.yaml
 F:	arch/arm64/boot/dts/ti/Makefile
@@ -3816,7 +3819,7 @@ F:	arch/arm/boot/dts/nspire/
 ARM/TOSHIBA VISCONTI ARCHITECTURE
 M:	Nobuhiro Iwamatsu <nobuhiro.iwamatsu.x90@mail.toshiba>
 L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-S:	Supported
+S:	Odd Fixes
 T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iwamatsu/linux-visconti.git
 F:	Documentation/devicetree/bindings/arm/toshiba.yaml
 F:	Documentation/devicetree/bindings/clock/toshiba,tmpv770x-pipllct.yaml
@@ -4454,6 +4457,15 @@ L:	linux-sound@vger.kernel.org
 S:	Orphan
 F:	Documentation/devicetree/bindings/sound/axentia,*
 F:	sound/soc/atmel/tse850-pcm5142.c
+
+AXIADO SGPIO DRIVER
+M:	Petar Stepanovic <pstepanovic@axiado.com>
+M:	SriNavmani A <srinavmani@axiado.com>
+M:	Prasad Bolisetty <pbolisetty@axiado.com>
+L:	linux-gpio@vger.kernel.org
+S:	Supported
+F:	Documentation/devicetree/bindings/gpio/axiado,ax3005-sgpio.yaml
+F:	drivers/gpio/gpio-axiado-sgpio.c
 
 AXIS ARTPEC ARM64 SoC SUPPORT
 M:	Jesper Nilsson <jesper.nilsson@axis.com>
@@ -7590,11 +7602,12 @@ F:	drivers/iio/chemical/sen0322.c
 
 DH ELECTRONICS DHSOM SOM AND BOARD SUPPORT
 M:	Christoph Niedermaier <cniedermaier@dh-electronics.com>
-M:	Marek Vasut <marex@denx.de>
+M:	Marek Vasut <marex@nabladev.com>
 L:	kernel@dh-electronics.com
 S:	Maintained
 N:	dhcom
 N:	dhcor
+N:	dhcos
 N:	dhsom
 
 DIALOG SEMICONDUCTOR DRIVERS
@@ -11209,6 +11222,7 @@ F:	Documentation/devicetree/bindings/phy/google,lga-usb-phy.yaml
 F:	Documentation/devicetree/bindings/soc/google/google,gs101-pmu-intr-gen.yaml
 F:	Documentation/devicetree/bindings/usb/google,lga-dwc3.yaml
 F:	arch/arm64/boot/dts/exynos/google/
+F:	arch/arm64/boot/dts/google/
 F:	drivers/clk/samsung/clk-gs101.c
 F:	drivers/phy/phy-google-usb.c
 F:	drivers/soc/samsung/gs101-pmu.c
@@ -11685,6 +11699,12 @@ M:	Roderick Colenbrander <roderick.colenbrander@sony.com>
 L:	linux-input@vger.kernel.org
 S:	Supported
 F:	drivers/hid/hid-playstation.c
+
+HID PULSAR DRIVER
+M:	Nikolas Koesling <nikolas@koesling.info>
+L:	linux-input@vger.kernel.org
+S:	Maintained
+F:	drivers/hid/hid-pulsar.c
 
 HID SENSOR HUB DRIVERS
 M:	Jiri Kosina <jikos@kernel.org>
@@ -14535,7 +14555,7 @@ S:	Supported
 F:	include/keys/trusted_dcp.h
 F:	security/keys/trusted-keys/trusted_dcp.c
 
-KEYS-TRUSTED-PLPKS
+KEYS-TRUSTED-PKWM
 M:	Srish Srinivasan <ssrish@linux.ibm.com>
 M:	Nayna Jain <nayna@linux.ibm.com>
 L:	linux-integrity@vger.kernel.org
@@ -18433,6 +18453,12 @@ F:	scripts/module*
 F:	tools/testing/selftests/kmod/
 F:	tools/testing/selftests/module/
 
+MONOLITHIC POWER SYSTEM MPQ4210 REGULATOR DRIVER
+M:	Tapio Reijonen <tapio.reijonen@vaisala.com>
+S:	Maintained
+F:	Documentation/devicetree/bindings/regulator/mps,mpq4210.yaml
+F:	drivers/regulator/mpq4210.c
+
 MONOLITHIC POWER SYSTEM PMIC DRIVER
 M:	Saravanan Sekar <sravanhome@gmail.com>
 S:	Maintained
@@ -19434,6 +19460,7 @@ F:	drivers/scsi/nsp32*
 
 NINTENDO HID DRIVER
 M:	Daniel J. Ogorchock <djogorchock@gmail.com>
+M:	Vicki Pfau <vi@endrift.com>
 L:	linux-input@vger.kernel.org
 S:	Maintained
 F:	drivers/hid/hid-nintendo*
@@ -19505,6 +19532,13 @@ S:	Maintained
 T:	git git://git.kernel.org/pub/scm/linux/kernel/git/nolibc/linux-nolibc.git
 F:	tools/include/nolibc/
 F:	tools/testing/selftests/nolibc/
+
+NOVATEK NT72676 I2C CONTROLLER DRIVER
+M:	Ben Huang <ben_huang@novatek.com.tw>
+L:	linux-i2c@vger.kernel.org
+S:	Maintained
+F:	Documentation/devicetree/bindings/i2c/novatek,nt72676-i2c.yaml
+F:	drivers/i2c/busses/i2c-nt72676.c
 
 NOVATEK NVT-TS I2C TOUCHSCREEN DRIVER
 M:	Hans de Goede <hansg@kernel.org>
@@ -23076,6 +23110,12 @@ S:	Maintained
 F:	Documentation/devicetree/bindings/spi/realtek,rtl9301-snand.yaml
 F:	drivers/spi/spi-realtek-rtl-snand.c
 
+REALTEK SPI-NOR
+M:	Jyan Chou <jyanchou@realtek.com>
+M:	Yu-Chun Lin <eleanor.lin@realtek.com>
+S:	Supported
+F:	drivers/spi/spi-rtk-nor.c
+
 REALTEK SYSTIMER DRIVER
 M:	Hao-Wen Ting <haowen.ting@realtek.com>
 S:	Maintained
@@ -23579,7 +23619,8 @@ F:	drivers/iommu/riscv/
 
 RISC-V MICROCHIP SUPPORT
 M:	Conor Dooley <conor.dooley@microchip.com>
-M:	Daire McNamara <daire.mcnamara@microchip.com>
+R:	Valentina Fernandez <valentina.fernandezalanis@microchip.com>
+R:	Daire McNamara <daire.mcnamara@microchip.com>
 L:	linux-riscv@lists.infradead.org
 S:	Supported
 T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/ (dts, soc, firmware)
@@ -23659,8 +23700,17 @@ F:	drivers/irqchip/irq-riscv-rpmi-sysmsi.c
 F:	drivers/mailbox/riscv-sbi-mpxy-mbox.c
 F:	include/linux/mailbox/riscv-rpmi-message.h
 
+RISC-V RPMI DEVICE POWER DRIVER
+M:	Joshua Yeong <joshua.yeong@starfivetech.com>
+L:	linux-riscv@lists.infradead.org
+S:	Maintained
+F:	Documentation/devicetree/bindings/power/riscv,rpmi-device-power.yaml
+F:	Documentation/devicetree/bindings/power/riscv,rpmi-mpxy-device-power.yaml
+F:	drivers/pmdomain/riscv/
+
 RISC-V SPACEMIT SoC Support
 M:	Yixun Lan <dlan@kernel.org>
+R:	Troy Mitchell <troy.mitchell@linux.spacemit.com>
 L:	linux-riscv@lists.infradead.org
 L:	spacemit@lists.linux.dev
 S:	Maintained
@@ -23691,7 +23741,7 @@ M:	Fu Wei <wefu@redhat.com>
 L:	linux-riscv@lists.infradead.org
 S:	Maintained
 Q:	https://patchwork.kernel.org/project/riscv-thead/list/
-T:	git https://github.com/pdp7/linux.git
+T:	git https://git.kernel.org/pub/scm/linux/kernel/git/fustini/linux.git
 F:	Documentation/devicetree/bindings/clock/thead,th1520-clk-ap.yaml
 F:	Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
 F:	Documentation/devicetree/bindings/mailbox/thead,th1520-mbox.yaml
@@ -23893,6 +23943,7 @@ F:	drivers/clk/clk-bd718x7.c
 F:	drivers/gpio/gpio-bd71815.c
 F:	drivers/gpio/gpio-bd71828.c
 F:	drivers/gpio/gpio-bd72720.c
+F:	drivers/gpio/gpio-bd73800.c
 F:	drivers/mfd/rohm-bd71828.c
 F:	drivers/mfd/rohm-bd718x7.c
 F:	drivers/mfd/rohm-bd9576.c
@@ -23912,6 +23963,7 @@ F:	include/linux/mfd/rohm-bd71815.h
 F:	include/linux/mfd/rohm-bd71828.h
 F:	include/linux/mfd/rohm-bd718x7.h
 F:	include/linux/mfd/rohm-bd72720.h
+F:	include/linux/mfd/rohm-bd73800.h
 F:	include/linux/mfd/rohm-bd957x.h
 F:	include/linux/mfd/rohm-bd96801.h
 F:	include/linux/mfd/rohm-bd96802.h
@@ -24783,6 +24835,13 @@ R:	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
 L:	linux-mmc@vger.kernel.org
 S:	Maintained
 F:	drivers/mmc/host/sdhci-brcmstb*
+
+SECURE DIGITAL HOST CONTROLLER INTERFACE (SDHCI) CADENCE DRIVER
+M:	Tanmay Kathpalia <tanmay.kathpalia@altera.com>
+L:	linux-mmc@vger.kernel.org
+S:	Supported
+F:	Documentation/devicetree/bindings/mmc/cdns,sd6hc.yaml
+F:	drivers/mmc/host/sdhci-cadence*
 
 SECURE DIGITAL HOST CONTROLLER INTERFACE (SDHCI) DRIVER
 M:	Adrian Hunter <adrian.hunter@intel.com>
@@ -25822,6 +25881,14 @@ S:	Maintained
 F:	Documentation/devicetree/bindings/sound/spacemit,k1-i2s.yaml
 F:	sound/soc/spacemit/k1_i2s.c
 
+SPACEMIT RESET CONTROLLER DRIVER
+M:	Guodong Xu <docular.xu@gmail.com>
+L:	linux-riscv@lists.infradead.org
+L:	spacemit@lists.linux.dev
+S:	Maintained
+F:	drivers/reset/spacemit/
+F:	include/dt-bindings/reset/spacemit,k3-resets.h
+
 SPANISH DOCUMENTATION
 M:	Carlos Bilbao <carlos.bilbao@kernel.org>
 R:	Avadhut Naik <avadhut.naik@amd.com>
@@ -26708,6 +26775,7 @@ F:	drivers/pmdomain/arm/
 F:	drivers/powercap/arm_scmi_powercap.c
 F:	drivers/regulator/scmi-regulator.c
 F:	drivers/reset/reset-scmi.c
+F:	include/linux/device-id/scmi.h
 F:	include/linux/sc[mp]i_protocol.h
 F:	include/trace/events/scmi.h
 F:	include/uapi/linux/virtio_scmi.h
@@ -29393,11 +29461,6 @@ M:	Roger Lucas <vt8231@hiddenengine.co.uk>
 L:	linux-hwmon@vger.kernel.org
 S:	Maintained
 F:	drivers/hwmon/vt8231.c
-
-VUB300 USB to SDIO/SD/MMC bridge chip
-L:	linux-mmc@vger.kernel.org
-S:	Orphan
-F:	drivers/mmc/host/vub300.c
 
 W1 DALLAS'S 1-WIRE BUS
 M:	Krzysztof Kozlowski <krzk@kernel.org>
